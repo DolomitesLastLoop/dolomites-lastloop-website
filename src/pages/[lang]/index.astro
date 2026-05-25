@@ -1,0 +1,120 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Hero from "@components/Hero.astro";
+import Newsletter from "@components/Newsletter.astro";
+import { useTranslations, localizePath, type Lang } from "@i18n/utils";
+
+export const prerender = false;
+
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) {
+  return Astro.redirect("/de", 302);
+}
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang}>
+  <Hero lang={lang} />
+
+  <section class="section" id="features">
+    <div class="container">
+      <p class="eyebrow reveal">USP</p>
+      <h2 class="reveal">{t("home.features.title")}</h2>
+      <div class="grid grid-2 mt-6">
+        <article class="card reveal">
+          <h3>{t("home.features.location.title")}</h3>
+          <p>{t("home.features.location.text")}</p>
+        </article>
+        <article class="card reveal">
+          <h3>{t("home.features.format.title")}</h3>
+          <p>{t("home.features.format.text")}</p>
+        </article>
+        <article class="card reveal">
+          <h3>{t("home.features.community.title")}</h3>
+          <p>{t("home.features.community.text")}</p>
+        </article>
+        <article class="card reveal">
+          <h3>{t("home.features.limit.title")}</h3>
+          <p>{t("home.features.limit.text")}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section archive-teaser">
+    <div class="container archive-inner">
+      <div class="archive-text reveal">
+        <p class="eyebrow">{t("home.archive.title")}</p>
+        <h2>2026</h2>
+        <p class="text-muted">{t("home.archive.first_edition")}</p>
+        <a class="btn btn-ghost mt-5" href={localizePath("/ergebnisse", lang)}>
+          {t("home.archive.link")} →
+        </a>
+      </div>
+      <div class="archive-stats reveal" aria-hidden="true">
+        <div>
+          <span class="stat-num">6,71</span>
+          <span class="stat-label">km / Loop</span>
+        </div>
+        <div>
+          <span class="stat-num">100</span>
+          <span class="stat-label">Starter</span>
+        </div>
+        <div>
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Stunden</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Newsletter lang={lang} />
+</BaseLayout>
+
+<style>
+  .archive-teaser {
+    background:
+      linear-gradient(180deg, transparent, rgba(232, 93, 4, 0.04)),
+      var(--color-bg-alt);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .archive-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  .archive-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    text-align: center;
+  }
+  .archive-stats > div {
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-card);
+  }
+  .stat-num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    color: var(--color-accent);
+    line-height: 1;
+  }
+  .stat-label {
+    display: block;
+    margin-top: var(--space-2);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+  @media (max-width: 800px) {
+    .archive-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

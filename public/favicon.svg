@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#0a0a0a"/>
+  <path d="M3 23 L9 14 L13 18 L19 8 L25 16 L29 23 Z" fill="#e85d04"/>
+  <text x="16" y="29" font-family="Impact, sans-serif" font-size="7" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">DLL</text>
+</svg>

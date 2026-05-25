@@ -1,0 +1,182 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { useTranslations, type Lang } from "@i18n/utils";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+const t = useTranslations(lang);
+
+const rules: Array<keyof ReturnType<typeof Object>> = [];
+const ruleKeys = [
+  "race.rules.1",
+  "race.rules.2",
+  "race.rules.3",
+  "race.rules.4",
+  "race.rules.5",
+  "race.rules.6",
+  "race.rules.7",
+  "race.rules.8",
+  "race.rules.9",
+  "race.rules.10",
+] as const;
+---
+
+<BaseLayout lang={lang} title={t("race.title")}>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">2027</p>
+      <h1>{t("race.title")}</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid-split">
+      <div class="reveal">
+        <h2>{t("race.what.title")}</h2>
+        <p>{t("race.what.text")}</p>
+      </div>
+      <div class="reveal callout">
+        <span class="callout-num">6,71</span>
+        <span class="callout-unit">km / Loop</span>
+        <p class="text-dim mt-5">@ Nordic Arena · Toblach</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight bg-alt">
+    <div class="container">
+      <h2 class="reveal">{t("race.course.title")}</h2>
+      <div class="grid-split mt-5">
+        <p class="reveal">{t("race.course.text")}</p>
+        <div class="course-profile reveal" aria-hidden="true">
+          <svg viewBox="0 0 600 200" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="prof" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#e85d04" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#e85d04" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,170 C100,160 180,90 300,40 C420,90 500,160 600,170 L600,200 L0,200 Z"
+              fill="url(#prof)"
+            />
+            <path
+              d="M0,170 C100,160 180,90 300,40 C420,90 500,160 600,170"
+              fill="none"
+              stroke="#e85d04"
+              stroke-width="2"
+            />
+            <circle cx="0" cy="170" r="5" fill="#e85d04" />
+            <circle cx="300" cy="40" r="5" fill="#e85d04" />
+            <circle cx="600" cy="170" r="5" fill="#e85d04" />
+          </svg>
+          <div class="profile-labels">
+            <span>Start</span><span>Top</span><span>Ziel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="reveal">{t("race.rules.title")}</h2>
+      <ol class="rules reveal">
+        {ruleKeys.map((key) => <li>{t(key)}</li>)}
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--space-9) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .bg-alt {
+    background: var(--color-bg-alt);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .grid-split {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  @media (max-width: 800px) {
+    .grid-split {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .callout {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-7);
+    text-align: center;
+  }
+  .callout-num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 8vw, 6rem);
+    color: var(--color-accent);
+    line-height: 1;
+  }
+  .callout-unit {
+    display: block;
+    margin-top: var(--space-3);
+    font-size: 0.9rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .course-profile svg {
+    width: 100%;
+    height: 200px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-card);
+  }
+  .profile-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-2);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+
+  .rules {
+    list-style: none;
+    counter-reset: rule;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+    max-width: 80ch;
+  }
+  .rules li {
+    counter-increment: rule;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-4) var(--space-5) var(--space-4) calc(var(--space-6) + var(--space-5));
+    position: relative;
+    color: var(--color-text);
+  }
+  .rules li::before {
+    content: counter(rule, decimal-leading-zero);
+    position: absolute;
+    left: var(--space-5);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-display);
+    color: var(--color-accent);
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+</style>

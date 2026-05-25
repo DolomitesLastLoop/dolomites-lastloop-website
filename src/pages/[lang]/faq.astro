@@ -1,0 +1,99 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { useTranslations, type Lang } from "@i18n/utils";
+import { faq } from "@i18n/faq";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+const t = useTranslations(lang);
+const content = faq[lang];
+---
+
+<BaseLayout lang={lang} title={t("faq.title")}>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Info</p>
+      <h1>{t("faq.title")}</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-narrow">
+      <h2>{t("faq.participants")}</h2>
+      <div class="accordion">
+        {
+          content.participants.map((item, i) => (
+            <details class="faq-item" open={i === 0}>
+              <summary>{item.q}</summary>
+              <p>{item.a}</p>
+            </details>
+          ))
+        }
+      </div>
+
+      <h2 class="mt-7">{t("faq.crew")}</h2>
+      <div class="accordion">
+        {
+          content.crew.map((item) => (
+            <details class="faq-item">
+              <summary>{item.q}</summary>
+              <p>{item.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--space-9) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .accordion {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .faq-item {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-card);
+    overflow: hidden;
+    transition: border-color var(--transition);
+  }
+  .faq-item[open] {
+    border-color: var(--color-accent);
+  }
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: var(--space-5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item summary::after {
+    content: "+";
+    color: var(--color-accent);
+    font-size: 1.6rem;
+    line-height: 1;
+    transition: transform var(--transition);
+  }
+  .faq-item[open] summary::after {
+    content: "−";
+  }
+  .faq-item p {
+    padding: 0 var(--space-5) var(--space-5);
+    color: var(--color-text-muted);
+  }
+</style>

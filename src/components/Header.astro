@@ -1,0 +1,283 @@
+---
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { useTranslations, localizePath, type Lang } from "@i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const links = [
+  { href: localizePath("/", lang), label: t("nav.home") },
+  { href: localizePath("/race-info", lang), label: t("nav.race_info") },
+  { href: localizePath("/anmeldung", lang), label: t("nav.signup") },
+  { href: localizePath("/startliste", lang), label: t("nav.startlist") },
+  { href: localizePath("/ergebnisse", lang), label: t("nav.results") },
+  { href: localizePath("/faq", lang), label: t("nav.faq") },
+  { href: localizePath("/kontakt", lang), label: t("nav.contact") },
+];
+
+const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
+---
+
+<header class="site-header" id="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href={localizePath("/", lang)} aria-label={t("site.title")}>
+      <span class="brand-mark" aria-hidden="true">DLL</span>
+      <span class="brand-name">Dolomites Last Loop</span>
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary">
+      <ul>
+        {
+          links.map((link) => {
+            const normalized = link.href.replace(/\/+$/, "") || `/${lang}`;
+            const isActive =
+              normalized === current ||
+              (normalized !== `/${lang}` && current.startsWith(normalized));
+            return (
+              <li>
+                <a
+                  href={link.href}
+                  class:list={{ active: isActive }}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {link.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <LanguageSwitcher lang={lang} />
+      <button
+        class="burger"
+        type="button"
+        aria-label={t("nav.menu")}
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        data-burger
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="mobile-nav"
+    id="mobile-nav"
+    role="dialog"
+    aria-modal="true"
+    aria-label={t("nav.menu")}
+    hidden
+  >
+    <nav aria-label="Mobile">
+      <ul>
+        {
+          links.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mobile-lang">
+        <LanguageSwitcher lang={lang} />
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    height: var(--nav-height);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: transparent;
+    transition:
+      background var(--transition),
+      border-color var(--transition);
+    border-bottom: 1px solid transparent;
+  }
+
+  .site-header[data-scrolled="true"] {
+    background: rgba(10, 10, 10, 0.85);
+    border-bottom-color: var(--color-border);
+  }
+
+  .header-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-text);
+  }
+  .brand:hover {
+    color: var(--color-text);
+  }
+  .brand-mark {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    color: #0a0a0a;
+    background: var(--color-accent);
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-sm);
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .primary-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .primary-nav a {
+    display: inline-block;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border-radius: var(--radius-sm);
+    transition: color var(--transition), background var(--transition);
+  }
+
+  .primary-nav a:hover,
+  .primary-nav a.active {
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .primary-nav a.active {
+    color: var(--color-accent);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .burger {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-sm);
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+  }
+  .burger span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--color-text);
+    margin: 4px auto;
+    transition: transform var(--transition), opacity var(--transition);
+  }
+  .burger[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .burger[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+  .burger[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .mobile-nav {
+    position: fixed;
+    inset: var(--nav-height) 0 0 0;
+    background: var(--color-bg);
+    padding: var(--space-7) var(--space-5);
+    overflow-y: auto;
+  }
+  .mobile-nav ul {
+    list-style: none;
+    margin: 0 0 var(--space-6);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .mobile-nav a {
+    display: block;
+    padding: var(--space-3) 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .mobile-lang {
+    margin-top: var(--space-6);
+  }
+
+  @media (max-width: 960px) {
+    .primary-nav,
+    .header-actions .lang {
+      display: none;
+    }
+    .burger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const burger = document.querySelector<HTMLButtonElement>("[data-burger]");
+  const mobileNav = document.getElementById("mobile-nav");
+
+  function setScrolled() {
+    if (!header) return;
+    header.dataset.scrolled = window.scrollY > 12 ? "true" : "false";
+  }
+  setScrolled();
+  window.addEventListener("scroll", setScrolled, { passive: true });
+
+  burger?.addEventListener("click", () => {
+    const open = burger.getAttribute("aria-expanded") === "true";
+    burger.setAttribute("aria-expanded", String(!open));
+    if (mobileNav) {
+      mobileNav.hidden = open;
+      document.body.style.overflow = open ? "" : "hidden";
+    }
+  });
+
+  mobileNav?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => {
+      burger?.setAttribute("aria-expanded", "false");
+      if (mobileNav) mobileNav.hidden = true;
+      document.body.style.overflow = "";
+    }),
+  );
+</script>

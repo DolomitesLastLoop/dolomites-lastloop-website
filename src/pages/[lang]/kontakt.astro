@@ -1,0 +1,169 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { useTranslations, type Lang } from "@i18n/utils";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang} title={t("contact.title")}>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">{t("contact.title")}</p>
+      <h1>Sport OK Toblach</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container contact-grid">
+      <div class="info reveal">
+        <div class="info-item">
+          <span class="info-label">{t("contact.email")}</span>
+          <a href="mailto:dolomiteslastloop@gmail.com">
+            dolomiteslastloop@gmail.com
+          </a>
+        </div>
+        <div class="info-item">
+          <span class="info-label">{t("contact.org")}</span>
+          <span>{t("contact.org.value")}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">{t("contact.location")}</span>
+          <span>{t("contact.location.value")}</span>
+        </div>
+
+        <div class="map mt-6">
+          <iframe
+            src="https://www.openstreetmap.org/export/embed.html?bbox=12.2080%2C46.7290%2C12.2480%2C46.7440&layer=mapnik&marker=46.7365%2C12.2280"
+            title={t("contact.map.title")}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+          <a
+            class="map-link"
+            href="https://www.openstreetmap.org/?mlat=46.7365&mlon=12.2280#map=15/46.7365/12.2280"
+            target="_blank"
+            rel="noopener"
+          >
+            {t("contact.map.title")} →
+          </a>
+        </div>
+      </div>
+
+      <form class="card reveal" data-contact novalidate>
+        <h2>{t("contact.form.title")}</h2>
+
+        <div class="field">
+          <label for="c-name">{t("contact.form.name")}</label>
+          <input type="text" id="c-name" name="name" required />
+        </div>
+        <div class="field">
+          <label for="c-email">{t("contact.form.email")}</label>
+          <input type="email" id="c-email" name="email" required />
+        </div>
+        <div class="field">
+          <label for="c-message">{t("contact.form.message")}</label>
+          <textarea id="c-message" name="message" required></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-block" type="submit">
+          {t("contact.form.submit")}
+        </button>
+
+        <p class="status status-success mt-4" data-c-success hidden>
+          {t("contact.form.success")}
+        </p>
+        <p class="status status-error mt-4" data-c-error hidden>
+          {t("contact.form.error")}
+        </p>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--space-9) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-7);
+  }
+  @media (max-width: 800px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .info-item {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .info-item:last-of-type {
+    border-bottom: none;
+  }
+  .info-label {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+    margin-bottom: var(--space-1);
+  }
+
+  .map {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-card);
+  }
+  .map iframe {
+    width: 100%;
+    height: 300px;
+    border: none;
+    display: block;
+    filter: invert(0.92) hue-rotate(180deg) brightness(0.95) contrast(1.05);
+  }
+  .map-link {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-accent);
+  }
+
+  .status-success {
+    color: var(--color-success);
+  }
+  .status-error {
+    color: var(--color-error);
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-contact]");
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const ok = document.querySelector<HTMLElement>("[data-c-success]");
+    const err = document.querySelector<HTMLElement>("[data-c-error]");
+    if (ok) ok.hidden = true;
+    if (err) err.hidden = true;
+    const data = Object.fromEntries(new FormData(form).entries());
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("fail");
+      form.reset();
+      if (ok) ok.hidden = false;
+    } catch {
+      if (err) err.hidden = false;
+    }
+  });
+</script>

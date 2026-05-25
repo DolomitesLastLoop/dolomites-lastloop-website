@@ -1,0 +1,55 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { isAuthenticated, issueSession, verifyPassword } from "@lib/auth";
+
+export const prerender = false;
+
+if (isAuthenticated(Astro.cookies)) {
+  return Astro.redirect("/admin", 302);
+}
+
+let error: string | null = null;
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  const password = String(form.get("password") || "");
+  if (verifyPassword(password)) {
+    issueSession(Astro.cookies);
+    return Astro.redirect("/admin", 302);
+  }
+  error = "Falsches Passwort.";
+}
+---
+
+<BaseLayout lang="de" title="Admin Login" noindex>
+  <section class="section">
+    <div class="container-narrow login-wrap">
+      <div class="card">
+        <h1>Admin</h1>
+        <p class="text-muted mb-5">Geschützter Bereich. Bitte anmelden.</p>
+
+        {error && <div class="alert alert-error">{error}</div>}
+
+        <form method="POST">
+          <div class="field">
+            <label for="pw">Passwort</label>
+            <input type="password" id="pw" name="password" required autofocus />
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Anmelden</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .login-wrap {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+  .login-wrap .card {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+</style>

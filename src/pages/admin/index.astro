@@ -1,0 +1,352 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { isAuthenticated } from "@lib/auth";
+import { getAdminClient, MAX_PARTICIPANTS, type Participant, type WaitlistEntry, type NewsletterEntry } from "@lib/supabase";
+
+export const prerender = false;
+
+if (!isAuthenticated(Astro.cookies)) {
+  return Astro.redirect("/admin/login", 302);
+}
+
+let participants: Participant[] = [];
+let waitlist: WaitlistEntry[] = [];
+let newsletter: NewsletterEntry[] = [];
+let dbError: string | null = null;
+
+try {
+  const supabase = getAdminClient();
+  const [pRes, wRes, nRes] = await Promise.all([
+    supabase
+      .from("participants")
+      .select("*")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("waitlist")
+      .select("*")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("newsletter")
+      .select("*")
+      .order("created_at", { ascending: false }),
+  ]);
+  participants = (pRes.data as Participant[]) ?? [];
+  waitlist = (wRes.data as WaitlistEntry[]) ?? [];
+  newsletter = (nRes.data as NewsletterEntry[]) ?? [];
+} catch (err) {
+  dbError = err instanceof Error ? err.message : "Datenbankfehler";
+}
+
+const confirmed = participants.filter((p) => p.ticket_status === "confirmed").length;
+const pending = participants.filter((p) => p.ticket_status === "pending").length;
+const attestApproved = participants.filter((p) => p.attest_status === "approved").length;
+---
+
+<BaseLayout lang="de" title="Admin" noindex>
+  <section class="page-head">
+    <div class="container flex-between">
+      <div>
+        <p class="eyebrow">Sport OK Toblach</p>
+        <h1>Admin</h1>
+      </div>
+      <form method="POST" action="/api/admin/logout">
+        <button class="btn btn-ghost" type="submit">Abmelden</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {
+        dbError && (
+          <div class="alert alert-error">
+            <strong>Supabase nicht erreichbar:</strong> {dbError}
+          </div>
+        )
+      }
+
+      <div class="grid grid-4 mb-6">
+        <div class="stat">
+          <span class="stat-num">{confirmed}</span>
+          <span class="stat-label">Bestätigt</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">{pending}</span>
+          <span class="stat-label">Ausstehend</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">{waitlist.length}</span>
+          <span class="stat-label">Warteliste</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">{attestApproved} / {MAX_PARTICIPANTS}</span>
+          <span class="stat-label">Atteste OK</span>
+        </div>
+      </div>
+
+      <div class="admin-tabs" role="tablist">
+        <button class="tab active" data-tab="participants" type="button">Teilnehmer</button>
+        <button class="tab" data-tab="waitlist" type="button">Warteliste</button>
+        <button class="tab" data-tab="newsletter" type="button">Newsletter</button>
+      </div>
+
+      <div class="panel" data-panel="participants">
+        <div class="flex-between mb-4">
+          <h2>Teilnehmer ({participants.length})</h2>
+          <div class="actions">
+            <a class="btn btn-ghost" href="/api/admin/export?type=participants">Export CSV</a>
+          </div>
+        </div>
+
+        <form class="add-participant card mb-5" data-add-participant>
+          <h3>Manuell hinzufügen</h3>
+          <div class="field-row">
+            <div class="field"><label>Vorname<input name="vorname" required /></label></div>
+            <div class="field"><label>Nachname<input name="nachname" required /></label></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Email<input name="email" type="email" required /></label></div>
+            <div class="field"><label>Nation<input name="nationalitaet" /></label></div>
+          </div>
+          <div class="field">
+            <label>Status
+              <select name="ticket_status">
+                <option value="confirmed">Bestätigt</option>
+                <option value="pending">Ausstehend</option>
+                <option value="waitlist">Warteliste</option>
+              </select>
+            </label>
+          </div>
+          <button class="btn btn-primary" type="submit">Hinzufügen</button>
+        </form>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>#</th><th>Name</th><th>Email</th><th>Nation</th>
+                <th>Status</th><th>Attest</th><th>Aktion</th>
+              </tr>
+            </thead>
+            <tbody>
+              {participants.map((p) => (
+                <tr>
+                  <td>{p.startnummer ?? "—"}</td>
+                  <td>{p.vorname} {p.nachname}</td>
+                  <td>{p.email}</td>
+                  <td>{p.nationalitaet ?? "—"}</td>
+                  <td>
+                    <span class={`badge ${
+                      p.ticket_status === "confirmed" ? "badge-confirmed" :
+                      p.ticket_status === "waitlist" ? "badge-waitlist" : "badge-pending"
+                    }`}>{p.ticket_status}</span>
+                  </td>
+                  <td>
+                    {p.attest_url ? (
+                      <>
+                        <a href={p.attest_url} target="_blank" rel="noopener">PDF</a>
+                        <span class="text-dim"> · {p.attest_status ?? "pending"}</span>
+                      </>
+                    ) : (
+                      <span class="text-dim">—</span>
+                    )}
+                  </td>
+                  <td class="actions-cell">
+                    {p.attest_url && p.attest_status !== "approved" && (
+                      <button class="btn-mini" data-attest-id={p.id} data-action="approve">✓</button>
+                    )}
+                    {p.attest_url && p.attest_status !== "rejected" && (
+                      <button class="btn-mini danger" data-attest-id={p.id} data-action="reject">✗</button>
+                    )}
+                    <button class="btn-mini danger" data-delete-id={p.id}>Entfernen</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" data-panel="waitlist" hidden>
+        <div class="flex-between mb-4">
+          <h2>Warteliste ({waitlist.length})</h2>
+          <a class="btn btn-ghost" href="/api/admin/export?type=waitlist">Export CSV</a>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Name</th><th>Email</th><th>Datum</th></tr></thead>
+            <tbody>
+              {waitlist.map((w) => (
+                <tr>
+                  <td>{w.name ?? "—"}</td>
+                  <td>{w.email}</td>
+                  <td>{new Date(w.created_at).toLocaleDateString("de-DE")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" data-panel="newsletter" hidden>
+        <div class="flex-between mb-4">
+          <h2>Newsletter ({newsletter.length})</h2>
+          <a class="btn btn-ghost" href="/api/admin/export?type=newsletter">Export CSV</a>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Email</th><th>Datum</th></tr></thead>
+            <tbody>
+              {newsletter.map((n) => (
+                <tr>
+                  <td>{n.email}</td>
+                  <td>{new Date(n.created_at).toLocaleDateString("de-DE")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--space-9) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .stat {
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-card);
+    text-align: center;
+  }
+  .stat-num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--color-accent);
+  }
+  .stat-label {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+
+  .admin-tabs {
+    display: flex;
+    gap: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-5);
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text-muted);
+    padding: var(--space-3) var(--space-4);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .tab:hover,
+  .tab.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  .btn-mini {
+    background: var(--color-bg-alt);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-right: 0.25rem;
+  }
+  .btn-mini:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+  .btn-mini.danger:hover {
+    border-color: var(--color-error);
+    color: var(--color-error);
+  }
+  .actions-cell {
+    white-space: nowrap;
+  }
+
+  .add-participant .field label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      document.querySelectorAll<HTMLElement>("[data-panel]").forEach((p) => {
+        p.hidden = p.dataset.panel !== target;
+      });
+    });
+  });
+
+  document
+    .querySelector<HTMLFormElement>("[data-add-participant]")
+    ?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.currentTarget as HTMLFormElement;
+      const data = Object.fromEntries(new FormData(form).entries());
+      const res = await fetch("/api/admin/participants", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) location.reload();
+      else alert("Konnte Teilnehmer nicht anlegen.");
+    });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-delete-id]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      if (!confirm("Wirklich entfernen?")) return;
+      const id = btn.dataset.deleteId!;
+      const res = await fetch(`/api/admin/participants?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+      if (res.ok) btn.closest("tr")?.remove();
+      else alert("Löschen fehlgeschlagen.");
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-attest-id]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.attestId!;
+      const action = btn.dataset.action!;
+      const res = await fetch("/api/admin/attest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action }),
+      });
+      if (res.ok) location.reload();
+      else alert("Aktion fehlgeschlagen.");
+    });
+  });
+</script>

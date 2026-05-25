@@ -1,0 +1,530 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { useTranslations, type Lang } from "@i18n/utils";
+import { getAdminClient, MAX_PARTICIPANTS } from "@lib/supabase";
+import { TICKET_TIERS } from "@lib/stripe";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+const t = useTranslations(lang);
+
+const url = new URL(Astro.request.url);
+const sessionStatus = url.searchParams.get("status");
+
+let isFull = false;
+try {
+  const supabase = getAdminClient();
+  const { count } = await supabase
+    .from("participants")
+    .select("id", { count: "exact", head: true })
+    .in("ticket_status", ["confirmed", "pending"]);
+  isFull = (count ?? 0) >= MAX_PARTICIPANTS;
+} catch {
+  // Supabase nicht konfiguriert – wir lassen das Formular trotzdem rendern
+  isFull = false;
+}
+
+const today = new Date();
+const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+const minISO = minDate.toISOString().slice(0, 10);
+const maxISO = maxDate.toISOString().slice(0, 10);
+---
+
+<BaseLayout lang={lang} title={t("signup.title")}>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">2027</p>
+      <h1>{t("signup.title")}</h1>
+      <p class="section-lead">{t("signup.intro")}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-narrow">
+      {
+        sessionStatus === "success" && (
+          <div class="alert alert-success">
+            <strong>✓</strong> Zahlung erfolgreich. Bitte ärztliches Attest hochladen.
+          </div>
+        )
+      }
+      {
+        sessionStatus === "cancelled" && (
+          <div class="alert alert-error">
+            Zahlung abgebrochen. Du kannst es jederzeit erneut versuchen.
+          </div>
+        )
+      }
+
+      {
+        isFull ? (
+          <div class="card text-center">
+            <h2>{t("signup.full.title")}</h2>
+            <p>{t("signup.full.text")}</p>
+            <form class="waitlist-form mt-6" data-waitlist novalidate>
+              <div class="field">
+                <label for="wl-name">{t("contact.form.name")}</label>
+                <input type="text" id="wl-name" name="name" required />
+              </div>
+              <div class="field">
+                <label for="wl-email">{t("contact.form.email")}</label>
+                <input type="email" id="wl-email" name="email" required />
+              </div>
+              <button class="btn btn-primary btn-block" type="submit">
+                {t("signup.full.cta")}
+              </button>
+              <p class="status status-success mt-4" data-wl-success hidden>
+                {t("home.newsletter.success")}
+              </p>
+              <p class="status status-error mt-4" data-wl-error hidden>
+                {t("home.newsletter.error")}
+              </p>
+            </form>
+          </div>
+        ) : (
+          <>
+            <div class="steps" role="tablist" aria-label="Sign-up steps">
+              <div class="step active" data-step-indicator="1">
+                <span class="step-num">01</span>
+                <span class="step-label">{t("signup.step1.title")}</span>
+              </div>
+              <div class="step" data-step-indicator="2">
+                <span class="step-num">02</span>
+                <span class="step-label">{t("signup.step2.title")}</span>
+              </div>
+              <div class="step" data-step-indicator="3">
+                <span class="step-num">03</span>
+                <span class="step-label">{t("signup.step3.title")}</span>
+              </div>
+            </div>
+
+            <form class="signup-form" id="signup-form" novalidate>
+              {/* Step 1 */}
+              <fieldset class="step-panel" data-panel="1">
+                <legend class="sr-only">{t("signup.step1.title")}</legend>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="vorname">{t("signup.field.firstname")}</label>
+                    <input type="text" id="vorname" name="vorname" required />
+                  </div>
+                  <div class="field">
+                    <label for="nachname">{t("signup.field.lastname")}</label>
+                    <input type="text" id="nachname" name="nachname" required />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="email">{t("signup.field.email")}</label>
+                  <input type="email" id="email" name="email" required />
+                </div>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="geburtsdatum">{t("signup.field.birthdate")}</label>
+                    <input
+                      type="date"
+                      id="geburtsdatum"
+                      name="geburtsdatum"
+                      min={minISO}
+                      max={maxISO}
+                      required
+                    />
+                    <span class="hint">{t("signup.field.age_error")}</span>
+                  </div>
+                  <div class="field">
+                    <label for="nationalitaet">{t("signup.field.nationality")}</label>
+                    <input
+                      type="text"
+                      id="nationalitaet"
+                      name="nationalitaet"
+                      placeholder="IT, DE, AT, CH…"
+                    />
+                  </div>
+                </div>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="notfallkontakt_name">
+                      {t("signup.field.emergency_name")}
+                    </label>
+                    <input
+                      type="text"
+                      id="notfallkontakt_name"
+                      name="notfallkontakt_name"
+                      required
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="notfallkontakt_tel">
+                      {t("signup.field.emergency_phone")}
+                    </label>
+                    <input
+                      type="tel"
+                      id="notfallkontakt_tel"
+                      name="notfallkontakt_tel"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <p class="status status-error" data-step1-error hidden></p>
+
+                <div class="flex-between mt-6">
+                  <span class="text-dim">{t("signup.step")} 1 / 3</span>
+                  <button class="btn btn-primary" type="button" data-next="2">
+                    {t("signup.continue")} →
+                  </button>
+                </div>
+              </fieldset>
+
+              {/* Step 2 */}
+              <fieldset class="step-panel" data-panel="2" hidden>
+                <legend class="sr-only">{t("signup.step2.title")}</legend>
+
+                <div class="tickets">
+                  {TICKET_TIERS.map((tier) => (
+                    <label class="ticket-option">
+                      <input
+                        type="radio"
+                        name="tier"
+                        value={tier.id}
+                        checked={tier.id === "early_bird"}
+                      />
+                      <span class="ticket-card">
+                        <span class="ticket-name">{t(tier.labelKey)}</span>
+                        <span class="ticket-price">{tier.priceLabel}</span>
+                        <span class="ticket-incl text-dim">
+                          {t("signup.ticket.included")}
+                        </span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+
+                <p class="status status-error" data-step2-error hidden></p>
+
+                <div class="flex-between mt-6">
+                  <button class="btn btn-ghost" type="button" data-prev="1">
+                    ← {t("signup.back")}
+                  </button>
+                  <button class="btn btn-primary" type="button" data-checkout>
+                    {t("signup.ticket.checkout")} →
+                  </button>
+                </div>
+              </fieldset>
+
+              {/* Step 3 */}
+              <fieldset class="step-panel" data-panel="3" hidden>
+                <legend class="sr-only">{t("signup.step3.title")}</legend>
+
+                <h2>{t("signup.attest.title")}</h2>
+                <p class="text-muted mb-5">{t("signup.attest.hint")}</p>
+
+                <div class="field">
+                  <label for="participant-id-input">Registration ID</label>
+                  <input
+                    type="text"
+                    id="participant-id-input"
+                    name="participant_id"
+                    placeholder="aus Bestätigungs-Email"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="attest-file">PDF (max 5 MB)</label>
+                  <input
+                    type="file"
+                    id="attest-file"
+                    name="attest"
+                    accept="application/pdf"
+                  />
+                </div>
+
+                <button class="btn btn-primary" type="button" data-upload-attest>
+                  {t("signup.attest.upload")}
+                </button>
+                <a class="btn btn-ghost ml-3" href="/">
+                  {t("signup.attest.skip")}
+                </a>
+
+                <p class="status status-success mt-4" data-attest-success hidden>
+                  {t("signup.attest.success")}
+                </p>
+                <p class="status status-error mt-4" data-attest-error hidden></p>
+              </fieldset>
+            </form>
+          </>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--space-9) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+  .step {
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-card);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    opacity: 0.6;
+    transition: opacity var(--transition), border-color var(--transition);
+  }
+  .step.active {
+    opacity: 1;
+    border-color: var(--color-accent);
+  }
+  .step-num {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-accent);
+  }
+  .step-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .signup-form fieldset {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    background: var(--color-card);
+  }
+
+  .tickets {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .ticket-option {
+    display: block;
+    cursor: pointer;
+  }
+  .ticket-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .ticket-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2) var(--space-4);
+    align-items: center;
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color var(--transition), background var(--transition);
+  }
+  .ticket-option input:checked + .ticket-card {
+    border-color: var(--color-accent);
+    background: var(--color-accent-dim);
+  }
+  .ticket-name {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .ticket-price {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--color-accent);
+  }
+  .ticket-incl {
+    grid-column: 1 / -1;
+    font-size: 0.85rem;
+  }
+
+  .ml-3 {
+    margin-left: var(--space-3);
+  }
+  .status-success {
+    color: var(--color-success);
+  }
+  .status-error {
+    color: var(--color-error);
+  }
+</style>
+
+<script>
+  function showStep(n: number) {
+    document.querySelectorAll<HTMLElement>("[data-panel]").forEach((el) => {
+      el.hidden = el.dataset.panel !== String(n);
+    });
+    document.querySelectorAll<HTMLElement>("[data-step-indicator]").forEach((el) => {
+      const idx = Number(el.dataset.stepIndicator);
+      el.classList.toggle("active", idx <= n);
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function showError(target: string, message: string) {
+    const el = document.querySelector<HTMLElement>(target);
+    if (!el) return;
+    el.textContent = message;
+    el.hidden = false;
+  }
+  function clearError(target: string) {
+    const el = document.querySelector<HTMLElement>(target);
+    if (!el) return;
+    el.textContent = "";
+    el.hidden = true;
+  }
+
+  function validateStep1(): string | null {
+    const form = document.getElementById("signup-form") as HTMLFormElement | null;
+    if (!form) return "Formular nicht gefunden";
+    const data = new FormData(form);
+    const required = [
+      "vorname",
+      "nachname",
+      "email",
+      "geburtsdatum",
+      "notfallkontakt_name",
+      "notfallkontakt_tel",
+    ];
+    for (const key of required) {
+      const v = String(data.get(key) || "").trim();
+      if (!v) return "Bitte alle Pflichtfelder ausfüllen.";
+    }
+    const email = String(data.get("email"));
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return "Bitte gültige Email-Adresse angeben.";
+    }
+    const birth = new Date(String(data.get("geburtsdatum")));
+    const today = new Date();
+    const age =
+      today.getFullYear() -
+      birth.getFullYear() -
+      (today < new Date(today.getFullYear(), birth.getMonth(), birth.getDate()) ? 1 : 0);
+    if (!Number.isFinite(age) || age < 18) {
+      return "Du musst mindestens 18 Jahre alt sein.";
+    }
+    return null;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>("[data-next]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      clearError("[data-step1-error]");
+      const err = validateStep1();
+      if (err) {
+        showError("[data-step1-error]", err);
+        return;
+      }
+      showStep(Number(btn.dataset.next));
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>("[data-prev]").forEach((btn) => {
+    btn.addEventListener("click", () => showStep(Number(btn.dataset.prev)));
+  });
+
+  document
+    .querySelector<HTMLButtonElement>("[data-checkout]")
+    ?.addEventListener("click", async (e) => {
+      const btn = e.currentTarget as HTMLButtonElement;
+      btn.disabled = true;
+      clearError("[data-step2-error]");
+      try {
+        const form = document.getElementById("signup-form") as HTMLFormElement;
+        const data = new FormData(form);
+        const payload = Object.fromEntries(data.entries());
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.url) {
+          showError(
+            "[data-step2-error]",
+            json.error || "Zahlung konnte nicht gestartet werden.",
+          );
+          btn.disabled = false;
+          return;
+        }
+        window.location.href = json.url;
+      } catch (err) {
+        showError("[data-step2-error]", "Netzwerkfehler. Bitte erneut versuchen.");
+        btn.disabled = false;
+      }
+    });
+
+  document
+    .querySelector<HTMLButtonElement>("[data-upload-attest]")
+    ?.addEventListener("click", async () => {
+      const idEl = document.getElementById(
+        "participant-id-input",
+      ) as HTMLInputElement | null;
+      const fileEl = document.getElementById("attest-file") as HTMLInputElement | null;
+      clearError("[data-attest-error]");
+      if (!idEl?.value || !fileEl?.files?.[0]) {
+        showError("[data-attest-error]", "Bitte ID und PDF angeben.");
+        return;
+      }
+      const file = fileEl.files[0];
+      if (file.size > 5 * 1024 * 1024) {
+        showError("[data-attest-error]", "Datei ist zu groß (max 5 MB).");
+        return;
+      }
+      const fd = new FormData();
+      fd.append("participant_id", idEl.value.trim());
+      fd.append("file", file);
+      try {
+        const res = await fetch("/api/upload-attest", { method: "POST", body: fd });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || "upload failed");
+        const ok = document.querySelector<HTMLElement>("[data-attest-success]");
+        if (ok) ok.hidden = false;
+      } catch (err: any) {
+        showError("[data-attest-error]", err?.message || "Upload fehlgeschlagen.");
+      }
+    });
+
+  // Waitlist
+  document
+    .querySelector<HTMLFormElement>("[data-waitlist]")
+    ?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.currentTarget as HTMLFormElement;
+      const ok = document.querySelector<HTMLElement>("[data-wl-success]");
+      const err = document.querySelector<HTMLElement>("[data-wl-error]");
+      if (ok) ok.hidden = true;
+      if (err) err.hidden = true;
+      const data = Object.fromEntries(new FormData(form).entries());
+      try {
+        const res = await fetch("/api/waitlist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error("fail");
+        form.reset();
+        if (ok) ok.hidden = false;
+      } catch {
+        if (err) err.hidden = false;
+      }
+    });
+
+  // Auto-step to attest if URL has status=success
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("status") === "success") {
+    showStep(3);
+  }
+</script>

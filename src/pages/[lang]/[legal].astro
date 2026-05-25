@@ -1,0 +1,56 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { useTranslations, type Lang } from "@i18n/utils";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+const slug = Astro.params.legal as string | undefined;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+
+const validSlugs = new Set([
+  "datenschutz",
+  "agb",
+  "barrierefreiheit",
+  "rueckerstattung",
+]);
+
+if (!slug || !validSlugs.has(slug)) {
+  return new Response("Not found", { status: 404 });
+}
+
+const t = useTranslations(lang);
+
+const titleMap: Record<string, string> = {
+  datenschutz: t("footer.privacy"),
+  agb: t("footer.terms"),
+  barrierefreiheit: t("footer.accessibility"),
+  rueckerstattung: t("footer.refund"),
+};
+const title = titleMap[slug] ?? slug;
+---
+
+<BaseLayout lang={lang} title={title}>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Legal</p>
+      <h1>{title}</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-narrow">
+      <p class="text-muted">
+        Dieser Bereich wird vor dem offiziellen Verkaufsstart 2027 mit den
+        rechtsgültigen Texten bestückt. Bei Fragen kontaktiere uns bitte unter
+        <a href="mailto:dolomiteslastloop@gmail.com">dolomiteslastloop@gmail.com</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--space-9) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+</style>

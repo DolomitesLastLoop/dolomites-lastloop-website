@@ -1,0 +1,190 @@
+---
+import MountainSilhouette from "./MountainSilhouette.astro";
+import { useTranslations, localizePath, type Lang } from "@i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="hero" aria-label={t("hero.title")}>
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-gradient"></div>
+    <div class="hero-glow"></div>
+  </div>
+
+  <div class="container hero-inner">
+    <p class="eyebrow reveal">2027 · Première</p>
+    <h1 class="hero-title reveal">{t("hero.title")}</h1>
+    <p class="hero-subtitle reveal">{t("hero.subtitle")}</p>
+    <p class="hero-teaser reveal">{t("hero.teaser")}</p>
+
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary" href={localizePath("/anmeldung", lang)}>
+        {t("hero.cta_signup")}
+      </a>
+      <a class="btn btn-ghost" href={localizePath("/race-info", lang)}>
+        {t("hero.cta_more")}
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-mountains" aria-hidden="true">
+    <MountainSilhouette />
+  </div>
+
+  <div class="hero-scroll" aria-hidden="true">
+    <span></span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: calc(100vh - var(--nav-height));
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    isolation: isolate;
+    margin-top: calc(var(--nav-height) * -1);
+    padding-top: var(--nav-height);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(
+        ellipse at top,
+        rgba(232, 93, 4, 0.08),
+        transparent 55%
+      ),
+      linear-gradient(180deg, #0a0a0a 0%, #07070b 100%);
+  }
+
+  .hero-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        circle at 20% 30%,
+        rgba(232, 93, 4, 0.15),
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 60%,
+        rgba(60, 60, 120, 0.18),
+        transparent 55%
+      );
+  }
+
+  .hero-glow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 60vw;
+    height: 60vw;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      rgba(232, 93, 4, 0.07),
+      transparent 60%
+    );
+    filter: blur(40px);
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: var(--space-9) var(--space-5);
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 9vw, 7.5rem);
+    margin-bottom: var(--space-3);
+    letter-spacing: 0.03em;
+    background: linear-gradient(180deg, #ffffff 0%, #b8b8c0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .hero-subtitle {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.5vw, 1.85rem);
+    letter-spacing: 0.18em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    margin-bottom: var(--space-5);
+  }
+
+  .hero-teaser {
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    color: var(--color-text-muted);
+    max-width: 50ch;
+    margin: 0 auto var(--space-7);
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-mountains {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: var(--space-5);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 56px;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      var(--color-accent),
+      transparent
+    );
+    z-index: 2;
+  }
+  .hero-scroll span {
+    position: absolute;
+    top: 0;
+    left: -3px;
+    width: 7px;
+    height: 7px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    animation: scrollDot 2.2s infinite var(--ease);
+  }
+  @keyframes scrollDot {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(48px);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scroll span {
+      animation: none;
+    }
+  }
+</style>

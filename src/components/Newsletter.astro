@@ -1,0 +1,96 @@
+---
+import { useTranslations, type Lang } from "@i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="newsletter section">
+  <div class="container-narrow text-center">
+    <p class="eyebrow">Newsletter</p>
+    <h2>{t("home.newsletter.title")}</h2>
+    <p class="section-lead" style="margin: 0 auto var(--space-6);">
+      {t("home.newsletter.text")}
+    </p>
+
+    <form class="newsletter-form" data-newsletter novalidate>
+      <input
+        type="email"
+        name="email"
+        required
+        placeholder={t("home.newsletter.placeholder")}
+        aria-label={t("home.newsletter.placeholder")}
+      />
+      <button type="submit" class="btn btn-primary">
+        {t("home.newsletter.submit")}
+      </button>
+    </form>
+
+    <p class="status status-success" data-success hidden>{t("home.newsletter.success")}</p>
+    <p class="status status-error" data-error hidden>{t("home.newsletter.error")}</p>
+  </div>
+</section>
+
+<style>
+  .newsletter-form {
+    display: flex;
+    gap: var(--space-3);
+    max-width: 460px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+  .newsletter-form input {
+    flex: 1 1 240px;
+    background: var(--color-bg-alt);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.95rem 1.1rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+  }
+  .newsletter-form input:focus {
+    border-color: var(--color-accent);
+    outline: none;
+  }
+  .status {
+    margin-top: var(--space-4);
+    font-size: 0.95rem;
+  }
+  .status-success {
+    color: var(--color-success);
+  }
+  .status-error {
+    color: var(--color-error);
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-newsletter]");
+  const success = document.querySelector<HTMLElement>("[data-success]");
+  const error = document.querySelector<HTMLElement>("[data-error]");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    success && (success.hidden = true);
+    error && (error.hidden = true);
+    const data = new FormData(form);
+    const email = String(data.get("email") || "").trim();
+    if (!email) return;
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error("fail");
+      form.reset();
+      if (success) success.hidden = false;
+    } catch {
+      if (error) error.hidden = false;
+    }
+  });
+</script>
