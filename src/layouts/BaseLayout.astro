@@ -81,6 +81,16 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
     </main>
     <Footer lang={lang} />
 
+    <button
+      class="scroll-top"
+      type="button"
+      data-scroll-top
+      aria-label={t("ui.scroll_top")}
+      title={t("ui.scroll_top")}
+    >
+      ↑
+    </button>
+
     <script>
       // ─── Reveal on scroll ───
       const reveals = document.querySelectorAll(".reveal");
@@ -210,6 +220,24 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
           if ((ev as PageTransitionEvent).persisted) {
             document.body.dataset.leaving = "false";
           }
+        });
+      }
+
+      // ─── Scroll-to-top ───
+      const scrollTopBtn = document.querySelector<HTMLButtonElement>(
+        "[data-scroll-top]",
+      );
+      if (scrollTopBtn) {
+        const updateBtn = () => {
+          scrollTopBtn.classList.toggle("is-visible", window.scrollY > 500);
+        };
+        updateBtn();
+        window.addEventListener("scroll", updateBtn, { passive: true });
+        scrollTopBtn.addEventListener("click", () => {
+          window.scrollTo({
+            top: 0,
+            behavior: reduceMotion ? "auto" : "smooth",
+          });
         });
       }
     </script>

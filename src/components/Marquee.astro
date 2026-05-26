@@ -1,66 +1,140 @@
 ---
-const items = [
+interface Props {
+  variant?: "primary" | "muted";
+}
+const { variant = "primary" } = Astro.props;
+
+const rowOne = [
   "Dolomites Last Loop",
-  "Backyard Ultra",
-  "Toblach",
-  "6,71 km",
   "One Loop",
   "No Excuses",
+  "Toblach",
+  "6,71 km",
+  "Backyard Ultra",
+  "Nacht",
+  "Erschöpfung",
+  "Euphorie",
+  "The Last One Standing",
 ];
-// Duplicate so the looping translate covers a full screen.
-const sequence = [...items, ...items, ...items, ...items];
+
+const rowTwo = [
+  "Dolomites Last Loop",
+  "Un Loop",
+  "Nessuna Scusa",
+  "Dobbiaco",
+  "6,71 km",
+  "Backyard Ultra",
+  "Notte",
+  "Stanchezza",
+  "Euforia",
+  "The Last One Standing",
+];
+
+const dupe = (a: string[]) => [...a, ...a, ...a, ...a];
+const r1 = dupe(rowOne);
+const r2 = dupe(rowTwo);
 ---
 
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    {
-      sequence.map((label) => (
-        <span class="marquee-item">
-          <span>{label}</span>
-          <span class="dot">·</span>
-        </span>
-      ))
-    }
+<div class:list={["marquee", `marquee-${variant}`]} aria-hidden="true">
+  <div class="row row-left">
+    <div class="track">
+      {
+        r1.map((label) => (
+          <span class="item">
+            <span>{label}</span>
+            <span class="dot">·</span>
+          </span>
+        ))
+      }
+    </div>
+  </div>
+  <div class="row row-right">
+    <div class="track track-reverse">
+      {
+        r2.map((label) => (
+          <span class="item">
+            <span>{label}</span>
+            <span class="dot">·</span>
+          </span>
+        ))
+      }
+    </div>
   </div>
 </div>
 
 <style>
   .marquee {
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .marquee-primary {
     background: var(--color-primary);
     color: var(--color-bg);
-    overflow: hidden;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
-  .marquee-track {
+  .marquee-muted {
+    background: var(--color-bg-alt);
+    color: var(--color-text);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .row {
+    overflow: hidden;
+    padding: var(--space-3) 0;
+  }
+  .row + .row {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .marquee-muted .row + .row {
+    border-top-color: var(--color-border);
+  }
+
+  .track {
     display: inline-flex;
     align-items: center;
     gap: 0;
-    padding: var(--space-4) 0;
     white-space: nowrap;
-    animation: marquee 30s linear infinite;
+    animation: marqueeLeft 32s linear infinite;
     will-change: transform;
   }
-  .marquee-item {
+  .track-reverse {
+    animation: marqueeRight 38s linear infinite;
+  }
+  .item {
     display: inline-flex;
     align-items: center;
     gap: var(--space-4);
     font-family: var(--font-display);
-    font-size: 1.25rem;
-    letter-spacing: 0.18em;
+    font-size: 1.2rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     padding-right: var(--space-4);
   }
-  .marquee-item .dot {
+  .item .dot {
     opacity: 0.5;
   }
 
-  @keyframes marquee {
+  @keyframes marqueeLeft {
     from {
       transform: translateX(0);
     }
     to {
-      transform: translateX(-25%); /* one-quarter, matching the 4x duplication */
+      transform: translateX(-25%);
+    }
+  }
+  @keyframes marqueeRight {
+    from {
+      transform: translateX(-25%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      animation: none !important;
     }
   }
 </style>

@@ -14,6 +14,7 @@ const slides = [
   { src: "/images/emotion-smile.jpg", pos: "center 15%" },
   { src: "/images/night-camp.jpg", pos: "center center" },
 ];
+const SLIDE_DURATION_MS = 6000;
 ---
 
 <section class="hero" aria-label={t("hero.title")}>
@@ -33,20 +34,28 @@ const slides = [
 
   <div class="container hero-inner">
     <p class="hero-eyebrow reveal">2027</p>
+
     <h1 class="hero-title hero-title-anim" data-hero-title>
       {t("hero.title")}
     </h1>
-    <p class="hero-subtitle hero-fade" data-delay="300">{t("hero.subtitle")}</p>
-    <p class="hero-teaser hero-fade" data-delay="450">{t("hero.teaser")}</p>
 
-    <div class="hero-cta hero-rise" data-delay="600">
-      <a class="btn btn-primary" href={localizePath("/anmeldung", lang)}>
+    <div class="hero-rule" aria-hidden="true">
+      <span></span>
+    </div>
+
+    <p class="hero-subtitle hero-fade" data-delay="350">{t("hero.subtitle")}</p>
+    <p class="hero-teaser hero-fade" data-delay="500">{t("hero.teaser")}</p>
+
+    <div class="hero-cta hero-rise" data-delay="650">
+      <a class="btn btn-primary btn-arrow" href={localizePath("/anmeldung", lang)}>
         {t("hero.cta_signup")}
       </a>
-      <a class="btn btn-on-dark" href={localizePath("/race-info", lang)}>
+      <a class="btn btn-on-dark btn-arrow" href={localizePath("/race-info", lang)}>
         {t("hero.cta_more")}
       </a>
     </div>
+
+    <p class="hero-subtext hero-fade" data-delay="900">{t("hero.subtext")}</p>
   </div>
 
   <div class="hero-dots" role="tablist" aria-label="Slide navigation">
@@ -54,25 +63,22 @@ const slides = [
       slides.map((_, i) => (
         <button
           type="button"
-          class:list={["dot", { active: i === 0 }]}
+          class:list={["bar", { active: i === 0 }]}
           data-dot={i}
           role="tab"
           aria-label={`Slide ${i + 1}`}
-        />
+        >
+          <span class="bar-fill" />
+        </button>
       ))
     }
   </div>
-
-  <a class="hero-scroll-cue" href="#after-hero" aria-label="Scroll">
-    <span class="cue-line"></span>
-    <span class="cue-arrow">↓</span>
-  </a>
 
   <span class="hero-credit">© Harald Wisthaler</span>
   <span id="after-hero" aria-hidden="true"></span>
 </section>
 
-<style>
+<style define:vars={{ slideMs: SLIDE_DURATION_MS + "ms" }}>
   .hero {
     position: relative;
     min-height: 100vh;
@@ -107,25 +113,25 @@ const slides = [
     transform: scale(1.12);
   }
 
+  /* Dramatic gradient from top to bottom */
   .hero-overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.3) 30%,
-      rgba(0, 0, 0, 0.42) 70%,
-      rgba(0, 0, 0, 0.7) 100%
+      rgba(20, 35, 55, 0.3) 0%,
+      rgba(20, 35, 55, 0.45) 40%,
+      rgba(20, 35, 55, 0.7) 80%,
+      rgba(20, 35, 55, 0.85) 100%
     );
   }
-
   .hero-vignette {
     position: absolute;
     inset: 0;
     background: radial-gradient(
       ellipse at center,
-      transparent 35%,
-      rgba(0, 0, 0, 0.5) 100%
+      transparent 30%,
+      rgba(0, 0, 0, 0.55) 100%
     );
     pointer-events: none;
   }
@@ -153,14 +159,19 @@ const slides = [
     backdrop-filter: blur(6px);
   }
 
-  /* Letter-spacing reveal for hero title */
   .hero-title {
-    font-size: clamp(3.5rem, 9vw, 8.5rem);
+    font-size: clamp(3.5rem, 10vw, 9.5rem);
     margin-bottom: var(--space-4);
     color: #ffffff;
     text-shadow: 0 4px 30px rgba(0, 0, 0, 0.55);
     line-height: 0.95;
   }
+  @media (max-width: 600px) {
+    .hero-title {
+      font-size: clamp(3rem, 18vw, 6rem);
+    }
+  }
+
   .hero-title-anim {
     opacity: 0;
     letter-spacing: -0.5em;
@@ -172,11 +183,32 @@ const slides = [
   }
   .hero-title-anim.is-on {
     opacity: 1;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     transform: none;
   }
 
-  /* Sequential fades */
+  /* Thin line under title that draws in */
+  .hero-rule {
+    height: 1px;
+    width: min(280px, 60vw);
+    margin: 0 auto var(--space-6);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .hero-rule span {
+    display: block;
+    height: 100%;
+    background: #ffffff;
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: heroRule 2s 700ms var(--ease-emphasis) forwards;
+  }
+  @keyframes heroRule {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
   .hero-fade,
   .hero-rise {
     opacity: 0;
@@ -198,8 +230,8 @@ const slides = [
 
   .hero-subtitle {
     font-family: var(--font-display);
-    font-size: clamp(1rem, 2vw, 1.5rem);
-    letter-spacing: 0.42em;
+    font-size: clamp(0.95rem, 2vw, 1.45rem);
+    letter-spacing: 0.5em;
     color: rgba(255, 255, 255, 0.92);
     text-transform: uppercase;
     margin-bottom: var(--space-6);
@@ -222,6 +254,18 @@ const slides = [
     gap: var(--space-4);
     justify-content: center;
     flex-wrap: wrap;
+    margin-bottom: var(--space-7);
+  }
+
+  .hero-subtext {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 400;
+    margin: 0 auto;
+    max-width: 50ch;
   }
 
   .hero-credit {
@@ -236,132 +280,118 @@ const slides = [
     z-index: 2;
   }
 
+  /* Slide-progress bar dots */
   .hero-dots {
     position: absolute;
-    bottom: calc(var(--space-7) + var(--space-3));
+    bottom: var(--space-6);
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: var(--space-3);
     z-index: 2;
   }
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.35);
+  .bar {
+    position: relative;
+    width: 44px;
+    height: 2px;
     border: none;
+    padding: var(--space-2) 0;
+    background: transparent;
     cursor: pointer;
-    padding: 0;
-    transition: background var(--transition), transform var(--transition),
-      box-shadow var(--transition);
+    overflow: visible;
   }
-  .dot:hover {
+  .bar::before {
+    content: "";
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.35);
+    transition: background var(--transition);
+  }
+  .bar:hover::before {
     background: rgba(255, 255, 255, 0.7);
   }
-  .dot.active {
+  .bar-fill {
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 2px;
     background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.18);
-    transform: scale(1.1);
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+  .bar.active .bar-fill {
+    animation: barFill var(--slideMs) linear forwards;
+  }
+  @keyframes barFill {
+    to {
+      transform: scaleX(1);
+    }
+  }
+  .bar.active::before {
+    background: rgba(255, 255, 255, 0.85);
   }
 
-  .hero-scroll-cue {
-    position: absolute;
-    bottom: var(--space-6);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2);
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 1.4rem;
-    text-decoration: none;
-  }
-  .cue-line {
-    width: 1px;
-    height: 44px;
-    background: linear-gradient(
-      180deg,
-      transparent,
-      rgba(255, 255, 255, 0.7),
-      transparent
-    );
-    animation: cueLine 2.4s var(--ease) infinite;
-  }
-  .cue-arrow {
-    line-height: 1;
-    animation: cueArrow 2.4s var(--ease) infinite;
-  }
-  @keyframes cueLine {
-    0%, 100% { opacity: 0.35; }
-    50% { opacity: 1; }
-  }
-  @keyframes cueArrow {
-    0%, 100% { transform: translateY(0); opacity: 0.7; }
-    50% { transform: translateY(4px); opacity: 1; }
-  }
   @media (prefers-reduced-motion: reduce) {
-    .cue-line,
-    .cue-arrow,
-    .slide {
-      animation: none;
-      transition: opacity 200ms linear;
-      transform: none !important;
-    }
+    .slide,
     .hero-title-anim,
     .hero-fade,
-    .hero-rise {
-      opacity: 1;
-      letter-spacing: normal;
+    .hero-rise,
+    .hero-rule span,
+    .bar-fill {
+      animation: none !important;
+      transition: opacity 200ms linear;
+      opacity: 1 !important;
+      letter-spacing: normal !important;
       transform: none !important;
-      transition: none !important;
     }
   }
 </style>
 
-<script>
-  // ─────────────────────── Slideshow ───────────────────────
-  const slides = Array.from(document.querySelectorAll<HTMLElement>("[data-slide]"));
-  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-dot]"));
+<script define:vars={{ duration: SLIDE_DURATION_MS }}>
+  // Slideshow with line-fill animation reset
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const bars = Array.from(document.querySelectorAll(".bar"));
   let active = 0;
-  let timer: number | undefined;
+  let timer;
 
-  function show(i: number) {
+  function show(i) {
     slides[active]?.classList.remove("active");
-    dots[active]?.classList.remove("active");
+    bars[active]?.classList.remove("active");
     active = (i + slides.length) % slides.length;
     slides[active]?.classList.add("active");
-    dots[active]?.classList.add("active");
+    bars[active]?.classList.add("active");
+    // force reflow so the fill animation restarts
+    const fill = bars[active]?.querySelector(".bar-fill");
+    if (fill) {
+      fill.style.animation = "none";
+      void fill.offsetWidth;
+      fill.style.animation = "";
+    }
   }
 
   function startAuto() {
     if (slides.length < 2) return;
-    timer = window.setInterval(() => show(active + 1), 6000);
+    timer = setInterval(() => show(active + 1), duration);
   }
-
   function pauseAuto() {
     if (timer) {
       clearInterval(timer);
       timer = undefined;
     }
   }
-
-  dots.forEach((d, i) =>
-    d.addEventListener("click", () => {
+  bars.forEach((b, i) =>
+    b.addEventListener("click", () => {
       pauseAuto();
       show(i);
       startAuto();
     }),
   );
-
   if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     startAuto();
   }
 
-  // ─────────────────────── Parallax 0.5x ───────────────────
-  const stage = document.querySelector<HTMLElement>(".hero-stage");
+  // Parallax 0.5x
+  const stage = document.querySelector(".hero-stage");
   let raf = 0;
   function applyParallax() {
     if (!stage) return;
@@ -379,13 +409,10 @@ const slides = [
     );
   }
 
-  // ─────────────────────── Title letter-spacing reveal ───────
-  // Run on next frame so the initial state paints first.
+  // Sequential reveals
   requestAnimationFrame(() => {
     document
-      .querySelectorAll<HTMLElement>(
-        ".hero-title-anim, .hero-fade, .hero-rise",
-      )
+      .querySelectorAll(".hero-title-anim, .hero-fade, .hero-rise")
       .forEach((el) => {
         const delay = Number(el.dataset.delay || "0");
         setTimeout(() => el.classList.add("is-on"), delay);

@@ -1,0 +1,147 @@
+---
+import { useTranslations, type Lang } from "@i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="story" aria-label={t("story.title")}>
+  <div class="story-grid">
+    <div class="story-text">
+      <div class="story-inner">
+        <span class="eyebrow on-dark">{t("story.eyebrow")}</span>
+        <h2 class="reveal reveal-left" data-delay="100">{t("story.title")}</h2>
+
+        <p class="story-lead reveal" data-delay="200">{t("story.text")}</p>
+
+        <ul class="facts">
+          <li class="fact reveal" data-delay="300">
+            <span class="fact-mark" aria-hidden="true">01</span>
+            <span class="fact-text">{t("story.fact1")}</span>
+          </li>
+          <li class="fact reveal" data-delay="450">
+            <span class="fact-mark" aria-hidden="true">02</span>
+            <span class="fact-text">{t("story.fact2")}</span>
+          </li>
+          <li class="fact reveal" data-delay="600">
+            <span class="fact-mark" aria-hidden="true">03</span>
+            <span class="fact-text">{t("story.fact3")}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="story-photo" aria-hidden="true">
+      <img src="/images/day-running-1.jpg" alt="" loading="lazy" />
+      <div class="photo-overlay"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story {
+    background: #1a2a3a;
+    color: #ffffff;
+    isolation: isolate;
+  }
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 70vh;
+  }
+  @media (max-width: 900px) {
+    .story-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .story-text {
+    display: flex;
+    align-items: center;
+    padding: var(--space-9) var(--space-6);
+  }
+  .story-inner {
+    max-width: 520px;
+  }
+  .story-text h2 {
+    color: #ffffff;
+    margin-bottom: var(--space-5);
+  }
+  .story-lead {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.15rem;
+    margin-bottom: var(--space-7);
+    max-width: 50ch;
+  }
+
+  .facts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+  .fact {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: var(--space-4);
+    align-items: center;
+    padding: var(--space-4) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .fact:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .fact-mark {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.45);
+  }
+  .fact-text {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: #ffffff;
+  }
+
+  .story-photo {
+    position: relative;
+    overflow: hidden;
+    min-height: 360px;
+  }
+  .story-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 1500ms var(--ease-emphasis);
+  }
+  .story:hover .story-photo img {
+    transform: scale(1.04);
+  }
+  .photo-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(26, 42, 58, 0.5) 0%,
+      rgba(26, 42, 58, 0.25) 30%,
+      rgba(26, 42, 58, 0) 70%
+    );
+  }
+
+  .eyebrow.on-dark {
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .eyebrow.on-dark::before {
+    background: rgba(255, 255, 255, 0.6);
+  }
+</style>

@@ -1,7 +1,13 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/Hero.astro";
+import EmotionQuote from "@components/EmotionQuote.astro";
+import AthletesEmotion from "@components/AthletesEmotion.astro";
+import StorySplit from "@components/StorySplit.astro";
 import Marquee from "@components/Marquee.astro";
+import FullBleedImage from "@components/FullBleedImage.astro";
+import Testimonials from "@components/Testimonials.astro";
+import FilmTeaser from "@components/FilmTeaser.astro";
 import Newsletter from "@components/Newsletter.astro";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 
@@ -17,10 +23,15 @@ const t = useTranslations(lang);
 <BaseLayout lang={lang}>
   <Hero lang={lang} />
 
+  <EmotionQuote lang={lang} />
+
   <section class="section" id="features">
     <div class="container">
-      <p class="eyebrow reveal">USP</p>
-      <h2 class="reveal reveal-left" data-delay="100">{t("home.features.title")}</h2>
+      <div class="section-head reveal">
+        <span class="eyebrow">USP</span>
+        <h2 class="reveal-left" data-delay="100">{t("home.features.title")}</h2>
+      </div>
+
       <div class="grid grid-2 mt-6">
         <article class="card reveal" data-delay="100">
           <h3>{t("home.features.location.title")}</h3>
@@ -42,7 +53,13 @@ const t = useTranslations(lang);
     </div>
   </section>
 
-  <Marquee />
+  <AthletesEmotion lang={lang} />
+
+  <StorySplit lang={lang} />
+
+  <Marquee variant="primary" />
+
+  <FullBleedImage lang={lang} src="/images/day-running-2.jpg" />
 
   <!-- Cinematic 2026 retrospective -->
   <section class="retro" aria-labelledby="retro-title">
@@ -62,7 +79,11 @@ const t = useTranslations(lang);
 
       <div class="retro-stats reveal" data-delay="300">
         <div class="retro-stat">
-          <span class="num" data-counter="101" data-duration="1500">0</span>
+          <span
+            class="num"
+            data-counter="101"
+            data-duration="1500"
+          >0</span>
           <span class="lbl">{t("home.archive.stat.starters")}</span>
         </div>
         <div class="retro-stat">
@@ -82,10 +103,10 @@ const t = useTranslations(lang);
       </div>
 
       <div class="retro-cta reveal" data-delay="400">
-        <a class="btn btn-primary" href={localizePath("/galerie", lang)}>
-          {t("home.archive.gallery")} →
+        <a class="btn btn-primary btn-arrow" href={localizePath("/galerie", lang)}>
+          {t("home.archive.gallery")}
         </a>
-        <a class="btn btn-on-dark" href={localizePath("/ergebnisse", lang)}>
+        <a class="btn btn-on-dark btn-arrow" href={localizePath("/ergebnisse", lang)}>
           {t("home.archive.link")}
         </a>
       </div>
@@ -93,6 +114,10 @@ const t = useTranslations(lang);
 
     <span class="retro-credit">© Harald Wisthaler</span>
   </section>
+
+  <Testimonials lang={lang} />
+
+  <FilmTeaser lang={lang} />
 
   <Newsletter lang={lang} />
 </BaseLayout>
@@ -120,15 +145,11 @@ const t = useTranslations(lang);
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(
-        180deg,
-        rgba(26, 42, 58, 0.5),
-        rgba(26, 42, 58, 0.7)
-      ),
+      linear-gradient(180deg, rgba(20, 35, 55, 0.6), rgba(20, 35, 55, 0.78)),
       radial-gradient(
         ellipse at center,
-        rgba(26, 42, 58, 0.2),
-        rgba(26, 42, 58, 0.7)
+        rgba(20, 35, 55, 0.2),
+        rgba(20, 35, 55, 0.7)
       );
   }
   .retro-inner {
@@ -136,10 +157,10 @@ const t = useTranslations(lang);
     text-align: center;
   }
   .eyebrow.on-dark {
-    color: #ffd9b8;
+    color: #ffffff;
   }
   .eyebrow.on-dark::before {
-    background: #ffd9b8;
+    background: rgba(255, 255, 255, 0.6);
   }
   .retro-title {
     color: #ffffff;
@@ -169,6 +190,10 @@ const t = useTranslations(lang);
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
+    transition: transform var(--transition);
+  }
+  .retro-stat:hover {
+    transform: scale(1.04);
   }
   .retro-stat .num {
     font-family: var(--font-display);

@@ -1,0 +1,125 @@
+---
+import { useTranslations, type Lang } from "@i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// These quotes stay in the runner's original language on purpose.
+const items = [
+  {
+    quote:
+      "Die härteste Nacht meines Lebens. Und ich würde es sofort wieder tun.",
+    name: "Thomas K.",
+    country: "Deutschland",
+    year: 2026,
+  },
+  {
+    quote: "Non sapevo che il mio corpo potesse fare questo.",
+    name: "Marco R.",
+    country: "Italia",
+    year: 2026,
+  },
+  {
+    quote:
+      "After loop 12, every step is a choice. That’s the beauty of it.",
+    name: "Sarah M.",
+    country: "Austria",
+    year: 2026,
+  },
+];
+---
+
+<section class="testimonials section">
+  <div class="container">
+    <div class="section-head reveal text-center">
+      <span class="eyebrow">{t("testimonials.eyebrow")}</span>
+      <h2 class="reveal-left">{t("testimonials.title")}</h2>
+    </div>
+
+    <div class="grid grid-3 mt-7">
+      {
+        items.map((it, idx) => (
+          <article class="t-card reveal" data-delay={String(idx * 120)}>
+            <span class="t-mark" aria-hidden="true">“</span>
+            <blockquote>
+              <p>{it.quote}</p>
+              <footer>
+                <span class="t-name">{it.name}</span>
+                <span class="t-meta">
+                  {it.country} · {it.year}
+                </span>
+              </footer>
+            </blockquote>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .t-card {
+    position: relative;
+    padding: var(--space-7) var(--space-6) var(--space-6);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition),
+      border-color var(--transition);
+  }
+  .t-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--color-primary-light);
+  }
+
+  .t-mark {
+    position: absolute;
+    top: -8px;
+    left: var(--space-5);
+    font-family: var(--font-display);
+    font-size: 6rem;
+    line-height: 0.7;
+    color: var(--color-primary);
+    opacity: 0.16;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .t-card blockquote {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .t-card blockquote p {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+  .t-card footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .t-name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+  .t-meta {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+</style>

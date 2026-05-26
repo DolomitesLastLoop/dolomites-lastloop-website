@@ -32,6 +32,38 @@ export const ui = {
       "Das erste Backyard Ultra Rennen in den Dolomiten. Am 15. Mai 2027 in Toblach.",
     "hero.cta_signup": "Jetzt anmelden",
     "hero.cta_more": "Mehr erfahren",
+    "hero.subtext":
+      "Nacht. Erschöpfung. Euphorie. Und dann noch eine Runde.",
+
+    "emotion.quote":
+      "Der letzte Läufer, der noch eine Runde schafft, gewinnt.",
+    "emotion.attribution": "— Backyard Ultra Regel Nr. 1",
+
+    "athletes.eyebrow": "Athleten",
+    "athletes.col1.overlay": "Stunde 18",
+    "athletes.col2.overlay": "101 Athleten. Ein Ziel.",
+    "athletes.col3.overlay": "Noch eine Runde.",
+    "athletes.tagline":
+      "Backyard Ultra – wo Grenzen neu definiert werden.",
+
+    "story.eyebrow": "Das Format",
+    "story.title": "Was ist Backyard Ultra?",
+    "story.fact1": "6,71 km",
+    "story.fact2": "jede Stunde",
+    "story.fact3": "bis einer übrig bleibt",
+    "story.text":
+      "Ein Loop. Jede volle Stunde. Wer pünktlich zurück ist, läuft weiter. Wer es nicht schafft, ist raus.",
+
+    "fullbleed.credit": "© Harald Wisthaler",
+
+    "testimonials.eyebrow": "Stimmen",
+    "testimonials.title": "Aus der Nacht von 2026",
+
+    "film.eyebrow": "Race Film",
+    "film.tagline": "Der Film zur Première 2026 – coming soon",
+    "film.play": "Film abspielen",
+
+    "ui.scroll_top": "Nach oben",
 
     "home.features.title": "Was macht dieses Rennen besonders?",
     "home.features.location.title": "Herz der Dolomiten",
@@ -235,6 +267,38 @@ export const ui = {
       "La prima Backyard Ultra delle Dolomiti. Il 15 maggio 2027 a Dobbiaco.",
     "hero.cta_signup": "Iscriviti ora",
     "hero.cta_more": "Scopri di più",
+    "hero.subtext":
+      "Notte. Stanchezza. Euforia. E poi un altro giro.",
+
+    "emotion.quote":
+      "Vince l’ultimo atleta che riesce a completare un giro.",
+    "emotion.attribution": "— Regola n.1 della Backyard Ultra",
+
+    "athletes.eyebrow": "Atleti",
+    "athletes.col1.overlay": "Ora 18",
+    "athletes.col2.overlay": "101 atleti. Un obiettivo.",
+    "athletes.col3.overlay": "Un altro giro.",
+    "athletes.tagline":
+      "Backyard Ultra – dove i limiti vengono ridefiniti.",
+
+    "story.eyebrow": "Il formato",
+    "story.title": "Cos’è la Backyard Ultra?",
+    "story.fact1": "6,71 km",
+    "story.fact2": "ogni ora",
+    "story.fact3": "finché ne resta uno",
+    "story.text":
+      "Un loop. Ogni ora esatta. Chi rientra in tempo riparte. Chi non ce la fa è fuori.",
+
+    "fullbleed.credit": "© Harald Wisthaler",
+
+    "testimonials.eyebrow": "Voci",
+    "testimonials.title": "Dalla notte del 2026",
+
+    "film.eyebrow": "Race Film",
+    "film.tagline": "Il film della Première 2026 – coming soon",
+    "film.play": "Riproduci il film",
+
+    "ui.scroll_top": "Torna su",
 
     "home.features.title": "Cosa rende speciale questa gara?",
     "home.features.location.title": "Cuore delle Dolomiti",
@@ -439,6 +503,38 @@ export const ui = {
       "The first Backyard Ultra race in the Dolomites. May 15, 2027 in Toblach.",
     "hero.cta_signup": "Sign up now",
     "hero.cta_more": "Learn more",
+    "hero.subtext":
+      "Night. Exhaustion. Euphoria. And then one more loop.",
+
+    "emotion.quote":
+      "The last runner to complete one more loop wins.",
+    "emotion.attribution": "— Backyard Ultra Rule No. 1",
+
+    "athletes.eyebrow": "Athletes",
+    "athletes.col1.overlay": "Hour 18",
+    "athletes.col2.overlay": "101 athletes. One goal.",
+    "athletes.col3.overlay": "One more loop.",
+    "athletes.tagline":
+      "Backyard Ultra – where limits are redefined.",
+
+    "story.eyebrow": "The format",
+    "story.title": "What is Backyard Ultra?",
+    "story.fact1": "6.71 km",
+    "story.fact2": "every hour",
+    "story.fact3": "until one is left",
+    "story.text":
+      "One loop. Every hour on the hour. Back in time, you run again. Miss it, you’re out.",
+
+    "fullbleed.credit": "© Harald Wisthaler",
+
+    "testimonials.eyebrow": "Voices",
+    "testimonials.title": "From the night of 2026",
+
+    "film.eyebrow": "Race Film",
+    "film.tagline": "The film of the 2026 Première – coming soon",
+    "film.play": "Play film",
+
+    "ui.scroll_top": "Back to top",
 
     "home.features.title": "What makes this race special?",
     "home.features.location.title": "Heart of the Dolomites",
