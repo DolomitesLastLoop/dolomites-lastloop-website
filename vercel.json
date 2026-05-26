@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
-  "nodeVersion": "20.x",
   "headers": [
     {
       "source": "/api/stripe-webhook",
