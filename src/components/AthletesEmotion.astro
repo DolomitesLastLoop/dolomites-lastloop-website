@@ -1,16 +1,28 @@
 ---
 import { useTranslations, type Lang } from "@i18n/utils";
 
+interface Slot {
+  src: string;
+  position?: string;
+}
 interface Props {
   lang: Lang;
+  col1?: Slot;
+  col2?: Slot;
+  col3?: Slot;
 }
-const { lang } = Astro.props;
+const {
+  lang,
+  col1 = { src: "/images/night-runners.jpg", position: "center 20%" },
+  col2 = { src: "/images/hero-start.jpg", position: "center center" },
+  col3 = { src: "/images/emotion-smile.jpg", position: "center 15%" },
+} = Astro.props;
 const t = useTranslations(lang);
 
 const cols = [
-  { src: "/images/night-runners.jpg", overlay: t("athletes.col1.overlay") },
-  { src: "/images/hero-start.jpg", overlay: t("athletes.col2.overlay"), wide: true },
-  { src: "/images/emotion-smile.jpg", overlay: t("athletes.col3.overlay") },
+  { src: col1.src, position: col1.position ?? "center 20%", overlay: t("athletes.col1.overlay") },
+  { src: col2.src, position: col2.position ?? "center center", overlay: t("athletes.col2.overlay"), wide: true },
+  { src: col3.src, position: col3.position ?? "center 20%", overlay: t("athletes.col3.overlay") },
 ];
 ---
 
@@ -27,7 +39,12 @@ const cols = [
             class:list={["col reveal reveal-scale", { wide: c.wide }]}
             data-delay={String(idx * 120)}
           >
-            <img src={c.src} alt="" loading="lazy" />
+            <img
+              src={c.src}
+              alt=""
+              loading="lazy"
+              style={`object-position:${c.position}`}
+            />
             <figcaption>
               <span class="overlay-text">{c.overlay}</span>
             </figcaption>

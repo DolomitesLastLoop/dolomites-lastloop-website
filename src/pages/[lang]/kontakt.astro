@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
+import { photo, pos } from "@lib/photos";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 export const prerender = false;
@@ -11,8 +12,8 @@ const t = useTranslations(lang);
 
 <BaseLayout lang={lang} title={t("contact.title")}>
   <PageHero
-    bg="/images/hero-start.jpg"
-    position="center 35%"
+    bg={photo.start_atmosphere_b}
+    position={pos.group}
     eyebrow={t("contact.eyebrow")}
     title={t("contact.title")}
     subtitle={t("contact.subtitle")}
@@ -50,7 +51,12 @@ const t = useTranslations(lang);
 
       <aside class="info reveal" data-delay="100">
         <figure class="info-photo reveal-scale">
-          <img src="/images/portrait-exhausted.jpg" alt="" loading="lazy" />
+          <img
+            src={photo.start_close}
+            alt=""
+            loading="lazy"
+            style={`object-position:${pos.portrait}`}
+          />
         </figure>
 
         <div class="info-list mt-5">

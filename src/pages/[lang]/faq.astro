@@ -2,6 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
 import FullBleedImage from "@components/FullBleedImage.astro";
+import { photo, pos } from "@lib/photos";
 import { useTranslations, type Lang } from "@i18n/utils";
 import { faq } from "@i18n/faq";
 
@@ -14,8 +15,8 @@ const content = faq[lang];
 
 <BaseLayout lang={lang} title={t("faq.title")}>
   <PageHero
-    bg="/images/night-camp.jpg"
-    position="center 40%"
+    bg={photo.night_camp}
+    position={pos.landscape}
     eyebrow={t("faq.eyebrow")}
     title={t("faq.title")}
     subtitle={t("faq.subtitle")}
@@ -46,7 +47,7 @@ const content = faq[lang];
     </div>
   </section>
 
-  <FullBleedImage lang={lang} src="/images/night-runners.jpg" />
+  <FullBleedImage lang={lang} src={photo.night_runners} position={pos.portrait} />
 
   <section class="section">
     <div class="container-narrow">

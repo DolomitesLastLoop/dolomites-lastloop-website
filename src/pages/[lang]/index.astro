@@ -8,6 +8,7 @@ import Marquee from "@components/Marquee.astro";
 import FullBleedImage from "@components/FullBleedImage.astro";
 import Testimonials from "@components/Testimonials.astro";
 import Newsletter from "@components/Newsletter.astro";
+import { photo, pos } from "@lib/photos";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 
 export const prerender = false;
@@ -22,7 +23,13 @@ const t = useTranslations(lang);
 <BaseLayout lang={lang}>
   <Hero lang={lang} />
 
-  <EmotionQuote lang={lang} />
+  <EmotionQuote
+    lang={lang}
+    left={photo.portrait_exhausted}
+    leftPos={pos.portrait}
+    right={photo.night_intense}
+    rightPos={pos.portrait}
+  />
 
   <section class="section" id="features">
     <div class="container">
@@ -52,18 +59,28 @@ const t = useTranslations(lang);
     </div>
   </section>
 
-  <AthletesEmotion lang={lang} />
+  <AthletesEmotion
+    lang={lang}
+    col1={{ src: photo.night_focus, position: pos.portrait }}
+    col2={{ src: photo.start_group, position: pos.group }}
+    col3={{ src: photo.portrait_a, position: pos.portrait }}
+  />
 
-  <StorySplit lang={lang} />
+  <StorySplit lang={lang} photo={photo.course_runner_c} position={pos.upper} />
 
   <Marquee variant="primary" />
 
-  <FullBleedImage lang={lang} src="/images/day-running-2.jpg" />
+  <FullBleedImage lang={lang} src={photo.day_running_2} position={pos.landscape} />
 
   <!-- Cinematic 2026 retrospective -->
   <section class="retro" aria-labelledby="retro-title">
     <div class="retro-bg" aria-hidden="true">
-      <img src="/images/hero-start.jpg" alt="" loading="lazy" />
+      <img
+        src={photo.start_atmosphere_a}
+        alt=""
+        loading="lazy"
+        style={`object-position:${pos.group}`}
+      />
       <div class="retro-overlay"></div>
     </div>
 

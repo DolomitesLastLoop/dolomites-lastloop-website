@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
+import { photo, pos } from "@lib/photos";
 import { useTranslations, type Lang } from "@i18n/utils";
 import { getAdminClient, MAX_PARTICIPANTS } from "@lib/supabase";
 import { TICKET_TIERS } from "@lib/stripe";
@@ -37,15 +38,20 @@ const maxISO = maxDate.toISOString().slice(0, 10);
 
 <BaseLayout lang={lang} title={t("signup.title")}>
   <PageHero
-    bg="/images/emotion-smile.jpg"
-    position="center 15%"
+    bg={photo.emotion_smile}
+    position={pos.faceTight}
     eyebrow={t("signup.eyebrow")}
     title={t("signup.hero_title")}
     subtitle={t("signup.hero_subtitle")}
   />
 
   <div class="strip">
-    <img src="/images/day-running-2.jpg" alt="" loading="lazy" />
+    <img
+      src={photo.course_anmeldung}
+      alt=""
+      loading="lazy"
+      style={`object-position:${pos.landscape}`}
+    />
   </div>
 
   <div class="badges container">
@@ -297,7 +303,12 @@ const maxISO = maxDate.toISOString().slice(0, 10);
 
       <aside class="signup-side">
         <figure class="side-photo reveal reveal-scale">
-          <img src="/images/emotion-smile.jpg" alt="" loading="lazy" />
+          <img
+            src={photo.portrait_b}
+            alt=""
+            loading="lazy"
+            style={`object-position:${pos.portrait}`}
+          />
         </figure>
 
         <ul class="side-facts">

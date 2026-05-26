@@ -3,18 +3,28 @@ import { useTranslations, type Lang } from "@i18n/utils";
 
 interface Props {
   lang: Lang;
+  left?: string;
+  right?: string;
+  leftPos?: string;
+  rightPos?: string;
 }
-const { lang } = Astro.props;
+const {
+  lang,
+  left = "/images/emotion-smile.jpg",
+  right = "/images/night-runners.jpg",
+  leftPos = "center 20%",
+  rightPos = "center 20%",
+} = Astro.props;
 const t = useTranslations(lang);
 ---
 
 <section class="emotion" aria-label={t("emotion.quote")}>
   <aside class="strip strip-left" aria-hidden="true">
-    <img src="/images/emotion-smile.jpg" alt="" loading="lazy" />
+    <img src={left} alt="" loading="lazy" style={`object-position:${leftPos}`} />
   </aside>
 
   <aside class="strip strip-right" aria-hidden="true">
-    <img src="/images/night-runners.jpg" alt="" loading="lazy" />
+    <img src={right} alt="" loading="lazy" style={`object-position:${rightPos}`} />
   </aside>
 
   <svg

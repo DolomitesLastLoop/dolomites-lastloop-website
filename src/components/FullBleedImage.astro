@@ -5,14 +5,20 @@ interface Props {
   lang: Lang;
   src?: string;
   alt?: string;
+  position?: string;
 }
-const { lang, src = "/images/day-running-2.jpg", alt = "" } = Astro.props;
+const {
+  lang,
+  src = "/images/day-running-2.jpg",
+  alt = "",
+  position = "center center",
+} = Astro.props;
 const t = useTranslations(lang);
 ---
 
 <section class="fb" aria-hidden={alt ? undefined : "true"}>
   <div class="fb-stage" data-fb-parallax>
-    <img src={src} alt={alt} loading="lazy" />
+    <img src={src} alt={alt} loading="lazy" style={`object-position:${position}`} />
   </div>
   <span class="fb-credit">{t("fullbleed.credit")}</span>
 </section>

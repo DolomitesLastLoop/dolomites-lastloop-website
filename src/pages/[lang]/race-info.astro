@@ -3,6 +3,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
 import StorySplit from "@components/StorySplit.astro";
 import FullBleedImage from "@components/FullBleedImage.astro";
+import { photo, pos } from "@lib/photos";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 export const prerender = false;
@@ -31,16 +32,16 @@ const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8
 
 <BaseLayout lang={lang} title={t("race.title")}>
   <PageHero
-    bg="/images/day-runner-portrait.jpg"
-    position="center 30%"
+    bg={photo.day_runner_portrait}
+    position={pos.upper}
     eyebrow={t("race.eyebrow")}
     title={t("race.title")}
     subtitle={t("race.subtitle")}
   />
 
-  <StorySplit lang={lang} />
+  <StorySplit lang={lang} photo={photo.course_runner_a} position={pos.upper} />
 
-  <FullBleedImage lang={lang} src="/images/bib-detail.jpg" />
+  <FullBleedImage lang={lang} src={photo.bib_detail} position={pos.group} />
 
   <section class="section section-alt course">
     <div class="container">
@@ -86,7 +87,12 @@ const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8
         </div>
 
         <figure class="course-photo reveal reveal-scale" data-delay="200">
-          <img src="/images/day-running-1.jpg" alt="" loading="lazy" />
+          <img
+            src={photo.day_running_1}
+            alt=""
+            loading="lazy"
+            style={`object-position:${pos.landscape}`}
+          />
           <figcaption>© Harald Wisthaler</figcaption>
         </figure>
       </div>
@@ -113,7 +119,12 @@ const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8
 
   <section class="rules-section section">
     <div class="rules-bg" aria-hidden="true">
-      <img src="/images/night-headlamp.jpg" alt="" loading="lazy" />
+      <img
+        src={photo.night_headlamp}
+        alt=""
+        loading="lazy"
+        style={`object-position:${pos.landscape}`}
+      />
       <div class="rules-overlay"></div>
     </div>
     <div class="container rules-inner">

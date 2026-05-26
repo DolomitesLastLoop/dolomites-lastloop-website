@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
+import { photo, pos } from "@lib/photos";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 import { getAdminClient, type RaceResult } from "@lib/supabase";
 
@@ -41,8 +42,8 @@ const medalClass = (place: number) =>
 
 <BaseLayout lang={lang} title={t("results.title")}>
   <PageHero
-    bg="/images/day-running-2.jpg"
-    position="center 35%"
+    bg={photo.course_runner_b}
+    position={pos.upper}
     eyebrow={t("results.eyebrow")}
     title={t("results.title")}
     subtitle={t("results.subtitle")}
@@ -81,7 +82,12 @@ const medalClass = (place: number) =>
           <span class="stat-lbl">{t("results.stat.loop")}</span>
         </div>
         <figure class="stat-photo reveal reveal-scale" data-delay="400">
-          <img src="/images/emotion-smile.jpg" alt="" loading="lazy" />
+          <img
+            src={photo.portrait_exhausted}
+            alt=""
+            loading="lazy"
+            style={`object-position:${pos.portrait}`}
+          />
         </figure>
       </div>
     </div>
