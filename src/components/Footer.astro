@@ -12,7 +12,18 @@ const year = 2027;
 <footer class="site-footer">
   <div class="container footer-inner">
     <div class="col col-brand">
-      <span class="footer-brand">Dolomites Last Loop</span>
+      <a class="footer-brand" href={localizePath("/", lang)}>
+        <img
+          src="/images/Logo.jpeg"
+          alt=""
+          width="44"
+          height="44"
+          class="footer-logo"
+          loading="lazy"
+          decoding="async"
+        />
+        <span>Dolomites Last Loop</span>
+      </a>
       <p class="text-dim">{t("site.tagline")}</p>
       <p class="text-dim">{t("footer.org")}</p>
     </div>
@@ -88,12 +99,25 @@ const year = 2027;
   }
 
   .footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
     font-family: var(--font-display);
-    font-size: 1.5rem;
-    letter-spacing: 0.1em;
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    display: block;
     margin-bottom: var(--space-3);
+    color: var(--color-text);
+  }
+  .footer-brand:hover {
+    color: var(--color-primary);
+  }
+  .footer-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #ffffff;
   }
 
   .col h4 {

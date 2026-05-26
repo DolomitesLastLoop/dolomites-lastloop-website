@@ -27,9 +27,9 @@ export const ui = {
     "nav.close": "Schließen",
 
     "hero.title": "Dolomites Last Loop",
-    "hero.subtitle": "Backyard Ultra • Toblach • 15. Mai 2027",
+    "hero.subtitle": "Backyard Ultra · Toblach · 15. Mai 2027",
     "hero.teaser":
-      "Das erste Backyard Ultra Rennen in den Dolomiten. Premiere am 15. Mai 2027.",
+      "Das erste Backyard Ultra Rennen in den Dolomiten. Am 15. Mai 2027 in Toblach.",
     "hero.cta_signup": "Jetzt anmelden",
     "hero.cta_more": "Mehr erfahren",
 
@@ -49,15 +49,19 @@ export const ui = {
 
     "home.newsletter.title": "Bleib auf dem Laufenden",
     "home.newsletter.text":
-      "Erhalte als Erster Updates rund um die Premiere am 15. Mai 2027.",
+      "Erhalte als Erster Updates zur Ausgabe am 15. Mai 2027.",
     "home.newsletter.placeholder": "Deine Email-Adresse",
     "home.newsletter.submit": "Eintragen",
     "home.newsletter.success": "Danke! Du bist auf der Liste.",
     "home.newsletter.error": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
 
-    "home.archive.title": "Ergebnisse-Archiv",
-    "home.archive.first_edition": "Erste Ausgabe – Premiere",
-    "home.archive.link": "Zu den Ergebnissen",
+    "home.archive.title": "2026 – Rückblick",
+    "home.archive.first_edition": "Bilder und Zahlen einer langen Nacht.",
+    "home.archive.link": "Ergebnisse 2026",
+    "home.archive.gallery": "Zur Galerie",
+    "home.archive.stat.starters": "Starter",
+    "home.archive.stat.loop": "km / Loop",
+    "home.archive.stat.hours": "Stunden",
 
     "race.title": "Race Info",
     "race.what.title": "Was ist ein Backyard Ultra?",
@@ -85,7 +89,7 @@ export const ui = {
 
     "signup.title": "Anmeldung",
     "signup.intro":
-      "Sichere dir einen der 150 Startplätze für die Premiere am 15. Mai 2027.",
+      "Sichere dir einen der 150 Startplätze für die Ausgabe am 15. Mai 2027.",
     "signup.step": "Schritt",
     "signup.step1.title": "Persönliche Daten",
     "signup.step2.title": "Ticket & Zahlung",
@@ -132,23 +136,23 @@ export const ui = {
 
     "results.title": "Ergebnisse",
     "results.intro": "Archiv vergangener Ausgaben.",
-    "results.year.2026": "2026 – Erste Ausgabe",
+    "results.year.2026": "2026 – 101 Starter",
     "results.col.place": "Platz",
     "results.col.name": "Name",
     "results.col.nation": "Nation",
     "results.col.loops": "Runden",
     "results.placeholder":
-      "Ergebnisse der Premieren-Ausgabe werden hier nach dem Rennen veröffentlicht.",
+      "Die offiziellen Ergebnisse der Ausgabe 2026 werden hier veröffentlicht.",
     "results.gallery_link":
       "Eindrücke der Ausgabe 2026 in der Galerie ansehen →",
 
     "gallery.title": "Galerie",
-    "gallery.subtitle": "2026 – Première",
+    "gallery.subtitle": "2026 · 101 Starter",
     "gallery.intro":
-      "Bilder von der ersten Ausgabe – Tag und Nacht in den Dolomiten.",
+      "Bilder aus Toblach – Tag und Nacht in den Dolomiten.",
     "gallery.section.day": "Tag",
     "gallery.section.night": "Nacht",
-    "gallery.credit": "© Wisthaler Photography",
+    "gallery.credit": "© Harald Wisthaler – www.wisthaler.com",
     "gallery.close": "Schließen",
     "gallery.alt.hero_start": "Startlinie mit allen Läufern",
     "gallery.alt.day_running_1": "Läufer auf der Strecke am See",
@@ -221,9 +225,9 @@ export const ui = {
     "nav.close": "Chiudi",
 
     "hero.title": "Dolomites Last Loop",
-    "hero.subtitle": "Backyard Ultra • Dobbiaco • 15 maggio 2027",
+    "hero.subtitle": "Backyard Ultra · Dobbiaco · 15 maggio 2027",
     "hero.teaser":
-      "La prima Backyard Ultra delle Dolomiti. Anteprima il 15 maggio 2027.",
+      "La prima Backyard Ultra delle Dolomiti. Il 15 maggio 2027 a Dobbiaco.",
     "hero.cta_signup": "Iscriviti ora",
     "hero.cta_more": "Scopri di più",
 
@@ -243,15 +247,19 @@ export const ui = {
 
     "home.newsletter.title": "Resta aggiornato",
     "home.newsletter.text":
-      "Ricevi per primo gli aggiornamenti sull’anteprima del 15 maggio 2027.",
+      "Ricevi per primo gli aggiornamenti sull’edizione del 15 maggio 2027.",
     "home.newsletter.placeholder": "La tua email",
     "home.newsletter.submit": "Iscriviti",
     "home.newsletter.success": "Grazie! Sei nella lista.",
     "home.newsletter.error": "Qualcosa è andato storto. Riprova.",
 
-    "home.archive.title": "Archivio risultati",
-    "home.archive.first_edition": "Prima edizione – Anteprima",
-    "home.archive.link": "Vai ai risultati",
+    "home.archive.title": "2026 – Sguardo indietro",
+    "home.archive.first_edition": "Immagini e numeri di una lunga notte.",
+    "home.archive.link": "Risultati 2026",
+    "home.archive.gallery": "Vai alla galleria",
+    "home.archive.stat.starters": "Partenti",
+    "home.archive.stat.loop": "km / Loop",
+    "home.archive.stat.hours": "Ore",
 
     "race.title": "Info gara",
     "race.what.title": "Cos’è una Backyard Ultra?",
@@ -279,7 +287,7 @@ export const ui = {
 
     "signup.title": "Iscrizione",
     "signup.intro":
-      "Assicurati uno dei 150 posti per l’anteprima del 15 maggio 2027.",
+      "Assicurati uno dei 150 posti per l’edizione del 15 maggio 2027.",
     "signup.step": "Step",
     "signup.step1.title": "Dati personali",
     "signup.step2.title": "Biglietto & pagamento",
@@ -327,23 +335,23 @@ export const ui = {
 
     "results.title": "Risultati",
     "results.intro": "Archivio delle edizioni passate.",
-    "results.year.2026": "2026 – Prima edizione",
+    "results.year.2026": "2026 – 101 partenti",
     "results.col.place": "Pos.",
     "results.col.name": "Nome",
     "results.col.nation": "Nazione",
     "results.col.loops": "Giri",
     "results.placeholder":
-      "I risultati dell’edizione inaugurale saranno pubblicati qui dopo la gara.",
+      "I risultati ufficiali dell’edizione 2026 saranno pubblicati qui.",
     "results.gallery_link":
       "Guarda le immagini dell’edizione 2026 in galleria →",
 
     "gallery.title": "Galleria",
-    "gallery.subtitle": "2026 – Anteprima",
+    "gallery.subtitle": "2026 · 101 partenti",
     "gallery.intro":
-      "Immagini della prima edizione – giorno e notte tra le Dolomiti.",
+      "Immagini da Dobbiaco – giorno e notte tra le Dolomiti.",
     "gallery.section.day": "Giorno",
     "gallery.section.night": "Notte",
-    "gallery.credit": "© Wisthaler Photography",
+    "gallery.credit": "© Harald Wisthaler – www.wisthaler.com",
     "gallery.close": "Chiudi",
     "gallery.alt.hero_start": "Linea di partenza con tutti gli atleti",
     "gallery.alt.day_running_1": "Atleta sul percorso vicino al lago",
@@ -416,9 +424,9 @@ export const ui = {
     "nav.close": "Close",
 
     "hero.title": "Dolomites Last Loop",
-    "hero.subtitle": "Backyard Ultra • Toblach • May 15, 2027",
+    "hero.subtitle": "Backyard Ultra · Toblach · May 15, 2027",
     "hero.teaser":
-      "The first Backyard Ultra race in the Dolomites. Premiere on May 15, 2027.",
+      "The first Backyard Ultra race in the Dolomites. May 15, 2027 in Toblach.",
     "hero.cta_signup": "Sign up now",
     "hero.cta_more": "Learn more",
 
@@ -438,15 +446,19 @@ export const ui = {
 
     "home.newsletter.title": "Stay in the loop",
     "home.newsletter.text":
-      "Be the first to receive updates about the May 15, 2027 premiere.",
+      "Be the first to receive updates about the May 15, 2027 edition.",
     "home.newsletter.placeholder": "Your email",
     "home.newsletter.submit": "Subscribe",
     "home.newsletter.success": "Thanks! You’re on the list.",
     "home.newsletter.error": "Something went wrong. Please try again.",
 
-    "home.archive.title": "Results archive",
-    "home.archive.first_edition": "First edition – Preview",
-    "home.archive.link": "Go to results",
+    "home.archive.title": "2026 – Looking back",
+    "home.archive.first_edition": "Photos and numbers from one long night.",
+    "home.archive.link": "Results 2026",
+    "home.archive.gallery": "Open gallery",
+    "home.archive.stat.starters": "Starters",
+    "home.archive.stat.loop": "km / Loop",
+    "home.archive.stat.hours": "Hours",
 
     "race.title": "Race info",
     "race.what.title": "What is a Backyard Ultra?",
@@ -473,7 +485,7 @@ export const ui = {
 
     "signup.title": "Sign up",
     "signup.intro":
-      "Secure one of the 150 starting spots for the May 15, 2027 premiere.",
+      "Secure one of the 150 starting spots for the May 15, 2027 edition.",
     "signup.step": "Step",
     "signup.step1.title": "Personal data",
     "signup.step2.title": "Ticket & payment",
@@ -520,23 +532,23 @@ export const ui = {
 
     "results.title": "Results",
     "results.intro": "Archive of past editions.",
-    "results.year.2026": "2026 – First edition",
+    "results.year.2026": "2026 – 101 starters",
     "results.col.place": "Pos.",
     "results.col.name": "Name",
     "results.col.nation": "Nation",
     "results.col.loops": "Loops",
     "results.placeholder":
-      "Results of the inaugural edition will be published here after the race.",
+      "Official results of the 2026 edition will be published here.",
     "results.gallery_link":
       "View photos of the 2026 edition in the gallery →",
 
     "gallery.title": "Gallery",
-    "gallery.subtitle": "2026 – Première",
+    "gallery.subtitle": "2026 · 101 starters",
     "gallery.intro":
-      "Photos from the first edition – day and night in the Dolomites.",
+      "Photos from Toblach – day and night in the Dolomites.",
     "gallery.section.day": "Day",
     "gallery.section.night": "Night",
-    "gallery.credit": "© Wisthaler Photography",
+    "gallery.credit": "© Harald Wisthaler – www.wisthaler.com",
     "gallery.close": "Close",
     "gallery.alt.hero_start": "Starting line with all runners",
     "gallery.alt.day_running_1": "Runner on course near the lake",

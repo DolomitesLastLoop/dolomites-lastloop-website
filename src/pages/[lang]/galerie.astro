@@ -1,4 +1,6 @@
 ---
+import fs from "node:fs";
+import path from "node:path";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { useTranslations, type Lang } from "@i18n/utils";
 
@@ -7,21 +9,64 @@ const lang = (Astro.params.lang ?? "de") as Lang;
 if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 const t = useTranslations(lang);
 
-const day = [
-  { src: "/images/hero-start.jpg", altKey: "gallery.alt.hero_start" as const, span: 2 },
-  { src: "/images/day-running-1.jpg", altKey: "gallery.alt.day_running_1" as const, span: 1 },
-  { src: "/images/day-running-2.jpg", altKey: "gallery.alt.day_running_2" as const, span: 1 },
-  { src: "/images/day-runner-portrait.jpg", altKey: "gallery.alt.day_runner_portrait" as const, span: 1 },
-  { src: "/images/bib-detail.jpg", altKey: "gallery.alt.bib_detail" as const, span: 1 },
-];
+const imagesDir = path.join(process.cwd(), "public", "images");
+let files: string[] = [];
+try {
+  files = fs.readdirSync(imagesDir).filter((f) => {
+    if (!/\.(jpe?g|png|webp)$/i.test(f)) return false;
+    if (f.toLowerCase() === "logo.jpeg" || f.toLowerCase() === "logo.png") return false;
+    if (f.startsWith(".")) return false;
+    return true;
+  });
+} catch (err) {
+  console.error("Gallery: cannot read images dir", err);
+}
 
-const night = [
-  { src: "/images/night-runners.jpg", altKey: "gallery.alt.night_runners" as const, span: 1 },
-  { src: "/images/night-camp.jpg", altKey: "gallery.alt.night_camp" as const, span: 2 },
-  { src: "/images/night-headlamp.jpg", altKey: "gallery.alt.night_headlamp" as const, span: 1 },
-  { src: "/images/emotion-smile.jpg", altKey: "gallery.alt.emotion_smile" as const, span: 1 },
-  { src: "/images/portrait-exhausted.jpg", altKey: "gallery.alt.portrait_exhausted" as const, span: 1 },
-];
+// Bucket day / night.
+// HHW0xxx (low numbers from a fresh sensor cycle) = night.
+// Named "night-*", "emotion-smile", "portrait-exhausted" = night.
+// Everything else = day.
+const isNight = (name: string) => {
+  if (/^night-/i.test(name)) return true;
+  if (/^emotion-smile/i.test(name)) return true;
+  if (/^portrait-exhausted/i.test(name)) return true;
+  // raw Wisthaler night batch
+  if (/HHW0[0-2]\d{2}\.jpg$/i.test(name)) return true;
+  return false;
+};
+
+// Deduplicate: the 10 semantic-named photos are copies of raw originals.
+// Skip the raw originals if their semantic version exists.
+const semanticRawMap: Record<string, string> = {
+  "HW80448.jpg": "hero-start.jpg",
+  "HW89652.jpg": "day-running-1.jpg",
+  "HW80475.jpg": "day-running-2.jpg",
+  "HW89733.jpg": "day-runner-portrait.jpg",
+  "HHW6300.jpg": "bib-detail.jpg",
+  "HHW0023.jpg": "night-runners.jpg",
+  "HHW0161.jpg": "night-camp.jpg",
+  "HHW0097.jpg": "night-headlamp.jpg",
+  "HHW9554.jpg": "emotion-smile.jpg",
+  "HHW8544.jpg": "portrait-exhausted.jpg",
+};
+const semanticSet = new Set(Object.values(semanticRawMap));
+files = files.filter((f) => {
+  for (const [suffix] of Object.entries(semanticRawMap)) {
+    if (f.endsWith(suffix) && semanticSet.has(semanticRawMap[suffix]) && files.includes(semanticRawMap[suffix])) {
+      return false;
+    }
+  }
+  return true;
+});
+
+const day = files.filter((f) => !isNight(f)).sort();
+const night = files.filter((f) => isNight(f)).sort();
+
+const encodeSrc = (f: string) =>
+  "/images/" + encodeURIComponent(f);
+
+// Larger tiles for selected highlights for masonry rhythm
+const isLarge = (idx: number) => idx % 7 === 0;
 ---
 
 <BaseLayout
@@ -34,56 +79,77 @@ const night = [
       <p class="eyebrow">{t("gallery.subtitle")}</p>
       <h1>{t("gallery.title")}</h1>
       <p class="section-lead">{t("gallery.intro")}</p>
+      <p class="text-dim">{t("gallery.credit")}</p>
     </div>
   </section>
 
   <section class="section">
-    <div class="container">
+    <div class="container-wide">
       <div class="section-divider reveal">
         <span class="dot"></span>
         <h2>{t("gallery.section.day")}</h2>
+        <span class="count">{day.length}</span>
         <span class="line"></span>
       </div>
 
-      <div class="masonry">
-        {
-          day.map((p) => (
-            <figure
-              class={`tile reveal tile-span-${p.span}`}
-              data-src={p.src}
-              data-alt={t(p.altKey)}
-            >
-              <img src={p.src} alt={t(p.altKey)} loading="lazy" />
-              <figcaption>{t("gallery.credit")}</figcaption>
-            </figure>
-          ))
-        }
-      </div>
+      {
+        day.length === 0 ? (
+          <p class="text-dim">—</p>
+        ) : (
+          <div class="masonry">
+            {day.map((f, idx) => (
+              <figure
+                class={`tile reveal ${isLarge(idx) ? "tile-large" : ""}`}
+                data-src={encodeSrc(f)}
+                data-alt={f}
+              >
+                <img
+                  src={encodeSrc(f)}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="hover-overlay">{t("gallery.credit")}</span>
+              </figure>
+            ))}
+          </div>
+        )
+      }
     </div>
   </section>
 
   <section class="section section-alt">
-    <div class="container">
+    <div class="container-wide">
       <div class="section-divider reveal">
-        <span class="dot dot-green"></span>
+        <span class="dot dot-night"></span>
         <h2>{t("gallery.section.night")}</h2>
+        <span class="count">{night.length}</span>
         <span class="line"></span>
       </div>
 
-      <div class="masonry">
-        {
-          night.map((p) => (
-            <figure
-              class={`tile reveal tile-span-${p.span}`}
-              data-src={p.src}
-              data-alt={t(p.altKey)}
-            >
-              <img src={p.src} alt={t(p.altKey)} loading="lazy" />
-              <figcaption>{t("gallery.credit")}</figcaption>
-            </figure>
-          ))
-        }
-      </div>
+      {
+        night.length === 0 ? (
+          <p class="text-dim">—</p>
+        ) : (
+          <div class="masonry">
+            {night.map((f, idx) => (
+              <figure
+                class={`tile reveal ${isLarge(idx) ? "tile-large" : ""}`}
+                data-src={encodeSrc(f)}
+                data-alt={f}
+              >
+                <img
+                  src={encodeSrc(f)}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="hover-overlay">{t("gallery.credit")}</span>
+              </figure>
+            ))}
+          </div>
+        )
+      }
     </div>
   </section>
 
@@ -104,7 +170,6 @@ const night = [
     <figure class="lb-stage">
       <img id="lb-image" src="" alt="" />
       <figcaption>
-        <span id="lb-caption"></span>
         <span class="lb-credit">{t("gallery.credit")}</span>
       </figcaption>
     </figure>
@@ -121,7 +186,7 @@ const night = [
 
   .section-divider {
     display: grid;
-    grid-template-columns: auto auto 1fr;
+    grid-template-columns: auto auto auto 1fr;
     align-items: center;
     gap: var(--space-4);
     margin-bottom: var(--space-6);
@@ -129,15 +194,25 @@ const night = [
   .section-divider h2 {
     margin: 0;
   }
+  .section-divider .count {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
   .section-divider .dot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: var(--color-accent);
+    background: var(--color-primary);
     display: inline-block;
   }
-  .section-divider .dot-green {
-    background: var(--color-green);
+  .section-divider .dot-night {
+    background: #1a2a3a;
   }
   .section-divider .line {
     height: 1px;
@@ -146,80 +221,54 @@ const night = [
   }
 
   .masonry {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 200px;
-    gap: var(--space-4);
+    columns: 4 240px;
+    column-gap: var(--space-4);
   }
-
-  @media (max-width: 1000px) {
-    .masonry {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  @media (max-width: 700px) {
-    .masonry {
-      grid-template-columns: repeat(2, 1fr);
-      grid-auto-rows: 180px;
-    }
-  }
-  @media (max-width: 460px) {
-    .masonry {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .tile {
-    margin: 0;
+  .masonry .tile {
+    break-inside: avoid;
+    margin: 0 0 var(--space-4);
     position: relative;
     overflow: hidden;
     border-radius: var(--radius);
     cursor: zoom-in;
     background: var(--color-bg-alt);
     box-shadow: var(--shadow-card);
-    grid-row: span 1;
     transition: transform var(--transition), box-shadow var(--transition);
   }
-  .tile-span-2 {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-  @media (max-width: 460px) {
-    .tile-span-2 {
-      grid-column: span 1;
-      grid-row: span 2;
-    }
-  }
-
   .tile img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     display: block;
-    transition: transform 600ms var(--ease);
+    transition: transform 800ms var(--ease-emphasis);
   }
   .tile:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-hover);
   }
   .tile:hover img {
-    transform: scale(1.03);
+    transform: scale(1.04);
   }
-
-  .tile figcaption {
+  .tile .hover-overlay {
     position: absolute;
-    bottom: var(--space-2);
-    right: var(--space-3);
-    font-size: 0.65rem;
-    letter-spacing: 0.14em;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.92);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-    pointer-events: none;
+    color: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0) 100%
+    );
     opacity: 0;
     transition: opacity var(--transition);
+    pointer-events: none;
   }
-  .tile:hover figcaption {
+  .tile:hover .hover-overlay,
+  .tile:focus-within .hover-overlay {
     opacity: 1;
   }
 
@@ -228,7 +277,7 @@ const night = [
     position: fixed;
     inset: 0;
     z-index: 100;
-    background: rgba(10, 10, 10, 0.93);
+    background: rgba(10, 14, 22, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -239,8 +288,8 @@ const night = [
   }
   .lb-stage {
     margin: 0;
-    max-width: min(92vw, 1400px);
-    max-height: 88vh;
+    max-width: min(94vw, 1500px);
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -248,30 +297,27 @@ const night = [
   }
   .lb-stage img {
     max-width: 100%;
-    max-height: 80vh;
+    max-height: 82vh;
     object-fit: contain;
     border-radius: var(--radius);
     background: #000;
   }
   .lb-stage figcaption {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
     color: rgba(255, 255, 255, 0.9);
     font-size: 0.85rem;
   }
   .lb-credit {
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 0.75rem;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
   }
   .lb-close {
     position: absolute;
     top: var(--space-4);
     right: var(--space-4);
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -288,8 +334,8 @@ const night = [
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.25);
     color: #fff;
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 2rem;
@@ -331,19 +377,16 @@ const night = [
 </style>
 
 <script>
-  type Tile = { src: string; alt: string };
-
-  const tiles: HTMLElement[] = Array.from(
+  const tiles = Array.from(
     document.querySelectorAll<HTMLElement>(".tile"),
   );
-  const data: Tile[] = tiles.map((t) => ({
+  const data = tiles.map((t) => ({
     src: t.dataset.src || "",
     alt: t.dataset.alt || "",
   }));
 
   const lb = document.getElementById("lightbox") as HTMLElement | null;
   const lbImg = document.getElementById("lb-image") as HTMLImageElement | null;
-  const lbCaption = document.getElementById("lb-caption") as HTMLElement | null;
   const closeBtn = document.querySelector<HTMLButtonElement>(".lb-close");
   const prevBtn = document.querySelector<HTMLButtonElement>(".lb-prev");
   const nextBtn = document.querySelector<HTMLButtonElement>(".lb-next");
@@ -351,11 +394,10 @@ const night = [
   let current = 0;
 
   function open(idx: number) {
-    if (!lb || !lbImg || !lbCaption) return;
+    if (!lb || !lbImg) return;
     current = idx;
     lbImg.src = data[idx].src;
     lbImg.alt = data[idx].alt;
-    lbCaption.textContent = data[idx].alt;
     lb.hidden = false;
     document.body.style.overflow = "hidden";
   }

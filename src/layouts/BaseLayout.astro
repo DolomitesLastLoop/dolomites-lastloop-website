@@ -34,7 +34,7 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#faf6f0" />
     <meta name="generator" content={Astro.generator} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
 
@@ -82,8 +82,9 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
     <Footer lang={lang} />
 
     <script>
-      const items = document.querySelectorAll(".reveal");
-      if ("IntersectionObserver" in window && items.length) {
+      // ─── Reveal on scroll ───
+      const reveals = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window && reveals.length) {
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -95,9 +96,45 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
           },
           { threshold: 0.12 },
         );
-        items.forEach((el) => io.observe(el));
+        reveals.forEach((el) => io.observe(el));
       } else {
-        items.forEach((el) => el.classList.add("is-visible"));
+        reveals.forEach((el) => el.classList.add("is-visible"));
+      }
+
+      // ─── Count-up numbers ───
+      const counters = document.querySelectorAll<HTMLElement>("[data-counter]");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if ("IntersectionObserver" in window && counters.length) {
+        const ic = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              const el = entry.target as HTMLElement;
+              const target = Number(el.dataset.counter || "0");
+              const suffix = el.dataset.suffix || "";
+              const duration = Number(el.dataset.duration || "1800");
+              if (reduceMotion || Number.isNaN(target)) {
+                el.textContent = target.toLocaleString("de-DE") + suffix;
+              } else {
+                const t0 = performance.now();
+                const tick = (now: number) => {
+                  const progress = Math.min(1, (now - t0) / duration);
+                  const eased = 1 - Math.pow(1 - progress, 3);
+                  const v = Math.round(target * eased);
+                  el.textContent = v.toLocaleString("de-DE") + suffix;
+                  if (progress < 1) requestAnimationFrame(tick);
+                };
+                requestAnimationFrame(tick);
+              }
+              ic.unobserve(el);
+            });
+          },
+          { threshold: 0.4 },
+        );
+        counters.forEach((el) => {
+          el.textContent = "0" + (el.dataset.suffix || "");
+          ic.observe(el);
+        });
       }
     </script>
   </body>

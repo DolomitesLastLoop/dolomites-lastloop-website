@@ -19,21 +19,21 @@ const t = useTranslations(lang);
   <section class="section" id="features">
     <div class="container">
       <p class="eyebrow reveal">USP</p>
-      <h2 class="reveal">{t("home.features.title")}</h2>
+      <h2 class="reveal" data-delay="100">{t("home.features.title")}</h2>
       <div class="grid grid-2 mt-6">
-        <article class="card reveal">
+        <article class="card reveal" data-delay="100">
           <h3>{t("home.features.location.title")}</h3>
           <p>{t("home.features.location.text")}</p>
         </article>
-        <article class="card reveal">
+        <article class="card reveal" data-delay="200">
           <h3>{t("home.features.format.title")}</h3>
           <p>{t("home.features.format.text")}</p>
         </article>
-        <article class="card reveal">
+        <article class="card reveal" data-delay="300">
           <h3>{t("home.features.community.title")}</h3>
           <p>{t("home.features.community.text")}</p>
         </article>
-        <article class="card reveal">
+        <article class="card reveal" data-delay="400">
           <h3>{t("home.features.limit.title")}</h3>
           <p>{t("home.features.limit.text")}</p>
         </article>
@@ -41,128 +41,156 @@ const t = useTranslations(lang);
     </div>
   </section>
 
-  <section class="visual-band">
-    <div class="visual-band-img reveal" aria-hidden="true">
-      <img
-        src="/images/day-running-2.jpg"
-        alt=""
-        loading="lazy"
-      />
+  <!-- Cinematic 2026 retrospective -->
+  <section class="retro" aria-labelledby="retro-title">
+    <div class="retro-bg" aria-hidden="true">
+      <img src="/images/hero-start.jpg" alt="" loading="lazy" />
+      <div class="retro-overlay"></div>
     </div>
-    <div class="visual-band-caption">
-      <p>© Wisthaler Photography</p>
-    </div>
-  </section>
 
-  <section class="section section-alt archive-teaser">
-    <div class="container archive-inner">
-      <div class="archive-text reveal">
-        <p class="eyebrow">{t("home.archive.title")}</p>
-        <h2>2026</h2>
-        <p class="text-muted">{t("home.archive.first_edition")}</p>
-        <div class="archive-actions mt-5">
-          <a class="btn btn-primary" href={localizePath("/galerie", lang)}>
-            {t("nav.gallery")} →
-          </a>
-          <a class="btn btn-ghost" href={localizePath("/ergebnisse", lang)}>
-            {t("home.archive.link")}
-          </a>
+    <div class="container retro-inner">
+      <p class="eyebrow on-dark reveal">2026 · Toblach</p>
+      <h2 id="retro-title" class="retro-title reveal" data-delay="100">
+        {t("home.archive.title")}
+      </h2>
+      <p class="retro-lead reveal" data-delay="200">
+        {t("home.archive.first_edition")}
+      </p>
+
+      <div class="retro-stats reveal" data-delay="300">
+        <div class="retro-stat">
+          <span class="num" data-counter="101" data-duration="2000">0</span>
+          <span class="lbl">{t("home.archive.stat.starters")}</span>
+        </div>
+        <div class="retro-stat">
+          <span class="num">6,71</span>
+          <span class="lbl">{t("home.archive.stat.loop")}</span>
+        </div>
+        <div class="retro-stat">
+          <span class="num">
+            <span data-counter="24" data-duration="1600">0</span>+
+          </span>
+          <span class="lbl">{t("home.archive.stat.hours")}</span>
         </div>
       </div>
-      <div class="archive-stats reveal" aria-hidden="true">
-        <div>
-          <span class="stat-num">6,71</span>
-          <span class="stat-label">km / Loop</span>
-        </div>
-        <div>
-          <span class="stat-num">150</span>
-          <span class="stat-label">Starter</span>
-        </div>
-        <div>
-          <span class="stat-num">∞</span>
-          <span class="stat-label">Stunden</span>
-        </div>
+
+      <div class="retro-cta reveal" data-delay="400">
+        <a class="btn btn-primary" href={localizePath("/galerie", lang)}>
+          {t("home.archive.gallery")} →
+        </a>
+        <a class="btn btn-on-dark" href={localizePath("/ergebnisse", lang)}>
+          {t("home.archive.link")}
+        </a>
       </div>
     </div>
+
+    <span class="retro-credit">© Harald Wisthaler</span>
   </section>
 
   <Newsletter lang={lang} />
 </BaseLayout>
 
 <style>
-  .visual-band {
+  .retro {
     position: relative;
-    margin: var(--space-7) 0 0;
-  }
-  .visual-band-img {
-    position: relative;
-    width: 100%;
-    height: clamp(280px, 50vh, 520px);
+    isolation: isolate;
     overflow: hidden;
+    padding: var(--space-10) 0;
+    color: #ffffff;
   }
-  .visual-band-img img {
+  .retro-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .retro-bg img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
-    transition: transform 800ms var(--ease);
   }
-  .visual-band:hover .visual-band-img img {
-    transform: scale(1.02);
+  .retro-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(26, 42, 58, 0.5),
+        rgba(26, 42, 58, 0.7)
+      ),
+      radial-gradient(
+        ellipse at center,
+        rgba(26, 42, 58, 0.2),
+        rgba(26, 42, 58, 0.7)
+      );
   }
-  .visual-band-caption {
+  .retro-inner {
+    position: relative;
+    text-align: center;
+  }
+  .eyebrow.on-dark {
+    color: #ffd9b8;
+  }
+  .eyebrow.on-dark::before {
+    background: #ffd9b8;
+  }
+  .retro-title {
+    color: #ffffff;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+    margin-bottom: var(--space-4);
+  }
+  .retro-lead {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    max-width: 50ch;
+    margin: 0 auto var(--space-7);
+  }
+  .retro-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    max-width: 720px;
+    margin: 0 auto var(--space-7);
+  }
+  @media (max-width: 600px) {
+    .retro-stats {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+  }
+  .retro-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .retro-stat .num {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: #ffffff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+  }
+  .retro-stat .lbl {
+    font-size: 0.78rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .retro-cta {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .retro-credit {
     position: absolute;
     bottom: var(--space-3);
     right: var(--space-4);
     font-size: 0.7rem;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.85);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-  }
-
-  .archive-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-7);
-    align-items: center;
-  }
-  .archive-actions {
-    display: flex;
-    gap: var(--space-3);
-    flex-wrap: wrap;
-  }
-  .archive-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-4);
-    text-align: center;
-  }
-  .archive-stats > div {
-    padding: var(--space-5);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    background: var(--color-card);
-    box-shadow: var(--shadow-card);
-  }
-  .stat-num {
-    display: block;
-    font-family: var(--font-display);
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-    color: var(--color-accent);
-    line-height: 1;
-  }
-  .stat-label {
-    display: block;
-    margin-top: var(--space-2);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-dim);
-  }
-  @media (max-width: 800px) {
-    .archive-inner {
-      grid-template-columns: 1fr;
-    }
+    color: rgba(255, 255, 255, 0.55);
+    pointer-events: none;
   }
 </style>

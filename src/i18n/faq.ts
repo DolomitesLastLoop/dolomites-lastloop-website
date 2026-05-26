@@ -11,7 +11,7 @@ export const faq: Record<Lang, FaqContent> = {
         a: "Jede volle Stunde startet ein gemeinsamer Loop von 6,71 km. Wer rechtzeitig zurück ist, startet zur nächsten Stunde erneut. Wer nicht rechtzeitig zurück ist, scheidet aus. Sieger ist der letzte Läufer, der noch eine zusätzliche Runde komplett schafft.",
       },
       {
-        q: "Wann findet die Premiere statt?",
+        q: "Wann findet die Ausgabe 2027 statt?",
         a: "Das Rennen startet am 15. Mai 2027 in Toblach. Die genaue Startuhrzeit und alle weiteren Details kommunizieren wir rechtzeitig über Newsletter und Social Media.",
       },
       {
@@ -57,7 +57,7 @@ export const faq: Record<Lang, FaqContent> = {
         a: "Ogni ora esatta parte un loop comune di 6,71 km. Chi rientra in tempo parte di nuovo all’ora successiva. Chi non rientra è fuori. Vince l’ultimo atleta che completa un giro in più di tutti gli altri.",
       },
       {
-        q: "Quando si svolge l’anteprima?",
+        q: "Quando si svolge l’edizione 2027?",
         a: "La gara parte il 15 maggio 2027 a Dobbiaco. L’orario esatto di partenza e tutti gli altri dettagli saranno comunicati per tempo via newsletter e social.",
       },
       {
@@ -103,7 +103,7 @@ export const faq: Record<Lang, FaqContent> = {
         a: "Every hour on the hour, a common 6.71 km loop starts. If you finish in time, you start again the next hour. Miss the cutoff and you’re out. The winner is the last runner to complete one more full loop than everyone else.",
       },
       {
-        q: "When does the premiere take place?",
+        q: "When does the 2027 edition take place?",
         a: "The race kicks off on May 15, 2027 in Toblach. The exact start time and all further details will be announced in time via newsletter and social channels.",
       },
       {

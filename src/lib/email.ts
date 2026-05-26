@@ -22,7 +22,7 @@ export async function sendRegistrationConfirmation(
   const number = startnummer ? `Startnummer: ${startnummer}` : "Du bist registriert.";
   const html = `
     <div style="font-family: Inter, system-ui, sans-serif; color:#0a0a0a; max-width:560px;">
-      <h1 style="font-family: 'Bebas Neue', Impact, sans-serif; color:#e85d04; letter-spacing:0.04em;">
+      <h1 style="font-family: 'Bebas Neue', Impact, sans-serif; color:#2d4a6b; letter-spacing:0.06em;">
         Dolomites Last Loop · 15. Mai 2027
       </h1>
       <p>Ciao ${firstName},</p>

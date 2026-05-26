@@ -25,6 +25,15 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
 <header class="site-header" id="site-header" data-header>
   <div class="container header-inner">
     <a class="brand" href={localizePath("/", lang)} aria-label={t("site.title")}>
+      <img
+        src="/images/Logo.jpeg"
+        alt=""
+        class="brand-logo"
+        width="40"
+        height="40"
+        loading="eager"
+        decoding="async"
+      />
       <span class="brand-name">Dolomites Last Loop</span>
     </a>
 
@@ -98,20 +107,52 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     inset: 0 0 auto 0;
     z-index: 50;
     height: var(--nav-height);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.9);
+    background: transparent;
     transition:
       background var(--transition),
       border-color var(--transition),
       box-shadow var(--transition);
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid transparent;
   }
 
   .site-header[data-scrolled="true"] {
-    background: #ffffff;
+    background: var(--color-bg);
     border-bottom-color: var(--color-border);
-    box-shadow: 0 1px 8px rgba(50, 40, 25, 0.05);
+    box-shadow: 0 2px 16px rgba(45, 74, 107, 0.06);
+  }
+
+  /* On pages where the hero is dark (full-bleed), nav text starts white */
+  .site-header:not([data-scrolled="true"]) .primary-nav a,
+  .site-header:not([data-scrolled="true"]) .brand-name {
+    color: #ffffff;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  }
+  .site-header:not([data-scrolled="true"]) .burger {
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  .site-header:not([data-scrolled="true"]) .burger span {
+    background: #ffffff;
+  }
+  .site-header:not([data-scrolled="true"]) .lang-link {
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .site-header:not([data-scrolled="true"]) .lang-link.active,
+  .site-header:not([data-scrolled="true"]) .lang-link:hover {
+    color: #ffffff;
+  }
+  .site-header:not([data-scrolled="true"]) .sep {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  /* Pages without a dark hero still need legible nav */
+  .site-header[data-solid="true"] {
+    background: var(--color-bg);
+    border-bottom-color: var(--color-border);
+  }
+  .site-header[data-solid="true"] .brand-name,
+  .site-header[data-solid="true"] .primary-nav a {
+    color: var(--color-text) !important;
+    text-shadow: none !important;
   }
 
   .header-inner {
@@ -125,16 +166,25 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
   .brand {
     display: inline-flex;
     align-items: center;
+    gap: var(--space-3);
     color: var(--color-text);
   }
   .brand:hover {
-    color: var(--color-accent);
+    color: var(--color-primary);
+  }
+  .brand-logo {
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #ffffff;
   }
   .brand-name {
     font-family: var(--font-display);
-    font-size: 1.25rem;
-    letter-spacing: 0.14em;
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
+    transition: color var(--transition);
   }
 
   .primary-nav ul {
@@ -147,23 +197,38 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
 
   .primary-nav a {
     display: inline-block;
-    padding: 0.5rem 0.85rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-text-muted);
     border-radius: var(--radius-sm);
-    transition: color var(--transition), background var(--transition);
+    transition: color var(--transition);
+    position: relative;
   }
 
-  .primary-nav a:hover {
-    color: var(--color-text);
-    background: var(--color-accent-dim);
+  .primary-nav a::after {
+    content: "";
+    position: absolute;
+    left: 0.85rem;
+    right: 0.85rem;
+    bottom: 4px;
+    height: 2px;
+    background: var(--color-primary);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--transition);
   }
-
+  .primary-nav a:hover::after,
+  .primary-nav a.active::after {
+    transform: scaleX(1);
+  }
   .primary-nav a.active {
-    color: var(--color-accent);
+    color: var(--color-primary);
+  }
+  .site-header:not([data-scrolled="true"]) .primary-nav a.active::after {
+    background: #ffffff;
   }
 
   .header-actions {
@@ -207,6 +272,7 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     background: var(--color-bg);
     padding: var(--space-7) var(--space-5);
     overflow-y: auto;
+    z-index: 49;
   }
   .mobile-nav ul {
     list-style: none;
@@ -220,18 +286,19 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     display: block;
     padding: var(--space-3) 0;
     font-family: var(--font-display);
-    font-size: 1.5rem;
-    letter-spacing: 0.08em;
+    font-size: 1.6rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
   }
   .mobile-lang {
     margin-top: var(--space-6);
   }
 
-  @media (max-width: 960px) {
+  @media (max-width: 1024px) {
     .primary-nav,
-    .header-actions .lang {
+    .header-actions > .lang {
       display: none;
     }
     .burger {
@@ -248,9 +315,15 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
   const burger = document.querySelector<HTMLButtonElement>("[data-burger]");
   const mobileNav = document.getElementById("mobile-nav");
 
+  // If the page has no .hero element, render the header in solid mode immediately
+  const hasHero = !!document.querySelector(".hero");
+  if (header && !hasHero) {
+    header.dataset.solid = "true";
+  }
+
   function setScrolled() {
     if (!header) return;
-    header.dataset.scrolled = window.scrollY > 12 ? "true" : "false";
+    header.dataset.scrolled = window.scrollY > 24 ? "true" : "false";
   }
   setScrolled();
   window.addEventListener("scroll", setScrolled, { passive: true });

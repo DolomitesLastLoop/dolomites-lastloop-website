@@ -6,26 +6,36 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+
+const slides = [
+  "/images/hero-start.jpg",
+  "/images/day-running-1.jpg",
+  "/images/night-runners.jpg",
+];
 ---
 
 <section class="hero" aria-label={t("hero.title")}>
-  <div class="hero-bg" aria-hidden="true">
-    <img
-      src="/images/hero-start.jpg"
-      alt=""
-      loading="eager"
-      fetchpriority="high"
-    />
+  <div class="hero-stage" data-parallax aria-hidden="true">
+    {
+      slides.map((src, i) => (
+        <div
+          class:list={["slide", { active: i === 0 }]}
+          data-slide
+          style={`background-image:url(${src})`}
+        />
+      ))
+    }
     <div class="hero-overlay"></div>
+    <div class="hero-vignette"></div>
   </div>
 
   <div class="container hero-inner">
-    <p class="hero-eyebrow reveal">15. Mai 2027 · Première</p>
-    <h1 class="hero-title reveal">{t("hero.title")}</h1>
-    <p class="hero-subtitle reveal">{t("hero.subtitle")}</p>
-    <p class="hero-teaser reveal">{t("hero.teaser")}</p>
+    <p class="hero-eyebrow reveal">2027</p>
+    <h1 class="hero-title reveal" data-delay="100">{t("hero.title")}</h1>
+    <p class="hero-subtitle reveal" data-delay="200">{t("hero.subtitle")}</p>
+    <p class="hero-teaser reveal" data-delay="300">{t("hero.teaser")}</p>
 
-    <div class="hero-cta reveal">
+    <div class="hero-cta reveal" data-delay="400">
       <a class="btn btn-primary" href={localizePath("/anmeldung", lang)}>
         {t("hero.cta_signup")}
       </a>
@@ -35,15 +45,23 @@ const t = useTranslations(lang);
     </div>
   </div>
 
-  <a class="hero-credit" href="#" aria-label="Photo credit">
-    © Wisthaler Photography
+  <a
+    class="hero-scroll-cue"
+    href="#after-hero"
+    aria-label="Scroll"
+  >
+    <span class="cue-line"></span>
+    <span class="cue-arrow">↓</span>
   </a>
+
+  <span class="hero-credit">© Harald Wisthaler</span>
+  <span id="after-hero" aria-hidden="true"></span>
 </section>
 
 <style>
   .hero {
     position: relative;
-    min-height: calc(100vh - var(--nav-height));
+    min-height: 100vh;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -53,17 +71,26 @@ const t = useTranslations(lang);
     color: #ffffff;
   }
 
-  .hero-bg {
+  .hero-stage {
     position: absolute;
     inset: 0;
     z-index: -2;
+    will-change: transform;
   }
 
-  .hero-bg img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 35%;
+  .slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 35%;
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 1500ms var(--ease-emphasis),
+      transform 8000ms linear;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: scale(1.12);
   }
 
   .hero-overlay {
@@ -72,10 +99,22 @@ const t = useTranslations(lang);
     background:
       linear-gradient(
         180deg,
-        rgba(0, 0, 0, 0.35) 0%,
-        rgba(0, 0, 0, 0.4) 60%,
-        rgba(0, 0, 0, 0.55) 100%
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.35) 30%,
+        rgba(0, 0, 0, 0.42) 70%,
+        rgba(0, 0, 0, 0.7) 100%
       );
+  }
+
+  .hero-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 35%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
+    pointer-events: none;
   }
 
   .hero-inner {
@@ -89,40 +128,46 @@ const t = useTranslations(lang);
     display: inline-block;
     font-family: var(--font-body);
     font-size: 0.85rem;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
     color: #ffffff;
-    background: var(--color-accent);
-    padding: 0.35rem 0.85rem;
-    border-radius: 999px;
-    margin-bottom: var(--space-5);
-    font-weight: 600;
+    padding: 0.45rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    margin-bottom: var(--space-6);
+    font-weight: 500;
+    background: rgba(45, 74, 107, 0.18);
+    backdrop-filter: blur(6px);
   }
 
   .hero-title {
-    font-size: clamp(3rem, 9vw, 7.5rem);
-    margin-bottom: var(--space-3);
-    letter-spacing: 0.03em;
+    font-size: clamp(3.5rem, 9vw, 8.5rem);
+    margin-bottom: var(--space-4);
+    letter-spacing: 0.06em;
     color: #ffffff;
-    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.55);
+    line-height: 0.95;
   }
 
   .hero-subtitle {
     font-family: var(--font-display);
-    font-size: clamp(1.25rem, 2.5vw, 1.85rem);
-    letter-spacing: 0.18em;
-    color: #ffd9b8;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    letter-spacing: 0.42em;
+    color: rgba(255, 255, 255, 0.92);
     text-transform: uppercase;
-    margin-bottom: var(--space-5);
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: var(--space-6);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+    font-weight: 400;
   }
 
   .hero-teaser {
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
-    color: rgba(255, 255, 255, 0.92);
-    max-width: 52ch;
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.88);
+    max-width: 55ch;
     margin: 0 auto var(--space-7);
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+    font-weight: 300;
+    letter-spacing: 0.01em;
   }
 
   .hero-cta {
@@ -137,10 +182,89 @@ const t = useTranslations(lang);
     bottom: var(--space-3);
     right: var(--space-4);
     font-size: 0.7rem;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.6);
     pointer-events: none;
     z-index: 2;
   }
+
+  .hero-scroll-cue {
+    position: absolute;
+    bottom: var(--space-6);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.4rem;
+    text-decoration: none;
+  }
+  .cue-line {
+    width: 1px;
+    height: 44px;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(255, 255, 255, 0.7),
+      transparent
+    );
+    animation: cueLine 2.4s var(--ease) infinite;
+  }
+  .cue-arrow {
+    line-height: 1;
+    animation: cueArrow 2.4s var(--ease) infinite;
+  }
+  @keyframes cueLine {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 1; }
+  }
+  @keyframes cueArrow {
+    0%, 100% { transform: translateY(0); opacity: 0.7; }
+    50% { transform: translateY(4px); opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cue-line,
+    .cue-arrow,
+    .slide {
+      animation: none;
+      transition: opacity 200ms linear;
+      transform: none !important;
+    }
+  }
 </style>
+
+<script>
+  // ─────────────────────── Slideshow ───────────────────────
+  const slides = document.querySelectorAll<HTMLElement>("[data-slide]");
+  if (slides.length > 1) {
+    let i = 0;
+    setInterval(() => {
+      slides[i].classList.remove("active");
+      i = (i + 1) % slides.length;
+      slides[i].classList.add("active");
+    }, 5000);
+  }
+
+  // ─────────────────────── Parallax ────────────────────────
+  const stage = document.querySelector<HTMLElement>(".hero-stage");
+  let raf = 0;
+  function applyParallax() {
+    if (!stage) return;
+    const y = window.scrollY;
+    stage.style.transform = `translate3d(0, ${y * 0.35}px, 0)`;
+    raf = 0;
+  }
+  if (stage && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!raf) raf = requestAnimationFrame(applyParallax);
+      },
+      { passive: true },
+    );
+  }
+</script>
