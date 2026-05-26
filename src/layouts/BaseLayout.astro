@@ -134,8 +134,15 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
               const decimals = Number(el.dataset.decimals || "0");
               const locale = el.dataset.locale || "de-DE";
 
+              const plus = el.hasAttribute("data-plus")
+                ? (el.parentElement?.querySelector(
+                    "[data-plus-target]",
+                  ) as HTMLElement | null)
+                : null;
+
               if (reduceMotion || Number.isNaN(target)) {
                 el.textContent = formatNumber(target, decimals, locale) + suffix;
+                plus?.classList.add("is-on");
               } else {
                 const t0 = performance.now();
                 const tick = (now: number) => {
@@ -144,6 +151,7 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
                   const v = target * eased;
                   el.textContent = formatNumber(v, decimals, locale) + suffix;
                   if (progress < 1) requestAnimationFrame(tick);
+                  else plus?.classList.add("is-on");
                 };
                 requestAnimationFrame(tick);
               }

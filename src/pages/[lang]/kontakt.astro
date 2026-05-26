@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 export const prerender = false;
@@ -9,50 +10,16 @@ const t = useTranslations(lang);
 ---
 
 <BaseLayout lang={lang} title={t("contact.title")}>
-  <section class="page-head">
-    <div class="container">
-      <p class="eyebrow">{t("contact.title")}</p>
-      <h1>Sport OK Toblach</h1>
-    </div>
-  </section>
+  <PageHero
+    bg="/images/hero-start.jpg"
+    position="center 35%"
+    eyebrow={t("contact.eyebrow")}
+    title={t("contact.title")}
+    subtitle={t("contact.subtitle")}
+  />
 
   <section class="section">
     <div class="container contact-grid">
-      <div class="info reveal">
-        <div class="info-item">
-          <span class="info-label">{t("contact.email")}</span>
-          <a href="mailto:dolomiteslastloop@gmail.com">
-            dolomiteslastloop@gmail.com
-          </a>
-        </div>
-        <div class="info-item">
-          <span class="info-label">{t("contact.org")}</span>
-          <span>{t("contact.org.value")}</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">{t("contact.location")}</span>
-          <span>{t("contact.location.value")}</span>
-        </div>
-
-        <div class="map mt-6">
-          <iframe
-            src="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy&output=embed"
-            title={t("contact.location.value")}
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen
-          ></iframe>
-          <a
-            class="map-link"
-            href="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy"
-            target="_blank"
-            rel="noopener"
-          >
-            {t("contact.location.value")} →
-          </a>
-        </div>
-      </div>
-
       <form class="card reveal" data-contact novalidate>
         <h2>{t("contact.form.title")}</h2>
 
@@ -69,7 +36,7 @@ const t = useTranslations(lang);
           <textarea id="c-message" name="message" required></textarea>
         </div>
 
-        <button class="btn btn-primary btn-block" type="submit">
+        <button class="btn btn-primary btn-block btn-arrow" type="submit">
           {t("contact.form.submit")}
         </button>
 
@@ -80,24 +47,75 @@ const t = useTranslations(lang);
           {t("contact.form.error")}
         </p>
       </form>
+
+      <aside class="info reveal" data-delay="100">
+        <figure class="info-photo reveal-scale">
+          <img src="/images/portrait-exhausted.jpg" alt="" loading="lazy" />
+        </figure>
+
+        <div class="info-list mt-5">
+          <div class="info-item">
+            <span class="info-label">{t("contact.email")}</span>
+            <a href="mailto:dolomiteslastloop@gmail.com">
+              dolomiteslastloop@gmail.com
+            </a>
+          </div>
+          <div class="info-item">
+            <span class="info-label">{t("contact.org")}</span>
+            <span>{t("contact.org.value")}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">{t("contact.location")}</span>
+            <span>{t("contact.location.value")}</span>
+          </div>
+        </div>
+
+        <div class="map mt-5">
+          <iframe
+            src="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy&output=embed"
+            title={t("contact.location.value")}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+          <a
+            class="map-link"
+            href="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy"
+            target="_blank"
+            rel="noopener"
+          >
+            {t("contact.location.value")} →
+          </a>
+        </div>
+      </aside>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .page-head {
-    padding: var(--space-9) 0 var(--space-5);
-    border-bottom: 1px solid var(--color-border);
-  }
   .contact-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.1fr 1fr;
     gap: var(--space-7);
   }
-  @media (max-width: 800px) {
+  @media (max-width: 900px) {
     .contact-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  .info-photo {
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+  }
+  .info-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
   }
 
   .info-item {
@@ -110,7 +128,7 @@ const t = useTranslations(lang);
   .info-label {
     display: block;
     font-size: 0.75rem;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-text-dim);
     margin-bottom: var(--space-1);
@@ -124,7 +142,7 @@ const t = useTranslations(lang);
   }
   .map iframe {
     width: 100%;
-    height: 320px;
+    height: 280px;
     border: none;
     display: block;
   }
@@ -133,7 +151,7 @@ const t = useTranslations(lang);
     padding: var(--space-3) var(--space-4);
     font-size: 0.85rem;
     border-top: 1px solid var(--color-border);
-    color: var(--color-accent);
+    color: var(--color-primary);
   }
 
   .status-success {

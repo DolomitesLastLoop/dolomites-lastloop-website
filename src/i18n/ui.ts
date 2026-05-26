@@ -95,6 +95,14 @@ export const ui = {
     "home.archive.stat.loop": "km / Loop",
     "home.archive.stat.hours": "Stunden",
 
+    "race.eyebrow": "Das Event",
+    "race.subtitle": "6,71 km · Nordic Arena Toblach · Jede Stunde",
+    "race.highlight.start.title": "Start",
+    "race.highlight.start.text": "Nordic Arena Toblach – jede volle Stunde.",
+    "race.highlight.top.title": "Höchster Punkt",
+    "race.highlight.top.text": "Mitte des Loops am Toblacher See.",
+    "race.highlight.finish.title": "Ziel",
+    "race.highlight.finish.text": "Zurück zur Nordic Arena im Gefälle.",
     "race.title": "Race Info",
     "race.what.title": "Was ist ein Backyard Ultra?",
     "race.what.text":
@@ -123,6 +131,16 @@ export const ui = {
     "race.rules.12":
       "Auf der Strecke sind weder Crew-Mitglieder noch andere Personen erlaubt. Es ist strengstens untersagt, mit den Athleten mitzulaufen.",
 
+    "signup.eyebrow": "2027",
+    "signup.hero_title": "Anmeldung 2027",
+    "signup.hero_subtitle": "150 Startplätze · 15. Mai 2027",
+    "signup.badge.location": "Toblach, Südtirol",
+    "signup.badge.date": "15. Mai 2027",
+    "signup.badge.slots": "150 Plätze",
+    "signup.side.fact1": "Eine Runde · 6,71 km · jede volle Stunde",
+    "signup.side.fact2": "Start & Ziel an der Nordic Arena",
+    "signup.side.fact3": "Mindestalter 18 Jahre, ärztliches Attest Pflicht",
+    "signup.side.slots_left": "Noch {n} Plätze verfügbar",
     "signup.title": "Anmeldung",
     "signup.intro":
       "Sichere dir einen der 150 Startplätze für die Ausgabe am 15. Mai 2027.",
@@ -170,6 +188,11 @@ export const ui = {
     "startlist.status.pending": "Ausstehend",
     "startlist.empty": "Noch keine Teilnehmer registriert.",
 
+    "results.eyebrow": "Archiv",
+    "results.subtitle": "2026 · Première · Toblach",
+    "results.stat.starters": "Starter",
+    "results.stat.hours": "Stunden",
+    "results.stat.loop": "km / Loop",
     "results.title": "Ergebnisse",
     "results.intro": "Archiv vergangener Ausgaben.",
     "results.year.2026": "2026 – 101 Starter",
@@ -202,10 +225,14 @@ export const ui = {
     "gallery.alt.emotion_smile": "Lächelnde Athletin",
     "gallery.alt.portrait_exhausted": "Erschöpfter Ausdruck nach dem Loop",
 
+    "faq.eyebrow": "Häufige Fragen",
+    "faq.subtitle": "Alle Antworten auf deine Fragen.",
     "faq.title": "FAQ",
     "faq.participants": "Für Teilnehmer",
     "faq.crew": "Für Betreuer",
 
+    "contact.eyebrow": "Hallo",
+    "contact.subtitle": "Schreib uns – wir freuen uns auf deine Nachricht.",
     "contact.title": "Kontakt",
     "contact.org": "Veranstalter",
     "contact.org.value": "Sport OK Toblach",
@@ -330,6 +357,14 @@ export const ui = {
     "home.archive.stat.loop": "km / Loop",
     "home.archive.stat.hours": "Ore",
 
+    "race.eyebrow": "L’evento",
+    "race.subtitle": "6,71 km · Nordic Arena Dobbiaco · Ogni ora",
+    "race.highlight.start.title": "Partenza",
+    "race.highlight.start.text": "Nordic Arena Dobbiaco – ogni ora esatta.",
+    "race.highlight.top.title": "Punto più alto",
+    "race.highlight.top.text": "Metà loop verso il Lago di Dobbiaco.",
+    "race.highlight.finish.title": "Arrivo",
+    "race.highlight.finish.text": "Ritorno alla Nordic Arena in discesa.",
     "race.title": "Info gara",
     "race.what.title": "Cos’è una Backyard Ultra?",
     "race.what.text":
@@ -358,6 +393,16 @@ export const ui = {
     "race.rules.12":
       "Sul percorso non sono ammessi né i membri dell’equipaggio né altre persone. È severamente vietato correre insieme agli atleti.",
 
+    "signup.eyebrow": "2027",
+    "signup.hero_title": "Iscrizione 2027",
+    "signup.hero_subtitle": "150 posti di partenza · 15 maggio 2027",
+    "signup.badge.location": "Dobbiaco, Alto Adige",
+    "signup.badge.date": "15 maggio 2027",
+    "signup.badge.slots": "150 posti",
+    "signup.side.fact1": "Un loop · 6,71 km · ogni ora esatta",
+    "signup.side.fact2": "Partenza e arrivo alla Nordic Arena",
+    "signup.side.fact3": "Età minima 18 anni, certificato medico obbligatorio",
+    "signup.side.slots_left": "Ancora {n} posti disponibili",
     "signup.title": "Iscrizione",
     "signup.intro":
       "Assicurati uno dei 150 posti per l’edizione del 15 maggio 2027.",
@@ -406,6 +451,11 @@ export const ui = {
     "startlist.status.pending": "In sospeso",
     "startlist.empty": "Nessun partecipante registrato.",
 
+    "results.eyebrow": "Archivio",
+    "results.subtitle": "2026 · Première · Dobbiaco",
+    "results.stat.starters": "Partenti",
+    "results.stat.hours": "Ore",
+    "results.stat.loop": "km / Loop",
     "results.title": "Risultati",
     "results.intro": "Archivio delle edizioni passate.",
     "results.year.2026": "2026 – 101 partenti",
@@ -438,10 +488,14 @@ export const ui = {
     "gallery.alt.emotion_smile": "Atleta che sorride",
     "gallery.alt.portrait_exhausted": "Espressione di stanchezza dopo il loop",
 
+    "faq.eyebrow": "Domande frequenti",
+    "faq.subtitle": "Tutte le risposte alle tue domande.",
     "faq.title": "FAQ",
     "faq.participants": "Per i partecipanti",
     "faq.crew": "Per i supporter",
 
+    "contact.eyebrow": "Ciao",
+    "contact.subtitle": "Scrivici – ci fa piacere ricevere il tuo messaggio.",
     "contact.title": "Contatti",
     "contact.org": "Organizzatore",
     "contact.org.value": "Sport OK Dobbiaco",
@@ -566,6 +620,14 @@ export const ui = {
     "home.archive.stat.loop": "km / Loop",
     "home.archive.stat.hours": "Hours",
 
+    "race.eyebrow": "The event",
+    "race.subtitle": "6.71 km · Nordic Arena Toblach · Every hour",
+    "race.highlight.start.title": "Start",
+    "race.highlight.start.text": "Nordic Arena Toblach – every hour on the hour.",
+    "race.highlight.top.title": "Highest point",
+    "race.highlight.top.text": "Mid-loop near Lake Toblach.",
+    "race.highlight.finish.title": "Finish",
+    "race.highlight.finish.text": "Back to the Nordic Arena downhill.",
     "race.title": "Race info",
     "race.what.title": "What is a Backyard Ultra?",
     "race.what.text":
@@ -593,6 +655,16 @@ export const ui = {
     "race.rules.12":
       "No crew members or other persons are allowed on the course. Running alongside athletes is strictly prohibited.",
 
+    "signup.eyebrow": "2027",
+    "signup.hero_title": "Sign up 2027",
+    "signup.hero_subtitle": "150 starting spots · May 15, 2027",
+    "signup.badge.location": "Toblach, South Tyrol",
+    "signup.badge.date": "May 15, 2027",
+    "signup.badge.slots": "150 spots",
+    "signup.side.fact1": "One loop · 6.71 km · every hour on the hour",
+    "signup.side.fact2": "Start and finish at the Nordic Arena",
+    "signup.side.fact3": "Minimum age 18, medical certificate required",
+    "signup.side.slots_left": "{n} spots still available",
     "signup.title": "Sign up",
     "signup.intro":
       "Secure one of the 150 starting spots for the May 15, 2027 edition.",
@@ -640,6 +712,11 @@ export const ui = {
     "startlist.status.pending": "Pending",
     "startlist.empty": "No registered runners yet.",
 
+    "results.eyebrow": "Archive",
+    "results.subtitle": "2026 · Première · Toblach",
+    "results.stat.starters": "Starters",
+    "results.stat.hours": "Hours",
+    "results.stat.loop": "km / Loop",
     "results.title": "Results",
     "results.intro": "Archive of past editions.",
     "results.year.2026": "2026 – 101 starters",
@@ -672,10 +749,14 @@ export const ui = {
     "gallery.alt.emotion_smile": "Smiling athlete",
     "gallery.alt.portrait_exhausted": "Exhausted look after a loop",
 
+    "faq.eyebrow": "Frequent questions",
+    "faq.subtitle": "All the answers to your questions.",
     "faq.title": "FAQ",
     "faq.participants": "For runners",
     "faq.crew": "For crew",
 
+    "contact.eyebrow": "Hello",
+    "contact.subtitle": "Drop us a line – we’d love to hear from you.",
     "contact.title": "Contact",
     "contact.org": "Organiser",
     "contact.org.value": "Sport OK Toblach",

@@ -1,5 +1,8 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import StorySplit from "@components/StorySplit.astro";
+import FullBleedImage from "@components/FullBleedImage.astro";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 export const prerender = false;
@@ -21,45 +24,42 @@ const ruleKeys = [
   "race.rules.11",
   "race.rules.12",
 ] as const;
+
+// Visually highlight the safety-critical rules
+const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8, 10)
 ---
 
 <BaseLayout lang={lang} title={t("race.title")}>
-  <section class="page-head">
-    <div class="container">
-      <p class="eyebrow">{t("site.event_date")}</p>
-      <h1>{t("race.title")}</h1>
-    </div>
-  </section>
+  <PageHero
+    bg="/images/day-runner-portrait.jpg"
+    position="center 30%"
+    eyebrow={t("race.eyebrow")}
+    title={t("race.title")}
+    subtitle={t("race.subtitle")}
+  />
 
-  <section class="section">
-    <div class="container grid-split">
-      <div class="reveal">
-        <h2>{t("race.what.title")}</h2>
-        <p>{t("race.what.text")}</p>
-      </div>
-      <div class="reveal callout">
-        <span class="callout-num">6,71</span>
-        <span class="callout-unit">km / Loop</span>
-        <p class="text-dim mt-5">@ Nordic Arena · Toblach</p>
-      </div>
-    </div>
-  </section>
+  <StorySplit lang={lang} />
 
-  <section class="section section-alt">
+  <FullBleedImage lang={lang} src="/images/bib-detail.jpg" />
+
+  <section class="section section-alt course">
     <div class="container">
-      <h2 class="reveal">{t("race.course.title")}</h2>
-      <div class="grid-split mt-5">
-        <div class="reveal">
+      <div class="section-head reveal">
+        <span class="eyebrow">{t("race.course.title")}</span>
+        <h2 class="reveal-left" data-delay="100">{t("race.course.title")}</h2>
+      </div>
+
+      <div class="course-grid mt-6">
+        <div class="reveal" data-delay="100">
           <p>{t("race.course.text")}</p>
-          <div class="course-profile mt-6" aria-hidden="true">
+          <div class="profile mt-6" aria-hidden="true">
             <svg viewBox="0 0 600 200" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="prof" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stop-color="#e85d04" stop-opacity="0.32" />
-                  <stop offset="100%" stop-color="#e85d04" stop-opacity="0" />
+                  <stop offset="0%" stop-color="#2d4a6b" stop-opacity="0.32" />
+                  <stop offset="100%" stop-color="#2d4a6b" stop-opacity="0" />
                 </linearGradient>
               </defs>
-              <!-- Climb (0–35%) → plateau (35–65%) → descent (65–100%) -->
               <path
                 d="M0,180 C30,170 120,80 210,60 L390,50 C470,60 540,160 600,180 L600,200 L0,200 Z"
                 fill="url(#prof)"
@@ -67,123 +67,112 @@ const ruleKeys = [
               <path
                 d="M0,180 C30,170 120,80 210,60 L390,50 C470,60 540,160 600,180"
                 fill="none"
-                stroke="#e85d04"
+                stroke="#2d4a6b"
                 stroke-width="2.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
-              <line
-                x1="0"
-                y1="180"
-                x2="600"
-                y2="180"
-                stroke="#d8d2c5"
-                stroke-width="1"
-                stroke-dasharray="3 5"
-              />
-              <circle cx="0" cy="180" r="6" fill="#e85d04" />
-              <circle cx="210" cy="60" r="6" fill="#e85d04" />
-              <circle cx="390" cy="50" r="6" fill="#e85d04" />
-              <circle cx="600" cy="180" r="6" fill="#e85d04" />
+              <line x1="0" y1="180" x2="600" y2="180" stroke="#ddd8cf" stroke-width="1" stroke-dasharray="3 5" />
+              <circle cx="0" cy="180" r="6" fill="#2d4a6b" />
+              <circle cx="300" cy="55" r="6" fill="#2d4a6b" />
+              <circle cx="600" cy="180" r="6" fill="#2d4a6b" />
             </svg>
             <div class="profile-labels">
-              <span>Start</span>
-              <span>Anstieg</span>
-              <span>Plateau</span>
-              <span>Abfall</span>
-              <span>Ziel</span>
+              <span>{t("race.highlight.start.title")}</span>
+              <span>{t("race.highlight.top.title")}</span>
+              <span>{t("race.highlight.finish.title")}</span>
             </div>
           </div>
         </div>
-        <figure class="course-photo reveal">
-          <img
-            src="/images/day-running-1.jpg"
-            alt={t("gallery.alt.day_running_1")}
-            loading="lazy"
-          />
-          <figcaption>© Wisthaler Photography</figcaption>
+
+        <figure class="course-photo reveal reveal-scale" data-delay="200">
+          <img src="/images/day-running-1.jpg" alt="" loading="lazy" />
+          <figcaption>© Harald Wisthaler</figcaption>
         </figure>
+      </div>
+
+      <div class="highlight-cards mt-7">
+        <article class="hc reveal" data-delay="100">
+          <span class="hc-num">01</span>
+          <h3>{t("race.highlight.start.title")}</h3>
+          <p>{t("race.highlight.start.text")}</p>
+        </article>
+        <article class="hc reveal" data-delay="200">
+          <span class="hc-num">02</span>
+          <h3>{t("race.highlight.top.title")}</h3>
+          <p>{t("race.highlight.top.text")}</p>
+        </article>
+        <article class="hc reveal" data-delay="300">
+          <span class="hc-num">03</span>
+          <h3>{t("race.highlight.finish.title")}</h3>
+          <p>{t("race.highlight.finish.text")}</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="container">
-      <h2 class="reveal">{t("race.rules.title")}</h2>
-      <ol class="rules reveal">
-        {ruleKeys.map((key) => <li>{t(key)}</li>)}
+  <section class="rules-section section">
+    <div class="rules-bg" aria-hidden="true">
+      <img src="/images/night-headlamp.jpg" alt="" loading="lazy" />
+      <div class="rules-overlay"></div>
+    </div>
+    <div class="container rules-inner">
+      <div class="section-head reveal text-center">
+        <span class="eyebrow on-dark">{t("race.rules.title")}</span>
+        <h2 class="on-dark">{t("race.rules.title")}</h2>
+      </div>
+
+      <ol class="rules-grid">
+        {
+          ruleKeys.map((key, idx) => (
+            <li
+              class:list={[
+                "rule reveal",
+                { critical: criticalIndexes.has(idx) },
+              ]}
+              data-delay={String((idx % 4) * 80)}
+            >
+              <span class="rule-num">
+                {(idx + 1).toString().padStart(2, "0")}
+              </span>
+              <p>{t(key)}</p>
+            </li>
+          ))
+        }
       </ol>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .page-head {
-    padding: var(--space-9) 0 var(--space-5);
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-bg-alt);
-  }
-  .grid-split {
+  .course-grid {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
     gap: var(--space-7);
     align-items: start;
   }
-  @media (max-width: 800px) {
-    .grid-split {
+  @media (max-width: 900px) {
+    .course-grid {
       grid-template-columns: 1fr;
     }
   }
-
-  .callout {
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-7);
-    text-align: center;
-    box-shadow: var(--shadow-card);
-  }
-  .callout-num {
-    display: block;
-    font-family: var(--font-display);
-    font-size: clamp(4rem, 8vw, 6rem);
-    color: var(--color-accent);
-    line-height: 1;
-  }
-  .callout-unit {
-    display: block;
-    margin-top: var(--space-3);
-    font-size: 0.9rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .course-profile svg {
+  .profile svg {
     width: 100%;
-    height: 200px;
+    height: 220px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     background: var(--color-card);
     box-shadow: var(--shadow-card);
   }
   .profile-labels {
-    display: grid;
-    grid-template-columns: auto 1fr 1fr 1fr auto;
+    display: flex;
+    justify-content: space-between;
     margin-top: var(--space-2);
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-text-dim);
-    text-align: center;
   }
-  .profile-labels span:first-child {
-    text-align: left;
-  }
-  .profile-labels span:last-child {
-    text-align: right;
-  }
-
   .course-photo {
     margin: 0;
     border-radius: var(--radius);
@@ -194,7 +183,7 @@ const ruleKeys = [
   .course-photo img {
     width: 100%;
     height: 100%;
-    max-height: 480px;
+    max-height: 520px;
     object-fit: cover;
     display: block;
   }
@@ -203,39 +192,148 @@ const ruleKeys = [
     bottom: var(--space-2);
     right: var(--space-3);
     font-size: 0.7rem;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.92);
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
   }
 
-  .rules {
-    list-style: none;
-    counter-reset: rule;
-    padding: 0;
+  .highlight-cards {
     display: grid;
-    gap: var(--space-3);
-    max-width: 80ch;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
   }
-  .rules li {
-    counter-increment: rule;
-    background: var(--color-card);
+  @media (max-width: 800px) {
+    .highlight-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+  .hc {
+    padding: var(--space-6);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    padding: var(--space-4) var(--space-5) var(--space-4) calc(var(--space-6) + var(--space-5));
-    position: relative;
-    color: var(--color-text);
+    background: var(--color-card);
     box-shadow: var(--shadow-card);
+    transition:
+      transform var(--transition),
+      border-color var(--transition),
+      box-shadow var(--transition);
   }
-  .rules li::before {
-    content: counter(rule, decimal-leading-zero);
-    position: absolute;
-    left: var(--space-5);
-    top: 50%;
-    transform: translateY(-50%);
+  .hc:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary-light);
+    box-shadow: var(--shadow-hover);
+  }
+  .hc-num {
+    display: inline-block;
     font-family: var(--font-display);
-    color: var(--color-accent);
-    font-size: 1.5rem;
-    letter-spacing: 0.05em;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    color: var(--color-primary);
+    margin-bottom: var(--space-3);
+  }
+
+  .rules-section {
+    position: relative;
+    isolation: isolate;
+    color: #ffffff;
+  }
+  .rules-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .rules-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .rules-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(20, 35, 55, 0.85) 0%,
+      rgba(20, 35, 55, 0.92) 100%
+    );
+  }
+  .rules-inner {
+    position: relative;
+  }
+  .rules-section h2,
+  .rules-section .eyebrow.on-dark {
+    color: #ffffff;
+  }
+  .rules-section .eyebrow.on-dark::before {
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .rules-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+    counter-reset: none;
+  }
+  @media (max-width: 800px) {
+    .rules-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .rule {
+    position: relative;
+    padding: var(--space-5) var(--space-6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(6px);
+    transition:
+      transform var(--transition),
+      border-color var(--transition),
+      background var(--transition);
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .rule:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .rule p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.92);
+  }
+  .rule-num {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .rule.critical {
+    background: rgba(232, 93, 4, 0.12);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+  .rule.critical .rule-num {
+    color: #ffd9b8;
+  }
+  .rule.critical::before {
+    content: "!";
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ffd9b8;
+    color: #1a2a3a;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 </style>

@@ -421,11 +421,15 @@ li {
 }
 
 .field label {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.18em;
   color: var(--color-text-muted);
+  transition: color var(--transition);
+}
+.field:focus-within label {
+  color: var(--color-primary);
 }
 
 .field input,
@@ -648,6 +652,28 @@ li {
 .num-flip .plus {
   display: inline-block;
   margin-left: 0.05em;
+}
+
+/* Counter "+" suffix fade-in (used after count-up reaches target) */
+[data-plus-target] {
+  display: inline-block;
+  margin-left: 0.05em;
+  opacity: 0;
+  transform: translateY(6px) scale(0.7);
+  transition:
+    opacity 350ms var(--ease-emphasis),
+    transform 350ms var(--ease-emphasis);
+}
+[data-plus-target].is-on {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-plus-target] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

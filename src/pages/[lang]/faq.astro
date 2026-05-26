@@ -1,5 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import FullBleedImage from "@components/FullBleedImage.astro";
 import { useTranslations, type Lang } from "@i18n/utils";
 import { faq } from "@i18n/faq";
 
@@ -11,34 +13,59 @@ const content = faq[lang];
 ---
 
 <BaseLayout lang={lang} title={t("faq.title")}>
-  <section class="page-head">
-    <div class="container">
-      <p class="eyebrow">Info</p>
-      <h1>{t("faq.title")}</h1>
-    </div>
-  </section>
+  <PageHero
+    bg="/images/night-camp.jpg"
+    position="center 40%"
+    eyebrow={t("faq.eyebrow")}
+    title={t("faq.title")}
+    subtitle={t("faq.subtitle")}
+  />
 
   <section class="section">
     <div class="container-narrow">
-      <h2>{t("faq.participants")}</h2>
+      <div class="section-head reveal">
+        <span class="eyebrow">{t("faq.participants")}</span>
+        <h2 class="reveal-left">{t("faq.participants")}</h2>
+      </div>
+
       <div class="accordion">
         {
           content.participants.map((item, i) => (
-            <details class="faq-item" open={i === 0}>
-              <summary>{item.q}</summary>
-              <p>{item.a}</p>
+            <details class="faq-item reveal" open={i === 0} data-delay={String((i % 4) * 80)}>
+              <summary>
+                <span>{item.q}</span>
+                <span class="icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-body">
+                <p>{item.a}</p>
+              </div>
             </details>
           ))
         }
       </div>
+    </div>
+  </section>
 
-      <h2 class="mt-7">{t("faq.crew")}</h2>
+  <FullBleedImage lang={lang} src="/images/night-runners.jpg" />
+
+  <section class="section">
+    <div class="container-narrow">
+      <div class="section-head reveal">
+        <span class="eyebrow">{t("faq.crew")}</span>
+        <h2 class="reveal-left">{t("faq.crew")}</h2>
+      </div>
+
       <div class="accordion">
         {
-          content.crew.map((item) => (
-            <details class="faq-item">
-              <summary>{item.q}</summary>
-              <p>{item.a}</p>
+          content.crew.map((item, idx) => (
+            <details class="faq-item reveal" data-delay={String(idx * 80)}>
+              <summary>
+                <span>{item.q}</span>
+                <span class="icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-body">
+                <p>{item.a}</p>
+              </div>
             </details>
           ))
         }
@@ -48,10 +75,6 @@ const content = faq[lang];
 </BaseLayout>
 
 <style>
-  .page-head {
-    padding: var(--space-9) 0 var(--space-5);
-    border-bottom: 1px solid var(--color-border);
-  }
   .accordion {
     display: grid;
     gap: var(--space-3);
@@ -61,39 +84,73 @@ const content = faq[lang];
     border-radius: var(--radius);
     background: var(--color-card);
     overflow: hidden;
-    transition: border-color var(--transition);
+    transition: border-color var(--transition), background var(--transition),
+      box-shadow var(--transition);
+    box-shadow: var(--shadow-card);
+    border-left: 3px solid transparent;
   }
   .faq-item[open] {
-    border-color: var(--color-accent);
+    border-color: var(--color-primary);
+    border-left-color: var(--color-primary);
+    background: var(--color-accent-dim);
   }
   .faq-item summary {
     list-style: none;
     cursor: pointer;
-    padding: var(--space-5);
+    padding: var(--space-5) var(--space-6);
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: var(--space-4);
     font-family: var(--font-display);
-    font-size: 1.15rem;
-    letter-spacing: 0.04em;
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
+    color: var(--color-text);
   }
   .faq-item summary::-webkit-details-marker {
     display: none;
   }
-  .faq-item summary::after {
-    content: "+";
-    color: var(--color-accent);
+  .icon {
+    color: var(--color-primary);
     font-size: 1.6rem;
     line-height: 1;
-    transition: transform var(--transition);
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 320ms var(--ease-emphasis);
   }
-  .faq-item[open] summary::after {
-    content: "−";
+  .faq-item[open] .icon {
+    transform: rotate(45deg);
   }
-  .faq-item p {
-    padding: 0 var(--space-5) var(--space-5);
+  .faq-body {
+    overflow: hidden;
+    padding: 0 var(--space-6) var(--space-5);
+    animation: faqDown 400ms var(--ease-emphasis);
+  }
+  .faq-body p {
+    margin: 0;
     color: var(--color-text-muted);
+    font-size: 1.02rem;
+    line-height: 1.6;
+  }
+  @keyframes faqDown {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .icon,
+    .faq-body {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 </style>

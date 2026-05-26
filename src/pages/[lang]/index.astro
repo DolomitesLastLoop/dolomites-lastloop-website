@@ -7,7 +7,6 @@ import StorySplit from "@components/StorySplit.astro";
 import Marquee from "@components/Marquee.astro";
 import FullBleedImage from "@components/FullBleedImage.astro";
 import Testimonials from "@components/Testimonials.astro";
-import FilmTeaser from "@components/FilmTeaser.astro";
 import Newsletter from "@components/Newsletter.astro";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 
@@ -97,7 +96,14 @@ const t = useTranslations(lang);
           <span class="lbl">{t("home.archive.stat.loop")}</span>
         </div>
         <div class="retro-stat">
-          <span class="num num-flip" data-flip>38<span class="plus">+</span></span>
+          <span class="num">
+            <span
+              data-counter="38"
+              data-duration="1500"
+              data-locale="de"
+              data-plus
+            >0</span><span class="plus" data-plus-target>+</span>
+          </span>
           <span class="lbl">{t("home.archive.stat.hours")}</span>
         </div>
       </div>
@@ -116,8 +122,6 @@ const t = useTranslations(lang);
   </section>
 
   <Testimonials lang={lang} />
-
-  <FilmTeaser lang={lang} />
 
   <Newsletter lang={lang} />
 </BaseLayout>

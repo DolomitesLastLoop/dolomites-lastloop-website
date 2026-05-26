@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 import { getAdminClient, type RaceResult } from "@lib/supabase";
 
@@ -27,38 +28,81 @@ const grouped = results.reduce<Record<number, RaceResult[]>>((acc, r) => {
 }, {});
 const years = Object.keys(grouped).map(Number).sort((a, b) => b - a);
 const hasYears = years.length > 0;
+
+const medalClass = (place: number) =>
+  place === 1
+    ? "place-gold"
+    : place === 2
+      ? "place-silver"
+      : place === 3
+        ? "place-bronze"
+        : "";
 ---
 
 <BaseLayout lang={lang} title={t("results.title")}>
-  <section class="page-head">
+  <PageHero
+    bg="/images/day-running-2.jpg"
+    position="center 35%"
+    eyebrow={t("results.eyebrow")}
+    title={t("results.title")}
+    subtitle={t("results.subtitle")}
+  />
+
+  <section class="section section-alt">
     <div class="container">
-      <p class="eyebrow">Archive</p>
-      <h1>{t("results.title")}</h1>
-      <p class="section-lead">{t("results.intro")}</p>
+      <div class="stats-row">
+        <div class="stat reveal" data-delay="100">
+          <span
+            class="stat-num"
+            data-counter="101"
+            data-duration="1500"
+            data-locale="de"
+          >0</span>
+          <span class="stat-lbl">{t("results.stat.starters")}</span>
+        </div>
+        <div class="stat reveal" data-delay="200">
+          <span class="stat-num">
+            <span
+              data-counter="38"
+              data-duration="1500"
+              data-plus
+            >0</span><span class="plus" data-plus-target>+</span>
+          </span>
+          <span class="stat-lbl">{t("results.stat.hours")}</span>
+        </div>
+        <div class="stat reveal" data-delay="300">
+          <span
+            class="stat-num"
+            data-counter="6.71"
+            data-decimals="2"
+            data-locale="de"
+            data-duration="1500"
+          >0</span>
+          <span class="stat-lbl">{t("results.stat.loop")}</span>
+        </div>
+        <figure class="stat-photo reveal reveal-scale" data-delay="400">
+          <img src="/images/emotion-smile.jpg" alt="" loading="lazy" />
+        </figure>
+      </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
+      <p class="text-muted mb-6">{t("results.intro")}</p>
+
+      <p class="mb-6">
+        <a class="btn btn-primary btn-arrow" href={localizePath("/galerie", lang)}>
+          {t("results.gallery_link")}
+        </a>
+      </p>
+
       {
         !hasYears && (
           <article class="card">
             <h2>{t("results.year.2026")}</h2>
             <p class="text-muted">{t("results.placeholder")}</p>
-            <a class="btn btn-primary mt-5" href={localizePath("/galerie", lang)}>
-              {t("results.gallery_link")}
-            </a>
           </article>
-        )
-      }
-
-      {
-        hasYears && (
-          <p class="reveal mb-6">
-            <a class="btn btn-ghost" href={localizePath("/galerie", lang)}>
-              {t("results.gallery_link")}
-            </a>
-          </p>
         )
       }
 
@@ -78,8 +122,11 @@ const hasYears = years.length > 0;
                 </thead>
                 <tbody>
                   {grouped[year].map((r) => (
-                    <tr>
-                      <td>{r.place}</td>
+                    <tr class={medalClass(r.place)}>
+                      <td>
+                        {r.place <= 3 ? <span class="medal" /> : null}
+                        {r.place}
+                      </td>
                       <td>{r.name}</td>
                       <td>{r.nationalitaet ?? "—"}</td>
                       <td>{r.runden}</td>
@@ -96,11 +143,116 @@ const hasYears = years.length > 0;
 </BaseLayout>
 
 <style>
-  .page-head {
-    padding: var(--space-9) 0 var(--space-5);
-    border-bottom: 1px solid var(--color-border);
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 1.4fr;
+    gap: var(--space-5);
+    align-items: stretch;
   }
+  @media (max-width: 900px) {
+    .stats-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .stat-photo {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 600px) {
+    .stats-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .stat {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: var(--shadow-card);
+    transition: transform var(--transition);
+  }
+  .stat:hover {
+    transform: scale(1.04);
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    color: var(--color-primary);
+    line-height: 1;
+    letter-spacing: 0.04em;
+  }
+  .stat-lbl {
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+  .stat-photo {
+    margin: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    min-height: 200px;
+  }
+  .stat-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .table-wrap {
     overflow-x: auto;
+  }
+  .table tr {
+    transition: background var(--transition);
+  }
+  .table tr:hover td {
+    background: var(--color-accent-dim);
+  }
+
+  /* Medal styling */
+  .place-gold,
+  .place-silver,
+  .place-bronze {
+    font-weight: 600;
+  }
+  .place-gold td:first-child,
+  .place-silver td:first-child,
+  .place-bronze td:first-child {
+    position: relative;
+    padding-left: 2.6rem !important;
+  }
+  .medal {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+  }
+  .place-gold .medal {
+    background: linear-gradient(135deg, #f3d27a, #c9963c);
+  }
+  .place-silver .medal {
+    background: linear-gradient(135deg, #dedede, #9c9c9c);
+  }
+  .place-bronze .medal {
+    background: linear-gradient(135deg, #d9924b, #8d4d1c);
+  }
+  .place-gold td {
+    background: rgba(201, 150, 60, 0.07);
+  }
+  .place-silver td {
+    background: rgba(156, 156, 156, 0.06);
+  }
+  .place-bronze td {
+    background: rgba(141, 77, 28, 0.06);
   }
 </style>
