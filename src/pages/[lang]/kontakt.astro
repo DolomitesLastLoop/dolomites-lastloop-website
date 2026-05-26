@@ -36,18 +36,19 @@ const t = useTranslations(lang);
 
         <div class="map mt-6">
           <iframe
-            src="https://www.openstreetmap.org/export/embed.html?bbox=12.2080%2C46.7290%2C12.2480%2C46.7440&layer=mapnik&marker=46.7365%2C12.2280"
-            title={t("contact.map.title")}
+            src="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy&output=embed"
+            title={t("contact.location.value")}
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
           ></iframe>
           <a
             class="map-link"
-            href="https://www.openstreetmap.org/?mlat=46.7365&mlon=12.2280#map=15/46.7365/12.2280"
+            href="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy"
             target="_blank"
             rel="noopener"
           >
-            {t("contact.map.title")} →
+            {t("contact.location.value")} →
           </a>
         </div>
       </div>
@@ -123,10 +124,9 @@ const t = useTranslations(lang);
   }
   .map iframe {
     width: 100%;
-    height: 300px;
+    height: 320px;
     border: none;
     display: block;
-    filter: invert(0.92) hue-rotate(180deg) brightness(0.95) contrast(1.05);
   }
   .map-link {
     display: block;

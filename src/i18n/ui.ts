@@ -86,6 +86,10 @@ export const ui = {
       "Mobiltelefon mit hinterlegter Notfallnummer ist Pflichtausrüstung.",
     "race.rules.10":
       "Bei medizinischen Bedenken kann die Rennleitung einen Läufer jederzeit aus dem Rennen nehmen.",
+    "race.rules.11":
+      "Bei Verdacht auf Einnahme von Schmerzmitteln kann der Veranstalter einen Dopingtest anordnen.",
+    "race.rules.12":
+      "Auf der Strecke sind weder Crew-Mitglieder noch andere Personen erlaubt. Es ist strengstens untersagt, mit den Athleten mitzulaufen.",
 
     "signup.title": "Anmeldung",
     "signup.intro":
@@ -154,6 +158,7 @@ export const ui = {
     "gallery.section.night": "Nacht",
     "gallery.credit": "© Harald Wisthaler – www.wisthaler.com",
     "gallery.close": "Schließen",
+    "gallery.download": "Foto herunterladen",
     "gallery.alt.hero_start": "Startlinie mit allen Läufern",
     "gallery.alt.day_running_1": "Läufer auf der Strecke am See",
     "gallery.alt.day_running_2": "Läufer im Startfeld",
@@ -173,7 +178,7 @@ export const ui = {
     "contact.org": "Veranstalter",
     "contact.org.value": "Sport OK Toblach",
     "contact.location": "Standort",
-    "contact.location.value": "Toblach, Südtirol, Italien",
+    "contact.location.value": "Seeweg 16, 39034 Toblach (BZ), Italien",
     "contact.email": "Email",
     "contact.form.title": "Schreib uns",
     "contact.form.name": "Name",
@@ -284,6 +289,10 @@ export const ui = {
       "Cellulare con numero di emergenza registrato è materiale obbligatorio.",
     "race.rules.10":
       "In caso di problemi medici, la direzione può ritirare un atleta dalla gara in qualsiasi momento.",
+    "race.rules.11":
+      "In caso di sospetto consumo di antidolorifici, l’organizzatore può disporre un test antidoping.",
+    "race.rules.12":
+      "Sul percorso non sono ammessi né i membri dell’equipaggio né altre persone. È severamente vietato correre insieme agli atleti.",
 
     "signup.title": "Iscrizione",
     "signup.intro":
@@ -353,6 +362,7 @@ export const ui = {
     "gallery.section.night": "Notte",
     "gallery.credit": "© Harald Wisthaler – www.wisthaler.com",
     "gallery.close": "Chiudi",
+    "gallery.download": "Scarica la foto",
     "gallery.alt.hero_start": "Linea di partenza con tutti gli atleti",
     "gallery.alt.day_running_1": "Atleta sul percorso vicino al lago",
     "gallery.alt.day_running_2": "Atleti nel gruppo di partenza",
@@ -372,7 +382,7 @@ export const ui = {
     "contact.org": "Organizzatore",
     "contact.org.value": "Sport OK Dobbiaco",
     "contact.location": "Sede",
-    "contact.location.value": "Dobbiaco, Alto Adige, Italia",
+    "contact.location.value": "Seeweg 16, 39034 Dobbiaco (BZ), Italia",
     "contact.email": "Email",
     "contact.form.title": "Scrivici",
     "contact.form.name": "Nome",
@@ -482,6 +492,10 @@ export const ui = {
       "Mobile phone with emergency number stored is mandatory gear.",
     "race.rules.10":
       "In case of medical concern, the race directors can withdraw a runner at any time.",
+    "race.rules.11":
+      "If use of painkillers is suspected, the organizer may order a doping test.",
+    "race.rules.12":
+      "No crew members or other persons are allowed on the course. Running alongside athletes is strictly prohibited.",
 
     "signup.title": "Sign up",
     "signup.intro":
@@ -550,6 +564,7 @@ export const ui = {
     "gallery.section.night": "Night",
     "gallery.credit": "© Harald Wisthaler – www.wisthaler.com",
     "gallery.close": "Close",
+    "gallery.download": "Download photo",
     "gallery.alt.hero_start": "Starting line with all runners",
     "gallery.alt.day_running_1": "Runner on course near the lake",
     "gallery.alt.day_running_2": "Runners in the start corral",
@@ -569,7 +584,7 @@ export const ui = {
     "contact.org": "Organiser",
     "contact.org.value": "Sport OK Toblach",
     "contact.location": "Location",
-    "contact.location.value": "Toblach/Dobbiaco, South Tyrol, Italy",
+    "contact.location.value": "Seeweg 16, 39034 Toblach (BZ), Italy",
     "contact.email": "Email",
     "contact.form.title": "Write to us",
     "contact.form.name": "Name",

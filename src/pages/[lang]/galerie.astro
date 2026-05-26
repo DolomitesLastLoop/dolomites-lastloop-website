@@ -101,6 +101,7 @@ const isLarge = (idx: number) => idx % 7 === 0;
               <figure
                 class={`tile reveal ${isLarge(idx) ? "tile-large" : ""}`}
                 data-src={encodeSrc(f)}
+                data-name={f}
                 data-alt={f}
               >
                 <img
@@ -109,6 +110,16 @@ const isLarge = (idx: number) => idx % 7 === 0;
                   loading="lazy"
                   decoding="async"
                 />
+                <a
+                  class="tile-dl"
+                  href={encodeSrc(f)}
+                  download={f}
+                  aria-label={t("gallery.download")}
+                  title={t("gallery.download")}
+                  onclick="event.stopPropagation()"
+                >
+                  ↓
+                </a>
                 <span class="hover-overlay">{t("gallery.credit")}</span>
               </figure>
             ))}
@@ -136,6 +147,7 @@ const isLarge = (idx: number) => idx % 7 === 0;
               <figure
                 class={`tile reveal ${isLarge(idx) ? "tile-large" : ""}`}
                 data-src={encodeSrc(f)}
+                data-name={f}
                 data-alt={f}
               >
                 <img
@@ -144,6 +156,16 @@ const isLarge = (idx: number) => idx % 7 === 0;
                   loading="lazy"
                   decoding="async"
                 />
+                <a
+                  class="tile-dl"
+                  href={encodeSrc(f)}
+                  download={f}
+                  aria-label={t("gallery.download")}
+                  title={t("gallery.download")}
+                  onclick="event.stopPropagation()"
+                >
+                  ↓
+                </a>
                 <span class="hover-overlay">{t("gallery.credit")}</span>
               </figure>
             ))}
@@ -164,6 +186,16 @@ const isLarge = (idx: number) => idx % 7 === 0;
     <button class="lb-close" type="button" aria-label={t("gallery.close")}>
       ✕
     </button>
+    <a
+      id="lb-download"
+      class="lb-dl"
+      href="#"
+      download
+      aria-label={t("gallery.download")}
+      title={t("gallery.download")}
+    >
+      ↓ <span class="lb-dl-text">{t("gallery.download")}</span>
+    </a>
     <button class="lb-nav lb-prev" type="button" aria-label="Previous">
       ‹
     </button>
@@ -272,6 +304,40 @@ const isLarge = (idx: number) => idx % 7 === 0;
     opacity: 1;
   }
 
+  .tile-dl {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    line-height: 1;
+    font-weight: 700;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity var(--transition), transform var(--transition),
+      background var(--transition);
+    z-index: 3;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  }
+  .tile:hover .tile-dl,
+  .tile:focus-within .tile-dl {
+    opacity: 1;
+    transform: none;
+  }
+  .tile-dl:hover {
+    background: #ffffff;
+    color: var(--color-primary-hover);
+    transform: scale(1.05);
+  }
+
   /* Lightbox */
   .lightbox {
     position: fixed;
@@ -312,6 +378,39 @@ const isLarge = (idx: number) => idx % 7 === 0;
     letter-spacing: 0.18em;
     text-transform: uppercase;
   }
+  .lb-dl {
+    position: absolute;
+    top: var(--space-4);
+    right: calc(var(--space-4) + 60px);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.55rem 1rem;
+    height: 46px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    transition: background var(--transition), border-color var(--transition);
+  }
+  .lb-dl:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+  @media (max-width: 600px) {
+    .lb-dl-text {
+      display: none;
+    }
+    .lb-dl {
+      right: calc(var(--space-4) + 54px);
+      padding: 0 0.85rem;
+    }
+  }
+
   .lb-close {
     position: absolute;
     top: var(--space-4);
@@ -382,11 +481,13 @@ const isLarge = (idx: number) => idx % 7 === 0;
   );
   const data = tiles.map((t) => ({
     src: t.dataset.src || "",
+    name: t.dataset.name || "",
     alt: t.dataset.alt || "",
   }));
 
   const lb = document.getElementById("lightbox") as HTMLElement | null;
   const lbImg = document.getElementById("lb-image") as HTMLImageElement | null;
+  const lbDl = document.getElementById("lb-download") as HTMLAnchorElement | null;
   const closeBtn = document.querySelector<HTMLButtonElement>(".lb-close");
   const prevBtn = document.querySelector<HTMLButtonElement>(".lb-prev");
   const nextBtn = document.querySelector<HTMLButtonElement>(".lb-next");
@@ -398,6 +499,10 @@ const isLarge = (idx: number) => idx % 7 === 0;
     current = idx;
     lbImg.src = data[idx].src;
     lbImg.alt = data[idx].alt;
+    if (lbDl) {
+      lbDl.href = data[idx].src;
+      lbDl.setAttribute("download", data[idx].name);
+    }
     lb.hidden = false;
     document.body.style.overflow = "hidden";
   }
