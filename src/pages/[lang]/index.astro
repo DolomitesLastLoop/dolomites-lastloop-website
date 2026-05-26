@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/Hero.astro";
+import Marquee from "@components/Marquee.astro";
 import Newsletter from "@components/Newsletter.astro";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 
@@ -19,7 +20,7 @@ const t = useTranslations(lang);
   <section class="section" id="features">
     <div class="container">
       <p class="eyebrow reveal">USP</p>
-      <h2 class="reveal" data-delay="100">{t("home.features.title")}</h2>
+      <h2 class="reveal reveal-left" data-delay="100">{t("home.features.title")}</h2>
       <div class="grid grid-2 mt-6">
         <article class="card reveal" data-delay="100">
           <h3>{t("home.features.location.title")}</h3>
@@ -41,6 +42,8 @@ const t = useTranslations(lang);
     </div>
   </section>
 
+  <Marquee />
+
   <!-- Cinematic 2026 retrospective -->
   <section class="retro" aria-labelledby="retro-title">
     <div class="retro-bg" aria-hidden="true">
@@ -50,7 +53,7 @@ const t = useTranslations(lang);
 
     <div class="container retro-inner">
       <p class="eyebrow on-dark reveal">2026 · Toblach</p>
-      <h2 id="retro-title" class="retro-title reveal" data-delay="100">
+      <h2 id="retro-title" class="retro-title reveal reveal-left" data-delay="100">
         {t("home.archive.title")}
       </h2>
       <p class="retro-lead reveal" data-delay="200">
@@ -59,17 +62,21 @@ const t = useTranslations(lang);
 
       <div class="retro-stats reveal" data-delay="300">
         <div class="retro-stat">
-          <span class="num" data-counter="101" data-duration="2000">0</span>
+          <span class="num" data-counter="101" data-duration="1500">0</span>
           <span class="lbl">{t("home.archive.stat.starters")}</span>
         </div>
         <div class="retro-stat">
-          <span class="num">6,71</span>
+          <span
+            class="num"
+            data-counter="6.71"
+            data-decimals="2"
+            data-locale="de"
+            data-duration="1500"
+          >0</span>
           <span class="lbl">{t("home.archive.stat.loop")}</span>
         </div>
         <div class="retro-stat">
-          <span class="num">
-            <span data-counter="38" data-duration="1800">0</span>
-          </span>
+          <span class="num num-flip" data-flip>38<span class="plus">+</span></span>
           <span class="lbl">{t("home.archive.stat.hours")}</span>
         </div>
       </div>

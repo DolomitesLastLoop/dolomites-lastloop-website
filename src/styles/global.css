@@ -85,6 +85,18 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  opacity: 1;
+  transition: opacity 300ms var(--ease-emphasis);
+}
+body[data-leaving="true"] {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body[data-leaving="true"] {
+    opacity: 1;
+    transition: none;
+  }
 }
 
 main {
@@ -538,17 +550,80 @@ li {
 .reveal[data-delay="400"].is-visible {
   transition-delay: 400ms;
 }
+.reveal[data-delay="500"].is-visible {
+  transition-delay: 500ms;
+}
+.reveal[data-delay="600"].is-visible {
+  transition-delay: 600ms;
+}
+
+/* Reveal variants */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition:
+    opacity 900ms var(--ease-emphasis),
+    transform 900ms var(--ease-emphasis);
+}
+.reveal-left.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition:
+    opacity 900ms var(--ease-emphasis),
+    transform 900ms var(--ease-emphasis);
+}
+.reveal-scale.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Number flip-in */
+@keyframes numFlip {
+  0% {
+    opacity: 0;
+    transform: rotateX(80deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
+}
+.num-flip {
+  display: inline-block;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+.num-flip.is-visible {
+  animation: numFlip 900ms var(--ease-emphasis) both;
+}
+.num-flip .plus {
+  display: inline-block;
+  margin-left: 0.05em;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .reveal-left,
+  .reveal-scale {
     opacity: 1;
     transform: none;
+  }
+  .num-flip {
+    animation: none !important;
   }
   html {
     scroll-behavior: auto;
   }
   [data-parallax] {
     transform: none !important;
+  }
+  .marquee-track {
+    animation: none !important;
   }
 }
 

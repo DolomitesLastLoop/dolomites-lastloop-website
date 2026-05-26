@@ -8,20 +8,22 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 
 const slides = [
-  "/images/hero-start.jpg",
-  "/images/day-running-1.jpg",
-  "/images/night-runners.jpg",
+  { src: "/images/hero-start.jpg", pos: "center center" },
+  { src: "/images/day-running-1.jpg", pos: "center 30%" },
+  { src: "/images/night-runners.jpg", pos: "center 20%" },
+  { src: "/images/emotion-smile.jpg", pos: "center 15%" },
+  { src: "/images/night-camp.jpg", pos: "center center" },
 ];
 ---
 
 <section class="hero" aria-label={t("hero.title")}>
   <div class="hero-stage" data-parallax aria-hidden="true">
     {
-      slides.map((src, i) => (
+      slides.map((s, i) => (
         <div
           class:list={["slide", { active: i === 0 }]}
           data-slide
-          style={`background-image:url(${src})`}
+          style={`background-image:url(${s.src}); background-position:${s.pos};`}
         />
       ))
     }
@@ -31,11 +33,13 @@ const slides = [
 
   <div class="container hero-inner">
     <p class="hero-eyebrow reveal">2027</p>
-    <h1 class="hero-title reveal" data-delay="100">{t("hero.title")}</h1>
-    <p class="hero-subtitle reveal" data-delay="200">{t("hero.subtitle")}</p>
-    <p class="hero-teaser reveal" data-delay="300">{t("hero.teaser")}</p>
+    <h1 class="hero-title hero-title-anim" data-hero-title>
+      {t("hero.title")}
+    </h1>
+    <p class="hero-subtitle hero-fade" data-delay="300">{t("hero.subtitle")}</p>
+    <p class="hero-teaser hero-fade" data-delay="450">{t("hero.teaser")}</p>
 
-    <div class="hero-cta reveal" data-delay="400">
+    <div class="hero-cta hero-rise" data-delay="600">
       <a class="btn btn-primary" href={localizePath("/anmeldung", lang)}>
         {t("hero.cta_signup")}
       </a>
@@ -45,11 +49,21 @@ const slides = [
     </div>
   </div>
 
-  <a
-    class="hero-scroll-cue"
-    href="#after-hero"
-    aria-label="Scroll"
-  >
+  <div class="hero-dots" role="tablist" aria-label="Slide navigation">
+    {
+      slides.map((_, i) => (
+        <button
+          type="button"
+          class:list={["dot", { active: i === 0 }]}
+          data-dot={i}
+          role="tab"
+          aria-label={`Slide ${i + 1}`}
+        />
+      ))
+    }
+  </div>
+
+  <a class="hero-scroll-cue" href="#after-hero" aria-label="Scroll">
     <span class="cue-line"></span>
     <span class="cue-arrow">↓</span>
   </a>
@@ -82,11 +96,11 @@ const slides = [
     position: absolute;
     inset: 0;
     background-size: cover;
-    background-position: center 35%;
     opacity: 0;
-    transform: scale(1.06);
-    transition: opacity 1500ms var(--ease-emphasis),
-      transform 8000ms linear;
+    transform: scale(1.04);
+    transition:
+      opacity 1500ms var(--ease-emphasis),
+      transform 9000ms linear;
   }
   .slide.active {
     opacity: 1;
@@ -96,14 +110,13 @@ const slides = [
   .hero-overlay {
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 0.55) 0%,
-        rgba(0, 0, 0, 0.35) 30%,
-        rgba(0, 0, 0, 0.42) 70%,
-        rgba(0, 0, 0, 0.7) 100%
-      );
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.3) 30%,
+      rgba(0, 0, 0, 0.42) 70%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
   }
 
   .hero-vignette {
@@ -140,13 +153,47 @@ const slides = [
     backdrop-filter: blur(6px);
   }
 
+  /* Letter-spacing reveal for hero title */
   .hero-title {
     font-size: clamp(3.5rem, 9vw, 8.5rem);
     margin-bottom: var(--space-4);
-    letter-spacing: 0.06em;
     color: #ffffff;
     text-shadow: 0 4px 30px rgba(0, 0, 0, 0.55);
     line-height: 0.95;
+  }
+  .hero-title-anim {
+    opacity: 0;
+    letter-spacing: -0.5em;
+    transform: translateY(8px);
+    transition:
+      opacity 1000ms var(--ease-emphasis),
+      letter-spacing 1000ms var(--ease-emphasis),
+      transform 1000ms var(--ease-emphasis);
+  }
+  .hero-title-anim.is-on {
+    opacity: 1;
+    letter-spacing: 0.06em;
+    transform: none;
+  }
+
+  /* Sequential fades */
+  .hero-fade,
+  .hero-rise {
+    opacity: 0;
+    transition:
+      opacity 800ms var(--ease-emphasis),
+      transform 800ms var(--ease-emphasis);
+  }
+  .hero-fade {
+    transform: translateY(8px);
+  }
+  .hero-rise {
+    transform: translateY(20px);
+  }
+  .hero-fade.is-on,
+  .hero-rise.is-on {
+    opacity: 1;
+    transform: none;
   }
 
   .hero-subtitle {
@@ -189,13 +236,42 @@ const slides = [
     z-index: 2;
   }
 
+  .hero-dots {
+    position: absolute;
+    bottom: calc(var(--space-7) + var(--space-3));
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--space-3);
+    z-index: 2;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background var(--transition), transform var(--transition),
+      box-shadow var(--transition);
+  }
+  .dot:hover {
+    background: rgba(255, 255, 255, 0.7);
+  }
+  .dot.active {
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.18);
+    transform: scale(1.1);
+  }
+
   .hero-scroll-cue {
     position: absolute;
     bottom: var(--space-6);
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     gap: var(--space-2);
@@ -234,28 +310,63 @@ const slides = [
       transition: opacity 200ms linear;
       transform: none !important;
     }
+    .hero-title-anim,
+    .hero-fade,
+    .hero-rise {
+      opacity: 1;
+      letter-spacing: normal;
+      transform: none !important;
+      transition: none !important;
+    }
   }
 </style>
 
 <script>
   // ─────────────────────── Slideshow ───────────────────────
-  const slides = document.querySelectorAll<HTMLElement>("[data-slide]");
-  if (slides.length > 1) {
-    let i = 0;
-    setInterval(() => {
-      slides[i].classList.remove("active");
-      i = (i + 1) % slides.length;
-      slides[i].classList.add("active");
-    }, 5000);
+  const slides = Array.from(document.querySelectorAll<HTMLElement>("[data-slide]"));
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-dot]"));
+  let active = 0;
+  let timer: number | undefined;
+
+  function show(i: number) {
+    slides[active]?.classList.remove("active");
+    dots[active]?.classList.remove("active");
+    active = (i + slides.length) % slides.length;
+    slides[active]?.classList.add("active");
+    dots[active]?.classList.add("active");
   }
 
-  // ─────────────────────── Parallax ────────────────────────
+  function startAuto() {
+    if (slides.length < 2) return;
+    timer = window.setInterval(() => show(active + 1), 6000);
+  }
+
+  function pauseAuto() {
+    if (timer) {
+      clearInterval(timer);
+      timer = undefined;
+    }
+  }
+
+  dots.forEach((d, i) =>
+    d.addEventListener("click", () => {
+      pauseAuto();
+      show(i);
+      startAuto();
+    }),
+  );
+
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    startAuto();
+  }
+
+  // ─────────────────────── Parallax 0.5x ───────────────────
   const stage = document.querySelector<HTMLElement>(".hero-stage");
   let raf = 0;
   function applyParallax() {
     if (!stage) return;
     const y = window.scrollY;
-    stage.style.transform = `translate3d(0, ${y * 0.35}px, 0)`;
+    stage.style.transform = `translate3d(0, ${y * 0.5}px, 0)`;
     raf = 0;
   }
   if (stage && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -267,4 +378,17 @@ const slides = [
       { passive: true },
     );
   }
+
+  // ─────────────────────── Title letter-spacing reveal ───────
+  // Run on next frame so the initial state paints first.
+  requestAnimationFrame(() => {
+    document
+      .querySelectorAll<HTMLElement>(
+        ".hero-title-anim, .hero-fade, .hero-rise",
+      )
+      .forEach((el) => {
+        const delay = Number(el.dataset.delay || "0");
+        setTimeout(() => el.classList.add("is-on"), delay);
+      });
+  });
 </script>

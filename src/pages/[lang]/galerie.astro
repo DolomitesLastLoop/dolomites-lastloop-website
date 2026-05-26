@@ -343,14 +343,21 @@ const isLarge = (idx: number) => idx % 7 === 0;
     position: fixed;
     inset: 0;
     z-index: 100;
-    background: rgba(10, 14, 22, 0.95);
+    background: rgba(10, 14, 22, 0);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: var(--space-5);
+    opacity: 0;
+    transition: background 280ms var(--ease-emphasis),
+      opacity 280ms var(--ease-emphasis);
   }
   .lightbox[hidden] {
     display: none;
+  }
+  .lightbox.is-open {
+    background: rgba(10, 14, 22, 0.95);
+    opacity: 1;
   }
   .lb-stage {
     margin: 0;
@@ -360,6 +367,11 @@ const isLarge = (idx: number) => idx % 7 === 0;
     flex-direction: column;
     align-items: center;
     gap: var(--space-3);
+    transform: scale(0.85);
+    transition: transform 380ms var(--ease-emphasis);
+  }
+  .lightbox.is-open .lb-stage {
+    transform: scale(1);
   }
   .lb-stage img {
     max-width: 100%;
@@ -367,6 +379,15 @@ const isLarge = (idx: number) => idx % 7 === 0;
     object-fit: contain;
     border-radius: var(--radius);
     background: #000;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox,
+    .lb-stage {
+      transition: none !important;
+    }
+    .lb-stage {
+      transform: none;
+    }
   }
   .lb-stage figcaption {
     color: rgba(255, 255, 255, 0.9);
@@ -505,12 +526,23 @@ const isLarge = (idx: number) => idx % 7 === 0;
     }
     lb.hidden = false;
     document.body.style.overflow = "hidden";
+    // next frame so the transition can run
+    requestAnimationFrame(() => lb.classList.add("is-open"));
   }
 
   function close() {
     if (!lb) return;
-    lb.hidden = true;
+    lb.classList.remove("is-open");
     document.body.style.overflow = "";
+    const onEnd = () => {
+      lb.hidden = true;
+      lb.removeEventListener("transitionend", onEnd);
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      lb.hidden = true;
+    } else {
+      lb.addEventListener("transitionend", onEnd);
+    }
   }
 
   function step(delta: number) {

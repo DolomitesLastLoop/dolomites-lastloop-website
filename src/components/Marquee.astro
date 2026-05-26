@@ -1,0 +1,66 @@
+---
+const items = [
+  "Dolomites Last Loop",
+  "Backyard Ultra",
+  "Toblach",
+  "6,71 km",
+  "One Loop",
+  "No Excuses",
+];
+// Duplicate so the looping translate covers a full screen.
+const sequence = [...items, ...items, ...items, ...items];
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    {
+      sequence.map((label) => (
+        <span class="marquee-item">
+          <span>{label}</span>
+          <span class="dot">·</span>
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    background: var(--color-primary);
+    color: var(--color-bg);
+    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .marquee-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: var(--space-4) 0;
+    white-space: nowrap;
+    animation: marquee 30s linear infinite;
+    will-change: transform;
+  }
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding-right: var(--space-4);
+  }
+  .marquee-item .dot {
+    opacity: 0.5;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-25%); /* one-quarter, matching the 4x duplication */
+    }
+  }
+</style>

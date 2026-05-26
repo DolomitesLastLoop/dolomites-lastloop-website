@@ -111,8 +111,20 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     transition:
       background var(--transition),
       border-color var(--transition),
-      box-shadow var(--transition);
+      box-shadow var(--transition),
+      transform 300ms var(--ease);
     border-bottom: 1px solid transparent;
+  }
+  .site-header[data-hidden="true"] {
+    transform: translateY(-100%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .site-header[data-hidden="true"] {
+      transform: none;
+    }
   }
 
   .site-header[data-scrolled="true"] {
@@ -344,6 +356,26 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
   }
   setScrolled();
   window.addEventListener("scroll", setScrolled, { passive: true });
+
+  // ── Hide on scroll down, reveal on scroll up ──
+  let lastY = window.scrollY;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function onScrollDirection() {
+    if (!header || reduceMotion) return;
+    const y = window.scrollY;
+    const delta = y - lastY;
+    // never hide while mobile menu open
+    const menuOpen = burger?.getAttribute("aria-expanded") === "true";
+    if (menuOpen || y < 120) {
+      header.dataset.hidden = "false";
+    } else if (delta > 6) {
+      header.dataset.hidden = "true";
+    } else if (delta < -6) {
+      header.dataset.hidden = "false";
+    }
+    lastY = y;
+  }
+  window.addEventListener("scroll", onScrollDirection, { passive: true });
 
   burger?.addEventListener("click", () => {
     const open = burger.getAttribute("aria-expanded") === "true";
