@@ -6,7 +6,7 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const year = new Date().getFullYear();
+const year = 2027;
 ---
 
 <footer class="site-footer">
@@ -21,6 +21,7 @@ const year = new Date().getFullYear();
       <h4>Info</h4>
       <ul>
         <li><a href={localizePath("/race-info", lang)}>{t("nav.race_info")}</a></li>
+        <li><a href={localizePath("/galerie", lang)}>{t("nav.gallery")}</a></li>
         <li><a href={localizePath("/faq", lang)}>{t("nav.faq")}</a></li>
         <li><a href={localizePath("/ergebnisse", lang)}>{t("nav.results")}</a></li>
       </ul>

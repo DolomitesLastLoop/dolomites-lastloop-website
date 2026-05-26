@@ -7,7 +7,6 @@ const lang = (Astro.params.lang ?? "de") as Lang;
 if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 const t = useTranslations(lang);
 
-const rules: Array<keyof ReturnType<typeof Object>> = [];
 const ruleKeys = [
   "race.rules.1",
   "race.rules.2",
@@ -25,7 +24,7 @@ const ruleKeys = [
 <BaseLayout lang={lang} title={t("race.title")}>
   <section class="page-head">
     <div class="container">
-      <p class="eyebrow">2027</p>
+      <p class="eyebrow">{t("site.event_date")}</p>
       <h1>{t("race.title")}</h1>
     </div>
   </section>
@@ -44,37 +43,64 @@ const ruleKeys = [
     </div>
   </section>
 
-  <section class="section section-tight bg-alt">
+  <section class="section section-alt">
     <div class="container">
       <h2 class="reveal">{t("race.course.title")}</h2>
       <div class="grid-split mt-5">
-        <p class="reveal">{t("race.course.text")}</p>
-        <div class="course-profile reveal" aria-hidden="true">
-          <svg viewBox="0 0 600 200" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="prof" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stop-color="#e85d04" stop-opacity="0.5" />
-                <stop offset="100%" stop-color="#e85d04" stop-opacity="0" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M0,170 C100,160 180,90 300,40 C420,90 500,160 600,170 L600,200 L0,200 Z"
-              fill="url(#prof)"
-            />
-            <path
-              d="M0,170 C100,160 180,90 300,40 C420,90 500,160 600,170"
-              fill="none"
-              stroke="#e85d04"
-              stroke-width="2"
-            />
-            <circle cx="0" cy="170" r="5" fill="#e85d04" />
-            <circle cx="300" cy="40" r="5" fill="#e85d04" />
-            <circle cx="600" cy="170" r="5" fill="#e85d04" />
-          </svg>
-          <div class="profile-labels">
-            <span>Start</span><span>Top</span><span>Ziel</span>
+        <div class="reveal">
+          <p>{t("race.course.text")}</p>
+          <div class="course-profile mt-6" aria-hidden="true">
+            <svg viewBox="0 0 600 200" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="prof" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#e85d04" stop-opacity="0.32" />
+                  <stop offset="100%" stop-color="#e85d04" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <!-- Climb (0–35%) → plateau (35–65%) → descent (65–100%) -->
+              <path
+                d="M0,180 C30,170 120,80 210,60 L390,50 C470,60 540,160 600,180 L600,200 L0,200 Z"
+                fill="url(#prof)"
+              />
+              <path
+                d="M0,180 C30,170 120,80 210,60 L390,50 C470,60 540,160 600,180"
+                fill="none"
+                stroke="#e85d04"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <line
+                x1="0"
+                y1="180"
+                x2="600"
+                y2="180"
+                stroke="#d8d2c5"
+                stroke-width="1"
+                stroke-dasharray="3 5"
+              />
+              <circle cx="0" cy="180" r="6" fill="#e85d04" />
+              <circle cx="210" cy="60" r="6" fill="#e85d04" />
+              <circle cx="390" cy="50" r="6" fill="#e85d04" />
+              <circle cx="600" cy="180" r="6" fill="#e85d04" />
+            </svg>
+            <div class="profile-labels">
+              <span>Start</span>
+              <span>Anstieg</span>
+              <span>Plateau</span>
+              <span>Abfall</span>
+              <span>Ziel</span>
+            </div>
           </div>
         </div>
+        <figure class="course-photo reveal">
+          <img
+            src="/images/day-running-1.jpg"
+            alt={t("gallery.alt.day_running_1")}
+            loading="lazy"
+          />
+          <figcaption>© Wisthaler Photography</figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -93,17 +119,13 @@ const ruleKeys = [
   .page-head {
     padding: var(--space-9) 0 var(--space-5);
     border-bottom: 1px solid var(--color-border);
-  }
-  .bg-alt {
     background: var(--color-bg-alt);
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
   }
   .grid-split {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: 1.2fr 1fr;
     gap: var(--space-7);
-    align-items: center;
+    align-items: start;
   }
   @media (max-width: 800px) {
     .grid-split {
@@ -117,6 +139,7 @@ const ruleKeys = [
     border-radius: var(--radius-lg);
     padding: var(--space-7);
     text-align: center;
+    box-shadow: var(--shadow-card);
   }
   .callout-num {
     display: block;
@@ -140,15 +163,48 @@ const ruleKeys = [
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     background: var(--color-card);
+    box-shadow: var(--shadow-card);
   }
   .profile-labels {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr 1fr 1fr auto;
     margin-top: var(--space-2);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-text-dim);
+    text-align: center;
+  }
+  .profile-labels span:first-child {
+    text-align: left;
+  }
+  .profile-labels span:last-child {
+    text-align: right;
+  }
+
+  .course-photo {
+    margin: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    position: relative;
+  }
+  .course-photo img {
+    width: 100%;
+    height: 100%;
+    max-height: 480px;
+    object-fit: cover;
+    display: block;
+  }
+  .course-photo figcaption {
+    position: absolute;
+    bottom: var(--space-2);
+    right: var(--space-3);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
   }
 
   .rules {
@@ -167,6 +223,7 @@ const ruleKeys = [
     padding: var(--space-4) var(--space-5) var(--space-4) calc(var(--space-6) + var(--space-5));
     position: relative;
     color: var(--color-text);
+    box-shadow: var(--shadow-card);
   }
   .rules li::before {
     content: counter(rule, decimal-leading-zero);

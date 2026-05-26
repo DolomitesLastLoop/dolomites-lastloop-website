@@ -13,6 +13,7 @@ const links = [
   { href: localizePath("/race-info", lang), label: t("nav.race_info") },
   { href: localizePath("/anmeldung", lang), label: t("nav.signup") },
   { href: localizePath("/startliste", lang), label: t("nav.startlist") },
+  { href: localizePath("/galerie", lang), label: t("nav.gallery") },
   { href: localizePath("/ergebnisse", lang), label: t("nav.results") },
   { href: localizePath("/faq", lang), label: t("nav.faq") },
   { href: localizePath("/kontakt", lang), label: t("nav.contact") },
@@ -24,7 +25,6 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
 <header class="site-header" id="site-header" data-header>
   <div class="container header-inner">
     <a class="brand" href={localizePath("/", lang)} aria-label={t("site.title")}>
-      <span class="brand-mark" aria-hidden="true">DLL</span>
       <span class="brand-name">Dolomites Last Loop</span>
     </a>
 
@@ -98,18 +98,20 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     inset: 0 0 auto 0;
     z-index: 50;
     height: var(--nav-height);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    background: transparent;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
     transition:
       background var(--transition),
-      border-color var(--transition);
-    border-bottom: 1px solid transparent;
+      border-color var(--transition),
+      box-shadow var(--transition);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .site-header[data-scrolled="true"] {
-    background: rgba(10, 10, 10, 0.85);
+    background: #ffffff;
     border-bottom-color: var(--color-border);
+    box-shadow: 0 1px 8px rgba(50, 40, 25, 0.05);
   }
 
   .header-inner {
@@ -123,25 +125,15 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-3);
     color: var(--color-text);
   }
   .brand:hover {
-    color: var(--color-text);
-  }
-  .brand-mark {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    letter-spacing: 0.1em;
-    color: #0a0a0a;
-    background: var(--color-accent);
-    padding: 0.2rem 0.55rem;
-    border-radius: var(--radius-sm);
+    color: var(--color-accent);
   }
   .brand-name {
     font-family: var(--font-display);
-    font-size: 1.05rem;
-    letter-spacing: 0.12em;
+    font-size: 1.25rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
 
@@ -165,10 +157,9 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     transition: color var(--transition), background var(--transition);
   }
 
-  .primary-nav a:hover,
-  .primary-nav a.active {
+  .primary-nav a:hover {
     color: var(--color-text);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--color-accent-dim);
   }
 
   .primary-nav a.active {

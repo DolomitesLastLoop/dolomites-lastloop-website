@@ -1,0 +1,397 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { useTranslations, type Lang } from "@i18n/utils";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+const t = useTranslations(lang);
+
+const day = [
+  { src: "/images/hero-start.jpg", altKey: "gallery.alt.hero_start" as const, span: 2 },
+  { src: "/images/day-running-1.jpg", altKey: "gallery.alt.day_running_1" as const, span: 1 },
+  { src: "/images/day-running-2.jpg", altKey: "gallery.alt.day_running_2" as const, span: 1 },
+  { src: "/images/day-runner-portrait.jpg", altKey: "gallery.alt.day_runner_portrait" as const, span: 1 },
+  { src: "/images/bib-detail.jpg", altKey: "gallery.alt.bib_detail" as const, span: 1 },
+];
+
+const night = [
+  { src: "/images/night-runners.jpg", altKey: "gallery.alt.night_runners" as const, span: 1 },
+  { src: "/images/night-camp.jpg", altKey: "gallery.alt.night_camp" as const, span: 2 },
+  { src: "/images/night-headlamp.jpg", altKey: "gallery.alt.night_headlamp" as const, span: 1 },
+  { src: "/images/emotion-smile.jpg", altKey: "gallery.alt.emotion_smile" as const, span: 1 },
+  { src: "/images/portrait-exhausted.jpg", altKey: "gallery.alt.portrait_exhausted" as const, span: 1 },
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={t("gallery.title")}
+  description={t("gallery.intro")}
+>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">{t("gallery.subtitle")}</p>
+      <h1>{t("gallery.title")}</h1>
+      <p class="section-lead">{t("gallery.intro")}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-divider reveal">
+        <span class="dot"></span>
+        <h2>{t("gallery.section.day")}</h2>
+        <span class="line"></span>
+      </div>
+
+      <div class="masonry">
+        {
+          day.map((p) => (
+            <figure
+              class={`tile reveal tile-span-${p.span}`}
+              data-src={p.src}
+              data-alt={t(p.altKey)}
+            >
+              <img src={p.src} alt={t(p.altKey)} loading="lazy" />
+              <figcaption>{t("gallery.credit")}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-divider reveal">
+        <span class="dot dot-green"></span>
+        <h2>{t("gallery.section.night")}</h2>
+        <span class="line"></span>
+      </div>
+
+      <div class="masonry">
+        {
+          night.map((p) => (
+            <figure
+              class={`tile reveal tile-span-${p.span}`}
+              data-src={p.src}
+              data-alt={t(p.altKey)}
+            >
+              <img src={p.src} alt={t(p.altKey)} loading="lazy" />
+              <figcaption>{t("gallery.credit")}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <div
+    class="lightbox"
+    id="lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Lightbox"
+    hidden
+  >
+    <button class="lb-close" type="button" aria-label={t("gallery.close")}>
+      ✕
+    </button>
+    <button class="lb-nav lb-prev" type="button" aria-label="Previous">
+      ‹
+    </button>
+    <figure class="lb-stage">
+      <img id="lb-image" src="" alt="" />
+      <figcaption>
+        <span id="lb-caption"></span>
+        <span class="lb-credit">{t("gallery.credit")}</span>
+      </figcaption>
+    </figure>
+    <button class="lb-nav lb-next" type="button" aria-label="Next">›</button>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--space-9) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-alt);
+  }
+
+  .section-divider {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+  .section-divider h2 {
+    margin: 0;
+  }
+  .section-divider .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    display: inline-block;
+  }
+  .section-divider .dot-green {
+    background: var(--color-green);
+  }
+  .section-divider .line {
+    height: 1px;
+    background: var(--color-border);
+    width: 100%;
+  }
+
+  .masonry {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 200px;
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 1000px) {
+    .masonry {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 700px) {
+    .masonry {
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 180px;
+    }
+  }
+  @media (max-width: 460px) {
+    .masonry {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .tile {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    cursor: zoom-in;
+    background: var(--color-bg-alt);
+    box-shadow: var(--shadow-card);
+    grid-row: span 1;
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+  .tile-span-2 {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  @media (max-width: 460px) {
+    .tile-span-2 {
+      grid-column: span 1;
+      grid-row: span 2;
+    }
+  }
+
+  .tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 600ms var(--ease);
+  }
+  .tile:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+  .tile:hover img {
+    transform: scale(1.03);
+  }
+
+  .tile figcaption {
+    position: absolute;
+    bottom: var(--space-2);
+    right: var(--space-3);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  .tile:hover figcaption {
+    opacity: 1;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(10, 10, 10, 0.93);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-5);
+  }
+  .lightbox[hidden] {
+    display: none;
+  }
+  .lb-stage {
+    margin: 0;
+    max-width: min(92vw, 1400px);
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .lb-stage img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: var(--radius);
+    background: #000;
+  }
+  .lb-stage figcaption {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.85rem;
+  }
+  .lb-credit {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .lb-close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: background var(--transition);
+  }
+  .lb-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+  .lb-nav {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition);
+  }
+  .lb-nav:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .lb-prev {
+    position: absolute;
+    left: var(--space-4);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .lb-next {
+    position: absolute;
+    right: var(--space-4);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  @media (max-width: 600px) {
+    .lb-prev,
+    .lb-next {
+      top: auto;
+      bottom: var(--space-4);
+      transform: none;
+    }
+    .lb-prev {
+      left: var(--space-4);
+    }
+    .lb-next {
+      right: var(--space-4);
+    }
+  }
+</style>
+
+<script>
+  type Tile = { src: string; alt: string };
+
+  const tiles: HTMLElement[] = Array.from(
+    document.querySelectorAll<HTMLElement>(".tile"),
+  );
+  const data: Tile[] = tiles.map((t) => ({
+    src: t.dataset.src || "",
+    alt: t.dataset.alt || "",
+  }));
+
+  const lb = document.getElementById("lightbox") as HTMLElement | null;
+  const lbImg = document.getElementById("lb-image") as HTMLImageElement | null;
+  const lbCaption = document.getElementById("lb-caption") as HTMLElement | null;
+  const closeBtn = document.querySelector<HTMLButtonElement>(".lb-close");
+  const prevBtn = document.querySelector<HTMLButtonElement>(".lb-prev");
+  const nextBtn = document.querySelector<HTMLButtonElement>(".lb-next");
+
+  let current = 0;
+
+  function open(idx: number) {
+    if (!lb || !lbImg || !lbCaption) return;
+    current = idx;
+    lbImg.src = data[idx].src;
+    lbImg.alt = data[idx].alt;
+    lbCaption.textContent = data[idx].alt;
+    lb.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  function close() {
+    if (!lb) return;
+    lb.hidden = true;
+    document.body.style.overflow = "";
+  }
+
+  function step(delta: number) {
+    open((current + delta + data.length) % data.length);
+  }
+
+  tiles.forEach((tile, idx) => {
+    tile.addEventListener("click", () => open(idx));
+    tile.setAttribute("tabindex", "0");
+    tile.setAttribute("role", "button");
+    tile.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open(idx);
+      }
+    });
+  });
+
+  closeBtn?.addEventListener("click", close);
+  prevBtn?.addEventListener("click", () => step(-1));
+  nextBtn?.addEventListener("click", () => step(1));
+  lb?.addEventListener("click", (e) => {
+    if (e.target === lb) close();
+  });
+  window.addEventListener("keydown", (e) => {
+    if (lb?.hidden) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowLeft") step(-1);
+    if (e.key === "ArrowRight") step(1);
+  });
+</script>

@@ -76,5 +76,5 @@ export interface RaceResult {
 }
 
 export const MAX_PARTICIPANTS = Number(
-  import.meta.env.MAX_PARTICIPANTS ?? 100,
+  import.meta.env.MAX_PARTICIPANTS ?? 150,
 );

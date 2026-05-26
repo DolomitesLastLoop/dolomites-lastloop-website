@@ -11,8 +11,8 @@ export const faq: Record<Lang, FaqContent> = {
         a: "Jede volle Stunde startet ein gemeinsamer Loop von 6,71 km. Wer rechtzeitig zurück ist, startet zur nächsten Stunde erneut. Wer nicht rechtzeitig zurück ist, scheidet aus. Sieger ist der letzte Läufer, der noch eine zusätzliche Runde komplett schafft.",
       },
       {
-        q: "Wann wird das Datum 2027 bekanntgegeben?",
-        a: "Das genaue Renndatum geben wir über unseren Newsletter und die Social Media Kanäle bekannt, sobald die Saisonplanung von Sport OK Toblach abgeschlossen ist.",
+        q: "Wann findet die Premiere statt?",
+        a: "Das Rennen startet am 15. Mai 2027 in Toblach. Die genaue Startuhrzeit und alle weiteren Details kommunizieren wir rechtzeitig über Newsletter und Social Media.",
       },
       {
         q: "Gibt es Strom, Wasser und Verpflegung?",
@@ -57,8 +57,8 @@ export const faq: Record<Lang, FaqContent> = {
         a: "Ogni ora esatta parte un loop comune di 6,71 km. Chi rientra in tempo parte di nuovo all’ora successiva. Chi non rientra è fuori. Vince l’ultimo atleta che completa un giro in più di tutti gli altri.",
       },
       {
-        q: "Quando sarà annunciata la data 2027?",
-        a: "Comunicheremo la data via newsletter e sui canali social appena la programmazione stagionale di Sport OK Dobbiaco sarà definita.",
+        q: "Quando si svolge l’anteprima?",
+        a: "La gara parte il 15 maggio 2027 a Dobbiaco. L’orario esatto di partenza e tutti gli altri dettagli saranno comunicati per tempo via newsletter e social.",
       },
       {
         q: "Ci sono corrente, acqua e ristoro?",
@@ -103,8 +103,8 @@ export const faq: Record<Lang, FaqContent> = {
         a: "Every hour on the hour, a common 6.71 km loop starts. If you finish in time, you start again the next hour. Miss the cutoff and you’re out. The winner is the last runner to complete one more full loop than everyone else.",
       },
       {
-        q: "When will the 2027 date be announced?",
-        a: "We’ll announce the date via newsletter and social channels once Sport OK Toblach has finalised the season calendar.",
+        q: "When does the premiere take place?",
+        a: "The race kicks off on May 15, 2027 in Toblach. The exact start time and all further details will be announced in time via newsletter and social channels.",
       },
       {
         q: "Is there power, water, and food?",

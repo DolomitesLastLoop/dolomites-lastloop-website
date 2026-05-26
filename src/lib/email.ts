@@ -23,7 +23,7 @@ export async function sendRegistrationConfirmation(
   const html = `
     <div style="font-family: Inter, system-ui, sans-serif; color:#0a0a0a; max-width:560px;">
       <h1 style="font-family: 'Bebas Neue', Impact, sans-serif; color:#e85d04; letter-spacing:0.04em;">
-        Dolomites Last Loop 2027
+        Dolomites Last Loop · 15. Mai 2027
       </h1>
       <p>Ciao ${firstName},</p>
       <p>danke für deine Anmeldung – wir freuen uns, dich an der Startlinie zu sehen.</p>
@@ -36,7 +36,7 @@ export async function sendRegistrationConfirmation(
     from,
     to,
     replyTo,
-    subject: "Anmeldung bestätigt · Dolomites Last Loop 2027",
+    subject: "Anmeldung bestätigt · Dolomites Last Loop · 15. Mai 2027",
     html,
   });
 }

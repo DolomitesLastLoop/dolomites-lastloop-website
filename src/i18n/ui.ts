@@ -12,22 +12,24 @@ export const ui = {
     "site.title": "Dolomites Last Loop",
     "site.tagline": "Backyard Ultra • Toblach • Dolomiten",
     "site.description":
-      "Das erste Backyard Ultra Rennen in den Dolomiten – Toblach 2027.",
+      "Das erste Backyard Ultra Rennen in den Dolomiten – Toblach, 15. Mai 2027.",
+    "site.event_date": "15. Mai 2027",
 
     "nav.home": "Start",
     "nav.race_info": "Rennen",
     "nav.signup": "Anmeldung",
     "nav.startlist": "Startliste",
     "nav.results": "Ergebnisse",
+    "nav.gallery": "Galerie",
     "nav.faq": "FAQ",
     "nav.contact": "Kontakt",
     "nav.menu": "Menü",
     "nav.close": "Schließen",
 
     "hero.title": "Dolomites Last Loop",
-    "hero.subtitle": "Backyard Ultra • Toblach • Dolomiten",
+    "hero.subtitle": "Backyard Ultra • Toblach • 15. Mai 2027",
     "hero.teaser":
-      "Das erste Backyard Ultra Rennen in den Dolomiten. Ausgabe 2027 – Datum folgt.",
+      "Das erste Backyard Ultra Rennen in den Dolomiten. Premiere am 15. Mai 2027.",
     "hero.cta_signup": "Jetzt anmelden",
     "hero.cta_more": "Mehr erfahren",
 
@@ -43,11 +45,11 @@ export const ui = {
       "Kein Hype, kein Pomp. Zentrale Teamzone, gemeinsamer Start, gemeinsames Leiden.",
     "home.features.limit.title": "Limitiert",
     "home.features.limit.text":
-      "Maximal 100 Startplätze. Persönliche, familiäre Atmosphäre statt Massenstart.",
+      "Maximal 150 Startplätze. Persönliche, familiäre Atmosphäre statt Massenstart.",
 
     "home.newsletter.title": "Bleib auf dem Laufenden",
     "home.newsletter.text":
-      "Erhalte als Erster Datum, Anmeldestart und News rund um die Ausgabe 2027.",
+      "Erhalte als Erster Updates rund um die Premiere am 15. Mai 2027.",
     "home.newsletter.placeholder": "Deine Email-Adresse",
     "home.newsletter.submit": "Eintragen",
     "home.newsletter.success": "Danke! Du bist auf der Liste.",
@@ -83,7 +85,7 @@ export const ui = {
 
     "signup.title": "Anmeldung",
     "signup.intro":
-      "Sichere dir einen der 100 Startplätze für die Premieren-Ausgabe 2027.",
+      "Sichere dir einen der 150 Startplätze für die Premiere am 15. Mai 2027.",
     "signup.step": "Schritt",
     "signup.step1.title": "Persönliche Daten",
     "signup.step2.title": "Ticket & Zahlung",
@@ -113,7 +115,7 @@ export const ui = {
     "signup.attest.success": "Attest erfolgreich hochgeladen.",
     "signup.full.title": "Startplätze ausgebucht",
     "signup.full.text":
-      "Aktuell sind alle 100 Plätze vergeben. Trage dich auf die Warteliste ein.",
+      "Aktuell sind alle 150 Plätze vergeben. Trage dich auf die Warteliste ein.",
     "signup.full.cta": "Auf Warteliste setzen",
 
     "startlist.title": "Startliste",
@@ -137,6 +139,27 @@ export const ui = {
     "results.col.loops": "Runden",
     "results.placeholder":
       "Ergebnisse der Premieren-Ausgabe werden hier nach dem Rennen veröffentlicht.",
+    "results.gallery_link":
+      "Eindrücke der Ausgabe 2026 in der Galerie ansehen →",
+
+    "gallery.title": "Galerie",
+    "gallery.subtitle": "2026 – Première",
+    "gallery.intro":
+      "Bilder von der ersten Ausgabe – Tag und Nacht in den Dolomiten.",
+    "gallery.section.day": "Tag",
+    "gallery.section.night": "Nacht",
+    "gallery.credit": "© Wisthaler Photography",
+    "gallery.close": "Schließen",
+    "gallery.alt.hero_start": "Startlinie mit allen Läufern",
+    "gallery.alt.day_running_1": "Läufer auf der Strecke am See",
+    "gallery.alt.day_running_2": "Läufer im Startfeld",
+    "gallery.alt.day_runner_portrait": "Läufer im Dynafit-Trikot",
+    "gallery.alt.bib_detail": "Startnummer 49 – Hannes",
+    "gallery.alt.night_runners": "Läufer mit Stirnlampen in der Nacht",
+    "gallery.alt.night_camp": "Basislager bei Nacht",
+    "gallery.alt.night_headlamp": "Athlet mit Stirnlampe im Basislager",
+    "gallery.alt.emotion_smile": "Lächelnde Athletin",
+    "gallery.alt.portrait_exhausted": "Erschöpfter Ausdruck nach dem Loop",
 
     "faq.title": "FAQ",
     "faq.participants": "Für Teilnehmer",
@@ -183,22 +206,24 @@ export const ui = {
     "site.title": "Dolomites Last Loop",
     "site.tagline": "Backyard Ultra • Dobbiaco • Dolomiti",
     "site.description":
-      "La prima Backyard Ultra delle Dolomiti – Dobbiaco 2027.",
+      "La prima Backyard Ultra delle Dolomiti – Dobbiaco, 15 maggio 2027.",
+    "site.event_date": "15 maggio 2027",
 
     "nav.home": "Home",
     "nav.race_info": "Gara",
     "nav.signup": "Iscrizione",
     "nav.startlist": "Lista partenti",
     "nav.results": "Risultati",
+    "nav.gallery": "Galleria",
     "nav.faq": "FAQ",
     "nav.contact": "Contatti",
     "nav.menu": "Menu",
     "nav.close": "Chiudi",
 
     "hero.title": "Dolomites Last Loop",
-    "hero.subtitle": "Backyard Ultra • Dobbiaco • Dolomiti",
+    "hero.subtitle": "Backyard Ultra • Dobbiaco • 15 maggio 2027",
     "hero.teaser":
-      "La prima Backyard Ultra delle Dolomiti. Edizione 2027 – data in arrivo.",
+      "La prima Backyard Ultra delle Dolomiti. Anteprima il 15 maggio 2027.",
     "hero.cta_signup": "Iscriviti ora",
     "hero.cta_more": "Scopri di più",
 
@@ -214,11 +239,11 @@ export const ui = {
       "Niente hype, niente eccessi. Zona team centrale, partenza comune, fatica condivisa.",
     "home.features.limit.title": "Posti limitati",
     "home.features.limit.text":
-      "Massimo 100 partenti. Atmosfera personale e familiare, non una corsa di massa.",
+      "Massimo 150 partenti. Atmosfera personale e familiare, non una corsa di massa.",
 
     "home.newsletter.title": "Resta aggiornato",
     "home.newsletter.text":
-      "Ricevi per primo data, apertura iscrizioni e novità sull’edizione 2027.",
+      "Ricevi per primo gli aggiornamenti sull’anteprima del 15 maggio 2027.",
     "home.newsletter.placeholder": "La tua email",
     "home.newsletter.submit": "Iscriviti",
     "home.newsletter.success": "Grazie! Sei nella lista.",
@@ -254,7 +279,7 @@ export const ui = {
 
     "signup.title": "Iscrizione",
     "signup.intro":
-      "Assicurati uno dei 100 posti per l’edizione inaugurale 2027.",
+      "Assicurati uno dei 150 posti per l’anteprima del 15 maggio 2027.",
     "signup.step": "Step",
     "signup.step1.title": "Dati personali",
     "signup.step2.title": "Biglietto & pagamento",
@@ -285,7 +310,7 @@ export const ui = {
     "signup.attest.success": "Certificato caricato con successo.",
     "signup.full.title": "Posti esauriti",
     "signup.full.text":
-      "Tutti i 100 posti sono stati assegnati. Iscriviti alla lista d’attesa.",
+      "Tutti i 150 posti sono stati assegnati. Iscriviti alla lista d’attesa.",
     "signup.full.cta": "Vai in lista d’attesa",
 
     "startlist.title": "Lista partenti",
@@ -309,6 +334,27 @@ export const ui = {
     "results.col.loops": "Giri",
     "results.placeholder":
       "I risultati dell’edizione inaugurale saranno pubblicati qui dopo la gara.",
+    "results.gallery_link":
+      "Guarda le immagini dell’edizione 2026 in galleria →",
+
+    "gallery.title": "Galleria",
+    "gallery.subtitle": "2026 – Anteprima",
+    "gallery.intro":
+      "Immagini della prima edizione – giorno e notte tra le Dolomiti.",
+    "gallery.section.day": "Giorno",
+    "gallery.section.night": "Notte",
+    "gallery.credit": "© Wisthaler Photography",
+    "gallery.close": "Chiudi",
+    "gallery.alt.hero_start": "Linea di partenza con tutti gli atleti",
+    "gallery.alt.day_running_1": "Atleta sul percorso vicino al lago",
+    "gallery.alt.day_running_2": "Atleti nel gruppo di partenza",
+    "gallery.alt.day_runner_portrait": "Atleta con maglia Dynafit",
+    "gallery.alt.bib_detail": "Pettorale 49 – Hannes",
+    "gallery.alt.night_runners": "Atleti con frontale di notte",
+    "gallery.alt.night_camp": "Campo base di notte",
+    "gallery.alt.night_headlamp": "Atleta con frontale al campo base",
+    "gallery.alt.emotion_smile": "Atleta che sorride",
+    "gallery.alt.portrait_exhausted": "Espressione di stanchezza dopo il loop",
 
     "faq.title": "FAQ",
     "faq.participants": "Per i partecipanti",
@@ -355,22 +401,24 @@ export const ui = {
     "site.title": "Dolomites Last Loop",
     "site.tagline": "Backyard Ultra • Toblach/Dobbiaco • Dolomites",
     "site.description":
-      "The first Backyard Ultra race in the Dolomites – Toblach 2027.",
+      "The first Backyard Ultra race in the Dolomites – Toblach, May 15, 2027.",
+    "site.event_date": "May 15, 2027",
 
     "nav.home": "Home",
     "nav.race_info": "Race",
     "nav.signup": "Sign up",
     "nav.startlist": "Start list",
     "nav.results": "Results",
+    "nav.gallery": "Gallery",
     "nav.faq": "FAQ",
     "nav.contact": "Contact",
     "nav.menu": "Menu",
     "nav.close": "Close",
 
     "hero.title": "Dolomites Last Loop",
-    "hero.subtitle": "Backyard Ultra • Toblach • Dolomites",
+    "hero.subtitle": "Backyard Ultra • Toblach • May 15, 2027",
     "hero.teaser":
-      "The first Backyard Ultra race in the Dolomites. 2027 edition – date to be announced.",
+      "The first Backyard Ultra race in the Dolomites. Premiere on May 15, 2027.",
     "hero.cta_signup": "Sign up now",
     "hero.cta_more": "Learn more",
 
@@ -386,11 +434,11 @@ export const ui = {
       "No hype, no glitter. Central team zone, shared start line, shared suffering.",
     "home.features.limit.title": "Limited field",
     "home.features.limit.text":
-      "Max 100 starters. Personal, family-style vibe instead of a mass start.",
+      "Max 150 starters. Personal, family-style vibe instead of a mass start.",
 
     "home.newsletter.title": "Stay in the loop",
     "home.newsletter.text":
-      "Be the first to know the date, registration opening, and news about the 2027 edition.",
+      "Be the first to receive updates about the May 15, 2027 premiere.",
     "home.newsletter.placeholder": "Your email",
     "home.newsletter.submit": "Subscribe",
     "home.newsletter.success": "Thanks! You’re on the list.",
@@ -425,7 +473,7 @@ export const ui = {
 
     "signup.title": "Sign up",
     "signup.intro":
-      "Secure one of the 100 starting spots for the inaugural 2027 edition.",
+      "Secure one of the 150 starting spots for the May 15, 2027 premiere.",
     "signup.step": "Step",
     "signup.step1.title": "Personal data",
     "signup.step2.title": "Ticket & payment",
@@ -455,7 +503,7 @@ export const ui = {
     "signup.attest.success": "Certificate uploaded successfully.",
     "signup.full.title": "Race is full",
     "signup.full.text":
-      "All 100 spots are taken. Join the waiting list to be notified.",
+      "All 150 spots are taken. Join the waiting list to be notified.",
     "signup.full.cta": "Join the waitlist",
 
     "startlist.title": "Start list",
@@ -479,6 +527,27 @@ export const ui = {
     "results.col.loops": "Loops",
     "results.placeholder":
       "Results of the inaugural edition will be published here after the race.",
+    "results.gallery_link":
+      "View photos of the 2026 edition in the gallery →",
+
+    "gallery.title": "Gallery",
+    "gallery.subtitle": "2026 – Première",
+    "gallery.intro":
+      "Photos from the first edition – day and night in the Dolomites.",
+    "gallery.section.day": "Day",
+    "gallery.section.night": "Night",
+    "gallery.credit": "© Wisthaler Photography",
+    "gallery.close": "Close",
+    "gallery.alt.hero_start": "Starting line with all runners",
+    "gallery.alt.day_running_1": "Runner on course near the lake",
+    "gallery.alt.day_running_2": "Runners in the start corral",
+    "gallery.alt.day_runner_portrait": "Runner in Dynafit jersey",
+    "gallery.alt.bib_detail": "Bib number 49 – Hannes",
+    "gallery.alt.night_runners": "Runners with headlamps at night",
+    "gallery.alt.night_camp": "Base camp at night",
+    "gallery.alt.night_headlamp": "Athlete with headlamp in base camp",
+    "gallery.alt.emotion_smile": "Smiling athlete",
+    "gallery.alt.portrait_exhausted": "Exhausted look after a loop",
 
     "faq.title": "FAQ",
     "faq.participants": "For runners",
