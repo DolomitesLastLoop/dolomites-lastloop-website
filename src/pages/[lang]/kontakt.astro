@@ -12,182 +12,139 @@ const t = useTranslations(lang);
 
 <BaseLayout lang={lang} title={t("contact.title")}>
   <PageHero
-    bg={photo.start_atmosphere_b}
+    bg={photo.hero_start}
     position={pos.group}
     eyebrow={t("contact.eyebrow")}
     title={t("contact.title")}
     subtitle={t("contact.subtitle")}
+    height="50vh"
   />
 
   <section class="section">
-    <div class="container contact-grid">
-      <form class="card reveal" data-contact novalidate>
-        <h2>{t("contact.form.title")}</h2>
+    <div class="container">
+      <div class="cm-grid">
+        <form class="card reveal" data-contact novalidate>
+          <h2>{t("contact.form.title")}</h2>
 
-        <div class="field">
-          <label for="c-name">{t("contact.form.name")}</label>
-          <input type="text" id="c-name" name="name" required />
-        </div>
-        <div class="field">
-          <label for="c-email">{t("contact.form.email")}</label>
-          <input type="email" id="c-email" name="email" required />
-        </div>
-        <div class="field">
-          <label for="c-message">{t("contact.form.message")}</label>
-          <textarea id="c-message" name="message" required></textarea>
-        </div>
+          <div class="field">
+            <label for="c-name">{t("contact.form.name")}</label>
+            <input type="text" id="c-name" name="name" required />
+          </div>
+          <div class="field">
+            <label for="c-email">{t("contact.form.email")}</label>
+            <input type="email" id="c-email" name="email" required />
+          </div>
+          <div class="field">
+            <label for="c-message">{t("contact.form.message")}</label>
+            <textarea id="c-message" name="message" required></textarea>
+          </div>
 
-        <button class="btn btn-primary btn-block btn-arrow" type="submit">
-          {t("contact.form.submit")}
-        </button>
+          <button class="btn btn-primary btn-block btn-arrow" type="submit">
+            {t("contact.form.submit")}
+          </button>
 
-        <p class="status status-success mt-4" data-c-success hidden>
-          {t("contact.form.success")}
-        </p>
-        <p class="status status-error mt-4" data-c-error hidden>
-          {t("contact.form.error")}
-        </p>
-      </form>
+          <p class="status status-success mt-4" data-c-success hidden>
+            {t("contact.form.success")}
+          </p>
+          <p class="status status-error mt-4" data-c-error hidden>
+            {t("contact.form.error")}
+          </p>
+        </form>
 
-      <aside class="info reveal" data-delay="100">
-        <figure class="info-photo reveal-scale">
-          <img
-            src={photo.hero_start}
-            alt=""
-            loading="lazy"
-            style="object-position:center center"
-          />
-        </figure>
+        <aside class="card reveal info-card" data-delay="100">
+          <h2>{t("contact.info.title")}</h2>
 
-        <div class="info-list mt-5">
-          <div class="info-item">
+          <div class="info-row">
             <span class="info-label">{t("contact.email")}</span>
-            <a href="mailto:dolomiteslastloop@gmail.com">
+            <a class="info-value" href="mailto:dolomiteslastloop@gmail.com">
               dolomiteslastloop@gmail.com
             </a>
           </div>
-          <div class="info-item">
+          <div class="info-row">
             <span class="info-label">{t("contact.org")}</span>
-            <span>{t("contact.org.value")}</span>
+            <span class="info-value">{t("contact.org.value")}</span>
           </div>
-          <div class="info-item">
+          <div class="info-row">
             <span class="info-label">{t("contact.location")}</span>
-            <span>{t("contact.location.value")}</span>
+            <span class="info-value">{t("contact.location.value")}</span>
           </div>
-        </div>
+        </aside>
+      </div>
+    </div>
+  </section>
 
-        <div class="map mt-5">
-          <iframe
-            src="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy&output=embed"
-            title={t("contact.location.value")}
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen
-          ></iframe>
-          <a
-            class="map-link"
-            href="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy"
-            target="_blank"
-            rel="noopener"
-          >
-            {t("contact.location.value")} →
-          </a>
-        </div>
-      </aside>
+  <section class="section-tight">
+    <div class="container">
+      <div class="map-full reveal">
+        <iframe
+          src="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy&output=embed"
+          title={t("contact.location.value")}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .contact-grid {
+  .cm-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 3rem;
     align-items: start;
   }
-  .contact-grid > * {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-    width: 100%;
-    align-self: start;
-  }
   @media (max-width: 900px) {
-    .contact-grid {
+    .cm-grid {
       grid-template-columns: 1fr;
     }
   }
 
-  /* Right column: stack tight, no top spacing above first element. */
-  .info {
+  /* Both columns are .card with identical padding → identical top offsets.
+     Headings inside use the same default margins → tops align as a straight line. */
+  .info-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: 0;
   }
-
-  .info-photo {
-    margin: 0;
-    height: 220px;
-    overflow: hidden;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-card);
-  }
-  .info-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .info > .info-list,
-  .info > .map {
-    margin-top: 0;
-  }
-  .info-list {
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: 0 var(--space-4);
-  }
-  .info-item {
-    padding: var(--space-3) 0;
-  }
-  .map iframe {
-    height: 180px;
-  }
-
-  .info-item {
+  .info-row {
     padding: var(--space-4) 0;
     border-bottom: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
   }
-  .info-item:last-of-type {
+  .info-row:last-child {
     border-bottom: none;
+    padding-bottom: 0;
+  }
+  .info-row:first-of-type {
+    padding-top: 0;
   }
   .info-label {
-    display: block;
     font-size: 0.75rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-text-dim);
-    margin-bottom: var(--space-1);
+  }
+  .info-value {
+    color: var(--color-text);
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
-  .map {
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+  .map-full {
+    border-radius: 12px;
     overflow: hidden;
-    background: var(--color-card);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
   }
-  .map iframe {
+  .map-full iframe {
     width: 100%;
-    height: 280px;
+    height: 350px;
     border: none;
     display: block;
-  }
-  .map-link {
-    display: block;
-    padding: var(--space-3) var(--space-4);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--color-border);
-    color: var(--color-primary);
   }
 
   .status-success {

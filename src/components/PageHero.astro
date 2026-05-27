@@ -6,6 +6,7 @@ interface Props {
   title: string;
   subtitle?: string;
   align?: "left" | "center";
+  height?: string;
 }
 const {
   bg,
@@ -14,10 +15,14 @@ const {
   title,
   subtitle,
   align = "center",
+  height = "56vh",
 } = Astro.props;
 ---
 
-<section class:list={["page-hero", `align-${align}`]}>
+<section
+  class:list={["page-hero", `align-${align}`]}
+  style={`--ph-height:${height}`}
+>
   <div class="ph-bg" aria-hidden="true">
     <img
       src={bg}
@@ -41,7 +46,7 @@ const {
 <style>
   .page-hero {
     position: relative;
-    min-height: 56vh;
+    min-height: var(--ph-height, 56vh);
     display: flex;
     align-items: flex-end;
     overflow: hidden;

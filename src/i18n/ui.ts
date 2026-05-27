@@ -233,6 +233,7 @@ export const ui = {
 
     "contact.eyebrow": "Hallo",
     "contact.subtitle": "Schreib uns – wir freuen uns auf deine Nachricht.",
+    "contact.info.title": "Info",
     "contact.title": "Kontakt",
     "contact.org": "Veranstalter",
     "contact.org.value": "Sport OK Toblach",
@@ -496,6 +497,7 @@ export const ui = {
 
     "contact.eyebrow": "Ciao",
     "contact.subtitle": "Scrivici – ci fa piacere ricevere il tuo messaggio.",
+    "contact.info.title": "Info",
     "contact.title": "Contatti",
     "contact.org": "Organizzatore",
     "contact.org.value": "Sport OK Dobbiaco",
@@ -757,6 +759,7 @@ export const ui = {
 
     "contact.eyebrow": "Hello",
     "contact.subtitle": "Drop us a line – we’d love to hear from you.",
+    "contact.info.title": "Info",
     "contact.title": "Contact",
     "contact.org": "Organiser",
     "contact.org.value": "Sport OK Toblach",
