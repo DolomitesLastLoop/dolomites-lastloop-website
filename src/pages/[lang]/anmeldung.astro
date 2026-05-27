@@ -47,10 +47,10 @@ const maxISO = maxDate.toISOString().slice(0, 10);
 
   <div class="strip">
     <img
-      src={photo.course_anmeldung}
+      src={photo.portrait_exhausted}
       alt=""
       loading="lazy"
-      style={`object-position:${pos.landscape}`}
+      style="object-position:center 20%"
     />
   </div>
 
@@ -331,7 +331,7 @@ const maxISO = maxDate.toISOString().slice(0, 10);
 <style>
   .strip {
     width: 100%;
-    height: 180px;
+    height: 240px;
     overflow: hidden;
     border-bottom: 1px solid var(--color-border);
   }
@@ -339,7 +339,6 @@ const maxISO = maxDate.toISOString().slice(0, 10);
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 40%;
     display: block;
   }
 

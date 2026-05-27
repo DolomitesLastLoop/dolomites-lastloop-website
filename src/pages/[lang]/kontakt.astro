@@ -101,14 +101,11 @@ const t = useTranslations(lang);
 <style>
   .contact-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: var(--space-6);
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
     align-items: start;
   }
-  .contact-grid > form {
-    width: 100%;
-    align-self: start;
-  }
+  .contact-grid > form,
   .contact-grid > .info {
     width: 100%;
     align-self: start;
@@ -119,15 +116,18 @@ const t = useTranslations(lang);
     }
   }
 
+  /* Match the card's internal top padding so the photo aligns with the
+     "SCHREIB UNS" heading inside the card. */
   .info {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    padding-top: var(--space-6);
   }
 
   .info-photo {
     margin: 0;
-    height: 280px;
+    height: 220px;
     overflow: hidden;
     border-radius: var(--radius);
     box-shadow: var(--shadow-card);
@@ -152,7 +152,7 @@ const t = useTranslations(lang);
     padding: var(--space-3) 0;
   }
   .map iframe {
-    height: 220px;
+    height: 180px;
   }
 
   .info-item {
