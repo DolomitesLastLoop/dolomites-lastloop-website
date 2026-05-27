@@ -105,8 +105,9 @@ const t = useTranslations(lang);
     gap: 3rem;
     align-items: start;
   }
-  .contact-grid > form,
-  .contact-grid > .info {
+  .contact-grid > * {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
     width: 100%;
     align-self: start;
   }
@@ -116,13 +117,11 @@ const t = useTranslations(lang);
     }
   }
 
-  /* Match the card's internal top padding so the photo aligns with the
-     "SCHREIB UNS" heading inside the card. */
+  /* Right column: stack tight, no top spacing above first element. */
   .info {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding-top: var(--space-6);
   }
 
   .info-photo {
