@@ -31,6 +31,7 @@ export const photo = {
   portrait_b: raw("HHW8869"), // day · personal portrait
   night_focus: raw("HHW0129"), // night · transition moment
   night_intense: raw("HHW0175"), // night · gear change
+  night_recovery: raw("HHW9146"), // night · two athletes recovering
 };
 
 // Object-position presets
