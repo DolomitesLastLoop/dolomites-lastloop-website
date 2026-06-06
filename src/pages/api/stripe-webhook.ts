@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import type { APIRoute } from "astro";
 import type Stripe from "stripe";
 import { getStripe } from "@lib/stripe";
@@ -34,30 +35,26 @@ export const POST: APIRoute = async ({ request }) => {
     try {
       const supabase = getAdminClient();
 
-      const { count } = await supabase
-        .from("participants")
-        .select("id", { count: "exact", head: true })
-        .eq("ticket_status", "confirmed");
-      const nextNumber = (count ?? 0) + 1;
-
-      const { data: updated, error } = await supabase
-        .from("participants")
-        .update({
-          ticket_status: "confirmed",
-          attest_status: "missing",
-          startnummer:
-            nextNumber > MAX_PARTICIPANTS ? null : nextNumber,
-        })
-        .eq("id", participantId)
-        .select("email,vorname,startnummer")
-        .single();
+      // Atomic startnummer assignment via advisory-locked Postgres function.
+      const { data: result, error } = await supabase
+        .rpc("confirm_participant", { p_id: participantId, p_max: MAX_PARTICIPANTS });
       if (error) throw error;
+      const updated = result as { email: string; vorname: string; startnummer: number | null };
+
+      // Generate a single-use upload token and persist it.
+      const attestToken = crypto.randomBytes(32).toString("hex");
+      await supabase
+        .from("participants")
+        .update({ attest_token: attestToken })
+        .eq("id", participantId);
 
       try {
         await sendRegistrationConfirmation(
           updated.email,
           updated.vorname,
           updated.startnummer,
+          participantId,
+          attestToken,
         );
       } catch (mailErr) {
         console.error("Email send failed", mailErr);

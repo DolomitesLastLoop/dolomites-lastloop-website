@@ -18,8 +18,13 @@ export async function sendRegistrationConfirmation(
   to: string,
   firstName: string,
   startnummer: number | null,
+  participantId: string,
+  attestToken: string,
 ) {
-  const number = startnummer ? `Startnummer: ${startnummer}` : "Du bist registriert.";
+  const siteUrl =
+    (process.env.PUBLIC_SITE_URL as string | undefined) ?? "https://dolomiteslastloop.com";
+  const uploadLink = `${siteUrl}/de/anmeldung?id=${encodeURIComponent(participantId)}&token=${encodeURIComponent(attestToken)}`;
+  const number = startnummer ? `Startnummer: <strong>${startnummer}</strong>` : "Du bist registriert.";
   const html = `
     <div style="font-family: Inter, system-ui, sans-serif; color:#0a0a0a; max-width:560px;">
       <h1 style="font-family: 'Bebas Neue', Impact, sans-serif; color:#2d4a6b; letter-spacing:0.06em;">
@@ -27,8 +32,15 @@ export async function sendRegistrationConfirmation(
       </h1>
       <p>Ciao ${firstName},</p>
       <p>danke für deine Anmeldung – wir freuen uns, dich an der Startlinie zu sehen.</p>
-      <p><strong>${number}</strong></p>
-      <p>Bitte denke daran, dein ärztliches Attest vor dem Renntag hochzuladen. Du findest den Link in deiner Anmeldebestätigung oder über die Website.</p>
+      <p>${number}</p>
+      <p>
+        Bitte lade dein ärztliches Attest vor dem Renntag hoch.<br/>
+        <a href="${uploadLink}" style="color:#2d4a6b;">Attest jetzt hochladen →</a>
+      </p>
+      <p style="font-size:0.85em;color:#666;">
+        Falls der Link nicht funktioniert, kopiere diese URL in deinen Browser:<br/>
+        ${uploadLink}
+      </p>
       <p>Sportliche Grüße<br/>Dolomites Last Loop Team · Sport OK Toblach</p>
     </div>
   `;

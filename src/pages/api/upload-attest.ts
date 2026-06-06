@@ -14,10 +14,11 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
   const participantId = String(form.get("participant_id") || "").trim();
+  const attestToken = String(form.get("attest_token") || "").trim();
   const file = form.get("file");
-  if (!participantId || !(file instanceof File)) {
+  if (!participantId || !attestToken || !(file instanceof File)) {
     return new Response(
-      JSON.stringify({ error: "participant_id und file erforderlich." }),
+      JSON.stringify({ error: "participant_id, attest_token und file erforderlich." }),
       { status: 400 },
     );
   }
@@ -35,16 +36,18 @@ export const POST: APIRoute = async ({ request }) => {
 
   try {
     const supabase = getAdminClient();
+    // Verify both participant_id and attest_token match — prevents unauthorized uploads.
     const { data: participant, error: fetchErr } = await supabase
       .from("participants")
       .select("id")
       .eq("id", participantId)
+      .eq("attest_token", attestToken)
       .maybeSingle();
     if (fetchErr) throw fetchErr;
     if (!participant) {
       return new Response(
-        JSON.stringify({ error: "Teilnehmer nicht gefunden." }),
-        { status: 404 },
+        JSON.stringify({ error: "Ungültige Upload-Berechtigung." }),
+        { status: 403 },
       );
     }
 

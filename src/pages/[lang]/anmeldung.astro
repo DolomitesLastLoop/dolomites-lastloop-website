@@ -263,7 +263,7 @@ const maxISO = maxDate.toISOString().slice(0, 10);
                 <h2>{t("signup.attest.title")}</h2>
                 <p class="text-muted mb-5">{t("signup.attest.hint")}</p>
 
-                <div class="field">
+                <div class="field" id="participant-id-field">
                   <label for="participant-id-input">Registration ID</label>
                   <input
                     type="text"
@@ -272,6 +272,13 @@ const maxISO = maxDate.toISOString().slice(0, 10);
                     placeholder="aus Bestätigungs-Email"
                   />
                 </div>
+
+                {/* Token is pre-filled from the email link; hidden when auto-filled */}
+                <input
+                  type="hidden"
+                  id="attest-token-input"
+                  name="attest_token"
+                />
 
                 <div class="field">
                   <label for="attest-file">PDF (max 5 MB)</label>
@@ -665,10 +672,13 @@ const maxISO = maxDate.toISOString().slice(0, 10);
       const idEl = document.getElementById(
         "participant-id-input",
       ) as HTMLInputElement | null;
+      const tokenEl = document.getElementById(
+        "attest-token-input",
+      ) as HTMLInputElement | null;
       const fileEl = document.getElementById("attest-file") as HTMLInputElement | null;
       clearError("[data-attest-error]");
-      if (!idEl?.value || !fileEl?.files?.[0]) {
-        showError("[data-attest-error]", "Bitte ID und PDF angeben.");
+      if (!idEl?.value || !tokenEl?.value || !fileEl?.files?.[0]) {
+        showError("[data-attest-error]", "Bitte den Link aus der Bestätigungs-Email verwenden und eine PDF-Datei auswählen.");
         return;
       }
       const file = fileEl.files[0];
@@ -678,6 +688,7 @@ const maxISO = maxDate.toISOString().slice(0, 10);
       }
       const fd = new FormData();
       fd.append("participant_id", idEl.value.trim());
+      fd.append("attest_token", tokenEl.value.trim());
       fd.append("file", file);
       try {
         const res = await fetch("/api/upload-attest", { method: "POST", body: fd });
@@ -715,9 +726,22 @@ const maxISO = maxDate.toISOString().slice(0, 10);
       }
     });
 
-  // Auto-step to attest if URL has status=success
+  // Auto-fill id + token from the email link, then jump to the attest step.
   const params = new URLSearchParams(window.location.search);
-  if (params.get("status") === "success") {
+  const idParam = params.get("id");
+  const tokenParam = params.get("token");
+  if (idParam) {
+    const idEl = document.getElementById("participant-id-input") as HTMLInputElement | null;
+    if (idEl) idEl.value = idParam;
+    // Hide the ID field when pre-filled — user only needs to pick their PDF.
+    const idField = document.getElementById("participant-id-field");
+    if (idField) idField.hidden = true;
+  }
+  if (tokenParam) {
+    const tokenEl = document.getElementById("attest-token-input") as HTMLInputElement | null;
+    if (tokenEl) tokenEl.value = tokenParam;
+  }
+  if (params.get("status") === "success" || (idParam && tokenParam)) {
     showStep(3);
   }
 </script>

@@ -90,6 +90,48 @@ create policy "results public read"
 -- No anon write access at all – the service role bypasses RLS.
 
 -- ────────────────────────────────────────────────────────────
+-- attest_token: one-time upload token, generated on payment confirmation
+-- ────────────────────────────────────────────────────────────
+alter table public.participants add column if not exists attest_token text;
+
+-- ────────────────────────────────────────────────────────────
+-- confirm_participant: atomically assigns startnummer and confirms a participant.
+-- Uses a transaction-level advisory lock so concurrent webhook calls never
+-- race for the same startnummer. Must be called with the service role.
+-- ────────────────────────────────────────────────────────────
+create or replace function confirm_participant(p_id uuid, p_max int)
+returns json
+language plpgsql
+security definer
+as $$
+declare
+  v_next integer;
+  v_row  participants;
+begin
+  -- Serialize all concurrent calls; lock is released automatically at tx end.
+  perform pg_advisory_xact_lock(8675309);
+
+  select coalesce(max(startnummer), 0) + 1
+  into   v_next
+  from   participants
+  where  startnummer is not null;
+
+  update participants set
+    ticket_status = 'confirmed',
+    attest_status = 'missing',
+    startnummer   = case when v_next > p_max then null else v_next end
+  where id = p_id
+  returning * into v_row;
+
+  return json_build_object(
+    'email',       v_row.email,
+    'vorname',     v_row.vorname,
+    'startnummer', v_row.startnummer
+  );
+end;
+$$;
+
+-- ────────────────────────────────────────────────────────────
 -- Storage bucket for attest PDFs
 -- Run once in the Supabase Storage UI or via SQL:
 --   insert into storage.buckets (id, name, public) values ('atteste', 'atteste', false)
