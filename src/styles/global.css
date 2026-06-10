@@ -83,6 +83,30 @@ html.lenis body {
   overflow: hidden;
 }
 
+/* Schwarze Sektion-Blende: liegt auf der Naht zwischen zwei Sektionen,
+   wird beim Durchscrollen per GSAP ein-/ausgeblendet (cinematic.ts).
+   Default opacity 0 → ohne JS / auf Mobile unsichtbar. */
+.fade-zone {
+  position: relative;
+  height: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.fade-zone > span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -24vh;
+  height: 48vh;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(5, 10, 18, 0.95) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+}
+
 html {
   scroll-behavior: smooth;
   background: var(--color-bg);

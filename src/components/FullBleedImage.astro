@@ -22,6 +22,7 @@ const t = useTranslations(lang);
   <div class="fb-stage" data-fb-parallax>
     <img src={src} alt={alt} loading="lazy" style={`object-position:${position}`} />
   </div>
+  <div class="fb-flash" data-photo-flash aria-hidden="true"></div>
   <span class="fb-credit">{t("fullbleed.credit")}</span>
 </section>
 
@@ -45,6 +46,13 @@ const t = useTranslations(lang);
     object-fit: cover;
     object-position: center;
     display: block;
+  }
+  .fb-flash {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(74, 127, 165, 0.9), rgba(45, 74, 107, 0.95));
+    opacity: 0; /* Flash-Einblendung via GSAP onEnter (cinematic.ts) */
+    pointer-events: none;
   }
   .fb-credit {
     position: absolute;

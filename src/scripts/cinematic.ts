@@ -43,8 +43,11 @@ function init() {
     heroIntro(true);
     heroScroll();
     fullBleedParallax();
+    photoFlash();
     storyReveal(true);
     loopCircles();
+    fadeZones();
+    scrollProgress();
   });
   mm.add("(max-width: 899px)", () => {
     heroIntro(false);
@@ -79,9 +82,9 @@ function heroScroll() {
     trigger: hero,
     start: "top top",
     end: "bottom top",
-    scrub: true,
+    scrub: 1.2, // träger Catch-up = langer, cineastischer Zoom
   };
-  gsap.fromTo(stage, { scale: 1.15 }, { scale: 1, yPercent: 12, ease: "none", scrollTrigger: st });
+  gsap.fromTo(stage, { scale: 1.3 }, { scale: 1, yPercent: 12, ease: "none", scrollTrigger: st });
   gsap.to(hero.querySelector(".hero-overlay"), { opacity: 0.3, ease: "none", scrollTrigger: st });
 }
 
@@ -137,9 +140,11 @@ function storyReveal(desktop: boolean) {
       gsap.from(split.lines, {
         autoAlpha: 0,
         x: -48,
+        filter: "blur(8px)",
         duration: 0.9,
         ease: "power3.out",
         stagger: 0.12,
+        clearProps: "filter", // blur nach dem Reveal entfernen (GPU)
         scrollTrigger: { trigger: el, start: "top 80%", once: true },
       });
     });
@@ -187,6 +192,47 @@ function loopCircles() {
       },
     );
   });
+}
+
+/* ── 2b. Wisthaler-Fotos: kurzer Navy-Flash beim Einblenden ── */
+function photoFlash() {
+  gsap.utils.toArray<HTMLElement>("[data-photo-flash]").forEach((flash) => {
+    ScrollTrigger.create({
+      trigger: flash.parentElement,
+      start: "top 75%",
+      once: true,
+      onEnter: () => {
+        gsap.fromTo(flash, { opacity: 0.55 }, { opacity: 0, duration: 1.1, ease: "power2.out" });
+      },
+    });
+  });
+}
+
+/* ── Schwarze Blenden an Sektionsgrenzen: dunkelt beim Durchscrollen ein/aus ── */
+function fadeZones() {
+  gsap.utils.toArray<HTMLElement>("[data-fade-zone]").forEach((zone) => {
+    const veil = zone.firstElementChild;
+    if (!veil) return;
+    gsap
+      .timeline({
+        scrollTrigger: { trigger: zone, start: "center 95%", end: "center 5%", scrub: 0.6 },
+      })
+      .fromTo(veil, { opacity: 0 }, { opacity: 0.6, ease: "none" })
+      .to(veil, { opacity: 0, ease: "none" });
+  });
+}
+
+/* ── Scroll-Progress: goldene Linie am rechten Rand ── */
+function scrollProgress() {
+  const wrap = document.querySelector<HTMLElement>("[data-scroll-progress]");
+  const bar = wrap?.querySelector<HTMLElement>("[data-scroll-progress-bar]");
+  if (!wrap || !bar) return;
+  wrap.classList.add("is-active");
+  gsap.fromTo(
+    bar,
+    { scaleY: 0 },
+    { scaleY: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.3 } },
+  );
 }
 
 /* ── 6. Marquee: GSAP-driven loop, speeds up with scroll velocity ── */
