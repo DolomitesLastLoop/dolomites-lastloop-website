@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
+import ResultsTable from "@components/ResultsTable.astro";
 import { photo, pos } from "@lib/photos";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 import { getAdminClient, type RaceResult } from "@lib/supabase";
@@ -27,8 +28,12 @@ const grouped = results.reduce<Record<number, RaceResult[]>>((acc, r) => {
   (acc[r.year] ??= []).push(r);
   return acc;
 }, {});
-const years = Object.keys(grouped).map(Number).sort((a, b) => b - a);
-const hasYears = years.length > 0;
+// 2026 wird statisch über ResultsTable (src/data/results-2026.json) gerendert –
+// das Supabase-Archiv übernimmt nur ältere/zukünftige Jahrgänge.
+const years = Object.keys(grouped)
+  .map(Number)
+  .filter((y) => y !== 2026)
+  .sort((a, b) => b - a);
 
 const medalClass = (place: number) =>
   place === 1
@@ -103,14 +108,9 @@ const medalClass = (place: number) =>
         </a>
       </p>
 
-      {
-        !hasYears && (
-          <article class="card">
-            <h2>{t("results.year.2026")}</h2>
-            <p class="text-muted">{t("results.placeholder")}</p>
-          </article>
-        )
-      }
+      <div class="mb-6">
+        <ResultsTable lang={lang} />
+      </div>
 
       {
         years.map((year) => (

@@ -1,0 +1,817 @@
+{
+  "year": 2026,
+  "loopDistanceKm": 6.71,
+  "results": [
+    {
+      "bib": 36,
+      "name": "Raphael Stanic",
+      "gender": "M",
+      "loops": 38,
+      "distanceKm": 254.83,
+      "status": "dnf",
+      "label": "1st Man"
+    },
+    {
+      "bib": 117,
+      "name": "Marco Matteazzi",
+      "gender": "M",
+      "loops": 38,
+      "distanceKm": 254.83,
+      "status": "dnf",
+      "label": "1st Man"
+    },
+    {
+      "bib": 112,
+      "name": "Alexander Rabensteiner",
+      "gender": "M",
+      "loops": 28,
+      "distanceKm": 187.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 75,
+      "name": "Arnold Hiller",
+      "gender": "M",
+      "loops": 27,
+      "distanceKm": 181.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 35,
+      "name": "Marc Slanzi",
+      "gender": "M",
+      "loops": 24,
+      "distanceKm": 160.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 67,
+      "name": "Egon Tauber",
+      "gender": "M",
+      "loops": 24,
+      "distanceKm": 160.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 54,
+      "name": "Fabian Pircher",
+      "gender": "M",
+      "loops": 22,
+      "distanceKm": 147.53,
+      "status": "dnf"
+    },
+    {
+      "bib": 4,
+      "name": "Philipp Crazzolara",
+      "gender": "M",
+      "loops": 19,
+      "distanceKm": 127.41,
+      "status": "dnf"
+    },
+    {
+      "bib": 30,
+      "name": "Monika Rabanser",
+      "gender": "W",
+      "loops": 19,
+      "distanceKm": 127.41,
+      "status": "dnf",
+      "label": "1st Woman"
+    },
+    {
+      "bib": 3,
+      "name": "Jan Buzzo",
+      "gender": "M",
+      "loops": 18,
+      "distanceKm": 120.71,
+      "status": "dnf"
+    },
+    {
+      "bib": 17,
+      "name": "Tobias Lahner",
+      "gender": "M",
+      "loops": 18,
+      "distanceKm": 120.71,
+      "status": "dnf"
+    },
+    {
+      "bib": 27,
+      "name": "Tanja Plaikner",
+      "gender": "W",
+      "loops": 18,
+      "distanceKm": 120.71,
+      "status": "dnf"
+    },
+    {
+      "bib": 19,
+      "name": "Greta Lochmann",
+      "gender": "W",
+      "loops": 17,
+      "distanceKm": 114.0,
+      "status": "dnf"
+    },
+    {
+      "bib": 65,
+      "name": "Manuel Mederle",
+      "gender": "M",
+      "loops": 17,
+      "distanceKm": 114.0,
+      "status": "dnf"
+    },
+    {
+      "bib": 46,
+      "name": "Roldano Marzorati",
+      "gender": "M",
+      "loops": 16,
+      "distanceKm": 107.3,
+      "status": "dnf"
+    },
+    {
+      "bib": 62,
+      "name": "Alexander Baur",
+      "gender": "M",
+      "loops": 16,
+      "distanceKm": 107.3,
+      "status": "dnf"
+    },
+    {
+      "bib": 6,
+      "name": "Daniel Forti",
+      "gender": "M",
+      "loops": 16,
+      "distanceKm": 107.3,
+      "status": "dnf"
+    },
+    {
+      "bib": 10,
+      "name": "Alex Tormena",
+      "gender": "M",
+      "loops": 16,
+      "distanceKm": 107.3,
+      "status": "dnf"
+    },
+    {
+      "bib": 11,
+      "name": "Lenz Hofer",
+      "gender": "M",
+      "loops": 16,
+      "distanceKm": 107.3,
+      "status": "dnf"
+    },
+    {
+      "bib": 24,
+      "name": "Gabriele Perini",
+      "gender": "M",
+      "loops": 16,
+      "distanceKm": 107.3,
+      "status": "dnf"
+    },
+    {
+      "bib": 29,
+      "name": "Markus Pörnbacher",
+      "gender": "M",
+      "loops": 16,
+      "distanceKm": 107.3,
+      "status": "dnf"
+    },
+    {
+      "bib": 32,
+      "name": "Jannis Resch",
+      "gender": "M",
+      "loops": 15,
+      "distanceKm": 100.59,
+      "status": "dnf"
+    },
+    {
+      "bib": 33,
+      "name": "Jonas Seisl",
+      "gender": "M",
+      "loops": 16,
+      "distanceKm": 107.3,
+      "status": "dnf"
+    },
+    {
+      "bib": 52,
+      "name": "Max Heinz",
+      "gender": "M",
+      "loops": 16,
+      "distanceKm": 107.3,
+      "status": "dnf"
+    },
+    {
+      "bib": 78,
+      "name": "Felix Verdorfer",
+      "gender": "M",
+      "loops": 15,
+      "distanceKm": 100.59,
+      "status": "dnf"
+    },
+    {
+      "bib": 107,
+      "name": "Rene Tschager",
+      "gender": "M",
+      "loops": 15,
+      "distanceKm": 100.59,
+      "status": "dnf"
+    },
+    {
+      "bib": 1,
+      "name": "Eva Bergmann",
+      "gender": "W",
+      "loops": 15,
+      "distanceKm": 100.59,
+      "status": "dnf"
+    },
+    {
+      "bib": 26,
+      "name": "Matthias Thaler",
+      "gender": "M",
+      "loops": 15,
+      "distanceKm": 100.59,
+      "status": "dnf"
+    },
+    {
+      "bib": 88,
+      "name": "Simone Mazzoleni",
+      "gender": "M",
+      "loops": 15,
+      "distanceKm": 100.59,
+      "status": "dnf"
+    },
+    {
+      "bib": 109,
+      "name": "Andrea Pelo di Giorgio",
+      "gender": "M",
+      "loops": 15,
+      "distanceKm": 100.59,
+      "status": "dnf"
+    },
+    {
+      "bib": 8,
+      "name": "Magdalena Frenner",
+      "gender": "W",
+      "loops": 13,
+      "distanceKm": 87.18,
+      "status": "dnf"
+    },
+    {
+      "bib": 31,
+      "name": "Max Anton Ratschiller",
+      "gender": "M",
+      "loops": 13,
+      "distanceKm": 87.18,
+      "status": "dnf"
+    },
+    {
+      "bib": 43,
+      "name": "Dominik Trojer",
+      "gender": "M",
+      "loops": 13,
+      "distanceKm": 87.18,
+      "status": "dnf"
+    },
+    {
+      "bib": 114,
+      "name": "Benjamin Lanz",
+      "gender": "M",
+      "loops": 13,
+      "distanceKm": 87.18,
+      "status": "dnf"
+    },
+    {
+      "bib": 116,
+      "name": "Andreas Parth",
+      "gender": "M",
+      "loops": 13,
+      "distanceKm": 87.18,
+      "status": "dnf"
+    },
+    {
+      "bib": 25,
+      "name": "Paul Obergasser",
+      "gender": "M",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 40,
+      "name": "Leonard Terzer",
+      "gender": "M",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 41,
+      "name": "Philip Theiner",
+      "gender": "M",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 49,
+      "name": "Hannes Zonta",
+      "gender": "M",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 79,
+      "name": "Dennis Reden",
+      "gender": "M",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 89,
+      "name": "Daniel von Payr",
+      "gender": "M",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 90,
+      "name": "Nadia Gruber",
+      "gender": "W",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 91,
+      "name": "Lisa Thaler",
+      "gender": "W",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 92,
+      "name": "Maria Moser",
+      "gender": "W",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 93,
+      "name": "Jasmin Falser",
+      "gender": "W",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 105,
+      "name": "Marco Zampar",
+      "gender": "M",
+      "loops": 12,
+      "distanceKm": 80.47,
+      "status": "dnf"
+    },
+    {
+      "bib": 9,
+      "name": "Luca Kasslatter",
+      "gender": "M",
+      "loops": 11,
+      "distanceKm": 73.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 13,
+      "name": "Annika Hofmann",
+      "gender": "W",
+      "loops": 11,
+      "distanceKm": 73.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 15,
+      "name": "Hannes Ladurner",
+      "gender": "M",
+      "loops": 11,
+      "distanceKm": 73.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 18,
+      "name": "Max Leitner",
+      "gender": "M",
+      "loops": 11,
+      "distanceKm": 73.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 38,
+      "name": "Sara Steinmair",
+      "gender": "W",
+      "loops": 11,
+      "distanceKm": 73.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 51,
+      "name": "Julian Oberrauch",
+      "gender": "M",
+      "loops": 11,
+      "distanceKm": 73.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 56,
+      "name": "Valentina Erlsbacher",
+      "gender": "W",
+      "loops": 11,
+      "distanceKm": 73.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 58,
+      "name": "Gertraud Tasser",
+      "gender": "W",
+      "loops": 11,
+      "distanceKm": 73.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 80,
+      "name": "Morris Peintner",
+      "gender": "M",
+      "loops": 11,
+      "distanceKm": 73.77,
+      "status": "dnf"
+    },
+    {
+      "bib": 7,
+      "name": "Hannes Maier",
+      "gender": "M",
+      "loops": 10,
+      "distanceKm": 67.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 20,
+      "name": "Thomas Elsler",
+      "gender": "M",
+      "loops": 10,
+      "distanceKm": 67.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 28,
+      "name": "Christian Gallmetzer",
+      "gender": "M",
+      "loops": 10,
+      "distanceKm": 67.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 47,
+      "name": "Vera Winkler",
+      "gender": "W",
+      "loops": 10,
+      "distanceKm": 67.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 60,
+      "name": "Mara Unterweger",
+      "gender": "W",
+      "loops": 10,
+      "distanceKm": 67.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 61,
+      "name": "Lena Schuller",
+      "gender": "W",
+      "loops": 10,
+      "distanceKm": 67.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 68,
+      "name": "Paul Ausserhofer",
+      "gender": "M",
+      "loops": 10,
+      "distanceKm": 67.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 72,
+      "name": "Stefan Plitzner",
+      "gender": "M",
+      "loops": 10,
+      "distanceKm": 67.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 111,
+      "name": "Philipp Sinner",
+      "gender": "M",
+      "loops": 10,
+      "distanceKm": 67.06,
+      "status": "dnf"
+    },
+    {
+      "bib": 71,
+      "name": "Alex Sigmund",
+      "gender": "M",
+      "loops": 9,
+      "distanceKm": 60.35,
+      "status": "dnf"
+    },
+    {
+      "bib": 77,
+      "name": "Carolina Raffo",
+      "gender": "W",
+      "loops": 9,
+      "distanceKm": 60.35,
+      "status": "dnf"
+    },
+    {
+      "bib": 94,
+      "name": "Massimiliano Rolandetti",
+      "gender": "M",
+      "loops": 9,
+      "distanceKm": 60.35,
+      "status": "dnf"
+    },
+    {
+      "bib": 95,
+      "name": "Jonas Vinzenz",
+      "gender": "M",
+      "loops": 9,
+      "distanceKm": 60.35,
+      "status": "dnf"
+    },
+    {
+      "bib": 104,
+      "name": "Alessandro Minigher",
+      "gender": "M",
+      "loops": 9,
+      "distanceKm": 60.35,
+      "status": "dnf"
+    },
+    {
+      "bib": 5,
+      "name": "Hannes Pörnbacher",
+      "gender": "M",
+      "loops": 8,
+      "distanceKm": 53.65,
+      "status": "dnf"
+    },
+    {
+      "bib": 34,
+      "name": "Hannah Sieder",
+      "gender": "W",
+      "loops": 8,
+      "distanceKm": 53.65,
+      "status": "dnf"
+    },
+    {
+      "bib": 42,
+      "name": "Christian Lang",
+      "gender": "M",
+      "loops": 8,
+      "distanceKm": 53.65,
+      "status": "dnf"
+    },
+    {
+      "bib": 66,
+      "name": "Marica Dapor",
+      "gender": "W",
+      "loops": 8,
+      "distanceKm": 53.65,
+      "status": "dnf"
+    },
+    {
+      "bib": 87,
+      "name": "Günther Strobl",
+      "gender": "M",
+      "loops": 8,
+      "distanceKm": 53.65,
+      "status": "dnf"
+    },
+    {
+      "bib": 103,
+      "name": "Andrea Buccetti",
+      "gender": "M",
+      "loops": 8,
+      "distanceKm": 53.65,
+      "status": "dnf"
+    },
+    {
+      "bib": 45,
+      "name": "Andrea Volpato",
+      "gender": "M",
+      "loops": 7,
+      "distanceKm": 46.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 70,
+      "name": "Florian Wöhrl",
+      "gender": "M",
+      "loops": 7,
+      "distanceKm": 46.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 74,
+      "name": "Josef Sieder",
+      "gender": "M",
+      "loops": 7,
+      "distanceKm": 46.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 97,
+      "name": "David Plankensteiner",
+      "gender": "M",
+      "loops": 7,
+      "distanceKm": 46.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 108,
+      "name": "Massimiliano Cavina",
+      "gender": "M",
+      "loops": 7,
+      "distanceKm": 46.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 110,
+      "name": "Patrick Locher",
+      "gender": "M",
+      "loops": 7,
+      "distanceKm": 46.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 115,
+      "name": "Mario Hausberger",
+      "gender": "M",
+      "loops": 7,
+      "distanceKm": 46.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 118,
+      "name": "Michael Stocker",
+      "gender": "M",
+      "loops": 7,
+      "distanceKm": 46.94,
+      "status": "dnf"
+    },
+    {
+      "bib": 14,
+      "name": "Carmen Kamelger",
+      "gender": "W",
+      "loops": 6,
+      "distanceKm": 40.24,
+      "status": "dnf"
+    },
+    {
+      "bib": 50,
+      "name": "Patrick Kofler",
+      "gender": "M",
+      "loops": 6,
+      "distanceKm": 40.24,
+      "status": "dnf"
+    },
+    {
+      "bib": 53,
+      "name": "Lorenz Ruggenthaler",
+      "gender": "M",
+      "loops": 6,
+      "distanceKm": 40.24,
+      "status": "dnf"
+    },
+    {
+      "bib": 69,
+      "name": "Thomas Ausserhofer",
+      "gender": "M",
+      "loops": 6,
+      "distanceKm": 40.24,
+      "status": "dnf"
+    },
+    {
+      "bib": 73,
+      "name": "Werner Kammerer",
+      "gender": "M",
+      "loops": 6,
+      "distanceKm": 40.24,
+      "status": "dnf"
+    },
+    {
+      "bib": 83,
+      "name": "Gianluca Fantin",
+      "gender": "M",
+      "loops": 6,
+      "distanceKm": 40.24,
+      "status": "dnf"
+    },
+    {
+      "bib": 86,
+      "name": "Nicola Draghi",
+      "gender": "M",
+      "loops": 6,
+      "distanceKm": 40.24,
+      "status": "dnf"
+    },
+    {
+      "bib": 113,
+      "name": "Philipp Glöggl",
+      "gender": "M",
+      "loops": 6,
+      "distanceKm": 40.24,
+      "status": "dnf"
+    },
+    {
+      "bib": 2,
+      "name": "Loris Burger",
+      "gender": "M",
+      "loops": 5,
+      "distanceKm": 33.53,
+      "status": "dnf"
+    },
+    {
+      "bib": 39,
+      "name": "Angelika Taschler",
+      "gender": "W",
+      "loops": 5,
+      "distanceKm": 33.53,
+      "status": "dnf"
+    },
+    {
+      "bib": 99,
+      "name": "Karen Sigmund",
+      "gender": "W",
+      "loops": 4,
+      "distanceKm": 26.82,
+      "status": "dnf"
+    },
+    {
+      "bib": 100,
+      "name": "Markus Frank",
+      "gender": "M",
+      "loops": 4,
+      "distanceKm": 26.82,
+      "status": "dnf"
+    },
+    {
+      "bib": 23,
+      "name": "Dominik Mühlmann",
+      "gender": "M",
+      "loops": 3,
+      "distanceKm": 20.12,
+      "status": "dnf"
+    },
+    {
+      "bib": 81,
+      "name": "Martin Hofer",
+      "gender": "M",
+      "loops": 3,
+      "distanceKm": 20.12,
+      "status": "dnf"
+    },
+    {
+      "bib": 98,
+      "name": "Xhuzepe Dedej",
+      "gender": "M",
+      "loops": 3,
+      "distanceKm": 20.12,
+      "status": "dnf"
+    },
+    {
+      "bib": 102,
+      "name": "Ivan Dallabona",
+      "gender": "M",
+      "loops": 3,
+      "distanceKm": 20.12,
+      "status": "dnf"
+    },
+    {
+      "bib": 101,
+      "name": "Alex Libardi",
+      "gender": "M",
+      "loops": 2,
+      "distanceKm": 13.41,
+      "status": "dnf"
+    },
+    {
+      "bib": 59,
+      "name": "Günther Mirrione",
+      "gender": "M",
+      "loops": 1,
+      "distanceKm": 6.71,
+      "status": "dnf"
+    }
+  ]
+}
