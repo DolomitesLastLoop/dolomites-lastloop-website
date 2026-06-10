@@ -154,6 +154,12 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
 
 > Hier neu auftretende Fehler + Ursache + Lösung notieren (Regel 4).
 
+### 2026-06-10 — Lokale .env: dotenv-Fallstricke (#, $, URL-Verwechslung)
+
+- Problem 1: In `PUBLIC_SUPABASE_URL` war ein API-Key (`sb_publishable_…`) statt der Projekt-URL eingetragen → `Invalid supabaseUrl`, 500 auf allen Supabase-Routen. Die korrekte URL (`https://<ref>.supabase.co`) lässt sich aus dem `ref`-Feld im Anon-JWT ableiten.
+- Problem 2: `ADMIN_PASSWORD` enthielt ein `#` → Vite/dotenv schneidet unquoted ab `#` als Kommentar ab; der Server lud nur den vorderen Teil, Login schlug fehl. Lösung: Wert in doppelte Anführungszeichen setzen. Gilt NUR lokal — Vercel-Env-Vars werden nicht dotenv-geparst.
+- Merkregel: Werte mit `#`, `$` oder Leerzeichen in `.env` immer quoten.
+
 ### 2026-06-10 — SVG stroke-dashoffset nicht via CSS-Property animieren
 
 - Problem: GSAP-Tween auf `strokeDashoffset` (CSS) bei `<circle pathLength="1">` interpolierte nicht — Wert sprang binär 1px→0px (LoopCircle zeichnete sich nicht auf).
