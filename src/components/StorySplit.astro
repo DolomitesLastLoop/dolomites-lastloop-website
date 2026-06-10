@@ -19,12 +19,12 @@ const t = useTranslations(lang);
     <div class="story-text">
       <div class="story-inner">
         <span class="eyebrow on-dark">{t("story.eyebrow")}</span>
-        <h2 class="reveal reveal-left" data-delay="100">{t("story.title")}</h2>
+        <h2>{t("story.title")}</h2>
 
-        <p class="story-lead reveal" data-delay="200">{t("story.text")}</p>
+        <p class="story-lead">{t("story.text")}</p>
 
         <ul class="facts">
-          <li class="fact reveal" data-delay="300">
+          <li class="fact">
             <span class="fact-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="13" r="8" />
@@ -34,7 +34,7 @@ const t = useTranslations(lang);
             </span>
             <span class="fact-text">{t("story.fact1")}</span>
           </li>
-          <li class="fact reveal" data-delay="450">
+          <li class="fact">
             <span class="fact-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
@@ -45,7 +45,7 @@ const t = useTranslations(lang);
             </span>
             <span class="fact-text">{t("story.fact2")}</span>
           </li>
-          <li class="fact reveal" data-delay="600">
+          <li class="fact">
             <span class="fact-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M8 21h8" />
@@ -154,11 +154,7 @@ const t = useTranslations(lang);
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1);
-    transition: transform 1500ms var(--ease-emphasis);
-  }
-  .story:hover .story-photo img {
-    transform: scale(1.04);
+    /* Scroll-Zoom via GSAP (cinematic.ts) — keine CSS-Transition, sonst Konflikt */
   }
   .photo-overlay {
     position: absolute;

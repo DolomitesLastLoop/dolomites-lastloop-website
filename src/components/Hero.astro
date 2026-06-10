@@ -1,5 +1,6 @@
 ---
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
+import HeroParticles from "@components/HeroParticles.astro";
 
 interface Props {
   lang: Lang;
@@ -18,7 +19,7 @@ const SLIDE_DURATION_MS = 6000;
 ---
 
 <section class="hero" aria-label={t("hero.title")}>
-  <div class="hero-stage" data-parallax aria-hidden="true">
+  <div class="hero-stage" aria-hidden="true">
     {
       slides.map((s, i) => (
         <div
@@ -32,10 +33,12 @@ const SLIDE_DURATION_MS = 6000;
     <div class="hero-vignette"></div>
   </div>
 
+  <HeroParticles />
+
   <div class="container hero-inner">
     <p class="hero-eyebrow reveal">2027</p>
 
-    <h1 class="hero-title hero-title-anim" data-hero-title>
+    <h1 class="hero-title" data-hero-title>
       {t("hero.title")}
     </h1>
 
@@ -172,19 +175,8 @@ const SLIDE_DURATION_MS = 6000;
     }
   }
 
-  .hero-title-anim {
-    opacity: 0;
-    letter-spacing: -0.5em;
-    transform: translateY(8px);
-    transition:
-      opacity 1000ms var(--ease-emphasis),
-      letter-spacing 1000ms var(--ease-emphasis),
-      transform 1000ms var(--ease-emphasis);
-  }
-  .hero-title-anim.is-on {
-    opacity: 1;
+  .hero-title {
     letter-spacing: 0.05em;
-    transform: none;
   }
 
   /* Thin line under title that draws in */
@@ -333,7 +325,6 @@ const SLIDE_DURATION_MS = 6000;
 
   @media (prefers-reduced-motion: reduce) {
     .slide,
-    .hero-title-anim,
     .hero-fade,
     .hero-rise,
     .hero-rule span,
@@ -390,29 +381,10 @@ const SLIDE_DURATION_MS = 6000;
     startAuto();
   }
 
-  // Parallax 0.5x
-  const stage = document.querySelector(".hero-stage");
-  let raf = 0;
-  function applyParallax() {
-    if (!stage) return;
-    const y = window.scrollY;
-    stage.style.transform = `translate3d(0, ${y * 0.5}px, 0)`;
-    raf = 0;
-  }
-  if (stage && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (!raf) raf = requestAnimationFrame(applyParallax);
-      },
-      { passive: true },
-    );
-  }
-
-  // Sequential reveals
+  // Sequential reveals (title entrance lives in scripts/cinematic.ts)
   requestAnimationFrame(() => {
     document
-      .querySelectorAll(".hero-title-anim, .hero-fade, .hero-rise")
+      .querySelectorAll(".hero-fade, .hero-rise")
       .forEach((el) => {
         const delay = Number(el.dataset.delay || "0");
         setTimeout(() => el.classList.add("is-on"), delay);

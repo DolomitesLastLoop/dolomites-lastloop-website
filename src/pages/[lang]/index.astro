@@ -4,6 +4,7 @@ import Hero from "@components/Hero.astro";
 import EmotionQuote from "@components/EmotionQuote.astro";
 import AthletesEmotion from "@components/AthletesEmotion.astro";
 import StorySplit from "@components/StorySplit.astro";
+import LoopCircle from "@components/LoopCircle.astro";
 import Marquee from "@components/Marquee.astro";
 import FullBleedImage from "@components/FullBleedImage.astro";
 import Testimonials from "@components/Testimonials.astro";
@@ -65,6 +66,8 @@ const t = useTranslations(lang);
     col2={{ src: photo.start_group, position: pos.group }}
     col3={{ src: photo.portrait_a, position: pos.portrait }}
   />
+
+  <LoopCircle label="2027" />
 
   <StorySplit lang={lang} photo={photo.course_runner_c} position={pos.upper} />
 

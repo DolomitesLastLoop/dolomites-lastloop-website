@@ -1,0 +1,136 @@
+---
+/**
+ * Feine Gold/Weiß-Partikel über dem Hero — wie Schnee/Sterne über den Dolomiten.
+ * Nur Desktop (≥900px), respektiert prefers-reduced-motion, pausiert off-screen.
+ */
+---
+
+<canvas class="hero-particles" data-hero-particles aria-hidden="true"></canvas>
+
+<style>
+  .hero-particles {
+    position: absolute;
+    inset: 0;
+    z-index: -1; /* above .hero-stage (-2), below .hero-inner */
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  @media (max-width: 899px) {
+    .hero-particles {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>("[data-hero-particles]");
+  const isDesktop = window.matchMedia("(min-width: 900px)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (canvas && isDesktop && !reduceMotion) {
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      const COUNT = 60;
+      const GOLD = "201, 168, 76"; // --color-gold #C9A84C
+      const WHITE = "255, 255, 255";
+
+      interface Particle {
+        x: number;
+        y: number;
+        r: number;
+        speedY: number;
+        swayAmp: number;
+        swayFreq: number;
+        phase: number;
+        alpha: number;
+        color: string;
+      }
+
+      let w = 0;
+      let h = 0;
+      let particles: Particle[] = [];
+      let rafId = 0;
+      let visible = true;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      function resize() {
+        if (!canvas) return;
+        w = canvas.clientWidth;
+        h = canvas.clientHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function spawn(randomY: boolean): Particle {
+        const gold = Math.random() < 0.45;
+        return {
+          x: Math.random() * w,
+          y: randomY ? Math.random() * h : h + 4,
+          r: 0.6 + Math.random() * 1.7,
+          speedY: 8 + Math.random() * 14, // px/s, slow upward drift
+          swayAmp: 10 + Math.random() * 25,
+          swayFreq: 0.1 + Math.random() * 0.25,
+          phase: Math.random() * Math.PI * 2,
+          alpha: 0.25 + Math.random() * 0.5,
+          color: gold ? GOLD : WHITE,
+        };
+      }
+
+      let last = performance.now();
+      function frame(now: number) {
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        ctx!.clearRect(0, 0, w, h);
+        const t = now / 1000;
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.y -= p.speedY * dt;
+          if (p.y < -4) particles[i] = spawn(false);
+          const x = p.x + Math.sin(t * p.swayFreq * Math.PI * 2 + p.phase) * p.swayAmp;
+          // fade out towards the top third
+          const fade = p.y < h * 0.35 ? Math.max(p.y / (h * 0.35), 0) : 1;
+          ctx!.beginPath();
+          ctx!.arc(x, p.y, p.r, 0, Math.PI * 2);
+          ctx!.fillStyle = `rgba(${p.color}, ${p.alpha * fade})`;
+          ctx!.fill();
+        }
+        rafId = requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (rafId) return;
+        last = performance.now();
+        rafId = requestAnimationFrame(frame);
+      }
+      function stop() {
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+      }
+
+      resize();
+      particles = Array.from({ length: COUNT }, () => spawn(true));
+      window.addEventListener("resize", () => {
+        resize();
+      });
+
+      // pause when the hero is scrolled out of view
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          visible = entry.isIntersecting;
+          visible ? start() : stop();
+        },
+        { threshold: 0 },
+      );
+      io.observe(canvas);
+
+      document.addEventListener("visibilitychange", () => {
+        document.hidden || !visible ? stop() : start();
+      });
+    }
+  }
+</script>

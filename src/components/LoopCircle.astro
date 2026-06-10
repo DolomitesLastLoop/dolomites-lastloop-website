@@ -1,0 +1,75 @@
+---
+/**
+ * Animierter Loop-Kreis als Sektion-Trenner: zeichnet sich beim Scrollen
+ * auf (stroke-dashoffset, gescrubbt in scripts/cinematic.ts).
+ * Ohne JS / bei reduced-motion ist der Kreis voll gezeichnet (CSS-Default).
+ */
+interface Props {
+  label?: string;
+  variant?: "light" | "dark";
+}
+const { label = "", variant = "light" } = Astro.props;
+---
+
+<div class:list={["loop-circle", `loop-${variant}`]} data-loop-circle aria-hidden="true">
+  <svg viewBox="0 0 120 120">
+    <circle class="loop-track" cx="60" cy="60" r="54"></circle>
+    <circle class="loop-draw" data-loop-draw cx="60" cy="60" r="54" pathLength="1"></circle>
+  </svg>
+  {label && <span class="loop-label">{label}</span>}
+</div>
+
+<style>
+  .loop-circle {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 110px;
+    height: 110px;
+    margin: calc(var(--space-8) * -1) auto;
+    z-index: 3;
+  }
+  .loop-circle svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg); /* draw starts at 12 o'clock */
+  }
+  .loop-track,
+  .loop-draw {
+    fill: none;
+    stroke-width: 2.5;
+  }
+  .loop-track {
+    stroke: rgba(201, 168, 76, 0.2);
+  }
+  .loop-draw {
+    stroke: var(--color-gold);
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    /* stroke-dashoffset bewusst NICHT in CSS setzen: GSAP animiert das
+       Attribut, und CSS würde es überschreiben. Ohne JS gilt der
+       SVG-Default 0 = voll gezeichneter Kreis. */
+  }
+  .loop-label {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+    color: var(--color-gold);
+  }
+  .loop-dark {
+    background: transparent;
+  }
+
+  @media (max-width: 899px) {
+    .loop-circle {
+      width: 84px;
+      height: 84px;
+      margin: calc(var(--space-7) * -1) auto;
+    }
+    .loop-label {
+      font-size: 1.1rem;
+    }
+  }
+</style>

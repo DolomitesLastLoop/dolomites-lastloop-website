@@ -36,7 +36,7 @@ const t = useTranslations(lang);
   }
   .fb-stage {
     position: absolute;
-    inset: -10% 0;
+    inset: -15% 0; /* buffer for the GSAP parallax (yPercent ±10) */
     will-change: transform;
   }
   .fb-stage img {
@@ -62,23 +62,5 @@ const t = useTranslations(lang);
     }
   }
 </style>
+<!-- Parallax wird zentral in scripts/cinematic.ts über [data-fb-parallax] gesteuert -->
 
-<script>
-  const stage = document.querySelector<HTMLElement>("[data-fb-parallax]");
-  const section = stage?.parentElement;
-  if (stage && section && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        const rect = section.getBoundingClientRect();
-        // distance the centre of the section is from the viewport centre
-        const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * 0.3;
-        stage.style.transform = `translate3d(0, ${-offset}px, 0)`;
-        raf = 0;
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-  }
-</script>
