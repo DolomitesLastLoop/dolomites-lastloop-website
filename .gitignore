@@ -27,3 +27,12 @@ pnpm-debug.log*
 
 # astro
 .astro/
+
+# Asset Ordner (nicht versionieren)
+web/
+web-2/
+Dolomites Last Loop Avatar/
+graphify-out/
+node_modules/
+dist/
+.astro/
