@@ -4,6 +4,12 @@ import Footer from "@components/Footer.astro";
 import ScrollProgress from "@components/ScrollProgress.astro";
 import { useTranslations, type Lang, defaultLang } from "@i18n/utils";
 import "@styles/global.css";
+// Fonts lokal via Fontsource (statt Google CDN): CSP-konform ('self') und DSGVO-freundlich
+import "@fontsource/bebas-neue/400.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 
 interface Props {
   lang: Lang;
@@ -66,13 +72,6 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
     <meta name="twitter:image" content={ogImg} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
-    />
   </head>
   <body>
     <a href="#main" class="sr-only">Skip to content</a>
