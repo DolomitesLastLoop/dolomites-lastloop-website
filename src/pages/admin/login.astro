@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isAuthenticated, issueSession, verifyPassword } from "@lib/auth";
+import { getAdminClient } from "@lib/supabase";
 
 export const prerender = false;
 
@@ -8,15 +9,43 @@ if (isAuthenticated(Astro.cookies)) {
   return Astro.redirect("/admin", 302);
 }
 
+function clientIp(): string {
+  try {
+    return Astro.clientAddress;
+  } catch {
+    return Astro.request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  }
+}
+
 let error: string | null = null;
 if (Astro.request.method === "POST") {
   const form = await Astro.request.formData();
   const password = String(form.get("password") || "");
-  if (verifyPassword(password)) {
+  const ok = verifyPassword(password);
+
+  // Brute-Force-Schutz: 5 Fehlversuche / 15 min → 15 min Lockout pro IP.
+  // Die RPC prüft die Sperre VOR der Erfolgs-Verarbeitung — ein korrektes
+  // Passwort während einer aktiven Sperre wird ebenfalls abgewiesen.
+  const { data: lockedUntil, error: rpcError } = await getAdminClient().rpc(
+    "register_login_attempt",
+    { p_ip: clientIp(), p_success: ok },
+  );
+
+  if (rpcError) {
+    // fail-closed: ohne funktionierenden Schutz keine Anmeldung
+    // (häufigste Ursache: register_login_attempt aus supabase/schema.sql
+    // wurde noch nicht im SQL-Editor ausgeführt)
+    console.error("login_attempts RPC fehlgeschlagen:", rpcError.message);
+    error = "Anmeldung derzeit nicht möglich. Bitte später erneut versuchen.";
+  } else if (lockedUntil) {
+    Astro.response.status = 429;
+    error = "Zu viele Fehlversuche. Bitte in 15 Minuten erneut versuchen.";
+  } else if (ok) {
     issueSession(Astro.cookies);
     return Astro.redirect("/admin", 302);
+  } else {
+    error = "Falsches Passwort.";
   }
-  error = "Falsches Passwort.";
 }
 ---
 

@@ -138,3 +138,70 @@ $$;
 --   on conflict (id) do nothing;
 -- Then keep the bucket private (we serve signed URLs).
 -- ────────────────────────────────────────────────────────────
+
+-- ─────────────────────────────────────────────────────────────
+-- Brute-Force-Schutz Admin-Login (2026-06-10)
+-- 5 Fehlversuche innerhalb von 15 min → 15 min Lockout pro IP.
+-- Einmalig im Supabase SQL-Editor ausführen (idempotent).
+-- ─────────────────────────────────────────────────────────────
+create table if not exists public.login_attempts (
+  ip text primary key,
+  attempts integer not null default 0,
+  first_attempt_at timestamptz not null default now(),
+  locked_until timestamptz
+);
+
+alter table public.login_attempts enable row level security;
+-- bewusst KEINE Policies: nur der Service-Role-Key (serverseitig) hat Zugriff
+
+-- Atomar prüfen + zählen. Rückgabe: locked_until (null = nicht gesperrt).
+-- Bei aktiver Sperre wird auch ein korrektes Passwort NICHT verarbeitet.
+create or replace function public.register_login_attempt(p_ip text, p_success boolean)
+returns timestamptz
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_max constant integer := 5;
+  v_window constant interval := interval '15 minutes';
+  v_lock constant interval := interval '15 minutes';
+  v_row public.login_attempts%rowtype;
+  v_attempts integer;
+begin
+  -- Aufrufe pro IP serialisieren (gleiche Technik wie confirm_participant)
+  perform pg_advisory_xact_lock(hashtext('login_attempts:' || p_ip));
+
+  select * into v_row from public.login_attempts where ip = p_ip;
+
+  if v_row.locked_until is not null and v_row.locked_until > now() then
+    return v_row.locked_until;
+  end if;
+
+  if p_success then
+    delete from public.login_attempts where ip = p_ip;
+    return null;
+  end if;
+
+  if v_row.ip is null or now() - v_row.first_attempt_at > v_window then
+    insert into public.login_attempts (ip, attempts, first_attempt_at, locked_until)
+    values (p_ip, 1, now(), null)
+    on conflict (ip) do update
+      set attempts = 1, first_attempt_at = now(), locked_until = null;
+    return null;
+  end if;
+
+  v_attempts := v_row.attempts + 1;
+  update public.login_attempts
+     set attempts = v_attempts,
+         locked_until = case when v_attempts >= v_max then now() + v_lock end
+   where ip = p_ip;
+
+  return case when v_attempts >= v_max then now() + v_lock end;
+end;
+$$;
+
+-- KRITISCH: Execute-Rechte einschränken — sonst könnte jeder via PostgREST
+-- fremde IPs sperren (DoS) oder den eigenen Zähler zurücksetzen (Bypass).
+revoke execute on function public.register_login_attempt(text, boolean) from public, anon, authenticated;
+grant execute on function public.register_login_attempt(text, boolean) to service_role;
