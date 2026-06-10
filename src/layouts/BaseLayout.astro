@@ -249,8 +249,9 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
         updateBtn();
         window.addEventListener("scroll", updateBtn, { passive: true });
         scrollTopBtn.addEventListener("click", () => {
-          if (window.lenis) {
-            window.lenis.scrollTo(0);
+          const lenis = (window as unknown as { lenis?: { scrollTo: (t: number) => void } }).lenis;
+          if (lenis) {
+            lenis.scrollTo(0);
           } else {
             window.scrollTo({
               top: 0,

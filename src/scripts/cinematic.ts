@@ -15,12 +15,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import Lenis from "lenis";
 
-declare global {
-  interface Window {
-    lenis?: Lenis;
-  }
-}
-
 const isAdmin = window.location.pathname.startsWith("/admin");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -36,7 +30,9 @@ function init() {
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
-  window.lenis = lenis;
+  // global verfügbar machen (Scroll-Top-Button in BaseLayout); kein
+  // `declare global` — kollidiert mit der Window-Deklaration des lenis-Pakets
+  (window as unknown as { lenis?: Lenis }).lenis = lenis;
 
   const mm = gsap.matchMedia();
   mm.add("(min-width: 900px)", () => {
