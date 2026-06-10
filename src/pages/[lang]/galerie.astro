@@ -112,7 +112,8 @@ const isLarge = (idx: number) => idx % 7 === 0;
                 <img
                   src={encodeSrc(f)}
                   alt=""
-                  loading="lazy"
+                  loading={idx < 8 ? "eager" : "lazy"}
+                  fetchpriority={idx < 8 ? "high" : undefined}
                   decoding="async"
                   width={dims[f]?.[0]}
                   height={dims[f]?.[1]}
@@ -261,13 +262,34 @@ const isLarge = (idx: number) => idx % 7 === 0;
     width: 100%;
   }
 
+  /* Grid-Masonry: Spaltenbalancierung der CSS-Columns brauchte die Höhen
+     ALLER Items (content-visibility wirkungslos, Re-Layout bei jeder
+     Invalidierung). Grid platziert unabhängig; row-spans setzt das Script
+     unten aus den width/height-Attributen. Ohne JS: normales Grid. */
   .masonry {
-    columns: 4 240px;
-    column-gap: var(--space-4);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-4);
+  }
+  .masonry.is-masonry {
+    grid-auto-rows: 8px;
+    gap: 0 var(--space-4);
+  }
+  .masonry.is-masonry .tile-large {
+    grid-column: span 2;
+  }
+  @media (max-width: 560px) {
+    .masonry.is-masonry .tile-large {
+      grid-column: auto;
+    }
+  }
+  /* Reveal nur bei aktivem JS (Klasse via Script) — nie dauerhaft verstecken */
+  .masonry-anim .tile:not(.tile-in) {
+    opacity: 0;
+    transform: translateY(14px);
   }
   .masonry .tile {
-    break-inside: avoid;
-    margin: 0 0 var(--space-4);
+    margin: 0;
     position: relative;
     overflow: hidden;
     border-radius: var(--radius);
@@ -278,8 +300,11 @@ const isLarge = (idx: number) => idx % 7 === 0;
        Scroll-Jank bei ~190 Bildern */
     content-visibility: auto;
     contain-intrinsic-size: auto 320px;
-    /* nur transform animieren; box-shadow-Transition ist Paint-teuer × 190 */
-    transition: transform var(--transition);
+    /* nur transform/opacity animieren; box-shadow-Transition ist Paint-teuer × 190 */
+    transition: transform var(--transition), opacity 500ms var(--ease);
+  }
+  .masonry.is-masonry .tile {
+    margin-bottom: var(--space-4); /* vertikaler Abstand steckt im row-span */
   }
   .tile img {
     width: 100%;
@@ -511,6 +536,54 @@ const isLarge = (idx: number) => idx % 7 === 0;
 </style>
 
 <script>
+  // ─── Grid-Masonry: row-spans aus width/height-Attributen ───
+  // (kein Warten auf Bild-Loads, keine Layout-Sprünge)
+  const ROW = 8;
+  const GAP = 16; // var(--space-4)
+  const masonries = Array.from(document.querySelectorAll<HTMLElement>(".masonry"));
+
+  function layoutMasonry() {
+    for (const m of masonries) {
+      m.classList.add("is-masonry");
+      const mTiles = Array.from(m.querySelectorAll<HTMLElement>(".tile"));
+      // Phase 1: alle Breiten lesen (ein Reflow), Phase 2: alle Spans schreiben
+      const widths = mTiles.map((tile) => tile.getBoundingClientRect().width);
+      mTiles.forEach((tile, i) => {
+        const img = tile.querySelector("img");
+        const w = Number(img?.getAttribute("width")) || 3;
+        const h = Number(img?.getAttribute("height")) || 2;
+        const span = Math.max(1, Math.ceil((widths[i] * (h / w) + GAP) / ROW));
+        tile.style.gridRowEnd = `span ${span}`;
+      });
+    }
+  }
+  let resizeTimer = 0;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(layoutMasonry, 150);
+  });
+  layoutMasonry();
+
+  // ─── Tile-Reveal per IntersectionObserver (einzeln, unobserve danach) ───
+  if (
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+    "IntersectionObserver" in window
+  ) {
+    masonries.forEach((m) => m.classList.add("masonry-anim"));
+    const tileIO = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("tile-in");
+            tileIO.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px 80px 0px", threshold: 0.05 },
+    );
+    masonries.forEach((m) => m.querySelectorAll(".tile").forEach((t) => tileIO.observe(t)));
+  }
+
   const tiles = Array.from(
     document.querySelectorAll<HTMLElement>(".tile"),
   );
