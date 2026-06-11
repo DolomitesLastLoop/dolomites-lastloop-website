@@ -4,7 +4,7 @@ import ws from "ws";
 // Vercel-Runtime ist Node 20 (ohne natives WebSocket) — supabase-js' Realtime-
 // Client wirft sonst beim Erstellen. Wir nutzen Realtime nicht, aber der
 // Konstruktor läuft immer. Ab Node 22 wäre der Transport überflüssig.
-const realtime = { transport: ws as unknown as WebSocket };
+const realtime = { transport: ws as unknown as typeof WebSocket };
 
 const url = import.meta.env.PUBLIC_SUPABASE_URL as string | undefined;
 const anonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string | undefined;
