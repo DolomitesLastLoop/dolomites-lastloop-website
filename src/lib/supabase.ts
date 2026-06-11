@@ -1,4 +1,10 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import ws from "ws";
+
+// Vercel-Runtime ist Node 20 (ohne natives WebSocket) — supabase-js' Realtime-
+// Client wirft sonst beim Erstellen. Wir nutzen Realtime nicht, aber der
+// Konstruktor läuft immer. Ab Node 22 wäre der Transport überflüssig.
+const realtime = { transport: ws as unknown as WebSocket };
 
 const url = import.meta.env.PUBLIC_SUPABASE_URL as string | undefined;
 const anonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string | undefined;
@@ -19,7 +25,7 @@ export function getPublicClient(): SupabaseClient {
   _publicClient = createClient(
     assertEnv("PUBLIC_SUPABASE_URL", url),
     assertEnv("PUBLIC_SUPABASE_ANON_KEY", anonKey),
-    { auth: { persistSession: false } },
+    { auth: { persistSession: false }, realtime },
   );
   return _publicClient;
 }
@@ -29,7 +35,7 @@ export function getAdminClient(): SupabaseClient {
   _adminClient = createClient(
     assertEnv("PUBLIC_SUPABASE_URL", url),
     assertEnv("SUPABASE_SERVICE_ROLE_KEY", serviceKey),
-    { auth: { persistSession: false } },
+    { auth: { persistSession: false }, realtime },
   );
   return _adminClient;
 }
