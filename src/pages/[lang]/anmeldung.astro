@@ -36,7 +36,15 @@ const minISO = minDate.toISOString().slice(0, 10);
 const maxISO = maxDate.toISOString().slice(0, 10);
 ---
 
-<BaseLayout lang={lang} title={t("signup.title")}>
+<BaseLayout
+  lang={lang}
+  title={t("signup.title")}
+  description={t("meta.signup")}
+  breadcrumbs={[
+    { name: t("nav.home"), url: `/${lang}` },
+    { name: t("signup.title"), url: `/${lang}/anmeldung` },
+  ]}
+>
   <PageHero
     bg={photo.emotion_smile}
     position={pos.faceTight}
@@ -48,7 +56,7 @@ const maxISO = maxDate.toISOString().slice(0, 10);
   <div class="strip">
     <img
       src={photo.portrait_exhausted}
-      alt=""
+      alt={t("alt.signup_portrait")}
       loading="lazy"
       style="object-position:center 20%"
     />
@@ -312,7 +320,7 @@ const maxISO = maxDate.toISOString().slice(0, 10);
         <figure class="side-photo reveal reveal-scale">
           <img
             src={photo.emotion_smile}
-            alt=""
+            alt={t("alt.signup_side")}
             loading="lazy"
             style="object-position:center 15%"
           />

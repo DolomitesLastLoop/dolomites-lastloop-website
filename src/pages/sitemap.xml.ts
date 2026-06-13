@@ -17,7 +17,7 @@ export const GET: APIRoute = ({ site }) => {
   const base =
     (import.meta.env.PUBLIC_SITE_URL as string | undefined) ??
     site?.toString() ??
-    "https://dolomiteslastloop.com";
+    "https://www.dolomiteslastloop.com";
   const now = new Date().toISOString();
 
   const urls = LANGS.flatMap((lang) =>

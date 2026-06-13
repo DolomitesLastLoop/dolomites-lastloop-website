@@ -43,7 +43,15 @@ const statusClass = (s: string) => {
 };
 ---
 
-<BaseLayout lang={lang} title={t("startlist.title")}>
+<BaseLayout
+  lang={lang}
+  title={t("startlist.title")}
+  description={t("meta.startlist")}
+  breadcrumbs={[
+    { name: t("nav.home"), url: `/${lang}` },
+    { name: t("startlist.title"), url: `/${lang}/startliste` },
+  ]}
+>
   <section class="page-head">
     <div class="container">
       <p class="eyebrow">Live</p>

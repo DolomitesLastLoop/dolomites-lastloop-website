@@ -27,7 +27,7 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     <a class="brand" href={localizePath("/", lang)} aria-label={t("site.title")}>
       <img
         src="/images/Logo.jpeg"
-        alt=""
+        alt={t("alt.logo")}
         class="brand-logo"
         width="40"
         height="40"

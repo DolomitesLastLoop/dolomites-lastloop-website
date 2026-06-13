@@ -15,6 +15,17 @@ export const ui = {
       "Das erste Backyard Ultra Rennen in den Dolomiten – Toblach, 15. Mai 2027.",
     "site.event_date": "15. Mai 2027",
 
+    "meta.race_info":
+      "Backyard Ultra in Toblach: 6,71 km Loop jede volle Stunde nach dem Last-One-Standing-Prinzip. Strecke, Regeln und Cut-off der Dolomites Last Loop 2027.",
+    "meta.signup":
+      "Jetzt für die Dolomites Last Loop 2027 in Toblach anmelden: Early-Bird-Gebühr, Anmeldeschluss und limitierte Startplätze. Sichere dir deinen Platz.",
+    "meta.startlist":
+      "Startliste der Dolomites Last Loop 2027 und Ergebnisse 2026: alle bestätigten Teilnehmer des Backyard Ultra in Toblach auf einen Blick.",
+    "alt.logo": "Dolomites Last Loop",
+    "alt.course_photo": "Läufer auf der 6,71 km langen Strecke der Dolomites Last Loop bei Toblach",
+    "alt.signup_portrait": "Erschöpfter Backyard-Ultra-Läufer nach mehreren Runden bei Nacht",
+    "alt.signup_side": "Lächelnde Läuferin bei der Dolomites Last Loop in Toblach",
+
     "nav.home": "Start",
     "nav.race_info": "Rennen",
     "nav.signup": "Anmeldung",
@@ -292,6 +303,17 @@ export const ui = {
     "site.description":
       "La prima Backyard Ultra delle Dolomiti – Dobbiaco, 15 maggio 2027.",
     "site.event_date": "15 maggio 2027",
+
+    "meta.race_info":
+      "Backyard Ultra a Dobbiaco: loop di 6,71 km ogni ora secondo il principio Last One Standing. Percorso, regole e cut-off della Dolomites Last Loop 2027.",
+    "meta.signup":
+      "Iscriviti ora alla Dolomites Last Loop 2027 a Dobbiaco: quota early-bird, scadenze e posti limitati. Assicurati il tuo posto di partenza.",
+    "meta.startlist":
+      "Lista partenti della Dolomites Last Loop 2027 e risultati 2026: tutti i partecipanti confermati della Backyard Ultra a Dobbiaco.",
+    "alt.logo": "Dolomites Last Loop",
+    "alt.course_photo": "Corridore sul percorso di 6,71 km della Dolomites Last Loop a Dobbiaco",
+    "alt.signup_portrait": "Atleta della Backyard Ultra esausto dopo diversi giri di notte",
+    "alt.signup_side": "Atleta sorridente alla Dolomites Last Loop a Dobbiaco",
 
     "nav.home": "Home",
     "nav.race_info": "Gara",
@@ -571,6 +593,17 @@ export const ui = {
     "site.description":
       "The first Backyard Ultra race in the Dolomites – Toblach, May 15, 2027.",
     "site.event_date": "May 15, 2027",
+
+    "meta.race_info":
+      "Backyard Ultra in Toblach: a 6.71 km loop every hour on the Last One Standing format. Course, rules and cut-off for the Dolomites Last Loop 2027.",
+    "meta.signup":
+      "Sign up now for the Dolomites Last Loop 2027 in Toblach: early-bird fee, registration deadline and limited start spots. Secure your place.",
+    "meta.startlist":
+      "Start list for the Dolomites Last Loop 2027 and 2026 results: all confirmed runners of the Backyard Ultra in Toblach at a glance.",
+    "alt.logo": "Dolomites Last Loop",
+    "alt.course_photo": "Runner on the 6.71 km Dolomites Last Loop course near Toblach",
+    "alt.signup_portrait": "Exhausted backyard ultra runner after several loops at night",
+    "alt.signup_side": "Smiling runner at the Dolomites Last Loop in Toblach",
 
     "nav.home": "Home",
     "nav.race_info": "Race",

@@ -1,0 +1,78 @@
+---
+import type { Lang } from "@i18n/utils";
+
+interface Crumb {
+  name: string;
+  url: string;
+}
+interface Props {
+  lang: Lang;
+  siteUrl: string;
+  breadcrumbs?: Crumb[];
+}
+const { lang, siteUrl, breadcrumbs } = Astro.props;
+const abs = (p: string) => new URL(p, siteUrl).toString();
+
+const organization = {
+  "@type": "Organization",
+  "@id": `${siteUrl}#organization`,
+  name: "Dolomites Last Loop",
+  url: siteUrl,
+  logo: abs("/images/Logo.jpeg"),
+  location: "Toblach/Dobbiaco, Südtirol, Italien",
+};
+
+const sportsEvent = {
+  "@type": "SportsEvent",
+  name: "Dolomites Last Loop 2027",
+  description:
+    "Das erste Backyard Ultra Rennen in den Dolomiten: 6,71 km Loop jede volle Stunde, Last One Standing.",
+  sport: "Backyard Ultra Running",
+  startDate: "2027-05-15",
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  image: abs("/og-image.png"),
+  url: abs(`/${lang}`),
+  inLanguage: lang,
+  location: {
+    "@type": "Place",
+    name: "Nordic Arena Toblach",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Toblach/Dobbiaco",
+      addressRegion: "Südtirol",
+      addressCountry: "IT",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 46.7204,
+      longitude: 12.2256,
+    },
+  },
+  organizer: { "@id": `${siteUrl}#organization` },
+  offers: {
+    "@type": "Offer",
+    url: abs(`/${lang}/anmeldung`),
+    availability: "https://schema.org/InStock",
+    category: "Race registration",
+  },
+};
+
+const graph: Record<string, unknown>[] = [organization, sportsEvent];
+
+if (breadcrumbs && breadcrumbs.length) {
+  graph.push({
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbs.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      item: abs(c.url),
+    })),
+  });
+}
+
+const jsonLd = { "@context": "https://schema.org", "@graph": graph };
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />

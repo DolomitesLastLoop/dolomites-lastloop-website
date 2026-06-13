@@ -21,7 +21,7 @@ if (!["de", "it", "en"].includes(lang)) {
 const t = useTranslations(lang);
 ---
 
-<BaseLayout lang={lang}>
+<BaseLayout lang={lang} preloadImage="/images/hero-start.jpg">
   <Hero lang={lang} />
 
   <EmotionQuote

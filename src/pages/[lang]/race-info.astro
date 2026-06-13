@@ -30,7 +30,15 @@ const ruleKeys = [
 const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8, 10)
 ---
 
-<BaseLayout lang={lang} title={t("race.title")}>
+<BaseLayout
+  lang={lang}
+  title={t("race.title")}
+  description={t("meta.race_info")}
+  breadcrumbs={[
+    { name: t("nav.home"), url: `/${lang}` },
+    { name: t("race.title"), url: `/${lang}/race-info` },
+  ]}
+>
   <PageHero
     bg={photo.day_runner_portrait}
     position={pos.upper}
@@ -89,7 +97,7 @@ const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8
         <figure class="course-photo reveal reveal-scale" data-delay="200">
           <img
             src={photo.day_running_1}
-            alt=""
+            alt={t("alt.course_photo")}
             loading="lazy"
             style={`object-position:${pos.landscape}`}
           />
