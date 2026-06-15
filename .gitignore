@@ -37,3 +37,5 @@ node_modules/
 dist/
 .astro/
 Ergebnisliste Dolomites Last Loop 2026.pdf
+.vercel
+.env*

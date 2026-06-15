@@ -1,20 +1,21 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { useTranslations, type Lang } from "@i18n/utils";
+import { legal, type LegalSlug } from "@i18n/legal";
 
 export const prerender = false;
 const lang = (Astro.params.lang ?? "de") as Lang;
 const slug = Astro.params.legal as string | undefined;
 if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 
-const validSlugs = new Set([
+const validSlugs = new Set<LegalSlug>([
   "datenschutz",
   "agb",
   "barrierefreiheit",
   "rueckerstattung",
 ]);
 
-if (!slug || !validSlugs.has(slug)) {
+if (!slug || !validSlugs.has(slug as LegalSlug)) {
   return new Response("Not found", { status: 404 });
 }
 
@@ -27,6 +28,7 @@ const titleMap: Record<string, string> = {
   rueckerstattung: t("footer.refund"),
 };
 const title = titleMap[slug] ?? slug;
+const page = legal[lang][slug as LegalSlug];
 ---
 
 <BaseLayout lang={lang} title={title}>
@@ -34,16 +36,34 @@ const title = titleMap[slug] ?? slug;
     <div class="container">
       <p class="eyebrow">Legal</p>
       <h1>{title}</h1>
+      {page.updated && <p class="updated">{page.updated}</p>}
     </div>
   </section>
 
   <section class="section">
-    <div class="container-narrow">
-      <p class="text-muted">
-        Dieser Bereich wird vor dem offiziellen Verkaufsstart 2027 mit den
-        rechtsgültigen Texten bestückt. Bei Fragen kontaktiere uns bitte unter
-        <a href="mailto:dolomiteslastloop@gmail.com">dolomiteslastloop@gmail.com</a>.
-      </p>
+    <div class="container-narrow legal">
+      {page.intro && <p class="intro">{page.intro}</p>}
+
+      {
+        page.sections.map((section) => (
+          <div class="legal-section">
+            <h2>{section.heading}</h2>
+            {section.blocks.map((block) => {
+              if (block.type === "h") return <h3>{block.text}</h3>;
+              if (block.type === "note") return <p class="note">{block.text}</p>;
+              if (block.type === "list")
+                return (
+                  <ul>
+                    {block.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                );
+              return <p>{block.text}</p>;
+            })}
+          </div>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>
@@ -52,5 +72,48 @@ const title = titleMap[slug] ?? slug;
   .page-head {
     padding: var(--space-9) 0 var(--space-5);
     border-bottom: 1px solid var(--color-border);
+  }
+  .updated {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+  .legal .intro {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-7);
+  }
+  .legal-section {
+    margin-bottom: var(--space-7);
+  }
+  .legal-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: var(--space-4);
+  }
+  .legal-section h3 {
+    font-size: 1.1rem;
+    margin: var(--space-5) 0 var(--space-3);
+  }
+  .legal-section p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: var(--space-3);
+  }
+  .legal-section ul {
+    margin: 0 0 var(--space-4);
+    padding-left: var(--space-5);
+    color: var(--color-text-muted);
+  }
+  .legal-section li {
+    line-height: 1.6;
+    margin-bottom: var(--space-2);
+  }
+  .legal-section .note {
+    border-left: 3px solid var(--color-primary);
+    background: var(--color-accent-dim);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    color: var(--color-text);
   }
 </style>

@@ -202,3 +202,8 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
 - `anmeldung.astro`: hidden Token-Input, Auto-fill aus URL-Params, ID-Feld wird bei Auto-fill versteckt.
 - `email.ts`: Signature um `participantId` + `attestToken` erweitert, Upload-Link im Email-Body.
 - **Deployment-Hinweis:** `ALTER TABLE participants ADD COLUMN IF NOT EXISTS attest_token text` muss in Supabase laufen (ist in `schema.sql` als idempotenter `ALTER` ergänzt).
+
+## Nächste Schritte
+- [ ] Domain ändern
+- [ ] Stripe einrichten
+- [ ] Datenschutz, AGB usw. einrichten
