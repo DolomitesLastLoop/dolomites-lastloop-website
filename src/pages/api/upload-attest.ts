@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { getAdminClient } from "@lib/supabase";
+import { checkRateLimit, tooManyRequests } from "@lib/ratelimit";
 
 export const prerender = false;
 
@@ -7,6 +8,9 @@ const MAX_BYTES = 5 * 1024 * 1024;
 const BUCKET = "atteste";
 
 export const POST: APIRoute = async ({ request }) => {
+  const rl = await checkRateLimit("upload-attest", request);
+  if (!rl.ok) return tooManyRequests(rl.retryAfter);
+
   const form = await request.formData().catch(() => null);
   if (!form) {
     return new Response(JSON.stringify({ error: "Invalid form" }), {

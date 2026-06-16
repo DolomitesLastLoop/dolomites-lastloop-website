@@ -50,13 +50,18 @@ kompletten Teilnehmer-Lebenszyklus ab:
 
 ## Tech Stack
 
-- **Astro 4** im SSR-Modus (`output: "server"`), deployt auf **Vercel**
-  (`@astrojs/vercel/serverless`, `maxDuration: 30`, Web Analytics aktiv)
+- **Astro 6** im SSR-Modus (`output: "server"`), deployt auf **Vercel**
+  (`@astrojs/vercel`, `maxDuration: 30`, Web Analytics aktiv) — Upgrade 4→6 am
+  2026-06-16 (Security, siehe Fehlerprotokoll). Adapter-Import ist `@astrojs/vercel`
+  (nicht mehr `/serverless`).
 - **Vanilla CSS** (keine UI-Frameworks) – globale Styles in `src/styles/global.css`
 - **Supabase** (`@supabase/supabase-js`) – Postgres + Storage (Bucket `atteste`), mit RLS
 - **Stripe** (`stripe`) – Checkout + Webhook
 - **Resend** (`resend`) – transaktionale Emails
-- **TypeScript 5**, **Sharp** (Bildkompression), Node **20.x**
+- **TypeScript 5**, **Sharp** (Bildkompression), Node **22.x** (Astro 6 erfordert
+  Node ≥22.12 → Vercel-Projekt-Runtime auf 22.x stellen)
+- **Upstash Redis** (`@upstash/ratelimit` + `@upstash/redis`) – Rate-Limiting der
+  öffentlichen API-Endpoints (`src/lib/ratelimit.ts`)
 - Eigene **i18n** (`src/i18n/`) statt Astro-Integration
 
 ## Projektstruktur
@@ -203,7 +208,51 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
 - `email.ts`: Signature um `participantId` + `attestToken` erweitert, Upload-Link im Email-Body.
 - **Deployment-Hinweis:** `ALTER TABLE participants ADD COLUMN IF NOT EXISTS attest_token text` muss in Supabase laufen (ist in `schema.sql` als idempotenter `ALTER` ergänzt).
 
+### 2026-06-16 — Security-Härtung (Pen-Test-Follow-up, 4 Fixes)
+
+Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
+
+**Fix 1 — Rate-Limiting öffentliche Endpoints**
+- Neu `src/lib/ratelimit.ts` (Upstash Redis, Sliding-Window pro IP via `x-forwarded-for`).
+  Limits: contact 5/60s, newsletter/waitlist/upload-attest je 3/60s. 429 + `Retry-After`.
+- In `contact.ts`, `newsletter.ts`, `waitlist.ts`, `upload-attest.ts` integriert.
+- **Fail-open**: ohne `UPSTASH_REDIS_REST_URL`/`_TOKEN` oder bei Upstash-Ausfall werden
+  Requests durchgelassen (Verfügbarkeit > Limit). Keys müssen im Vercel-Dashboard gesetzt
+  werden, sonst ist das Limit inaktiv.
+
+**Fix 2 — RLS-Härtung participants (PII-Leak-Prävention)**
+- Vorher hatte `anon` eine SELECT-Policy auf der ganzen `participants`-Tabelle → alle
+  Spalten (email, geburtsdatum, notfallkontakt_tel, **attest_token**, stripe_session_id)
+  über direkten PostgREST-Zugriff lesbar. Spaltenschutz lag nur in den App-Queries.
+- Lösung in `supabase/schema.sql`: View `participants_public` (nur id, vorname, nachname,
+  nationalitaet, status, startnummer, created_at; gefiltert auf confirmed/waitlist).
+  `grant select` nur an anon/authenticated; auf der Basistabelle anon-Policy **und** -Grant
+  entfernt. `startliste.astro` liest jetzt via `getPublicClient()` aus der View
+  (Alias `status→ticket_status`, Rendering unverändert).
+- **Deployment-Pflicht:** `supabase/schema.sql` im Supabase SQL-Editor ausführen, sonst
+  PGRST205 → Startliste fällt (try/catch) auf leer zurück.
+
+**Fix 3 — Astro 4 → 6.4.7 Upgrade**
+- Schließt die laufzeitrelevanten Astro-CVEs (XSS, Host-Header-SSRF, Auth-Bypass).
+- `@astrojs/vercel` 7 → 10, Config-Import `@astrojs/vercel/serverless` → `@astrojs/vercel`,
+  `engines.node` 20.x → 22.x (Astro 6 braucht ≥22.12).
+- `path-to-regexp` via `overrides` auf ^6.3.0 gehoben (ReDoS).
+- **Restliche `npm audit`-HIGH (esbuild/vite) sind Dev-Server-/Deno-/Windows-only**, im
+  Prod-Runtime nicht exponiert und gehören zu Astros Toolchain. **NIEMALS `npm audit fix
+  --force`** ausführen — das würde Astro auf v2 downgraden.
+
+**Fix 4 — CSP-Härtung (`vercel.json`)**
+- `frame-ancestors 'self'` ergänzt, `X-Frame-Options: SAMEORIGIN → DENY`,
+  `Cross-Origin-Opener-Policy: same-origin`, `Cross-Origin-Embedder-Policy: credentialless`.
+- COEP bewusst `credentialless` statt `require-corp`: `require-corp` würde die per
+  `img-src https:` erlaubten Cross-Origin-Bilder/Stripe-Ressourcen ohne CORP-Header
+  blockieren. Umschalten auf `require-corp` erst nach Browser-Test.
+- `'unsafe-inline'` bleibt (Astro SSR ohne Nonce-Support); `'unsafe-eval'` bleibt geblockt.
+
 ## Nächste Schritte
+- [ ] **Upstash-Keys im Vercel-Dashboard setzen** (`UPSTASH_REDIS_REST_URL`/`_TOKEN`) → Rate-Limiting scharf schalten
+- [ ] **`supabase/schema.sql` im Supabase SQL-Editor ausführen** → View `participants_public` anlegen
+- [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
 - [ ] Stripe einrichten
 - [ ] Datenschutz, AGB usw. einrichten

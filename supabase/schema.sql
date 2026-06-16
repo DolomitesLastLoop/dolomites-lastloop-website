@@ -73,13 +73,34 @@ alter table public.waitlist enable row level security;
 alter table public.newsletter enable row level security;
 alter table public.results enable row level security;
 
--- Public can read minimal participant info for the start list.
--- (We restrict columns in the API queries; this policy covers SELECT only.)
+-- ────────────────────────────────────────────────────────────
+-- Öffentliche Startliste: NUR über die View participants_public.
+-- (2026-06-16, Security-Härtung)
+-- Früher hatte anon eine SELECT-Policy auf der gesamten participants-Tabelle
+-- (alle Spalten – inkl. email, geburtsdatum, notfallkontakt_tel, attest_token,
+-- stripe_session_id). Die Spaltenbeschränkung lag nur in den App-Queries und
+-- wäre über direkten PostgREST-Zugriff mit dem Anon-Key umgehbar gewesen.
+-- Jetzt: anon liest ausschließlich eine View mit unkritischen Spalten; auf der
+-- Basistabelle hat anon weder Policy noch Grant.
 drop policy if exists "participants public read" on public.participants;
-create policy "participants public read"
-  on public.participants for select
-  to anon
-  using (ticket_status in ('confirmed', 'waitlist'));
+revoke select on public.participants from anon;
+
+create or replace view public.participants_public as
+  select
+    id,
+    vorname,
+    nachname,
+    nationalitaet,
+    ticket_status as status,
+    startnummer,
+    created_at
+  from public.participants
+  where ticket_status in ('confirmed', 'waitlist');
+
+-- Definer-View (läuft mit Owner-Rechten) → liefert nur die selektierten
+-- Spalten der gefilterten Zeilen. Zugriff explizit nur für anon/authenticated.
+revoke all on public.participants_public from public;
+grant select on public.participants_public to anon, authenticated;
 
 drop policy if exists "results public read" on public.results;
 create policy "results public read"

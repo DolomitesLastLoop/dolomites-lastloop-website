@@ -17,6 +17,8 @@ interface ImportMetaEnv {
   readonly ADMIN_SESSION_SECRET: string;
   readonly PUBLIC_SITE_URL: string;
   readonly MAX_PARTICIPANTS: string;
+  readonly UPSTASH_REDIS_REST_URL: string;
+  readonly UPSTASH_REDIS_REST_TOKEN: string;
 }
 
 interface ImportMeta {

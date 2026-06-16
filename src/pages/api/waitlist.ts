@@ -1,11 +1,15 @@
 import type { APIRoute } from "astro";
 import { getAdminClient } from "@lib/supabase";
+import { checkRateLimit, tooManyRequests } from "@lib/ratelimit";
 
 export const prerender = false;
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const POST: APIRoute = async ({ request }) => {
+  const rl = await checkRateLimit("waitlist", request);
+  if (!rl.ok) return tooManyRequests(rl.retryAfter);
+
   let payload: { email?: string; name?: string };
   try {
     payload = await request.json();

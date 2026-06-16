@@ -1,11 +1,15 @@
 import type { APIRoute } from "astro";
 import { sendContactNotification } from "@lib/email";
+import { checkRateLimit, tooManyRequests } from "@lib/ratelimit";
 
 export const prerender = false;
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const POST: APIRoute = async ({ request }) => {
+  const rl = await checkRateLimit("contact", request);
+  if (!rl.ok) return tooManyRequests(rl.retryAfter);
+
   let payload: { name?: string; email?: string; message?: string };
   try {
     payload = await request.json();

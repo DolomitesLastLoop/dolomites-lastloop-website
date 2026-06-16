@@ -2,7 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { useTranslations, type Lang } from "@i18n/utils";
 import {
-  getAdminClient,
+  getPublicClient,
   MAX_PARTICIPANTS,
   type Participant,
 } from "@lib/supabase";
@@ -16,13 +16,16 @@ let participants: Participant[] = [];
 let confirmedCount = 0;
 
 try {
-  const supabase = getAdminClient();
+  // Least Privilege: öffentliche Seite liest mit dem Anon-Key aus der View
+  // participants_public (nur unkritische Spalten, bereits auf confirmed/
+  // waitlist gefiltert). Alias status→ticket_status, damit der Rendering-Code
+  // unverändert bleibt.
+  const supabase = getPublicClient();
   const { data } = await supabase
-    .from("participants")
+    .from("participants_public")
     .select(
-      "id,vorname,nachname,nationalitaet,ticket_status,startnummer,created_at",
+      "id,vorname,nachname,nationalitaet,ticket_status:status,startnummer,created_at",
     )
-    .in("ticket_status", ["confirmed", "waitlist"])
     .order("startnummer", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });
   participants = (data as Participant[]) ?? [];
