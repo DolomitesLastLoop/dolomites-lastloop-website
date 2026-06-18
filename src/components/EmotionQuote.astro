@@ -1,10 +1,11 @@
 ---
+import { Image } from "astro:assets";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 interface Props {
   lang: Lang;
-  left?: string;
-  right?: string;
+  left?: ImageMetadata | string;
+  right?: ImageMetadata | string;
   leftPos?: string;
   rightPos?: string;
 }
@@ -20,11 +21,19 @@ const t = useTranslations(lang);
 
 <section class="emotion" aria-label={t("emotion.quote")}>
   <aside class="strip strip-left" aria-hidden="true">
-    <img src={left} alt="" loading="lazy" style={`object-position:${leftPos}`} />
+    {typeof left !== "string" ? (
+      <Image src={left} alt="" widths={[320, 540]} sizes="16vw" format="webp" quality={62} loading="lazy" decoding="async" style={`object-position:${leftPos}`} />
+    ) : (
+      <img src={left} alt="" loading="lazy" decoding="async" style={`object-position:${leftPos}`} />
+    )}
   </aside>
 
   <aside class="strip strip-right" aria-hidden="true">
-    <img src={right} alt="" loading="lazy" style={`object-position:${rightPos}`} />
+    {typeof right !== "string" ? (
+      <Image src={right} alt="" widths={[320, 540]} sizes="16vw" format="webp" quality={62} loading="lazy" decoding="async" style={`object-position:${rightPos}`} />
+    ) : (
+      <img src={right} alt="" loading="lazy" decoding="async" style={`object-position:${rightPos}`} />
+    )}
   </aside>
 
   <svg

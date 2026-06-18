@@ -7,7 +7,7 @@ import galleryManifest from "../../data/gallery-manifest.json";
 
 // width/height aus dem Manifest (scripts/gallery-manifest.mjs), damit die
 // Masonry nicht bei jedem Lazy-Load neu layoutet
-const dims = galleryManifest as Record<string, [number, number]>;
+const dims = galleryManifest as unknown as Record<string, [number, number]>;
 
 export const prerender = false;
 const lang = (Astro.params.lang ?? "de") as Lang;

@@ -1,3 +1,30 @@
+@AGENTS.md
+
+# Claude Integration Entry (Agentic OS)
+
+`AGENTS.md` is auto-injected above via `@import` — Governance-Regeln, Gates und State-Model
+sind bereits im Kontext. Projekt-spezifische Verfeinerungen stehen in `AGENTS.override.md`
+(present-only via `bootstrap.md §1a` geladen). **Regeln aus AGENTS.md hier NICHT duplizieren.**
+
+## Startup (jede Konversation)
+
+1. **Vor jeder Datei-Änderung oder Completion-Behauptung den governed Flow aus `AGENTS.md` betreten — keine stillen Direkt-Edits.**
+2. Task-Scope aus der User-Nachricht klassifizieren (`tiny-fix` / `quick-win` / `feature` / `architecture-change` / `hotfix`).
+3. `.agentcortex/context/current_state.md` (SSoT) lesen. *(Bei tiny-fix überspringen.)*
+4. `.agent/rules/engineering_guardrails.md` lesen. *(Bei tiny-fix/quick-win überspringen.)*
+5. Falls `.agentcortex/context/work/<worklog-key>.md` existiert → zum Resume lesen.
+
+## Slash Commands & Skills
+
+`/command` → `.claude/commands/<command>.md` → kanonischer Workflow `.agent/workflows/<command>.md`.
+Skill-Metadaten: `.agent/skills/*`; volle Anweisungen: `.agents/skills/*/SKILL.md`.
+
+## Validate
+
+`.agentcortex/bin/validate.sh` (bash) oder `.agentcortex/bin/validate.ps1` (PowerShell).
+
+---
+
 # CLAUDE.md – Dolomites Last Loop Website
 
 > Projektspezifische Anweisungen für Claude Code. Die globalen Verhaltensregeln
@@ -152,6 +179,11 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
 - Atteste sind sensible Gesundheitsdaten → Bucket privat halten, nur signierte URLs.
 - Deployment: Repo mit Vercel verbinden, Env-Vars aus `.env.example` im
   Vercel-Dashboard setzen.
+- **Brevo Newsletter**: `BREVO_API_KEY` + `BREVO_LIST_ID` müssen im **Vercel-Dashboard**
+  gesetzt werden (Production + Preview). `BREVO_LIST_ID` ist eine reine Zahl. Lokal in
+  `.env` Werte mit `#` quoten/ohne `#` schreiben (dotenv schneidet sonst ab `#` ab –
+  `src/lib/brevo.ts` filtert defensiv auf Ziffern). Fehlt die Config, wird Brevo still
+  übersprungen und nur Supabase (Admin-Panel) befüllt.
 
 ---
 
@@ -251,6 +283,7 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 
 ## Nächste Schritte
 - [ ] **Upstash-Keys im Vercel-Dashboard setzen** (`UPSTASH_REDIS_REST_URL`/`_TOKEN`) → Rate-Limiting scharf schalten
+- [ ] **Brevo-Keys im Vercel-Dashboard setzen** (`BREVO_API_KEY`/`BREVO_LIST_ID`) → Newsletter geht live an Brevo
 - [ ] **`supabase/schema.sql` im Supabase SQL-Editor ausführen** → View `participants_public` anlegen
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern

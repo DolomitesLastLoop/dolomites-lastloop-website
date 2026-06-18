@@ -1,6 +1,8 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/Hero.astro";
+import Countdown from "@components/Countdown.astro";
 import EmotionQuote from "@components/EmotionQuote.astro";
 import AthletesEmotion from "@components/AthletesEmotion.astro";
 import StorySplit from "@components/StorySplit.astro";
@@ -9,7 +11,8 @@ import Marquee from "@components/Marquee.astro";
 import FullBleedImage from "@components/FullBleedImage.astro";
 import Testimonials from "@components/Testimonials.astro";
 import Newsletter from "@components/Newsletter.astro";
-import { photo, pos } from "@lib/photos";
+import { pos } from "@lib/photos";
+import { homePhoto } from "@lib/home-images";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 
 export const prerender = false;
@@ -24,11 +27,13 @@ const t = useTranslations(lang);
 <BaseLayout lang={lang} preloadImage="/images/hero-start.jpg">
   <Hero lang={lang} />
 
+  <Countdown lang={lang} />
+
   <EmotionQuote
     lang={lang}
-    left={photo.portrait_exhausted}
+    left={homePhoto.portrait_exhausted}
     leftPos={pos.portrait}
-    right={photo.night_intense}
+    right={homePhoto.night_intense}
     rightPos={pos.portrait}
   />
 
@@ -64,28 +69,43 @@ const t = useTranslations(lang);
 
   <AthletesEmotion
     lang={lang}
-    col1={{ src: photo.night_focus, position: pos.portrait }}
-    col2={{ src: photo.start_group, position: pos.group }}
-    col3={{ src: photo.portrait_a, position: pos.portrait }}
+    col1={{ src: homePhoto.night_focus, position: pos.portrait, alt: t("alt.athletes_night") }}
+    col2={{ src: homePhoto.start_group, position: pos.group, alt: t("alt.athletes_start") }}
+    col3={{ src: homePhoto.portrait_a, position: pos.portrait, alt: t("alt.athletes_portrait") }}
   />
 
   <LoopCircle label="2027" />
 
-  <StorySplit lang={lang} photo={photo.course_runner_c} position={pos.upper} />
+  <StorySplit
+    lang={lang}
+    photo={homePhoto.course_runner_c}
+    alt={t("alt.story_course")}
+    position={pos.upper}
+  />
 
   <Marquee variant="primary" />
 
-  <FullBleedImage lang={lang} src={photo.day_running_2} position={pos.landscape} />
+  <FullBleedImage
+    lang={lang}
+    src={homePhoto.day_running_2}
+    alt={t("alt.fullbleed_day")}
+    position={pos.landscape}
+  />
 
   <div class="fade-zone" data-fade-zone aria-hidden="true"><span></span></div>
 
   <!-- Cinematic 2026 retrospective -->
   <section class="retro" aria-labelledby="retro-title">
     <div class="retro-bg" aria-hidden="true">
-      <img
-        src={photo.start_atmosphere_a}
+      <Image
+        src={homePhoto.start_atmosphere_a}
         alt=""
+        widths={[768, 1280, 1920]}
+        sizes="100vw"
+        format="webp"
+        quality={64}
         loading="lazy"
+        decoding="async"
         style={`object-position:${pos.group}`}
       />
       <div class="retro-overlay"></div>

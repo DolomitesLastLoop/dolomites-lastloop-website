@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { getAdminClient } from "@lib/supabase";
 import { checkRateLimit, tooManyRequests } from "@lib/ratelimit";
+import { addBrevoContact } from "@lib/brevo";
 
 export const prerender = false;
 
@@ -10,7 +11,7 @@ export const POST: APIRoute = async ({ request }) => {
   const rl = await checkRateLimit("newsletter", request);
   if (!rl.ok) return tooManyRequests(rl.retryAfter);
 
-  let payload: { email?: string };
+  let payload: { email?: string; name?: string; website?: string };
   try {
     payload = await request.json();
   } catch {
@@ -18,13 +19,28 @@ export const POST: APIRoute = async ({ request }) => {
       status: 400,
     });
   }
+
+  // Honeypot: das Feld "website" ist für Menschen versteckt; ausgefüllt = Bot.
+  // Still mit ok antworten, damit der Bot keinen Unterschied bemerkt.
+  if (String(payload.website || "").trim() !== "") {
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  }
+
   const email = String(payload.email || "").trim().toLowerCase();
+  const name = String(payload.name || "").trim().slice(0, 100);
   if (!emailRe.test(email)) {
     return new Response(JSON.stringify({ error: "Invalid email" }), {
       status: 400,
     });
   }
   try {
+    // Brevo ist best-effort: Fehler hier dürfen den Eintrag nicht blockieren.
+    const brevo = await addBrevoContact({ email, name });
+    if (!brevo.ok && !brevo.skipped) {
+      console.error("[newsletter] Brevo error:", brevo.error);
+    }
+
+    // Supabase bleibt Quelle für das Admin-Panel (email-only, kein Schema-Change).
     const supabase = getAdminClient();
     const { error } = await supabase
       .from("newsletter")

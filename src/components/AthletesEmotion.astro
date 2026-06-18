@@ -1,9 +1,11 @@
 ---
+import { Image } from "astro:assets";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 interface Slot {
-  src: string;
+  src: ImageMetadata | string;
   position?: string;
+  alt?: string;
 }
 interface Props {
   lang: Lang;
@@ -20,9 +22,9 @@ const {
 const t = useTranslations(lang);
 
 const cols = [
-  { src: col1.src, position: col1.position ?? "center 20%", overlay: t("athletes.col1.overlay") },
-  { src: col2.src, position: col2.position ?? "center center", overlay: t("athletes.col2.overlay"), wide: true },
-  { src: col3.src, position: col3.position ?? "center 20%", overlay: t("athletes.col3.overlay") },
+  { src: col1.src, position: col1.position ?? "center 20%", alt: col1.alt ?? "", overlay: t("athletes.col1.overlay") },
+  { src: col2.src, position: col2.position ?? "center center", alt: col2.alt ?? "", overlay: t("athletes.col2.overlay"), wide: true },
+  { src: col3.src, position: col3.position ?? "center 20%", alt: col3.alt ?? "", overlay: t("athletes.col3.overlay") },
 ];
 ---
 
@@ -39,12 +41,27 @@ const cols = [
             class:list={["col reveal reveal-scale", { wide: c.wide }]}
             data-delay={String(idx * 120)}
           >
-            <img
-              src={c.src}
-              alt=""
-              loading="lazy"
-              style={`object-position:${c.position}`}
-            />
+            {typeof c.src !== "string" ? (
+              <Image
+                src={c.src}
+                alt={c.alt}
+                widths={[360, 600, 900]}
+                sizes="(max-width: 900px) 100vw, 33vw"
+                format="webp"
+                quality={68}
+                loading="lazy"
+                decoding="async"
+                style={`object-position:${c.position}`}
+              />
+            ) : (
+              <img
+                src={c.src}
+                alt={c.alt}
+                loading="lazy"
+                decoding="async"
+                style={`object-position:${c.position}`}
+              />
+            )}
             <figcaption>
               <span class="overlay-text">{c.overlay}</span>
             </figcaption>

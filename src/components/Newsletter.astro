@@ -18,12 +18,26 @@ const t = useTranslations(lang);
 
     <form class="newsletter-form" data-newsletter novalidate>
       <input
+        type="text"
+        name="name"
+        autocomplete="given-name"
+        placeholder={t("home.newsletter.name")}
+        aria-label={t("home.newsletter.name")}
+      />
+      <input
         type="email"
         name="email"
         required
         placeholder={t("home.newsletter.placeholder")}
         aria-label={t("home.newsletter.placeholder")}
       />
+      {/* Honeypot: für Menschen unsichtbar, von Bots häufig ausgefüllt. */}
+      <div class="hp" aria-hidden="true">
+        <label>
+          Website
+          <input type="text" name="website" tabindex="-1" autocomplete="off" />
+        </label>
+      </div>
       <button type="submit" class="btn btn-primary">
         {t("home.newsletter.submit")}
       </button>
@@ -66,6 +80,14 @@ const t = useTranslations(lang);
   .status-error {
     color: var(--color-error);
   }
+  /* Honeypot vollständig aus Layout + Screenreadern entfernen. */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
 </style>
 
 <script>
@@ -79,12 +101,14 @@ const t = useTranslations(lang);
     error && (error.hidden = true);
     const data = new FormData(form);
     const email = String(data.get("email") || "").trim();
+    const name = String(data.get("name") || "").trim();
+    const website = String(data.get("website") || "").trim();
     if (!email) return;
     try {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, name, website }),
       });
       if (!res.ok) throw new Error("fail");
       form.reset();

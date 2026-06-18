@@ -1,9 +1,10 @@
 ---
+import { Image } from "astro:assets";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 interface Props {
   lang: Lang;
-  src?: string;
+  src?: ImageMetadata | string;
   alt?: string;
   position?: string;
   height?: string;
@@ -16,11 +17,27 @@ const {
   height = "70vh",
 } = Astro.props;
 const t = useTranslations(lang);
+// ImageMetadata → optimiertes <Image> (WebP); String-Pfade (public/) → <img>.
+const optimized = typeof src !== "string";
 ---
 
 <section class="fb" aria-hidden={alt ? undefined : "true"} style={`--fb-height:${height}`}>
   <div class="fb-stage" data-fb-parallax>
-    <img src={src} alt={alt} loading="lazy" style={`object-position:${position}`} />
+    {optimized ? (
+      <Image
+        src={src as ImageMetadata}
+        alt={alt}
+        widths={[640, 1024, 1600]}
+        sizes="100vw"
+        format="webp"
+        quality={68}
+        loading="lazy"
+        decoding="async"
+        style={`object-position:${position}`}
+      />
+    ) : (
+      <img src={src as string} alt={alt} loading="lazy" decoding="async" style={`object-position:${position}`} />
+    )}
   </div>
   <div class="fb-flash" data-photo-flash aria-hidden="true"></div>
   <span class="fb-credit">{t("fullbleed.credit")}</span>
