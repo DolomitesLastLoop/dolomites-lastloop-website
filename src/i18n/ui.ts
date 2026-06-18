@@ -109,7 +109,7 @@ export const ui = {
     "countdown.hours": "Stunden",
     "countdown.minutes": "Minuten",
     "countdown.seconds": "Sekunden",
-    "countdown.suffix": "bis zur Dolomites Last Loop",
+    "countdown.suffix": "bis zum Dolomites Last Loop",
     "countdown.over": "Event beendet",
 
     "home.archive.title": "2026 – Rückblick",
