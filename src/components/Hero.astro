@@ -9,10 +9,12 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 
 const slides = [
+  // WebP, wo es kleiner als das (bereits optimierte) JPG ist; hero-start +
+  // night-camp bleiben JPG, da WebP sie nicht unterbietet.
   { src: "/images/hero-start.jpg", pos: "center center" },
-  { src: "/images/day-running-1.jpg", pos: "center 30%" },
-  { src: "/images/night-runners.jpg", pos: "center 20%" },
-  { src: "/images/emotion-smile.jpg", pos: "center 15%" },
+  { src: "/images/day-running-1.webp", pos: "center 30%" },
+  { src: "/images/night-runners.webp", pos: "center 20%" },
+  { src: "/images/emotion-smile.webp", pos: "center 15%" },
   { src: "/images/night-camp.jpg", pos: "center center" },
 ];
 const SLIDE_DURATION_MS = 6000;
