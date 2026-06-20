@@ -40,7 +40,6 @@ const units = [
       }
     </div>
 
-    <p class="cd-suffix" data-countdown-suffix>{t("countdown.suffix")}</p>
     <p class="cd-over" data-countdown-over hidden>{t("countdown.over")}</p>
   </div>
 </section>
@@ -81,10 +80,6 @@ const units = [
     text-transform: uppercase;
     color: var(--color-text-dim, var(--color-text));
   }
-  .cd-suffix {
-    font-size: 0.95rem;
-    color: var(--color-text-dim, var(--color-text));
-  }
   .cd-over {
     font-family: var(--font-display);
     font-size: clamp(1.6rem, 5vw, 2.4rem);
@@ -103,9 +98,6 @@ const units = [
       minutes: root.querySelector('[data-unit="minutes"]'),
       seconds: root.querySelector('[data-unit="seconds"]'),
     };
-    const suffix = document.querySelector<HTMLElement>(
-      "[data-countdown-suffix]",
-    );
     const over = document.querySelector<HTMLElement>("[data-countdown-over]");
 
     const pad = (n: number) => String(n).padStart(2, "0");
@@ -114,7 +106,6 @@ const units = [
 
     function showEnded() {
       root!.hidden = true;
-      if (suffix) suffix.hidden = true;
       if (over) over.hidden = false;
       if (timer) window.clearInterval(timer);
     }
