@@ -288,6 +288,7 @@ export const ui = {
     "contact.form.error": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
     "contact.map.title": "Nordic Arena Toblach",
 
+    "footer.imprint": "Impressum",
     "footer.privacy": "Datenschutz",
     "footer.terms": "AGB",
     "footer.accessibility": "Barrierefreiheit",
@@ -622,6 +623,7 @@ export const ui = {
     "contact.form.error": "Qualcosa è andato storto. Riprova.",
     "contact.map.title": "Nordic Arena Dobbiaco",
 
+    "footer.imprint": "Note legali",
     "footer.privacy": "Privacy",
     "footer.terms": "Termini",
     "footer.accessibility": "Accessibilità",
@@ -954,6 +956,7 @@ export const ui = {
     "contact.form.error": "Something went wrong. Please try again.",
     "contact.map.title": "Nordic Arena Toblach",
 
+    "footer.imprint": "Imprint",
     "footer.privacy": "Privacy",
     "footer.terms": "Terms",
     "footer.accessibility": "Accessibility",

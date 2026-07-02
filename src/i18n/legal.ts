@@ -14,6 +14,7 @@ export type LegalSection = { id?: string; heading: string; blocks: LegalBlock[] 
 export type LegalPage = { updated?: string; intro?: string; sections: LegalSection[] };
 
 export type LegalSlug =
+  | "impressum"
   | "datenschutz"
   | "agb"
   | "barrierefreiheit"
@@ -24,6 +25,53 @@ export type LegalContent = Record<LegalSlug, LegalPage>;
 export const legal: Record<Lang, LegalContent> = {
   // ───────────────────────────── DEUTSCH ─────────────────────────────
   de: {
+    impressum: {
+      intro:
+        "Anbieterkennzeichnung und gesetzliche Pflichtangaben zum Veranstalter der „Dolomites Last Loop“.",
+      sections: [
+        {
+          heading: "Verein",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Amateursportverein Sport OK Toblach",
+                "Sede legale / Sitz: Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italien",
+                "Codice Fiscale: 01483970214",
+                "Partita IVA: 01483970214",
+                "PEC: sportok@pec.it",
+                "E-Mail: info@worldcup-dobbiaco.it",
+                "Telefon: 0474 976000",
+                "Website: www.worldcup-dobbiaco.it",
+                "Codice Destinatario (SDI): SUBM70N",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Registereintragung",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Registro Nazionale delle Attività Sportive Dilettantistiche (RASD): Nr. 00362404",
+                "FISI – Federazione Italiana Sport Invernali · Codice affiliazione: 01894",
+                "Sportjahr: 2025/2026 · Erstaffiliation: 01.12.2016",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Gesetzliche Vertretung",
+          blocks: [
+            {
+              type: "list",
+              items: ["Präsidentin / Legale rappresentante: Gerti Taschler"],
+            },
+          ],
+        },
+      ],
+    },
     datenschutz: {
       intro:
         "Diese Datenschutzerklärung informiert dich gemäß der Datenschutz-Grundverordnung (EU) 2016/679 (DSGVO) sowie dem italienischen Datenschutzrecht (D.Lgs. 196/2003 i.d.F. des D.Lgs. 101/2018) über die Verarbeitung deiner personenbezogenen Daten im Rahmen der Veranstaltung „Dolomites Last Loop“.",
@@ -38,9 +86,10 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Sport OK Toblach",
-                "[ADRESSE AUSFÜLLEN]",
-                "E-Mail (Datenschutz): [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+                "Amateursportverein Sport OK Toblach",
+                "Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italien",
+                "Codice Fiscale: 01483970214",
+                "E-Mail (Datenschutz): info@worldcup-dobbiaco.it",
               ],
             },
           ],
@@ -151,7 +200,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "Zur Ausübung deiner Rechte wende dich an: [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+              text: "Zur Ausübung deiner Rechte wende dich an: info@worldcup-dobbiaco.it",
             },
           ],
         },
@@ -174,7 +223,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "Die Einwilligung ist freiwillig und kann jederzeit mit Wirkung für die Zukunft widerrufen werden ([E-MAIL DATENSCHUTZ AUSFÜLLEN]). Der Widerruf berührt die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung nicht; bereits veröffentlichte Aufnahmen müssen ggf. nicht zurückgezogen werden, soweit dies unmöglich oder mit unverhältnismäßigem Aufwand verbunden ist.",
+              text: "Die Einwilligung ist freiwillig und kann jederzeit mit Wirkung für die Zukunft widerrufen werden (info@worldcup-dobbiaco.it). Der Widerruf berührt die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung nicht; bereits veröffentlichte Aufnahmen müssen ggf. nicht zurückgezogen werden, soweit dies unmöglich oder mit unverhältnismäßigem Aufwand verbunden ist.",
             },
           ],
         },
@@ -313,7 +362,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Wenn du auf Barrieren stößt oder Inhalte nicht zugänglich sind, melde dich bitte bei uns unter [E-MAIL AUSFÜLLEN]. Wir bemühen uns um eine zeitnahe Lösung.",
+              text: "Wenn du auf Barrieren stößt oder Inhalte nicht zugänglich sind, melde dich bitte bei uns unter info@worldcup-dobbiaco.it. Wir bemühen uns um eine zeitnahe Lösung.",
             },
           ],
         },
@@ -351,7 +400,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Einen Antrag auf Rückerstattung stellst du per E-Mail an [RÜCKERSTATTUNG-E-MAIL AUSFÜLLEN]. Die Bearbeitung erfolgt in der Regel innerhalb von [BEARBEITUNGSZEIT AUSFÜLLEN] Werktagen.",
+              text: "Einen Antrag auf Rückerstattung stellst du per E-Mail an office@worldcup-dobbiaco.it. Die Bearbeitung erfolgt in der Regel innerhalb von [BEARBEITUNGSZEIT AUSFÜLLEN] Werktagen.",
             },
             {
               type: "p",
@@ -439,6 +488,53 @@ export const legal: Record<Lang, LegalContent> = {
 
   // ───────────────────────────── ITALIANO ─────────────────────────────
   it: {
+    impressum: {
+      intro:
+        "Dati identificativi e informazioni obbligatorie sull’organizzatore della „Dolomites Last Loop“.",
+      sections: [
+        {
+          heading: "Associazione",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Amateursportverein Sport OK Toblach",
+                "Sede legale: Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italia",
+                "Codice Fiscale: 01483970214",
+                "Partita IVA: 01483970214",
+                "PEC: sportok@pec.it",
+                "E-mail: info@worldcup-dobbiaco.it",
+                "Telefono: 0474 976000",
+                "Sito web: www.worldcup-dobbiaco.it",
+                "Codice Destinatario (SDI): SUBM70N",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Iscrizione ai registri",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Registro Nazionale delle Attività Sportive Dilettantistiche (RASD): n. 00362404",
+                "FISI – Federazione Italiana Sport Invernali · Codice affiliazione: 01894",
+                "Anno sportivo: 2025/2026 · Prima affiliazione: 01/12/2016",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Rappresentante legale",
+          blocks: [
+            {
+              type: "list",
+              items: ["Presidente / Legale rappresentante: Gerti Taschler"],
+            },
+          ],
+        },
+      ],
+    },
     datenschutz: {
       intro:
         "La presente informativa sulla privacy ti informa, ai sensi del Regolamento (UE) 2016/679 (GDPR) e della normativa italiana in materia di protezione dei dati personali (D.Lgs. 196/2003 come modificato dal D.Lgs. 101/2018), sul trattamento dei tuoi dati personali nell’ambito dell’evento „Dolomites Last Loop“.",
@@ -453,9 +549,10 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Sport OK Dobbiaco",
-                "[ADRESSE AUSFÜLLEN]",
-                "E-mail (privacy): [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+                "Amateursportverein Sport OK Toblach",
+                "Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italia",
+                "Codice Fiscale: 01483970214",
+                "E-mail (privacy): info@worldcup-dobbiaco.it",
               ],
             },
           ],
@@ -566,7 +663,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "Per esercitare i tuoi diritti scrivi a: [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+              text: "Per esercitare i tuoi diritti scrivi a: info@worldcup-dobbiaco.it",
             },
           ],
         },
@@ -728,7 +825,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Se incontri barriere o contenuti non accessibili, contattaci all’indirizzo [E-MAIL AUSFÜLLEN]. Ci adopereremo per trovare una soluzione in tempi rapidi.",
+              text: "Se incontri barriere o contenuti non accessibili, contattaci all’indirizzo info@worldcup-dobbiaco.it. Ci adopereremo per trovare una soluzione in tempi rapidi.",
             },
           ],
         },
@@ -766,7 +863,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "La richiesta di rimborso va inviata via e-mail a [RÜCKERSTATTUNG-E-MAIL AUSFÜLLEN]. L’elaborazione avviene di norma entro [BEARBEITUNGSZEIT AUSFÜLLEN] giorni lavorativi.",
+              text: "La richiesta di rimborso va inviata via e-mail a office@worldcup-dobbiaco.it. L’elaborazione avviene di norma entro [BEARBEITUNGSZEIT AUSFÜLLEN] giorni lavorativi.",
             },
             {
               type: "p",
@@ -854,6 +951,53 @@ export const legal: Record<Lang, LegalContent> = {
 
   // ───────────────────────────── ENGLISH ─────────────────────────────
   en: {
+    impressum: {
+      intro:
+        "Identification details and mandatory information about the organiser of the “Dolomites Last Loop”.",
+      sections: [
+        {
+          heading: "Association",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Amateursportverein Sport OK Toblach",
+                "Registered office: Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italy",
+                "Codice Fiscale (tax code): 01483970214",
+                "Partita IVA (VAT no.): 01483970214",
+                "PEC: sportok@pec.it",
+                "Email: info@worldcup-dobbiaco.it",
+                "Phone: 0474 976000",
+                "Website: www.worldcup-dobbiaco.it",
+                "Codice Destinatario (SDI): SUBM70N",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Register entries",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Italian National Register of Amateur Sports Activities (RASD): no. 00362404",
+                "FISI – Italian Winter Sports Federation · Affiliation code: 01894",
+                "Sports year: 2025/2026 · First affiliation: 01/12/2016",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Legal representative",
+          blocks: [
+            {
+              type: "list",
+              items: ["President / Legal representative: Gerti Taschler"],
+            },
+          ],
+        },
+      ],
+    },
     datenschutz: {
       intro:
         "This privacy policy informs you, in accordance with the General Data Protection Regulation (EU) 2016/679 (GDPR) and Italian data protection law (Legislative Decree 196/2003 as amended by Legislative Decree 101/2018), about the processing of your personal data in connection with the „Dolomites Last Loop“ event.",
@@ -868,9 +1012,10 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Sport OK Toblach",
-                "[ADRESSE AUSFÜLLEN]",
-                "Email (data protection): [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+                "Amateursportverein Sport OK Toblach",
+                "Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italy",
+                "Codice Fiscale: 01483970214",
+                "Email (data protection): info@worldcup-dobbiaco.it",
               ],
             },
           ],
@@ -981,7 +1126,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "To exercise your rights, contact: [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+              text: "To exercise your rights, contact: info@worldcup-dobbiaco.it",
             },
           ],
         },
@@ -1143,7 +1288,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "If you encounter barriers or content that is not accessible, please contact us at [E-MAIL AUSFÜLLEN]. We will do our best to find a prompt solution.",
+              text: "If you encounter barriers or content that is not accessible, please contact us at info@worldcup-dobbiaco.it. We will do our best to find a prompt solution.",
             },
           ],
         },
@@ -1181,7 +1326,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Submit a refund request by email to [RÜCKERSTATTUNG-E-MAIL AUSFÜLLEN]. Processing usually takes place within [BEARBEITUNGSZEIT AUSFÜLLEN] business days.",
+              text: "Submit a refund request by email to office@worldcup-dobbiaco.it. Processing usually takes place within [BEARBEITUNGSZEIT AUSFÜLLEN] business days.",
             },
             {
               type: "p",

@@ -9,6 +9,7 @@ const slug = Astro.params.legal as string | undefined;
 if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 
 const validSlugs = new Set<LegalSlug>([
+  "impressum",
   "datenschutz",
   "agb",
   "barrierefreiheit",
@@ -23,6 +24,7 @@ if (!slug || !validSlugs.has(slug as LegalSlug)) {
 const t = useTranslations(lang);
 
 const titleMap: Record<string, string> = {
+  impressum: t("footer.imprint"),
   datenschutz: t("footer.privacy"),
   agb: t("footer.terms"),
   barrierefreiheit: t("footer.accessibility"),
