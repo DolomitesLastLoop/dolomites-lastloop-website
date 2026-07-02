@@ -1,0 +1,17 @@
+---
+// Versteckte Test-Route: zeigt den vollen Anmelde-Flow IMMER (Feature-Flag wird
+// ignoriert), damit der komplette Ablauf vor Go-Live durchgeklickt werden kann.
+// Nicht in der Navigation verlinkt, noindex.
+import BaseLayout from "@layouts/BaseLayout.astro";
+import RegistrationFlow from "@components/RegistrationFlow.astro";
+import { useTranslations, type Lang } from "@i18n/utils";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang} title={`${t("signup.title")} (Test)`} noindex={true}>
+  <RegistrationFlow lang={lang} basePath="anmeldung-test" />
+</BaseLayout>

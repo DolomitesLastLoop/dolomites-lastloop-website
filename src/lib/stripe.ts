@@ -18,6 +18,8 @@ export const PRICES = {
   standard: import.meta.env.STRIPE_PRICE_STANDARD as string | undefined,
 };
 
+export type Tier = "early_bird" | "standard";
+
 export const TICKET_TIERS = [
   {
     id: "early_bird" as const,
@@ -32,3 +34,26 @@ export const TICKET_TIERS = [
     envKey: "STRIPE_PRICE_STANDARD",
   },
 ];
+
+// Early-Bird endet 3 Monate vor dem Renntag (Platzhalter 15.05.2027 → 15.02.2027).
+// Mitteleuropäische Zeit; nach diesem Zeitpunkt gilt automatisch Standard.
+export const EARLY_BIRD_DEADLINE = new Date("2027-02-15T23:59:59+01:00");
+
+export function currentTier(now: Date = new Date()): Tier {
+  return now <= EARLY_BIRD_DEADLINE ? "early_bird" : "standard";
+}
+
+// Betrag in Cent (EUR) und Anzeige-Label je Tier.
+export const TIER_AMOUNT: Record<Tier, number> = {
+  early_bird: 8000,
+  standard: 10000,
+};
+
+export const TIER_PRICE_LABEL: Record<Tier, string> = {
+  early_bird: "€ 80",
+  standard: "€ 100",
+};
+
+export function priceIdFor(tier: Tier): string | undefined {
+  return tier === "standard" ? PRICES.standard : PRICES.earlyBird;
+}

@@ -40,7 +40,12 @@ export function getAdminClient(): SupabaseClient {
   return _adminClient;
 }
 
-export type ParticipantStatus = "pending" | "confirmed" | "waitlist" | "cancelled";
+export type ParticipantStatus =
+  | "pending"
+  | "confirmed"
+  | "waitlist"
+  | "cancelled"
+  | "failed";
 
 export interface Participant {
   id: string;
@@ -51,6 +56,18 @@ export interface Participant {
   nationalitaet: string | null;
   notfallkontakt_name: string | null;
   notfallkontakt_tel: string | null;
+  // Erweiterte Anmeldedaten (2026-06-30). Sensible PII — nie in der Public-View.
+  tax_code: string | null;
+  phone: string | null;
+  street: string | null;
+  postal_code: string | null;
+  city: string | null;
+  country: string | null;
+  price_type: "early_bird" | "standard" | null;
+  consent_privacy: boolean | null;
+  consent_liability_waiver: boolean | null;
+  consent_image_rights: boolean | null;
+  confirmation_email_sent: boolean;
   ticket_status: ParticipantStatus;
   attest_url: string | null;
   attest_status: "missing" | "pending" | "approved" | "rejected" | null;

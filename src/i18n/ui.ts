@@ -308,6 +308,37 @@ export const ui = {
     "admin.attest.view": "Attest ansehen",
     "admin.attest.confirm": "Bestätigen",
     "admin.attest.reject": "Ablehnen",
+
+    "signup.field.phone": "Telefon",
+    "signup.field.taxcode": "Steuernummer (Codice Fiscale)",
+    "signup.field.taxcode_warn":
+      "Das sieht nicht wie eine italienische Steuernummer aus – falls du keine hast, kannst du trotzdem fortfahren.",
+    "signup.field.street": "Straße und Hausnummer",
+    "signup.field.postal": "PLZ",
+    "signup.field.city": "Ort",
+    "signup.field.country": "Land",
+    "signup.country.it": "Italien",
+    "signup.country.de": "Deutschland",
+    "signup.country.at": "Österreich",
+    "signup.country.ch": "Schweiz",
+    "signup.country.other": "Anderes Land",
+    "signup.consent.privacy":
+      "Ich akzeptiere die <a href=\"{href}\">Datenschutzerklärung</a> (es werden auch Gesundheitsdaten aus dem ärztlichen Attest verarbeitet).",
+    "signup.consent.liability":
+      "Ich akzeptiere die <a href=\"{href}\">Haftungsfreistellung / den Haftungsausschluss</a>.",
+    "signup.consent.image":
+      "Ich stimme zu, dass während des Events erstellte <a href=\"{href}\">Foto-/Videoaufnahmen</a> für Marketing-Zwecke verwendet werden dürfen.",
+    "signup.price.note": "Early-Bird-Preis bis 15.02.2027, danach automatisch Standard.",
+    "signup.paid.notice": "Zahlung erfolgreich. Bitte lade jetzt dein ärztliches Attest hoch.",
+    "signup.cancelled.notice": "Zahlung abgebrochen. Du kannst es jederzeit erneut versuchen.",
+    "signup.waitlist.text":
+      "Die 150 Startplätze sind aktuell vergeben. Trag dich unverbindlich auf die Warteliste ein – es wird kein Startgeld fällig. Wird ein Platz frei, melden wir uns.",
+    "signup.waitlist.success":
+      "Du stehst auf der Warteliste. Wir melden uns, sobald ein Platz frei wird.",
+    "signup.soon.title": "Die Anmeldung für 2027 öffnet in Kürze",
+    "signup.soon.text":
+      "Trag dich in den Newsletter ein, dann verpasst du den Anmeldestart nicht.",
+    "footer.liability": "Haftungsausschluss",
   },
 
   it: {
@@ -611,6 +642,37 @@ export const ui = {
     "admin.attest.view": "Vedi certificato",
     "admin.attest.confirm": "Conferma",
     "admin.attest.reject": "Rifiuta",
+
+    "signup.field.phone": "Telefono",
+    "signup.field.taxcode": "Codice Fiscale",
+    "signup.field.taxcode_warn":
+      "Non sembra un codice fiscale italiano – se non ne hai uno, puoi comunque proseguire.",
+    "signup.field.street": "Via e numero civico",
+    "signup.field.postal": "CAP",
+    "signup.field.city": "Città",
+    "signup.field.country": "Paese",
+    "signup.country.it": "Italia",
+    "signup.country.de": "Germania",
+    "signup.country.at": "Austria",
+    "signup.country.ch": "Svizzera",
+    "signup.country.other": "Altro paese",
+    "signup.consent.privacy":
+      "Accetto l’<a href=\"{href}\">informativa sulla privacy</a> (vengono trattati anche dati sanitari del certificato medico).",
+    "signup.consent.liability":
+      "Accetto la <a href=\"{href}\">manleva / esclusione di responsabilità</a>.",
+    "signup.consent.image":
+      "Acconsento all’uso di <a href=\"{href}\">foto/video</a> realizzati durante l’evento per scopi di marketing.",
+    "signup.price.note": "Prezzo Early Bird fino al 15.02.2027, poi automaticamente Standard.",
+    "signup.paid.notice": "Pagamento riuscito. Carica ora il tuo certificato medico.",
+    "signup.cancelled.notice": "Pagamento annullato. Puoi riprovare in qualsiasi momento.",
+    "signup.waitlist.text":
+      "I 150 posti sono al momento esauriti. Iscriviti senza impegno alla lista d’attesa – nessuna quota dovuta. Se si libera un posto, ti contatteremo.",
+    "signup.waitlist.success":
+      "Sei in lista d’attesa. Ti contatteremo appena si libera un posto.",
+    "signup.soon.title": "Le iscrizioni per il 2027 apriranno a breve",
+    "signup.soon.text":
+      "Iscriviti alla newsletter per non perderti l’apertura delle iscrizioni.",
+    "footer.liability": "Esclusione di responsabilità",
   },
 
   en: {
@@ -912,6 +974,37 @@ export const ui = {
     "admin.attest.view": "View certificate",
     "admin.attest.confirm": "Approve",
     "admin.attest.reject": "Reject",
+
+    "signup.field.phone": "Phone",
+    "signup.field.taxcode": "Tax code (Codice Fiscale)",
+    "signup.field.taxcode_warn":
+      "This doesn’t look like an Italian tax code – if you don’t have one, you can still continue.",
+    "signup.field.street": "Street and house number",
+    "signup.field.postal": "Postal code",
+    "signup.field.city": "City",
+    "signup.field.country": "Country",
+    "signup.country.it": "Italy",
+    "signup.country.de": "Germany",
+    "signup.country.at": "Austria",
+    "signup.country.ch": "Switzerland",
+    "signup.country.other": "Other country",
+    "signup.consent.privacy":
+      "I accept the <a href=\"{href}\">privacy policy</a> (health data from the medical certificate is also processed).",
+    "signup.consent.liability":
+      "I accept the <a href=\"{href}\">liability waiver / disclaimer</a>.",
+    "signup.consent.image":
+      "I agree that <a href=\"{href}\">photos/videos</a> taken during the event may be used for marketing purposes.",
+    "signup.price.note": "Early-bird price until 2027-02-15, then automatically standard.",
+    "signup.paid.notice": "Payment successful. Please upload your medical certificate now.",
+    "signup.cancelled.notice": "Payment cancelled. You can try again any time.",
+    "signup.waitlist.text":
+      "All 150 start slots are currently taken. Join the waiting list with no obligation – no entry fee is due. If a spot opens up, we’ll get in touch.",
+    "signup.waitlist.success":
+      "You’re on the waiting list. We’ll be in touch as soon as a spot opens up.",
+    "signup.soon.title": "Registration for 2027 opens soon",
+    "signup.soon.text":
+      "Sign up for the newsletter so you don’t miss the registration opening.",
+    "footer.liability": "Disclaimer",
   },
 } as const;
 

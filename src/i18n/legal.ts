@@ -10,10 +10,15 @@ export type LegalBlock =
   | { type: "note"; text: string }
   | { type: "list"; items: string[] };
 
-export type LegalSection = { heading: string; blocks: LegalBlock[] };
+export type LegalSection = { id?: string; heading: string; blocks: LegalBlock[] };
 export type LegalPage = { updated?: string; intro?: string; sections: LegalSection[] };
 
-export type LegalSlug = "datenschutz" | "agb" | "barrierefreiheit" | "rueckerstattung";
+export type LegalSlug =
+  | "datenschutz"
+  | "agb"
+  | "barrierefreiheit"
+  | "rueckerstattung"
+  | "haftungsausschluss";
 export type LegalContent = Record<LegalSlug, LegalPage>;
 
 export const legal: Record<Lang, LegalContent> = {
@@ -156,6 +161,20 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "p",
               text: "Du hast das Recht, dich bei einer Aufsichtsbehörde zu beschweren. Zuständig in Italien ist der Garante per la protezione dei dati personali (https://www.garanteprivacy.it).",
+            },
+          ],
+        },
+        {
+          id: "bildrechte",
+          heading: "10. Foto- und Videoaufnahmen (Bildrechte)",
+          blocks: [
+            {
+              type: "p",
+              text: "Während der Veranstaltung werden Foto- und Videoaufnahmen erstellt. Mit deiner Einwilligung bei der Anmeldung dürfen diese Aufnahmen vom Veranstalter (Sport OK Toblach) für die Berichterstattung über das Event sowie für Marketing- und Werbezwecke (Website, Social Media, Print) verwendet werden.",
+            },
+            {
+              type: "p",
+              text: "Die Einwilligung ist freiwillig und kann jederzeit mit Wirkung für die Zukunft widerrufen werden ([E-MAIL DATENSCHUTZ AUSFÜLLEN]). Der Widerruf berührt die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung nicht; bereits veröffentlichte Aufnahmen müssen ggf. nicht zurückgezogen werden, soweit dies unmöglich oder mit unverhältnismäßigem Aufwand verbunden ist.",
             },
           ],
         },
@@ -351,6 +370,71 @@ export const legal: Record<Lang, LegalContent> = {
         },
       ],
     },
+    haftungsausschluss: {
+      updated: "[STAND AUSFÜLLEN]",
+      intro:
+        "Die Teilnahme an der „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) erfolgt freiwillig und auf eigenes Risiko. Mit der Anmeldung erkennst du die folgenden Bedingungen an. Dieser Text ist ein Standardentwurf und muss vor dem Einsatz juristisch geprüft werden.",
+      sections: [
+        {
+          heading: "1. Teilnahme auf eigene Gefahr",
+          blocks: [
+            {
+              type: "p",
+              text: "Ein Backyard Ultra ist ein extremer Ausdauerwettbewerb. Die Teilnahme erfolgt ausschließlich auf eigene Gefahr und Verantwortung. Jede:r Teilnehmer:in schätzt die eigene körperliche und gesundheitliche Verfassung selbst ein und entscheidet eigenverantwortlich über Start, Fortsetzung und Abbruch des Rennens.",
+            },
+          ],
+        },
+        {
+          heading: "2. Gesundheitliche Eignung und ärztliches Attest",
+          blocks: [
+            {
+              type: "p",
+              text: "Die Teilnahme setzt die volle gesundheitliche Eignung für sportliche Höchstbelastungen voraus. Ein gültiges ärztliches Attest (certificato medico agonistico) ist verpflichtend vorzulegen. Ohne fristgerecht eingereichtes Attest ist die Anmeldung nicht endgültig gültig und eine Teilnahme ausgeschlossen.",
+            },
+          ],
+        },
+        {
+          heading: "3. Haftungsausschluss des Veranstalters",
+          blocks: [
+            {
+              type: "p",
+              text: "Der Veranstalter (Sport OK Toblach) sowie dessen Helfer:innen, Partner und Sponsoren haften nicht für Personen-, Sach- oder Vermögensschäden, die im Zusammenhang mit der Teilnahme entstehen, soweit diese nicht auf Vorsatz oder grober Fahrlässigkeit des Veranstalters beruhen. Die zwingende gesetzliche Haftung, insbesondere für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit, bleibt unberührt.",
+            },
+            {
+              type: "note",
+              text: "[JURISTISCH PRÜFEN] Der Umfang zulässiger Haftungsbeschränkungen richtet sich nach italienischem Recht (u. a. Art. 1229 Codice Civile). Diesen Text vor dem Live-Gang anwaltlich prüfen lassen.",
+            },
+          ],
+        },
+        {
+          heading: "4. Eigenverantwortung und Verhalten",
+          blocks: [
+            {
+              type: "p",
+              text: "Teilnehmer:innen befolgen die Anweisungen der Rennleitung sowie des Sanitäts- und Sicherheitspersonals jederzeit. Bei Sicherheitsbedenken kann die Rennleitung Teilnehmer:innen aus dem Rennen nehmen. Für mitgeführte Ausrüstung und Wertgegenstände wird keine Haftung übernommen.",
+            },
+          ],
+        },
+        {
+          heading: "5. Höhere Gewalt, Verschiebung und Absage",
+          blocks: [
+            {
+              type: "p",
+              text: "Bei höherer Gewalt (z. B. extreme Witterung, behördliche Auflagen, Naturereignisse) kann die Veranstaltung verschoben, verkürzt oder abgesagt werden. Ansprüche der Teilnehmer:innen über die in den Stornobedingungen geregelten Rückerstattungen hinaus bestehen in diesem Fall nicht.",
+            },
+          ],
+        },
+        {
+          heading: "6. Versicherung",
+          blocks: [
+            {
+              type: "p",
+              text: "Der Abschluss einer ausreichenden Kranken-, Unfall- und ggf. Bergungs-/Rückholversicherung liegt in der Verantwortung der Teilnehmer:innen. [VERSICHERUNGSHINWEIS AUSFÜLLEN – ob und welcher Versicherungsschutz seitens des Veranstalters besteht.]",
+            },
+          ],
+        },
+      ],
+    },
   },
 
   // ───────────────────────────── ITALIANO ─────────────────────────────
@@ -492,6 +576,20 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "p",
               text: "Hai il diritto di presentare reclamo a un’autorità di controllo. In Italia è competente il Garante per la protezione dei dati personali (https://www.garanteprivacy.it).",
+            },
+          ],
+        },
+        {
+          id: "bildrechte",
+          heading: "10. Foto e video (diritti di immagine)",
+          blocks: [
+            {
+              type: "p",
+              text: "Durante l’evento vengono realizzate riprese foto e video. Con il tuo consenso al momento dell’iscrizione, queste immagini possono essere utilizzate dall’organizzatore (Sport OK Dobbiaco) per la documentazione dell’evento e per scopi di marketing e pubblicità (sito web, social media, stampa).",
+            },
+            {
+              type: "p",
+              text: "Il consenso è facoltativo e può essere revocato in qualsiasi momento con effetto per il futuro ([E-MAIL PRIVACY DA INSERIRE]). La revoca non pregiudica la liceità del trattamento effettuato fino a quel momento; le immagini già pubblicate potrebbero non dover essere ritirate, qualora ciò risulti impossibile o comporti uno sforzo sproporzionato.",
             },
           ],
         },
@@ -687,6 +785,71 @@ export const legal: Record<Lang, LegalContent> = {
         },
       ],
     },
+    haftungsausschluss: {
+      updated: "[STAND AUSFÜLLEN]",
+      intro:
+        "La partecipazione alla „Dolomites Last Loop“ (Backyard Ultra, Dobbiaco/Toblach) è volontaria e avviene a proprio rischio. Con l’iscrizione accetti le seguenti condizioni. Questo testo è una bozza standard e deve essere verificato legalmente prima dell’uso.",
+      sections: [
+        {
+          heading: "1. Partecipazione a proprio rischio",
+          blocks: [
+            {
+              type: "p",
+              text: "Un Backyard Ultra è una competizione di endurance estrema. La partecipazione avviene esclusivamente a proprio rischio e responsabilità. Ogni partecipante valuta autonomamente le proprie condizioni fisiche e di salute e decide sotto la propria responsabilità in merito a partenza, prosecuzione e ritiro dalla gara.",
+            },
+          ],
+        },
+        {
+          heading: "2. Idoneità fisica e certificato medico",
+          blocks: [
+            {
+              type: "p",
+              text: "La partecipazione presuppone la piena idoneità a sforzi sportivi massimali. È obbligatorio presentare un valido certificato medico agonistico. Senza certificato presentato entro i termini, l’iscrizione non è definitivamente valida e la partecipazione è esclusa.",
+            },
+          ],
+        },
+        {
+          heading: "3. Esclusione di responsabilità dell’organizzatore",
+          blocks: [
+            {
+              type: "p",
+              text: "L’organizzatore (Sport OK Dobbiaco) nonché i suoi volontari, partner e sponsor non rispondono di danni a persone, cose o patrimonio derivanti dalla partecipazione, salvo che tali danni siano dovuti a dolo o colpa grave dell’organizzatore. Resta impregiudicata la responsabilità inderogabile di legge, in particolare per danni derivanti da lesioni alla vita, all’integrità fisica o alla salute.",
+            },
+            {
+              type: "note",
+              text: "[DA VERIFICARE LEGALMENTE] L’ammissibilità delle limitazioni di responsabilità è disciplinata dal diritto italiano (tra cui l’art. 1229 Codice Civile). Far verificare questo testo da un legale prima della pubblicazione.",
+            },
+          ],
+        },
+        {
+          heading: "4. Responsabilità personale e comportamento",
+          blocks: [
+            {
+              type: "p",
+              text: "I partecipanti seguono in ogni momento le indicazioni della direzione di gara e del personale sanitario e di sicurezza. In caso di rischi per la sicurezza, la direzione di gara può ritirare un partecipante. Non si assume alcuna responsabilità per attrezzatura e oggetti di valore portati con sé.",
+            },
+          ],
+        },
+        {
+          heading: "5. Forza maggiore, rinvio e annullamento",
+          blocks: [
+            {
+              type: "p",
+              text: "In caso di forza maggiore (es. condizioni meteo estreme, disposizioni delle autorità, eventi naturali) l’evento può essere rinviato, ridotto o annullato. In tal caso i partecipanti non vantano pretese oltre i rimborsi disciplinati dalle condizioni di annullamento.",
+            },
+          ],
+        },
+        {
+          heading: "6. Assicurazione",
+          blocks: [
+            {
+              type: "p",
+              text: "La stipula di un’adeguata assicurazione sanitaria, infortuni ed eventualmente soccorso/recupero è responsabilità dei partecipanti. [NOTA ASSICURATIVA DA INSERIRE – se e quale copertura assicurativa è prevista dall’organizzatore.]",
+            },
+          ],
+        },
+      ],
+    },
   },
 
   // ───────────────────────────── ENGLISH ─────────────────────────────
@@ -828,6 +991,20 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "p",
               text: "You have the right to lodge a complaint with a supervisory authority. In Italy the competent authority is the Garante per la protezione dei dati personali (https://www.garanteprivacy.it).",
+            },
+          ],
+        },
+        {
+          id: "bildrechte",
+          heading: "10. Photos and videos (image rights)",
+          blocks: [
+            {
+              type: "p",
+              text: "Photos and videos are taken during the event. With your consent at registration, these images may be used by the organiser (Sport OK Toblach) for event coverage as well as for marketing and advertising purposes (website, social media, print).",
+            },
+            {
+              type: "p",
+              text: "Consent is voluntary and can be withdrawn at any time with effect for the future ([PRIVACY EMAIL TO BE FILLED IN]). Withdrawal does not affect the lawfulness of processing carried out beforehand; images already published may not need to be withdrawn where this is impossible or involves disproportionate effort.",
             },
           ],
         },
@@ -1018,6 +1195,71 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "p",
               text: "In the event of disqualification or voluntary withdrawal during the event, there is no entitlement to a refund of the entry fee.",
+            },
+          ],
+        },
+      ],
+    },
+    haftungsausschluss: {
+      updated: "[STAND AUSFÜLLEN]",
+      intro:
+        "Participation in the „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) is voluntary and at your own risk. By registering you accept the following terms. This text is a standard draft and must be legally reviewed before use.",
+      sections: [
+        {
+          heading: "1. Participation at your own risk",
+          blocks: [
+            {
+              type: "p",
+              text: "A Backyard Ultra is an extreme endurance competition. Participation is entirely at your own risk and responsibility. Each participant assesses their own physical and health condition and decides, on their own responsibility, whether to start, continue or withdraw from the race.",
+            },
+          ],
+        },
+        {
+          heading: "2. Medical fitness and certificate",
+          blocks: [
+            {
+              type: "p",
+              text: "Participation requires full medical fitness for maximum athletic exertion. A valid medical certificate (certificato medico agonistico) must be provided. Without a certificate submitted on time, the registration is not finally valid and participation is excluded.",
+            },
+          ],
+        },
+        {
+          heading: "3. Disclaimer of liability of the organiser",
+          blocks: [
+            {
+              type: "p",
+              text: "The organiser (Sport OK Toblach) as well as its volunteers, partners and sponsors are not liable for personal injury, property or financial damage arising in connection with participation, unless such damage is due to intent or gross negligence on the part of the organiser. Mandatory statutory liability, in particular for damage resulting from injury to life, body or health, remains unaffected.",
+            },
+            {
+              type: "note",
+              text: "[LEGAL REVIEW REQUIRED] The permissible scope of liability limitations is governed by Italian law (including Art. 1229 of the Civil Code). Have this text reviewed by a lawyer before going live.",
+            },
+          ],
+        },
+        {
+          heading: "4. Personal responsibility and conduct",
+          blocks: [
+            {
+              type: "p",
+              text: "Participants follow the instructions of the race management and the medical and safety staff at all times. In the event of safety concerns, the race management may withdraw participants from the race. No liability is accepted for equipment and valuables carried.",
+            },
+          ],
+        },
+        {
+          heading: "5. Force majeure, postponement and cancellation",
+          blocks: [
+            {
+              type: "p",
+              text: "In the event of force majeure (e.g. extreme weather, official requirements, natural events), the event may be postponed, shortened or cancelled. In this case, participants have no claims beyond the refunds set out in the cancellation terms.",
+            },
+          ],
+        },
+        {
+          heading: "6. Insurance",
+          blocks: [
+            {
+              type: "p",
+              text: "Taking out adequate health, accident and, where applicable, rescue/repatriation insurance is the responsibility of the participants. [INSURANCE NOTE TO BE FILLED IN – whether and what insurance cover is provided by the organiser.]",
             },
           ],
         },

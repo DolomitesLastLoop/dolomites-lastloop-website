@@ -1,0 +1,572 @@
+---
+import PageHero from "@components/PageHero.astro";
+import { photo, pos } from "@lib/photos";
+import { useTranslations, localizePath, type Lang } from "@i18n/utils";
+import { getAdminClient, MAX_PARTICIPANTS } from "@lib/supabase";
+import { currentTier, TIER_PRICE_LABEL } from "@lib/stripe";
+
+interface Props {
+  lang: Lang;
+  basePath?: "anmeldung" | "anmeldung-test";
+  attestOnly?: boolean;
+}
+const { lang, basePath = "anmeldung", attestOnly = false } = Astro.props;
+const t = useTranslations(lang);
+
+const url = new URL(Astro.request.url);
+const sessionStatus = url.searchParams.get("status");
+
+let isFull = false;
+let slotsTaken = 0;
+try {
+  const supabase = getAdminClient();
+  const { count } = await supabase
+    .from("participants")
+    .select("id", { count: "exact", head: true })
+    .in("ticket_status", ["confirmed", "pending"]);
+  slotsTaken = count ?? 0;
+  isFull = slotsTaken >= MAX_PARTICIPANTS;
+} catch {
+  isFull = false;
+}
+const slotsLeft = Math.max(0, MAX_PARTICIPANTS - slotsTaken);
+
+// Preis serverseitig nach Datum bestimmen (Early-Bird bis 15.02.2027).
+const tier = currentTier();
+const priceLabel = TIER_PRICE_LABEL[tier];
+const tierName =
+  tier === "early_bird" ? t("signup.ticket.earlybird") : t("signup.ticket.standard");
+
+const today = new Date();
+const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+const minISO = minDate.toISOString().slice(0, 10);
+const maxISO = maxDate.toISOString().slice(0, 10);
+
+const privacyHref = localizePath("/datenschutz", lang);
+const liabilityHref = localizePath("/haftungsausschluss", lang);
+const imageHref = `${privacyHref}#bildrechte`;
+
+const countries: { value: string; label: string }[] = [
+  { value: "Italien", label: t("signup.country.it") },
+  { value: "Deutschland", label: t("signup.country.de") },
+  { value: "Österreich", label: t("signup.country.at") },
+  { value: "Schweiz", label: t("signup.country.ch") },
+  { value: "Andere", label: t("signup.country.other") },
+];
+---
+
+<PageHero
+  bg={photo.emotion_smile}
+  position={pos.faceTight}
+  eyebrow={t("signup.eyebrow")}
+  title={t("signup.hero_title")}
+  subtitle={t("signup.hero_subtitle")}
+/>
+
+<div class="strip">
+  <img
+    src={photo.portrait_exhausted}
+    alt={t("alt.signup_portrait")}
+    loading="lazy"
+    style="object-position:center 20%"
+  />
+</div>
+
+<div class="badges container">
+  <span class="badge-pill reveal">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M3 21l4-10 4 6 4-9 6 13" />
+    </svg>
+    {t("signup.badge.location")}
+  </span>
+  <span class="badge-pill reveal" data-delay="100">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M3 9h18" />
+      <path d="M8 3v4M16 3v4" />
+    </svg>
+    {t("signup.badge.date")}
+  </span>
+  <span class="badge-pill reveal" data-delay="200">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="9" cy="9" r="3" />
+      <path d="M3 20a6 6 0 0 1 12 0" />
+      <circle cx="17" cy="11" r="2.5" />
+      <path d="M13 20a4 4 0 0 1 8 0" />
+    </svg>
+    {t("signup.badge.slots")}
+  </span>
+</div>
+
+<section class="section signup-section">
+  <div class="container signup-grid">
+    <div class="signup-main">
+      {
+        sessionStatus === "success" && (
+          <div class="alert alert-success">
+            <strong>✓</strong> {t("signup.paid.notice")}
+          </div>
+        )
+      }
+      {
+        sessionStatus === "cancelled" && (
+          <div class="alert alert-error">{t("signup.cancelled.notice")}</div>
+        )
+      }
+      {
+        isFull && (
+          <div class="alert alert-warning">
+            <strong>{t("signup.full.title")}</strong> — {t("signup.full.text")}
+          </div>
+        )
+      }
+
+      {!attestOnly && (
+      <div class="steps" role="tablist" aria-label="Sign-up steps">
+        <div class="step active" data-step-indicator="1">
+          <span class="step-num">01</span>
+          <span class="step-label">{t("signup.step1.title")}</span>
+        </div>
+        <div class="step" data-step-indicator="2">
+          <span class="step-num">02</span>
+          <span class="step-label">
+            {isFull ? t("signup.full.cta") : t("signup.step2.title")}
+          </span>
+        </div>
+        <div class="step" data-step-indicator="3">
+          <span class="step-num">03</span>
+          <span class="step-label">{t("signup.step3.title")}</span>
+        </div>
+      </div>
+      )}
+
+      <form class="signup-form" id="signup-form" data-full={String(isFull)} novalidate>
+        <input type="hidden" name="lang" value={lang} />
+        <input type="hidden" name="return_path" value={basePath} />
+
+        {/* Step 1 */}
+        {!attestOnly && (
+        <fieldset class="step-panel" data-panel="1">
+          <legend class="sr-only">{t("signup.step1.title")}</legend>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="vorname">{t("signup.field.firstname")}</label>
+              <input type="text" id="vorname" name="vorname" autocomplete="given-name" required />
+            </div>
+            <div class="field">
+              <label for="nachname">{t("signup.field.lastname")}</label>
+              <input type="text" id="nachname" name="nachname" autocomplete="family-name" required />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="email">{t("signup.field.email")}</label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="phone">{t("signup.field.phone")}</label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+39 …" required />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="geburtsdatum">{t("signup.field.birthdate")}</label>
+              <input type="date" id="geburtsdatum" name="geburtsdatum" min={minISO} max={maxISO} required />
+              <span class="hint">{t("signup.field.age_error")}</span>
+            </div>
+            <div class="field">
+              <label for="tax_code">{t("signup.field.taxcode")}</label>
+              <input type="text" id="tax_code" name="tax_code" autocomplete="off" placeholder="RSSMRA…" />
+              <span class="hint warn" data-cf-warn hidden>{t("signup.field.taxcode_warn")}</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="street">{t("signup.field.street")}</label>
+            <input type="text" id="street" name="street" autocomplete="street-address" required />
+          </div>
+
+          <div class="field-row field-row-3">
+            <div class="field">
+              <label for="postal_code">{t("signup.field.postal")}</label>
+              <input type="text" id="postal_code" name="postal_code" autocomplete="postal-code" required />
+            </div>
+            <div class="field">
+              <label for="city">{t("signup.field.city")}</label>
+              <input type="text" id="city" name="city" autocomplete="address-level2" required />
+            </div>
+            <div class="field">
+              <label for="country">{t("signup.field.country")}</label>
+              <select id="country" name="country" required>
+                {countries.map((c) => (
+                  <option value={c.value} selected={c.value === "Italien"}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="nationalitaet">{t("signup.field.nationality")}</label>
+              <input type="text" id="nationalitaet" name="nationalitaet" placeholder="IT, DE, AT, CH…" />
+            </div>
+            <div class="field">
+              <label for="notfallkontakt_name">{t("signup.field.emergency_name")}</label>
+              <input type="text" id="notfallkontakt_name" name="notfallkontakt_name" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="notfallkontakt_tel">{t("signup.field.emergency_phone")}</label>
+            <input type="tel" id="notfallkontakt_tel" name="notfallkontakt_tel" placeholder="+39 …" required />
+          </div>
+
+          <div class="consents">
+            <label class="consent">
+              <input type="checkbox" name="consent_privacy" required />
+              <span set:html={t("signup.consent.privacy", { href: privacyHref })} />
+            </label>
+            <label class="consent">
+              <input type="checkbox" name="consent_liability_waiver" required />
+              <span set:html={t("signup.consent.liability", { href: liabilityHref })} />
+            </label>
+            <label class="consent">
+              <input type="checkbox" name="consent_image_rights" required />
+              <span set:html={t("signup.consent.image", { href: imageHref })} />
+            </label>
+          </div>
+
+          <p class="status status-error" data-step1-error hidden></p>
+
+          <div class="flex-between mt-6">
+            <span class="text-dim">{t("signup.step")} 1 / 3</span>
+            <button class="btn btn-primary" type="button" data-next="2">
+              {t("signup.continue")} →
+            </button>
+          </div>
+        </fieldset>
+        )}
+
+        {/* Step 2 — Preis & Zahlung ODER Warteliste */}
+        {!attestOnly && (
+        <fieldset class="step-panel" data-panel="2" hidden>
+          <legend class="sr-only">{t("signup.step2.title")}</legend>
+
+          {
+            isFull ? (
+              <div class="price-box waitlist">
+                <h2>{t("signup.full.cta")}</h2>
+                <p class="text-muted">{t("signup.waitlist.text")}</p>
+              </div>
+            ) : (
+              <div class="price-box">
+                <span class="price-tier">{tierName}</span>
+                <span class="price-amount">{priceLabel}</span>
+                <span class="price-incl text-dim">{t("signup.ticket.included")}</span>
+                <span class="price-note">{t("signup.price.note")}</span>
+              </div>
+            )
+          }
+
+          <p class="status status-success" data-waitlist-success hidden>
+            {t("signup.waitlist.success")}
+          </p>
+          <p class="status status-error" data-step2-error hidden></p>
+
+          <div class="flex-between mt-6">
+            <button class="btn btn-ghost" type="button" data-prev="1">
+              ← {t("signup.back")}
+            </button>
+            <button class="btn btn-primary" type="button" data-checkout>
+              {isFull ? t("signup.full.cta") : t("signup.ticket.checkout")} →
+            </button>
+          </div>
+        </fieldset>
+        )}
+
+        {/* Step 3 — Ärztliches Attest (nach Zahlung / via Magic-Link) */}
+        <fieldset class="step-panel" data-panel="3" hidden={!attestOnly}>
+          <legend class="sr-only">{t("signup.step3.title")}</legend>
+
+          <h2>{t("signup.attest.title")}</h2>
+          <p class="text-muted mb-5">{t("signup.attest.hint")}</p>
+
+          <div class="field" id="participant-id-field">
+            <label for="participant-id-input">Registration ID</label>
+            <input type="text" id="participant-id-input" name="participant_id" placeholder="aus Bestätigungs-Email" />
+          </div>
+
+          <input type="hidden" id="attest-token-input" name="attest_token" />
+
+          <div class="field">
+            <label for="attest-file">PDF (max 5 MB)</label>
+            <input type="file" id="attest-file" name="attest" accept="application/pdf" />
+          </div>
+
+          <button class="btn btn-primary" type="button" data-upload-attest>
+            {t("signup.attest.upload")}
+          </button>
+          <a class="btn btn-ghost ml-3" href={localizePath("/", lang)}>
+            {t("signup.attest.skip")}
+          </a>
+
+          <p class="status status-success mt-4" data-attest-success hidden>
+            {t("signup.attest.success")}
+          </p>
+          <p class="status status-error mt-4" data-attest-error hidden></p>
+        </fieldset>
+      </form>
+    </div>
+
+    <aside class="signup-side">
+      <figure class="side-photo reveal reveal-scale">
+        <img src={photo.emotion_smile} alt={t("alt.signup_side")} loading="lazy" style="object-position:center 15%" />
+      </figure>
+
+      <ul class="side-facts">
+        <li class="reveal" data-delay="100">{t("signup.side.fact1")}</li>
+        <li class="reveal" data-delay="200">{t("signup.side.fact2")}</li>
+        <li class="reveal" data-delay="300">{t("signup.side.fact3")}</li>
+      </ul>
+
+      <div class="slots-card reveal" data-delay="400">
+        <span class="slots-num">{slotsLeft}</span>
+        <span class="slots-lbl">{t("signup.side.slots_left", { n: slotsLeft })}</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .strip { width: 100%; height: 240px; overflow: hidden; border-bottom: 1px solid var(--color-border); }
+  .strip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .badges { display: flex; justify-content: center; gap: var(--space-3); flex-wrap: wrap; padding: var(--space-6) var(--space-5) 0; }
+  .badge-pill {
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    padding: 0.5rem 1rem; border-radius: 999px; background: var(--color-card);
+    border: 1px solid var(--color-border); color: var(--color-text);
+    font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
+    box-shadow: var(--shadow-card);
+  }
+  .badge-pill svg { width: 18px; height: 18px; color: var(--color-primary); }
+
+  .signup-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: var(--space-7);
+    align-items: start;
+  }
+  @media (max-width: 1000px) { .signup-grid { grid-template-columns: 1fr; } }
+
+  .signup-side {
+    display: flex; flex-direction: column; gap: var(--space-5);
+    position: sticky; top: calc(var(--nav-height) + var(--space-5));
+  }
+  @media (max-width: 1000px) { .signup-side { position: static; } }
+  .side-photo { margin: 0; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--radius); box-shadow: var(--shadow-card); }
+  .side-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .side-facts { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-3); }
+  .side-facts li { padding: var(--space-3) 0; border-top: 1px solid var(--color-border); color: var(--color-text); font-size: 0.95rem; }
+  .side-facts li:last-child { border-bottom: 1px solid var(--color-border); }
+  .slots-card { background: var(--color-primary); color: #fff; border-radius: var(--radius); padding: var(--space-5); text-align: center; box-shadow: var(--shadow-card); }
+  .slots-num { display: block; font-family: var(--font-display); font-size: 3rem; line-height: 1; letter-spacing: 0.05em; }
+  .slots-lbl { display: block; margin-top: var(--space-2); font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.92; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); margin-bottom: var(--space-6); }
+  .step {
+    padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius);
+    background: var(--color-card); display: flex; flex-direction: column; gap: var(--space-2);
+    opacity: 0.55; position: relative;
+    transition: opacity var(--transition), border-color var(--transition), background var(--transition), color var(--transition), box-shadow var(--transition);
+  }
+  .step.active { opacity: 1; border-color: var(--color-primary); background: var(--color-primary); color: #fff; box-shadow: 0 6px 18px rgba(45, 74, 107, 0.18); }
+  .step.active .step-label { color: rgba(255, 255, 255, 0.85); }
+  .step-num { font-family: var(--font-display); font-size: 1.5rem; color: var(--color-primary); transition: color var(--transition); }
+  .step.active .step-num { color: #fff; }
+  .step-label { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); }
+
+  .signup-form fieldset { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-6); background: var(--color-card); }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: var(--space-4); }
+  @media (max-width: 640px) { .field-row-3 { grid-template-columns: 1fr; } }
+  .hint.warn { color: var(--color-error); }
+
+  .consents { display: grid; gap: var(--space-3); margin-top: var(--space-5); padding-top: var(--space-5); border-top: 1px solid var(--color-border); }
+  .consent { display: grid; grid-template-columns: auto 1fr; gap: var(--space-3); align-items: start; font-size: 0.92rem; line-height: 1.5; color: var(--color-text); cursor: pointer; }
+  .consent input { margin-top: 0.2rem; width: 1.1rem; height: 1.1rem; accent-color: var(--color-primary); }
+  .consent :global(a) { color: var(--color-primary); text-decoration: underline; }
+
+  .price-box { display: grid; gap: var(--space-2); padding: var(--space-6); border: 1px solid var(--color-accent); border-radius: var(--radius); background: var(--color-accent-dim); }
+  .price-box.waitlist { border-color: var(--color-border); background: var(--color-bg-alt); }
+  .price-tier { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  .price-amount { font-family: var(--font-display); font-size: 2.4rem; color: var(--color-accent); line-height: 1; }
+  .price-incl { font-size: 0.9rem; }
+  .price-note { font-size: 0.82rem; color: var(--color-text-muted); }
+
+  .alert-warning { border-left: 3px solid var(--color-primary); background: var(--color-accent-dim); padding: var(--space-4) var(--space-5); border-radius: var(--radius); margin-bottom: var(--space-5); }
+
+  .ml-3 { margin-left: var(--space-3); }
+  .status-success { color: var(--color-success); }
+  .status-error { color: var(--color-error); }
+</style>
+
+<script>
+  import { isValidEmail, isPlausiblePhone, isCodiceFiscale, ageOnDay } from "@lib/validation";
+
+  function showStep(n: number) {
+    document.querySelectorAll<HTMLElement>("[data-panel]").forEach((el) => {
+      el.hidden = el.dataset.panel !== String(n);
+    });
+    document.querySelectorAll<HTMLElement>("[data-step-indicator]").forEach((el) => {
+      const idx = Number(el.dataset.stepIndicator);
+      el.classList.toggle("active", idx <= n);
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function showError(target: string, message: string) {
+    const el = document.querySelector<HTMLElement>(target);
+    if (!el) return;
+    el.textContent = message;
+    el.hidden = false;
+  }
+  function clearError(target: string) {
+    const el = document.querySelector<HTMLElement>(target);
+    if (!el) return;
+    el.textContent = "";
+    el.hidden = true;
+  }
+
+  const form = () => document.getElementById("signup-form") as HTMLFormElement | null;
+
+  // Soft Codice-Fiscale-Warnung (kein Blocker).
+  document.getElementById("tax_code")?.addEventListener("blur", (e) => {
+    const v = (e.target as HTMLInputElement).value.trim();
+    const warn = document.querySelector<HTMLElement>("[data-cf-warn]");
+    if (warn) warn.hidden = v === "" || isCodiceFiscale(v);
+  });
+
+  function validateStep1(): string | null {
+    const f = form();
+    if (!f) return "Formular nicht gefunden";
+    const data = new FormData(f);
+    const required = [
+      "vorname", "nachname", "email", "phone", "geburtsdatum",
+      "street", "postal_code", "city", "country",
+      "notfallkontakt_name", "notfallkontakt_tel",
+    ];
+    for (const key of required) {
+      if (!String(data.get(key) || "").trim()) {
+        return "Bitte alle Pflichtfelder ausfüllen.";
+      }
+    }
+    if (!isValidEmail(String(data.get("email")))) {
+      return "Bitte gültige Email-Adresse angeben.";
+    }
+    if (!isPlausiblePhone(String(data.get("phone"))) || !isPlausiblePhone(String(data.get("notfallkontakt_tel")))) {
+      return "Bitte eine gültige Telefonnummer angeben.";
+    }
+    const birth = new Date(String(data.get("geburtsdatum")));
+    if (Number.isNaN(birth.getTime()) || ageOnDay(birth, new Date()) < 18) {
+      return "Du musst mindestens 18 Jahre alt sein.";
+    }
+    for (const c of ["consent_privacy", "consent_liability_waiver", "consent_image_rights"]) {
+      if (!data.get(c)) return "Bitte allen drei Einwilligungen zustimmen.";
+    }
+    return null;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>("[data-next]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      clearError("[data-step1-error]");
+      const err = validateStep1();
+      if (err) { showError("[data-step1-error]", err); return; }
+      showStep(Number(btn.dataset.next));
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>("[data-prev]").forEach((btn) => {
+    btn.addEventListener("click", () => showStep(Number(btn.dataset.prev)));
+  });
+
+  // Step 2: Zahlung ODER Warteliste (Server entscheidet via /api/checkout).
+  document.querySelector<HTMLButtonElement>("[data-checkout]")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    btn.disabled = true;
+    clearError("[data-step2-error]");
+    try {
+      const f = form();
+      if (!f) throw new Error("no form");
+      const payload = Object.fromEntries(new FormData(f).entries());
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (res.ok && json.url) { window.location.href = json.url; return; }
+      if (res.ok && json.waitlist) {
+        const ok = document.querySelector<HTMLElement>("[data-waitlist-success]");
+        if (ok) ok.hidden = false;
+        btn.disabled = true;
+        return;
+      }
+      showError("[data-step2-error]", json.error || "Vorgang konnte nicht gestartet werden.");
+      btn.disabled = false;
+    } catch {
+      showError("[data-step2-error]", "Netzwerkfehler. Bitte erneut versuchen.");
+      btn.disabled = false;
+    }
+  });
+
+  // Step 3: Attest-Upload
+  document.querySelector<HTMLButtonElement>("[data-upload-attest]")?.addEventListener("click", async () => {
+    const idEl = document.getElementById("participant-id-input") as HTMLInputElement | null;
+    const tokenEl = document.getElementById("attest-token-input") as HTMLInputElement | null;
+    const fileEl = document.getElementById("attest-file") as HTMLInputElement | null;
+    clearError("[data-attest-error]");
+    if (!idEl?.value || !tokenEl?.value || !fileEl?.files?.[0]) {
+      showError("[data-attest-error]", "Bitte den Link aus der Bestätigungs-Email verwenden und eine PDF-Datei auswählen.");
+      return;
+    }
+    const file = fileEl.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      showError("[data-attest-error]", "Datei ist zu groß (max 5 MB).");
+      return;
+    }
+    const fd = new FormData();
+    fd.append("participant_id", idEl.value.trim());
+    fd.append("attest_token", tokenEl.value.trim());
+    fd.append("file", file);
+    try {
+      const res = await fetch("/api/upload-attest", { method: "POST", body: fd });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "upload failed");
+      const ok = document.querySelector<HTMLElement>("[data-attest-success]");
+      if (ok) ok.hidden = false;
+    } catch (err: any) {
+      showError("[data-attest-error]", err?.message || "Upload fehlgeschlagen.");
+    }
+  });
+
+  // Magic-Link: id + token aus der Email vorbefüllen und zu Schritt 3 springen.
+  const params = new URLSearchParams(window.location.search);
+  const idParam = params.get("id");
+  const tokenParam = params.get("token");
+  if (idParam) {
+    const idEl = document.getElementById("participant-id-input") as HTMLInputElement | null;
+    if (idEl) idEl.value = idParam;
+    const idField = document.getElementById("participant-id-field");
+    if (idField) idField.hidden = true;
+  }
+  if (tokenParam) {
+    const tokenEl = document.getElementById("attest-token-input") as HTMLInputElement | null;
+    if (tokenEl) tokenEl.value = tokenParam;
+  }
+  if (params.get("status") === "success" || (idParam && tokenParam)) {
+    showStep(3);
+  }
+</script>
