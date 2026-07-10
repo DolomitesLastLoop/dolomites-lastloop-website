@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { getAdminClient, MAX_PARTICIPANTS } from "@lib/supabase";
 import { getStripe, currentTier, priceIdFor } from "@lib/stripe";
 import { isValidEmail, isPlausiblePhone, ageOnDay } from "@lib/validation";
+import { isRegistrationEnabled } from "@lib/registration";
 
 export const prerender = false;
 
@@ -54,6 +55,11 @@ function resolveOrigin(request: Request, url: URL): string {
 }
 
 export const POST: APIRoute = async ({ request, url }) => {
+  // Security-Gate: Bei deaktivierter Anmeldung darf serverseitig KEINE neue,
+  // zahlungspflichtige Checkout-Session entstehen — auch nicht per direktem POST
+  // (das Verstecken des Formulars allein ist kein Schutz). Fail-safe via @lib/registration.
+  if (!isRegistrationEnabled()) return bad("Registration closed", 403);
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();

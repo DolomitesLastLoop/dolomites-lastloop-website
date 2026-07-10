@@ -7,6 +7,12 @@ import RegistrationFlow from "@components/RegistrationFlow.astro";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 export const prerender = false;
+
+// Diese Route zeigt das volle Formular FLAG-IGNORIEREND. In Production darf sie
+// deshalb nicht öffentlich erreichbar sein (sonst wäre das ungegatete Zahlungs-
+// formular trotz deaktivierter Anmeldung abrufbar). Nur außerhalb Prod verfügbar.
+if (import.meta.env.PROD) return new Response(null, { status: 404 });
+
 const lang = (Astro.params.lang ?? "de") as Lang;
 if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 const t = useTranslations(lang);

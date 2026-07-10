@@ -191,6 +191,29 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
 
 > Hier neu auftretende Fehler + Ursache + Lösung notieren (Regel 4).
 
+### 2026-07-10 — Anmeldeformular live trotz Flag=false (Feature-Gate unzureichend)
+
+- **Symptom:** Öffentliches Anmelde-/Zahlungsformular auf der Live-Domain sichtbar, obwohl
+  `PUBLIC_REGISTRATION_ENABLED=false` (und nach Löschen weiterhin). Live bestätigt auf
+  `dolomites-lastloop-website.vercel.app/de/anmeldung` (HTTP 200, volles Formular).
+- **NICHT die Ursache:** Truthy-String-Bug — `anmeldung.astro` prüfte bereits fail-safe
+  `=== "true"`. Der naheliegende „Fix" wäre ein No-Op gewesen.
+- **Ursache 1 (Build-Zeit-Inlining):** `PUBLIC_*`-Vars werden von Astro/Vite zur BUILD-Zeit
+  ins Bundle gebacken. Eine Env-Änderung im Vercel-Dashboard wirkt erst nach einem NEUEN
+  Deploy — „Variable löschen" ohne Redeploy ändert nichts.
+- **Ursache 2 (Gate versteckte nur UI):** `/api/checkout` und die Route
+  `anmeldung-test.astro` (flag-ignorierendes Vollformular, öffentlich) prüften das Flag
+  gar nicht → Zahlungsweg per direktem POST offen, Formular per Direkt-URL erreichbar.
+- **Lösung:** Zentraler fail-safe Helper `src/lib/registration.ts` (`isRegistrationEnabled()`,
+  liest `process.env` runtime-first, dann `import.meta.env`, Default deaktiviert). Genutzt von
+  `anmeldung.astro` UND `/api/checkout` (403-Gate am POST-Anfang). `anmeldung-test.astro`
+  in Production 404 (`import.meta.env.PROD`). `upload-attest` bewusst NICHT flag-gegatet —
+  Token-Auth (`attest_token`) ist dort die richtige Grenze, damit bereits bezahlte
+  Teilnehmer ihr Attest weiter hochladen können.
+- **Merkregel:** Ein `PUBLIC_`-Flag ist als Security-Kill-Switch unzureichend — (a) build-
+  time-inlined → Redeploy zwingend; (b) es versteckt nur UI, jeder serverseitige Pfad muss
+  separat gegatet werden.
+
 ### 2026-06-11 — supabase-js crasht auf Vercel (Node 20 ohne natives WebSocket)
 
 - Problem: `createClient()` wirft auf Node <22 „Node.js 20 detected without native WebSocket support" (RealtimeClient-Konstruktor läuft immer, auch wenn Realtime ungenutzt ist). Lokal unsichtbar (Node 24), in Production 500 auf allen Supabase-Routen.

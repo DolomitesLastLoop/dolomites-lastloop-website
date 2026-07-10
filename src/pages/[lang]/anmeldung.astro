@@ -3,6 +3,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
 import RegistrationFlow from "@components/RegistrationFlow.astro";
 import { photo, pos } from "@lib/photos";
+import { isRegistrationEnabled } from "@lib/registration";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 export const prerender = false;
@@ -11,9 +12,9 @@ if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 const t = useTranslations(lang);
 
 // Feature-Flag: solange nicht 'true', ist die öffentliche Anmeldung deaktiviert.
-// (Die volle, testbare Variante liegt unverlinkt unter /[lang]/anmeldung-test.)
-const registrationEnabled =
-  (import.meta.env.PUBLIC_REGISTRATION_ENABLED as string | undefined) === "true";
+// Zentrale, fail-safe Auswertung in @lib/registration — dieselbe Quelle gatet auch
+// den Zahlungs-Endpoint (/api/checkout).
+const registrationEnabled = isRegistrationEnabled();
 
 // Auch bei deaktiviertem Flag muss ein bereits bezahlter Teilnehmer Schritt 3
 // (Attest) erreichen: nach Stripe-Erfolg (?status=success) oder über den
