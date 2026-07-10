@@ -226,3 +226,78 @@ $$;
 -- fremde IPs sperren (DoS) oder den eigenen Zähler zurücksetzen (Bypass).
 revoke execute on function public.register_login_attempt(text, boolean) from public, anon, authenticated;
 grant execute on function public.register_login_attempt(text, boolean) to service_role;
+
+-- ─────────────────────────────────────────────────────────────
+-- Registrierung 2.0 (2026-06-30): Volldaten gemäß Anmelde-Spec
+-- Idempotent — einmalig im Supabase SQL-Editor ausführen.
+-- WICHTIG: Diese Spalten sind sensible PII / Gesundheitsbezug und dürfen
+-- NIEMALS in die öffentliche View participants_public aufgenommen werden.
+-- ─────────────────────────────────────────────────────────────
+alter table public.participants
+  add column if not exists tax_code text,
+  add column if not exists phone text,
+  add column if not exists street text,
+  add column if not exists postal_code text,
+  add column if not exists city text,
+  add column if not exists country text,
+  add column if not exists price_type text
+    check (price_type in ('early_bird', 'standard')),
+  add column if not exists consent_privacy boolean,
+  add column if not exists consent_liability_waiver boolean,
+  add column if not exists consent_image_rights boolean,
+  add column if not exists confirmation_email_sent boolean not null default false;
+
+-- ticket_status um 'failed' erweitern (Stripe-Session expired / fehlgeschlagen).
+alter table public.participants drop constraint if exists participants_ticket_status_check;
+alter table public.participants add constraint participants_ticket_status_check
+  check (ticket_status in ('pending', 'confirmed', 'waitlist', 'cancelled', 'failed'));
+
+-- ─────────────────────────────────────────────────────────────
+-- confirm_participant v2: atomares Kapazitäts-GATE.
+-- Ist beim Bestätigen kein Startplatz mehr frei (Nummer > p_max), wird der
+-- Teilnehmer NICHT bestätigt, sondern auf 'waitlist' gesetzt und 'overflow'
+-- zurückgegeben — der Webhook erstattet dann die Stripe-Zahlung automatisch.
+-- So können niemals >p_max bezahlte/bestätigte Plätze entstehen.
+-- ─────────────────────────────────────────────────────────────
+create or replace function confirm_participant(p_id uuid, p_max int)
+returns json
+language plpgsql
+security definer
+as $$
+declare
+  v_next     integer;
+  v_row      participants;
+  v_overflow boolean := false;
+begin
+  -- Serialize all concurrent calls; lock is released automatically at tx end.
+  perform pg_advisory_xact_lock(8675309);
+
+  select coalesce(max(startnummer), 0) + 1
+  into   v_next
+  from   participants
+  where  startnummer is not null;
+
+  if v_next > p_max then
+    v_overflow := true;
+    update participants set
+      ticket_status = 'waitlist',
+      startnummer   = null
+    where id = p_id
+    returning * into v_row;
+  else
+    update participants set
+      ticket_status = 'confirmed',
+      attest_status = 'missing',
+      startnummer   = v_next
+    where id = p_id
+    returning * into v_row;
+  end if;
+
+  return json_build_object(
+    'email',       v_row.email,
+    'vorname',     v_row.vorname,
+    'startnummer', v_row.startnummer,
+    'overflow',    v_overflow
+  );
+end;
+$$;

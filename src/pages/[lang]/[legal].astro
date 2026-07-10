@@ -9,10 +9,12 @@ const slug = Astro.params.legal as string | undefined;
 if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 
 const validSlugs = new Set<LegalSlug>([
+  "impressum",
   "datenschutz",
   "agb",
   "barrierefreiheit",
   "rueckerstattung",
+  "haftungsausschluss",
 ]);
 
 if (!slug || !validSlugs.has(slug as LegalSlug)) {
@@ -22,10 +24,12 @@ if (!slug || !validSlugs.has(slug as LegalSlug)) {
 const t = useTranslations(lang);
 
 const titleMap: Record<string, string> = {
+  impressum: t("footer.imprint"),
   datenschutz: t("footer.privacy"),
   agb: t("footer.terms"),
   barrierefreiheit: t("footer.accessibility"),
   rueckerstattung: t("footer.refund"),
+  haftungsausschluss: t("footer.liability"),
 };
 const title = titleMap[slug] ?? slug;
 const page = legal[lang][slug as LegalSlug];
@@ -47,7 +51,7 @@ const page = legal[lang][slug as LegalSlug];
       {
         page.sections.map((section) => (
           <div class="legal-section">
-            <h2>{section.heading}</h2>
+            <h2 id={section.id}>{section.heading}</h2>
             {section.blocks.map((block) => {
               if (block.type === "h") return <h3>{block.text}</h3>;
               if (block.type === "note") return <p class="note">{block.text}</p>;

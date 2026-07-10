@@ -10,15 +10,68 @@ export type LegalBlock =
   | { type: "note"; text: string }
   | { type: "list"; items: string[] };
 
-export type LegalSection = { heading: string; blocks: LegalBlock[] };
+export type LegalSection = { id?: string; heading: string; blocks: LegalBlock[] };
 export type LegalPage = { updated?: string; intro?: string; sections: LegalSection[] };
 
-export type LegalSlug = "datenschutz" | "agb" | "barrierefreiheit" | "rueckerstattung";
+export type LegalSlug =
+  | "impressum"
+  | "datenschutz"
+  | "agb"
+  | "barrierefreiheit"
+  | "rueckerstattung"
+  | "haftungsausschluss";
 export type LegalContent = Record<LegalSlug, LegalPage>;
 
 export const legal: Record<Lang, LegalContent> = {
   // ───────────────────────────── DEUTSCH ─────────────────────────────
   de: {
+    impressum: {
+      intro:
+        "Anbieterkennzeichnung und gesetzliche Pflichtangaben zum Veranstalter der „Dolomites Last Loop“.",
+      sections: [
+        {
+          heading: "Verein",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Amateursportverein Sport OK Toblach",
+                "Sede legale / Sitz: Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italien",
+                "Codice Fiscale: 01483970214",
+                "Partita IVA: 01483970214",
+                "PEC: sportok@pec.it",
+                "E-Mail: info@worldcup-dobbiaco.it",
+                "Telefon: 0474 976000",
+                "Website: www.worldcup-dobbiaco.it",
+                "Codice Destinatario (SDI): SUBM70N",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Registereintragung",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Registro Nazionale delle Attività Sportive Dilettantistiche (RASD): Nr. 00362404",
+                "FISI – Federazione Italiana Sport Invernali · Codice affiliazione: 01894",
+                "Sportjahr: 2025/2026 · Erstaffiliation: 01.12.2016",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Gesetzliche Vertretung",
+          blocks: [
+            {
+              type: "list",
+              items: ["Präsidentin / Legale rappresentante: Gerti Taschler"],
+            },
+          ],
+        },
+      ],
+    },
     datenschutz: {
       intro:
         "Diese Datenschutzerklärung informiert dich gemäß der Datenschutz-Grundverordnung (EU) 2016/679 (DSGVO) sowie dem italienischen Datenschutzrecht (D.Lgs. 196/2003 i.d.F. des D.Lgs. 101/2018) über die Verarbeitung deiner personenbezogenen Daten im Rahmen der Veranstaltung „Dolomites Last Loop“.",
@@ -33,9 +86,10 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Sport OK Toblach",
-                "[ADRESSE AUSFÜLLEN]",
-                "E-Mail (Datenschutz): [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+                "Amateursportverein Sport OK Toblach",
+                "Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italien",
+                "Codice Fiscale: 01483970214",
+                "E-Mail (Datenschutz): info@worldcup-dobbiaco.it",
               ],
             },
           ],
@@ -146,7 +200,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "Zur Ausübung deiner Rechte wende dich an: [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+              text: "Zur Ausübung deiner Rechte wende dich an: info@worldcup-dobbiaco.it",
             },
           ],
         },
@@ -156,6 +210,20 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "p",
               text: "Du hast das Recht, dich bei einer Aufsichtsbehörde zu beschweren. Zuständig in Italien ist der Garante per la protezione dei dati personali (https://www.garanteprivacy.it).",
+            },
+          ],
+        },
+        {
+          id: "bildrechte",
+          heading: "10. Foto- und Videoaufnahmen (Bildrechte)",
+          blocks: [
+            {
+              type: "p",
+              text: "Während der Veranstaltung werden Foto- und Videoaufnahmen erstellt. Mit deiner Einwilligung bei der Anmeldung dürfen diese Aufnahmen vom Veranstalter (Sport OK Toblach) für die Berichterstattung über das Event sowie für Marketing- und Werbezwecke (Website, Social Media, Print) verwendet werden.",
+            },
+            {
+              type: "p",
+              text: "Die Einwilligung ist freiwillig und kann jederzeit mit Wirkung für die Zukunft widerrufen werden (info@worldcup-dobbiaco.it). Der Widerruf berührt die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung nicht; bereits veröffentlichte Aufnahmen müssen ggf. nicht zurückgezogen werden, soweit dies unmöglich oder mit unverhältnismäßigem Aufwand verbunden ist.",
             },
           ],
         },
@@ -294,7 +362,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Wenn du auf Barrieren stößt oder Inhalte nicht zugänglich sind, melde dich bitte bei uns unter [E-MAIL AUSFÜLLEN]. Wir bemühen uns um eine zeitnahe Lösung.",
+              text: "Wenn du auf Barrieren stößt oder Inhalte nicht zugänglich sind, melde dich bitte bei uns unter info@worldcup-dobbiaco.it. Wir bemühen uns um eine zeitnahe Lösung.",
             },
           ],
         },
@@ -332,7 +400,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Einen Antrag auf Rückerstattung stellst du per E-Mail an [RÜCKERSTATTUNG-E-MAIL AUSFÜLLEN]. Die Bearbeitung erfolgt in der Regel innerhalb von [BEARBEITUNGSZEIT AUSFÜLLEN] Werktagen.",
+              text: "Einen Antrag auf Rückerstattung stellst du per E-Mail an office@worldcup-dobbiaco.it. Die Bearbeitung erfolgt in der Regel innerhalb von [BEARBEITUNGSZEIT AUSFÜLLEN] Werktagen.",
             },
             {
               type: "p",
@@ -351,10 +419,122 @@ export const legal: Record<Lang, LegalContent> = {
         },
       ],
     },
+    haftungsausschluss: {
+      updated: "[STAND AUSFÜLLEN]",
+      intro:
+        "Die Teilnahme an der „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) erfolgt freiwillig und auf eigenes Risiko. Mit der Anmeldung erkennst du die folgenden Bedingungen an. Dieser Text ist ein Standardentwurf und muss vor dem Einsatz juristisch geprüft werden.",
+      sections: [
+        {
+          heading: "1. Teilnahme auf eigene Gefahr",
+          blocks: [
+            {
+              type: "p",
+              text: "Ein Backyard Ultra ist ein extremer Ausdauerwettbewerb. Die Teilnahme erfolgt ausschließlich auf eigene Gefahr und Verantwortung. Jede:r Teilnehmer:in schätzt die eigene körperliche und gesundheitliche Verfassung selbst ein und entscheidet eigenverantwortlich über Start, Fortsetzung und Abbruch des Rennens.",
+            },
+          ],
+        },
+        {
+          heading: "2. Gesundheitliche Eignung und ärztliches Attest",
+          blocks: [
+            {
+              type: "p",
+              text: "Die Teilnahme setzt die volle gesundheitliche Eignung für sportliche Höchstbelastungen voraus. Ein gültiges ärztliches Attest (certificato medico agonistico) ist verpflichtend vorzulegen. Ohne fristgerecht eingereichtes Attest ist die Anmeldung nicht endgültig gültig und eine Teilnahme ausgeschlossen.",
+            },
+          ],
+        },
+        {
+          heading: "3. Haftungsausschluss des Veranstalters",
+          blocks: [
+            {
+              type: "p",
+              text: "Der Veranstalter (Sport OK Toblach) sowie dessen Helfer:innen, Partner und Sponsoren haften nicht für Personen-, Sach- oder Vermögensschäden, die im Zusammenhang mit der Teilnahme entstehen, soweit diese nicht auf Vorsatz oder grober Fahrlässigkeit des Veranstalters beruhen. Die zwingende gesetzliche Haftung, insbesondere für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit, bleibt unberührt.",
+            },
+            {
+              type: "note",
+              text: "[JURISTISCH PRÜFEN] Der Umfang zulässiger Haftungsbeschränkungen richtet sich nach italienischem Recht (u. a. Art. 1229 Codice Civile). Diesen Text vor dem Live-Gang anwaltlich prüfen lassen.",
+            },
+          ],
+        },
+        {
+          heading: "4. Eigenverantwortung und Verhalten",
+          blocks: [
+            {
+              type: "p",
+              text: "Teilnehmer:innen befolgen die Anweisungen der Rennleitung sowie des Sanitäts- und Sicherheitspersonals jederzeit. Bei Sicherheitsbedenken kann die Rennleitung Teilnehmer:innen aus dem Rennen nehmen. Für mitgeführte Ausrüstung und Wertgegenstände wird keine Haftung übernommen.",
+            },
+          ],
+        },
+        {
+          heading: "5. Höhere Gewalt, Verschiebung und Absage",
+          blocks: [
+            {
+              type: "p",
+              text: "Bei höherer Gewalt (z. B. extreme Witterung, behördliche Auflagen, Naturereignisse) kann die Veranstaltung verschoben, verkürzt oder abgesagt werden. Ansprüche der Teilnehmer:innen über die in den Stornobedingungen geregelten Rückerstattungen hinaus bestehen in diesem Fall nicht.",
+            },
+          ],
+        },
+        {
+          heading: "6. Versicherung",
+          blocks: [
+            {
+              type: "p",
+              text: "Der Abschluss einer ausreichenden Kranken-, Unfall- und ggf. Bergungs-/Rückholversicherung liegt in der Verantwortung der Teilnehmer:innen. [VERSICHERUNGSHINWEIS AUSFÜLLEN – ob und welcher Versicherungsschutz seitens des Veranstalters besteht.]",
+            },
+          ],
+        },
+      ],
+    },
   },
 
   // ───────────────────────────── ITALIANO ─────────────────────────────
   it: {
+    impressum: {
+      intro:
+        "Dati identificativi e informazioni obbligatorie sull’organizzatore della „Dolomites Last Loop“.",
+      sections: [
+        {
+          heading: "Associazione",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Amateursportverein Sport OK Toblach",
+                "Sede legale: Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italia",
+                "Codice Fiscale: 01483970214",
+                "Partita IVA: 01483970214",
+                "PEC: sportok@pec.it",
+                "E-mail: info@worldcup-dobbiaco.it",
+                "Telefono: 0474 976000",
+                "Sito web: www.worldcup-dobbiaco.it",
+                "Codice Destinatario (SDI): SUBM70N",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Iscrizione ai registri",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Registro Nazionale delle Attività Sportive Dilettantistiche (RASD): n. 00362404",
+                "FISI – Federazione Italiana Sport Invernali · Codice affiliazione: 01894",
+                "Anno sportivo: 2025/2026 · Prima affiliazione: 01/12/2016",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Rappresentante legale",
+          blocks: [
+            {
+              type: "list",
+              items: ["Presidente / Legale rappresentante: Gerti Taschler"],
+            },
+          ],
+        },
+      ],
+    },
     datenschutz: {
       intro:
         "La presente informativa sulla privacy ti informa, ai sensi del Regolamento (UE) 2016/679 (GDPR) e della normativa italiana in materia di protezione dei dati personali (D.Lgs. 196/2003 come modificato dal D.Lgs. 101/2018), sul trattamento dei tuoi dati personali nell’ambito dell’evento „Dolomites Last Loop“.",
@@ -369,9 +549,10 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Sport OK Dobbiaco",
-                "[ADRESSE AUSFÜLLEN]",
-                "E-mail (privacy): [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+                "Amateursportverein Sport OK Toblach",
+                "Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italia",
+                "Codice Fiscale: 01483970214",
+                "E-mail (privacy): info@worldcup-dobbiaco.it",
               ],
             },
           ],
@@ -482,7 +663,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "Per esercitare i tuoi diritti scrivi a: [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+              text: "Per esercitare i tuoi diritti scrivi a: info@worldcup-dobbiaco.it",
             },
           ],
         },
@@ -492,6 +673,20 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "p",
               text: "Hai il diritto di presentare reclamo a un’autorità di controllo. In Italia è competente il Garante per la protezione dei dati personali (https://www.garanteprivacy.it).",
+            },
+          ],
+        },
+        {
+          id: "bildrechte",
+          heading: "10. Foto e video (diritti di immagine)",
+          blocks: [
+            {
+              type: "p",
+              text: "Durante l’evento vengono realizzate riprese foto e video. Con il tuo consenso al momento dell’iscrizione, queste immagini possono essere utilizzate dall’organizzatore (Sport OK Dobbiaco) per la documentazione dell’evento e per scopi di marketing e pubblicità (sito web, social media, stampa).",
+            },
+            {
+              type: "p",
+              text: "Il consenso è facoltativo e può essere revocato in qualsiasi momento con effetto per il futuro ([E-MAIL PRIVACY DA INSERIRE]). La revoca non pregiudica la liceità del trattamento effettuato fino a quel momento; le immagini già pubblicate potrebbero non dover essere ritirate, qualora ciò risulti impossibile o comporti uno sforzo sproporzionato.",
             },
           ],
         },
@@ -630,7 +825,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Se incontri barriere o contenuti non accessibili, contattaci all’indirizzo [E-MAIL AUSFÜLLEN]. Ci adopereremo per trovare una soluzione in tempi rapidi.",
+              text: "Se incontri barriere o contenuti non accessibili, contattaci all’indirizzo info@worldcup-dobbiaco.it. Ci adopereremo per trovare una soluzione in tempi rapidi.",
             },
           ],
         },
@@ -668,7 +863,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "La richiesta di rimborso va inviata via e-mail a [RÜCKERSTATTUNG-E-MAIL AUSFÜLLEN]. L’elaborazione avviene di norma entro [BEARBEITUNGSZEIT AUSFÜLLEN] giorni lavorativi.",
+              text: "La richiesta di rimborso va inviata via e-mail a office@worldcup-dobbiaco.it. L’elaborazione avviene di norma entro [BEARBEITUNGSZEIT AUSFÜLLEN] giorni lavorativi.",
             },
             {
               type: "p",
@@ -687,10 +882,122 @@ export const legal: Record<Lang, LegalContent> = {
         },
       ],
     },
+    haftungsausschluss: {
+      updated: "[STAND AUSFÜLLEN]",
+      intro:
+        "La partecipazione alla „Dolomites Last Loop“ (Backyard Ultra, Dobbiaco/Toblach) è volontaria e avviene a proprio rischio. Con l’iscrizione accetti le seguenti condizioni. Questo testo è una bozza standard e deve essere verificato legalmente prima dell’uso.",
+      sections: [
+        {
+          heading: "1. Partecipazione a proprio rischio",
+          blocks: [
+            {
+              type: "p",
+              text: "Un Backyard Ultra è una competizione di endurance estrema. La partecipazione avviene esclusivamente a proprio rischio e responsabilità. Ogni partecipante valuta autonomamente le proprie condizioni fisiche e di salute e decide sotto la propria responsabilità in merito a partenza, prosecuzione e ritiro dalla gara.",
+            },
+          ],
+        },
+        {
+          heading: "2. Idoneità fisica e certificato medico",
+          blocks: [
+            {
+              type: "p",
+              text: "La partecipazione presuppone la piena idoneità a sforzi sportivi massimali. È obbligatorio presentare un valido certificato medico agonistico. Senza certificato presentato entro i termini, l’iscrizione non è definitivamente valida e la partecipazione è esclusa.",
+            },
+          ],
+        },
+        {
+          heading: "3. Esclusione di responsabilità dell’organizzatore",
+          blocks: [
+            {
+              type: "p",
+              text: "L’organizzatore (Sport OK Dobbiaco) nonché i suoi volontari, partner e sponsor non rispondono di danni a persone, cose o patrimonio derivanti dalla partecipazione, salvo che tali danni siano dovuti a dolo o colpa grave dell’organizzatore. Resta impregiudicata la responsabilità inderogabile di legge, in particolare per danni derivanti da lesioni alla vita, all’integrità fisica o alla salute.",
+            },
+            {
+              type: "note",
+              text: "[DA VERIFICARE LEGALMENTE] L’ammissibilità delle limitazioni di responsabilità è disciplinata dal diritto italiano (tra cui l’art. 1229 Codice Civile). Far verificare questo testo da un legale prima della pubblicazione.",
+            },
+          ],
+        },
+        {
+          heading: "4. Responsabilità personale e comportamento",
+          blocks: [
+            {
+              type: "p",
+              text: "I partecipanti seguono in ogni momento le indicazioni della direzione di gara e del personale sanitario e di sicurezza. In caso di rischi per la sicurezza, la direzione di gara può ritirare un partecipante. Non si assume alcuna responsabilità per attrezzatura e oggetti di valore portati con sé.",
+            },
+          ],
+        },
+        {
+          heading: "5. Forza maggiore, rinvio e annullamento",
+          blocks: [
+            {
+              type: "p",
+              text: "In caso di forza maggiore (es. condizioni meteo estreme, disposizioni delle autorità, eventi naturali) l’evento può essere rinviato, ridotto o annullato. In tal caso i partecipanti non vantano pretese oltre i rimborsi disciplinati dalle condizioni di annullamento.",
+            },
+          ],
+        },
+        {
+          heading: "6. Assicurazione",
+          blocks: [
+            {
+              type: "p",
+              text: "La stipula di un’adeguata assicurazione sanitaria, infortuni ed eventualmente soccorso/recupero è responsabilità dei partecipanti. [NOTA ASSICURATIVA DA INSERIRE – se e quale copertura assicurativa è prevista dall’organizzatore.]",
+            },
+          ],
+        },
+      ],
+    },
   },
 
   // ───────────────────────────── ENGLISH ─────────────────────────────
   en: {
+    impressum: {
+      intro:
+        "Identification details and mandatory information about the organiser of the “Dolomites Last Loop”.",
+      sections: [
+        {
+          heading: "Association",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Amateursportverein Sport OK Toblach",
+                "Registered office: Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italy",
+                "Codice Fiscale (tax code): 01483970214",
+                "Partita IVA (VAT no.): 01483970214",
+                "PEC: sportok@pec.it",
+                "Email: info@worldcup-dobbiaco.it",
+                "Phone: 0474 976000",
+                "Website: www.worldcup-dobbiaco.it",
+                "Codice Destinatario (SDI): SUBM70N",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Register entries",
+          blocks: [
+            {
+              type: "list",
+              items: [
+                "Italian National Register of Amateur Sports Activities (RASD): no. 00362404",
+                "FISI – Italian Winter Sports Federation · Affiliation code: 01894",
+                "Sports year: 2025/2026 · First affiliation: 01/12/2016",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Legal representative",
+          blocks: [
+            {
+              type: "list",
+              items: ["President / Legal representative: Gerti Taschler"],
+            },
+          ],
+        },
+      ],
+    },
     datenschutz: {
       intro:
         "This privacy policy informs you, in accordance with the General Data Protection Regulation (EU) 2016/679 (GDPR) and Italian data protection law (Legislative Decree 196/2003 as amended by Legislative Decree 101/2018), about the processing of your personal data in connection with the „Dolomites Last Loop“ event.",
@@ -705,9 +1012,10 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Sport OK Toblach",
-                "[ADRESSE AUSFÜLLEN]",
-                "Email (data protection): [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+                "Amateursportverein Sport OK Toblach",
+                "Seeweg 16, 39034 Dobbiaco/Toblach (BZ), Italy",
+                "Codice Fiscale: 01483970214",
+                "Email (data protection): info@worldcup-dobbiaco.it",
               ],
             },
           ],
@@ -818,7 +1126,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "To exercise your rights, contact: [E-MAIL DATENSCHUTZ AUSFÜLLEN]",
+              text: "To exercise your rights, contact: info@worldcup-dobbiaco.it",
             },
           ],
         },
@@ -828,6 +1136,20 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "p",
               text: "You have the right to lodge a complaint with a supervisory authority. In Italy the competent authority is the Garante per la protezione dei dati personali (https://www.garanteprivacy.it).",
+            },
+          ],
+        },
+        {
+          id: "bildrechte",
+          heading: "10. Photos and videos (image rights)",
+          blocks: [
+            {
+              type: "p",
+              text: "Photos and videos are taken during the event. With your consent at registration, these images may be used by the organiser (Sport OK Toblach) for event coverage as well as for marketing and advertising purposes (website, social media, print).",
+            },
+            {
+              type: "p",
+              text: "Consent is voluntary and can be withdrawn at any time with effect for the future ([PRIVACY EMAIL TO BE FILLED IN]). Withdrawal does not affect the lawfulness of processing carried out beforehand; images already published may not need to be withdrawn where this is impossible or involves disproportionate effort.",
             },
           ],
         },
@@ -966,7 +1288,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "If you encounter barriers or content that is not accessible, please contact us at [E-MAIL AUSFÜLLEN]. We will do our best to find a prompt solution.",
+              text: "If you encounter barriers or content that is not accessible, please contact us at info@worldcup-dobbiaco.it. We will do our best to find a prompt solution.",
             },
           ],
         },
@@ -1004,7 +1326,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Submit a refund request by email to [RÜCKERSTATTUNG-E-MAIL AUSFÜLLEN]. Processing usually takes place within [BEARBEITUNGSZEIT AUSFÜLLEN] business days.",
+              text: "Submit a refund request by email to office@worldcup-dobbiaco.it. Processing usually takes place within [BEARBEITUNGSZEIT AUSFÜLLEN] business days.",
             },
             {
               type: "p",
@@ -1018,6 +1340,71 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "p",
               text: "In the event of disqualification or voluntary withdrawal during the event, there is no entitlement to a refund of the entry fee.",
+            },
+          ],
+        },
+      ],
+    },
+    haftungsausschluss: {
+      updated: "[STAND AUSFÜLLEN]",
+      intro:
+        "Participation in the „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) is voluntary and at your own risk. By registering you accept the following terms. This text is a standard draft and must be legally reviewed before use.",
+      sections: [
+        {
+          heading: "1. Participation at your own risk",
+          blocks: [
+            {
+              type: "p",
+              text: "A Backyard Ultra is an extreme endurance competition. Participation is entirely at your own risk and responsibility. Each participant assesses their own physical and health condition and decides, on their own responsibility, whether to start, continue or withdraw from the race.",
+            },
+          ],
+        },
+        {
+          heading: "2. Medical fitness and certificate",
+          blocks: [
+            {
+              type: "p",
+              text: "Participation requires full medical fitness for maximum athletic exertion. A valid medical certificate (certificato medico agonistico) must be provided. Without a certificate submitted on time, the registration is not finally valid and participation is excluded.",
+            },
+          ],
+        },
+        {
+          heading: "3. Disclaimer of liability of the organiser",
+          blocks: [
+            {
+              type: "p",
+              text: "The organiser (Sport OK Toblach) as well as its volunteers, partners and sponsors are not liable for personal injury, property or financial damage arising in connection with participation, unless such damage is due to intent or gross negligence on the part of the organiser. Mandatory statutory liability, in particular for damage resulting from injury to life, body or health, remains unaffected.",
+            },
+            {
+              type: "note",
+              text: "[LEGAL REVIEW REQUIRED] The permissible scope of liability limitations is governed by Italian law (including Art. 1229 of the Civil Code). Have this text reviewed by a lawyer before going live.",
+            },
+          ],
+        },
+        {
+          heading: "4. Personal responsibility and conduct",
+          blocks: [
+            {
+              type: "p",
+              text: "Participants follow the instructions of the race management and the medical and safety staff at all times. In the event of safety concerns, the race management may withdraw participants from the race. No liability is accepted for equipment and valuables carried.",
+            },
+          ],
+        },
+        {
+          heading: "5. Force majeure, postponement and cancellation",
+          blocks: [
+            {
+              type: "p",
+              text: "In the event of force majeure (e.g. extreme weather, official requirements, natural events), the event may be postponed, shortened or cancelled. In this case, participants have no claims beyond the refunds set out in the cancellation terms.",
+            },
+          ],
+        },
+        {
+          heading: "6. Insurance",
+          blocks: [
+            {
+              type: "p",
+              text: "Taking out adequate health, accident and, where applicable, rescue/repatriation insurance is the responsibility of the participants. [INSURANCE NOTE TO BE FILLED IN – whether and what insurance cover is provided by the organiser.]",
             },
           ],
         },
