@@ -305,7 +305,7 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 - `'unsafe-inline'` bleibt (Astro SSR ohne Nonce-Support); `'unsafe-eval'` bleibt geblockt.
 
 ## Nächste Schritte
-- [ ] **Upstash-Keys im Vercel-Dashboard setzen** (`UPSTASH_REDIS_REST_URL`/`_TOKEN`) → Rate-Limiting scharf schalten
+- [x] **Upstash-Keys im Vercel-Dashboard setzen** (`UPSTASH_REDIS_REST_URL`/`_TOKEN`) → Rate-Limiting scharf schalten *(2026-07-11 in Production verifiziert: `/api/newsletter` liefert ab dem 4. Request 429 + `Retry-After` → Keys aktiv)*
 - [ ] **Brevo-Keys im Vercel-Dashboard setzen** (`BREVO_API_KEY`/`BREVO_LIST_ID`) → Newsletter geht live an Brevo
 - [ ] **`supabase/schema.sql` im Supabase SQL-Editor ausführen** → View `participants_public` anlegen
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
