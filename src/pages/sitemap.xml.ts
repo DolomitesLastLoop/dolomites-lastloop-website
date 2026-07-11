@@ -8,6 +8,7 @@ const ROUTES = [
   "/anmeldung",
   "/startliste",
   "/ergebnisse",
+  "/galerie",
   "/faq",
   "/kontakt",
 ];

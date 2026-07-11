@@ -35,7 +35,10 @@ const title = titleMap[slug] ?? slug;
 const page = legal[lang][slug as LegalSlug];
 ---
 
-<BaseLayout lang={lang} title={title}>
+{/* noindex TEMPORÄR: Rechtstexte in src/i18n/legal.ts enthalten noch [AUSFÜLLEN]-
+    Platzhalter und sind über den globalen Footer crawlbar. noindex entfernen, sobald
+    alle Platzhalter final ausgefüllt sind (siehe CLAUDE.md → Nächste Schritte). */}
+<BaseLayout lang={lang} title={title} noindex>
   <section class="page-head">
     <div class="container">
       <p class="eyebrow">Legal</p>
