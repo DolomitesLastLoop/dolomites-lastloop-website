@@ -305,6 +305,34 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   blockieren. Umschalten auf `require-corp` erst nach Browser-Test.
 - `'unsafe-inline'` bleibt (Astro SSR ohne Nonce-Support); `'unsafe-eval'` bleibt geblockt.
 
+### 2026-07-11 — Secrets build-time inlined (`import.meta.env`) → Preview: „Invalid API Key: sk_test_xxx"
+
+- **Symptom:** Checkout auf einem Preview-Deployment schlug mit `Invalid API Key provided:
+  sk_test_xxx` fehl, obwohl der Preview-scoped `STRIPE_SECRET_KEY` (vermeintlich) neu gesetzt
+  und redeployed wurde. Der Literal-String `sk_test_xxx` (= Platzhalter aus `.env.example`)
+  bewies, dass die Runtime tatsächlich den Platzhalter sendete (Stripe maskiert echte Keys).
+- **Ursache:** `src/lib/stripe.ts` (u. a.) las Secrets über `import.meta.env.X` auf Modul-Ebene.
+  Astro/Vite ersetzt `import.meta.env.X` mit **statischem** Key zur **BUILD-Zeit** durch einen
+  Literal — **auch für nicht-`PUBLIC_`-Secrets**. Der Wert vom Build-Zeitpunkt wurde in den
+  Server-Bundle eingebacken; Dashboard-Änderung + Redeploy griffen nicht (verschärft durch eine
+  als „Sensitive" markierte, nicht auslesbare Vercel-Var + Build-Cache). Bewiesen per lokalem
+  `astro build` + `grep`: der gebaute Chunk enthielt den Key-Literal, **keinen** Runtime-Lookup.
+- **Lösung:** Neuer Helper `src/lib/env.ts` — `env(name)` liest `process.env` (Vercel-Runtime)
+  zuerst, dann **dynamisch** `import.meta.env[name]` (dynamischer Key wird von Vite NICHT inlined;
+  nur Local-Dev-Fallback). Analog zum bereits vorhandenen `src/lib/registration.ts`. Umgestellt:
+  `STRIPE_SECRET_KEY`, `STRIPE_PRICE_*`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`,
+  `EMAIL_FROM/REPLY_TO`, `PUBLIC_SUPABASE_*`/`SUPABASE_SERVICE_ROLE_KEY`, `MAX_PARTICIPANTS`,
+  `PUBLIC_SITE_URL` (checkout/sitemap/BaseLayout). Client-seitiger
+  `PUBLIC_STRIPE_PUBLISHABLE_KEY` bleibt unangetastet.
+- **Verifiziert:** grep pro Secret im gebauten Server-Chunk → kein Literal mehr; E2E-Test auf
+  Preview grün (Formular → Zahlung → Webhook 200 → Resend-Mail → Attest-Upload → Startliste).
+- **Merkregel:** Secrets serverseitig NIE über statisches `import.meta.env.X` lesen — immer
+  runtime-first `process.env` (bzw. dynamischer Key via `@lib/env`). Sonst build-time-inlined
+  wie bei `PUBLIC_`-Vars.
+- **Offen (gleiche Klasse, NICHT in diesem PR):** `auth.ts` (`ADMIN_*`), `ratelimit.ts`
+  (`UPSTASH_*`), `brevo.ts` (`BREVO_*`) lesen ebenfalls via `import.meta.env` → als Follow-up
+  auf `@lib/env` umstellen.
+
 ## Nächste Schritte
 - [x] **Upstash-Keys im Vercel-Dashboard setzen** (`UPSTASH_REDIS_REST_URL`/`_TOKEN`) → Rate-Limiting scharf schalten *(2026-07-11 in Production verifiziert: `/api/newsletter` liefert ab dem 4. Request 429 + `Retry-After` → Keys aktiv)*
 - [ ] **Brevo-Keys im Vercel-Dashboard setzen** (`BREVO_API_KEY`/`BREVO_LIST_ID`) → Newsletter geht live an Brevo
