@@ -312,3 +312,4 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 - [ ] Domain ändern
 - [ ] Stripe einrichten
 - [ ] Datenschutz, AGB usw. einrichten
+- [ ] **Rechtstexte finalisieren:** 18× `[AUSFÜLLEN]` in `src/i18n/legal.ts` ausfüllen. **Danach zwingend:** `noindex` in `src/pages/[lang]/[legal].astro` wieder entfernen (aktuell tragen alle 6 Legal-Seiten `noindex,nofollow`, weil sie über den Footer crawlbar, aber inhaltlich unfertig sind) — sonst bleiben Impressum/Datenschutz dauerhaft aus dem Google-Index.
