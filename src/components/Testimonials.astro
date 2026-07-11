@@ -11,22 +11,33 @@ const t = useTranslations(lang);
 const items = [
   {
     quote:
-      "Die härteste Nacht meines Lebens. Und ich würde es sofort wieder tun.",
-    name: "Thomas K.",
-    country: "Deutschland",
+      "Die Challenge an sich, dass ihr das überhaupt organisiert habt, top. Und der Speaker Günther cooler Typ. Eigentlich war es eine lange \"Reise\" bei der man neue Bekanntschaften gemacht hat und mit Gleichgesinnten einen Austausch hatte.",
+    name: "Marc",
+    loops: 24,
     year: 2026,
   },
   {
-    quote: "Non sapevo che il mio corpo potesse fare questo.",
-    name: "Marco R.",
-    country: "Italia",
-    year: 2026,
-  },
-  {
+    // anonym eingewilligt – KEIN Name
     quote:
-      "After loop 12, every step is a choice. That’s the beauty of it.",
-    name: "Sarah M.",
-    country: "Austria",
+      "Die Atmosphäre im Camp, die Small Talks mit verschiedenen Runnern in jedem Loop, die gesamte Stimmung war super.",
+    name: "Teilnehmer",
+    loops: 16,
+    year: 2026,
+  },
+  {
+    // anonym eingewilligt – KEIN Name
+    quote:
+      "Der gesamte Tag war unvergesslich – das Team war permanent freundlich und zuvorkommend. Die Organisation der Veranstaltung war TOP.",
+    name: "Teilnehmerin",
+    loops: 11,
+    year: 2026,
+  },
+  {
+    // anonym eingewilligt – KEIN Name (zweite Antwort derselben Person, bewusst separate Karte)
+    quote:
+      "Am liebsten würde ich den gesamten Tag nochmals erleben - DANKE für die Planung und perfekte Durchführung vom Backyard Ultra! Ich freue mich schon auf 2027! :)",
+    name: "Teilnehmerin",
+    loops: 11,
     year: 2026,
   },
 ];
@@ -49,7 +60,7 @@ const items = [
               <footer>
                 <span class="t-name">{it.name}</span>
                 <span class="t-meta">
-                  {it.country} · {it.year}
+                  {it.loops} Loops · {it.year}
                 </span>
               </footer>
             </blockquote>

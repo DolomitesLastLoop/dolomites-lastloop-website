@@ -62,7 +62,8 @@ Skill-Metadaten: `.agent/skills/*`; volle Anweisungen: `.agents/skills/*/SKILL.m
 
 Die offizielle **Event-Plattform für die „Dolomites Last Loop"** – das erste
 **Backyard Ultra**-Rennen in den Dolomiten, in **Toblach/Dobbiaco** (Südtirol).
-Erste Ausgabe **2027** (Datum folgt). Veranstalter: Sport OK Toblach.
+**Erste Ausgabe 2026** (bereits stattgefunden); **zweite Ausgabe 2027** in
+Vorbereitung (Datum folgt). Veranstalter: Sport OK Toblach.
 
 Die Website ist mehrsprachig (**de** Standard, **it**, **en**) und deckt den
 kompletten Teilnehmer-Lebenszyklus ab:
