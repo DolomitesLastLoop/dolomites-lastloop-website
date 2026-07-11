@@ -11,9 +11,23 @@ import { Redis } from "@upstash/redis";
 const url = import.meta.env.UPSTASH_REDIS_REST_URL as string | undefined;
 const token = import.meta.env.UPSTASH_REDIS_REST_TOKEN as string | undefined;
 
+// Einmalige Warnung pro Prozess (Cold-Start), damit fehlende Config sichtbar
+// wird, ohne bei jedem Request die Logs zu fluten.
+let _warnedMissing = false;
+function warnMissingConfigOnce(): void {
+  if (_warnedMissing) return;
+  _warnedMissing = true;
+  console.warn(
+    "[ratelimit] UPSTASH_REDIS_REST_URL/_TOKEN nicht gesetzt — Rate-Limiting ist INAKTIV (fail-open, alle Requests werden durchgelassen).",
+  );
+}
+
 let _redis: Redis | null = null;
 function getRedis(): Redis | null {
-  if (!url || !token) return null;
+  if (!url || !token) {
+    warnMissingConfigOnce();
+    return null;
+  }
   if (!_redis) _redis = new Redis({ url, token });
   return _redis;
 }
