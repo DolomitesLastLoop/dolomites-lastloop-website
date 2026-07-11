@@ -1,11 +1,11 @@
 import Stripe from "stripe";
-
-const key = import.meta.env.STRIPE_SECRET_KEY as string | undefined;
+import { env } from "@lib/env";
 
 let _client: Stripe | null = null;
 
 export function getStripe(): Stripe {
   if (_client) return _client;
+  const key = env("STRIPE_SECRET_KEY");
   if (!key) {
     throw new Error("Missing environment variable: STRIPE_SECRET_KEY");
   }
@@ -14,8 +14,8 @@ export function getStripe(): Stripe {
 }
 
 export const PRICES = {
-  earlyBird: import.meta.env.STRIPE_PRICE_EARLY_BIRD as string | undefined,
-  standard: import.meta.env.STRIPE_PRICE_STANDARD as string | undefined,
+  earlyBird: env("STRIPE_PRICE_EARLY_BIRD"),
+  standard: env("STRIPE_PRICE_STANDARD"),
 };
 
 export type Tier = "early_bird" | "standard";

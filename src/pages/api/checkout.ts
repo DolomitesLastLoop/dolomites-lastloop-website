@@ -3,6 +3,7 @@ import { getAdminClient, MAX_PARTICIPANTS } from "@lib/supabase";
 import { getStripe, currentTier, priceIdFor } from "@lib/stripe";
 import { isValidEmail, isPlausiblePhone, ageOnDay } from "@lib/validation";
 import { isRegistrationEnabled } from "@lib/registration";
+import { env } from "@lib/env";
 
 export const prerender = false;
 
@@ -48,7 +49,7 @@ function resolveOrigin(request: Request, url: URL): string {
     return `${proto}://${host}`;
   }
   return (
-    (import.meta.env.PUBLIC_SITE_URL as string | undefined) ??
+    env("PUBLIC_SITE_URL") ??
     url?.origin ??
     new URL(request.url).origin
   );

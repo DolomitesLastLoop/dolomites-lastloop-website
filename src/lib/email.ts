@@ -1,26 +1,24 @@
 import { Resend } from "resend";
+import { env } from "@lib/env";
 
 type Lang = "de" | "it" | "en";
 
-const key = import.meta.env.RESEND_API_KEY as string | undefined;
-const from = (import.meta.env.EMAIL_FROM as string | undefined) ??
+const from = env("EMAIL_FROM") ??
   "Dolomites Last Loop <noreply@dolomiteslastloop.com>";
-const replyTo = (import.meta.env.EMAIL_REPLY_TO as string | undefined) ??
+const replyTo = env("EMAIL_REPLY_TO") ??
   "dolomiteslastloop@gmail.com";
 
 let _client: Resend | null = null;
 function client() {
   if (_client) return _client;
+  const key = env("RESEND_API_KEY");
   if (!key) throw new Error("Missing environment variable: RESEND_API_KEY");
   _client = new Resend(key);
   return _client;
 }
 
 function siteUrl(): string {
-  return (
-    (import.meta.env.PUBLIC_SITE_URL as string | undefined) ??
-    "https://www.dolomiteslastloop.com"
-  );
+  return env("PUBLIC_SITE_URL") ?? "https://www.dolomiteslastloop.com";
 }
 
 function normLang(lang: string | null | undefined): Lang {

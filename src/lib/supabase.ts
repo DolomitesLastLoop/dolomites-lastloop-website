@@ -1,14 +1,11 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import ws from "ws";
+import { env } from "@lib/env";
 
 // Vercel-Runtime ist Node 20 (ohne natives WebSocket) — supabase-js' Realtime-
 // Client wirft sonst beim Erstellen. Wir nutzen Realtime nicht, aber der
 // Konstruktor läuft immer. Ab Node 22 wäre der Transport überflüssig.
 const realtime = { transport: ws as unknown as typeof WebSocket };
-
-const url = import.meta.env.PUBLIC_SUPABASE_URL as string | undefined;
-const anonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string | undefined;
-const serviceKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY as string | undefined;
 
 function assertEnv(name: string, value: string | undefined): string {
   if (!value) {
@@ -23,8 +20,8 @@ let _adminClient: SupabaseClient | null = null;
 export function getPublicClient(): SupabaseClient {
   if (_publicClient) return _publicClient;
   _publicClient = createClient(
-    assertEnv("PUBLIC_SUPABASE_URL", url),
-    assertEnv("PUBLIC_SUPABASE_ANON_KEY", anonKey),
+    assertEnv("PUBLIC_SUPABASE_URL", env("PUBLIC_SUPABASE_URL")),
+    assertEnv("PUBLIC_SUPABASE_ANON_KEY", env("PUBLIC_SUPABASE_ANON_KEY")),
     { auth: { persistSession: false }, realtime },
   );
   return _publicClient;
@@ -33,8 +30,8 @@ export function getPublicClient(): SupabaseClient {
 export function getAdminClient(): SupabaseClient {
   if (_adminClient) return _adminClient;
   _adminClient = createClient(
-    assertEnv("PUBLIC_SUPABASE_URL", url),
-    assertEnv("SUPABASE_SERVICE_ROLE_KEY", serviceKey),
+    assertEnv("PUBLIC_SUPABASE_URL", env("PUBLIC_SUPABASE_URL")),
+    assertEnv("SUPABASE_SERVICE_ROLE_KEY", env("SUPABASE_SERVICE_ROLE_KEY")),
     { auth: { persistSession: false }, realtime },
   );
   return _adminClient;
@@ -98,6 +95,4 @@ export interface RaceResult {
   runden: number;
 }
 
-export const MAX_PARTICIPANTS = Number(
-  import.meta.env.MAX_PARTICIPANTS ?? 150,
-);
+export const MAX_PARTICIPANTS = Number(env("MAX_PARTICIPANTS") ?? 150);
