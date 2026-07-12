@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { env } from "@lib/env";
 
 export const prerender = false;
 
@@ -16,7 +17,7 @@ const LANGS = ["de", "it", "en"] as const;
 
 export const GET: APIRoute = ({ site }) => {
   const base =
-    (import.meta.env.PUBLIC_SITE_URL as string | undefined) ??
+    env("PUBLIC_SITE_URL") ??
     site?.toString() ??
     "https://www.dolomiteslastloop.com";
   const now = new Date().toISOString();

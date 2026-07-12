@@ -7,12 +7,13 @@ import {
   sendRegistrationConfirmation,
   sendWaitlistNotification,
 } from "@lib/email";
+import { env } from "@lib/env";
 
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
   const sig = request.headers.get("stripe-signature");
-  const secret = import.meta.env.STRIPE_WEBHOOK_SECRET as string | undefined;
+  const secret = env("STRIPE_WEBHOOK_SECRET");
   if (!sig || !secret) {
     return new Response("Missing signature", { status: 400 });
   }

@@ -4,6 +4,7 @@ import Footer from "@components/Footer.astro";
 import ScrollProgress from "@components/ScrollProgress.astro";
 import SeoJsonLd from "@components/SeoJsonLd.astro";
 import { useTranslations, type Lang, defaultLang } from "@i18n/utils";
+import { env } from "@lib/env";
 import "@styles/global.css";
 // Fonts lokal via Fontsource (statt Google CDN): CSP-konform ('self') und DSGVO-freundlich
 import "@fontsource/bebas-neue/400.css";
@@ -31,7 +32,7 @@ const siteTitle = t("site.title");
 const fullTitle = title ? `${title} – ${siteTitle}` : `${siteTitle} – ${t("site.tagline")}`;
 const metaDesc = description ?? t("site.description");
 
-const siteUrl = (import.meta.env.PUBLIC_SITE_URL as string | undefined) ?? "https://www.dolomiteslastloop.com";
+const siteUrl = env("PUBLIC_SITE_URL") ?? "https://www.dolomiteslastloop.com";
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImg = ogImage ?? new URL("/og-image.png", siteUrl).toString();
 
