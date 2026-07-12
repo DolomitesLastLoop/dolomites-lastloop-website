@@ -36,7 +36,8 @@ export type RateLimitName =
   | "contact"
   | "newsletter"
   | "waitlist"
-  | "upload-attest";
+  | "upload-attest"
+  | "attest-status";
 
 // tokens / window pro Endpoint und IP.
 const LIMITS: Record<RateLimitName, { tokens: number; window: `${number} s` }> =
@@ -45,6 +46,9 @@ const LIMITS: Record<RateLimitName, { tokens: number; window: `${number} s` }> =
     newsletter: { tokens: 3, window: "60 s" },
     waitlist: { tokens: 3, window: "60 s" },
     "upload-attest": { tokens: 3, window: "60 s" },
+    // Poll-Endpoint: pollt ~alle 2 s bis der Webhook den Token gesetzt hat →
+    // großzügiges Limit (≈1/s) plus Reload-Puffer, nur ein Read pro Request.
+    "attest-status": { tokens: 60, window: "60 s" },
   };
 
 const _limiters = new Map<RateLimitName, Ratelimit>();

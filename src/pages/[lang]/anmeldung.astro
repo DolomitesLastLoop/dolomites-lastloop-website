@@ -4,6 +4,7 @@ import PageHero from "@components/PageHero.astro";
 import RegistrationFlow from "@components/RegistrationFlow.astro";
 import { photo, pos } from "@lib/photos";
 import { isRegistrationEnabled } from "@lib/registration";
+import { getAdminClient } from "@lib/supabase";
 import { useTranslations, type Lang } from "@i18n/utils";
 
 export const prerender = false;
@@ -25,6 +26,57 @@ const params = new URL(Astro.request.url).searchParams;
 const isPostPaymentReturn =
   params.get("status") === "success" ||
   Boolean(params.get("id") && params.get("token"));
+
+// Direkter Post-Payment-Return (?status=success&session_id=…): Identität
+// serverseitig über die gespeicherte stripe_session_id auflösen, damit der Nutzer
+// NIE das rohe "Registration ID"-Feld sieht. Der attest_token wird erst vom
+// Webhook nach der Zahlung erzeugt → drei mögliche Zustände (siehe unten). Der
+// Magic-Link-Pfad (?id=…&token=…) läuft weiter clientseitig und wird hier bewusst
+// übersprungen, damit er unverändert bleibt.
+const sessionId = (params.get("session_id") ?? "").trim();
+const isMagicLink = Boolean(params.get("id") && params.get("token"));
+let prefillId: string | undefined;
+let prefillToken: string | undefined;
+let awaitingPayment = false;
+let attestFallback = false;
+
+if (params.get("status") === "success" && !isMagicLink) {
+  if (/^cs_[A-Za-z0-9_]+$/.test(sessionId)) {
+    try {
+      const supabase = getAdminClient();
+      const { data } = await supabase
+        .from("participants")
+        .select("id, attest_token")
+        .eq("stripe_session_id", sessionId)
+        .maybeSingle();
+      if (data?.id && data.attest_token) {
+        // Zustand "prefill": Teilnehmer + Token vorhanden → direkt vorbefüllen.
+        prefillId = data.id as string;
+        prefillToken = data.attest_token as string;
+      } else if (data?.id) {
+        // Zustand "awaiting": Teilnehmer da, Token noch nicht (Webhook-Race) →
+        // Wartemeldung + Poll/Reload. Erwarteter Fall, daher NICHT geloggt.
+        awaitingPayment = true;
+      } else {
+        // Zustand "notFound": keine Zeile zu dieser session_id → echter Sonderfall
+        // (unbekannte/manipulierte session_id). Still serverseitig loggen.
+        attestFallback = true;
+        console.warn(
+          `[anmeldung] Post-Payment-Return ohne Teilnehmer-Treffer für session_id=${sessionId}`,
+        );
+      }
+    } catch (err) {
+      // DB-Fehler: nicht blockieren, sondern Fallback-Meldung zeigen.
+      attestFallback = true;
+      console.warn("[anmeldung] Lookup der stripe_session_id fehlgeschlagen:", err);
+    }
+  } else {
+    // status=success ohne verwertbare session_id → Identität fehlt (manuelle URL,
+    // abgeschnittener Redirect). Klare Email-Link-Meldung statt rohem ID-Feld.
+    attestFallback = true;
+    console.warn("[anmeldung] Post-Payment-Return ohne verwertbare session_id");
+  }
+}
 ---
 
 <BaseLayout
@@ -38,9 +90,24 @@ const isPostPaymentReturn =
 >
   {
     registrationEnabled ? (
-      <RegistrationFlow lang={lang} basePath="anmeldung" />
+      <RegistrationFlow
+        lang={lang}
+        basePath="anmeldung"
+        prefillId={prefillId}
+        prefillToken={prefillToken}
+        awaitingPayment={awaitingPayment}
+        attestFallback={attestFallback}
+      />
     ) : isPostPaymentReturn ? (
-      <RegistrationFlow lang={lang} basePath="anmeldung" attestOnly />
+      <RegistrationFlow
+        lang={lang}
+        basePath="anmeldung"
+        attestOnly
+        prefillId={prefillId}
+        prefillToken={prefillToken}
+        awaitingPayment={awaitingPayment}
+        attestFallback={attestFallback}
+      />
     ) : (
       <>
         <PageHero
