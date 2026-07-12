@@ -195,6 +195,11 @@ export const ui = {
     "signup.attest.upload": "Datei auswählen",
     "signup.attest.skip": "Später nachreichen",
     "signup.attest.success": "Attest erfolgreich hochgeladen.",
+    "signup.attest.confirming": "Zahlung wird bestätigt – einen Moment…",
+    "signup.attest.emailFallback":
+      "Bitte nutze den Link aus deiner Bestätigungs-Email, um dein Attest hochzuladen.",
+    "signup.attest.uploadedTitle": "Attest erfolgreich hochgeladen",
+    "signup.attest.replace": "Datei ersetzen",
     "signup.full.title": "Startplätze ausgebucht",
     "signup.full.text":
       "Aktuell sind alle 150 Plätze vergeben. Trage dich auf die Warteliste ein.",
@@ -530,6 +535,11 @@ export const ui = {
     "signup.attest.upload": "Scegli file",
     "signup.attest.skip": "Carico più tardi",
     "signup.attest.success": "Certificato caricato con successo.",
+    "signup.attest.confirming": "Pagamento in fase di conferma – un momento…",
+    "signup.attest.emailFallback":
+      "Usa il link nella tua email di conferma per caricare il certificato.",
+    "signup.attest.uploadedTitle": "Certificato caricato con successo",
+    "signup.attest.replace": "Sostituisci file",
     "signup.full.title": "Posti esauriti",
     "signup.full.text":
       "Tutti i 150 posti sono stati assegnati. Iscriviti alla lista d’attesa.",
@@ -863,6 +873,11 @@ export const ui = {
     "signup.attest.upload": "Choose file",
     "signup.attest.skip": "Upload later",
     "signup.attest.success": "Certificate uploaded successfully.",
+    "signup.attest.confirming": "Confirming your payment – one moment…",
+    "signup.attest.emailFallback":
+      "Please use the link in your confirmation email to upload your certificate.",
+    "signup.attest.uploadedTitle": "Certificate uploaded successfully",
+    "signup.attest.replace": "Replace file",
     "signup.full.title": "Race is full",
     "signup.full.text":
       "All 150 spots are taken. Join the waiting list to be notified.",
