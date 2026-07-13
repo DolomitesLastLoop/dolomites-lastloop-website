@@ -45,7 +45,6 @@ try {
 } catch {
   isFull = false;
 }
-const slotsLeft = Math.max(0, MAX_PARTICIPANTS - slotsTaken);
 
 // Preis serverseitig nach Datum bestimmen (Early-Bird bis 15.02.2027).
 const tier = currentTier();
@@ -398,8 +397,7 @@ const countries: { value: string; label: string }[] = [
       </ul>
 
       <div class="slots-card reveal" data-delay="400">
-        <span class="slots-num">{slotsLeft}</span>
-        <span class="slots-lbl">{t("signup.side.slots_left", { n: slotsLeft })}</span>
+        <span class="slots-lbl">{t("signup.side.slots_left")}</span>
       </div>
     </aside>
   </div>
@@ -438,8 +436,7 @@ const countries: { value: string; label: string }[] = [
   .side-facts li { padding: var(--space-3) 0; border-top: 1px solid var(--color-border); color: var(--color-text); font-size: 0.95rem; }
   .side-facts li:last-child { border-bottom: 1px solid var(--color-border); }
   .slots-card { background: var(--color-primary); color: #fff; border-radius: var(--radius); padding: var(--space-5); text-align: center; box-shadow: var(--shadow-card); }
-  .slots-num { display: block; font-family: var(--font-display); font-size: 3rem; line-height: 1; letter-spacing: 0.05em; }
-  .slots-lbl { display: block; margin-top: var(--space-2); font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.92; }
+  .slots-lbl { display: block; font-size: 0.9rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.92; }
 
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); margin-bottom: var(--space-6); }
   .step {

@@ -93,7 +93,7 @@ export const ui = {
       "Kein Hype, kein Pomp. Zentrale Teamzone, gemeinsamer Start, gemeinsames Leiden.",
     "home.features.limit.title": "Limitiert",
     "home.features.limit.text":
-      "Maximal 150 Startplätze. Persönliche, familiäre Atmosphäre statt Massenstart.",
+      "Streng limitierte Startplätze. Persönliche, familiäre Atmosphäre statt Massenstart.",
 
     "home.newsletter.title": "Bleib auf dem Laufenden",
     "home.newsletter.text":
@@ -157,17 +157,17 @@ export const ui = {
 
     "signup.eyebrow": "2027",
     "signup.hero_title": "Anmeldung 2027",
-    "signup.hero_subtitle": "150 Startplätze · 15. Mai 2027",
+    "signup.hero_subtitle": "Limitierte Startplätze · 15. Mai 2027",
     "signup.badge.location": "Toblach, Südtirol",
     "signup.badge.date": "15. Mai 2027",
-    "signup.badge.slots": "150 Plätze",
+    "signup.badge.slots": "Limitierte Plätze",
     "signup.side.fact1": "Eine Runde · 6,71 km · jede volle Stunde",
     "signup.side.fact2": "Start & Ziel an der Nordic Arena",
     "signup.side.fact3": "Mindestalter 18 Jahre, ärztliches Attest Pflicht",
-    "signup.side.slots_left": "Noch {n} Plätze verfügbar",
+    "signup.side.slots_left": "Begrenzte Startplätze verfügbar",
     "signup.title": "Anmeldung",
     "signup.intro":
-      "Sichere dir einen der 150 Startplätze für die Ausgabe am 15. Mai 2027.",
+      "Sichere dir einen der limitierten Startplätze für die Ausgabe am 15. Mai 2027.",
     "signup.step": "Schritt",
     "signup.step1.title": "Persönliche Daten",
     "signup.step2.title": "Ticket & Zahlung",
@@ -202,11 +202,11 @@ export const ui = {
     "signup.attest.replace": "Datei ersetzen",
     "signup.full.title": "Startplätze ausgebucht",
     "signup.full.text":
-      "Aktuell sind alle 150 Plätze vergeben. Trage dich auf die Warteliste ein.",
+      "Aktuell sind alle Startplätze vergeben. Trage dich auf die Warteliste ein.",
     "signup.full.cta": "Auf Warteliste setzen",
 
     "startlist.title": "Startliste",
-    "startlist.counter": "{filled} von {total} Plätzen belegt",
+    "startlist.counter": "{filled} Anmeldungen bestätigt",
     "startlist.search": "Name suchen…",
     "startlist.col.number": "Nr.",
     "startlist.col.name": "Name",
@@ -338,7 +338,7 @@ export const ui = {
     "signup.paid.notice": "Zahlung erfolgreich. Bitte lade jetzt dein ärztliches Attest hoch.",
     "signup.cancelled.notice": "Zahlung abgebrochen. Du kannst es jederzeit erneut versuchen.",
     "signup.waitlist.text":
-      "Die 150 Startplätze sind aktuell vergeben. Trag dich unverbindlich auf die Warteliste ein – es wird kein Startgeld fällig. Wird ein Platz frei, melden wir uns.",
+      "Die Startplätze sind aktuell vergeben. Trag dich unverbindlich auf die Warteliste ein – es wird kein Startgeld fällig. Wird ein Platz frei, melden wir uns.",
     "signup.waitlist.success":
       "Du stehst auf der Warteliste. Wir melden uns, sobald ein Platz frei wird.",
     "signup.soon.title": "Die Anmeldung für 2027 öffnet in Kürze",
@@ -432,7 +432,7 @@ export const ui = {
       "Niente hype, niente eccessi. Zona team centrale, partenza comune, fatica condivisa.",
     "home.features.limit.title": "Posti limitati",
     "home.features.limit.text":
-      "Massimo 150 partenti. Atmosfera personale e familiare, non una corsa di massa.",
+      "Posti di partenza limitati. Atmosfera personale e familiare, non una corsa di massa.",
 
     "home.newsletter.title": "Resta aggiornato",
     "home.newsletter.text":
@@ -496,17 +496,17 @@ export const ui = {
 
     "signup.eyebrow": "2027",
     "signup.hero_title": "Iscrizione 2027",
-    "signup.hero_subtitle": "150 posti di partenza · 15 maggio 2027",
+    "signup.hero_subtitle": "Posti limitati · 15 maggio 2027",
     "signup.badge.location": "Dobbiaco, Alto Adige",
     "signup.badge.date": "15 maggio 2027",
-    "signup.badge.slots": "150 posti",
+    "signup.badge.slots": "Posti limitati",
     "signup.side.fact1": "Un loop · 6,71 km · ogni ora esatta",
     "signup.side.fact2": "Partenza e arrivo alla Nordic Arena",
     "signup.side.fact3": "Età minima 18 anni, certificato medico obbligatorio",
-    "signup.side.slots_left": "Ancora {n} posti disponibili",
+    "signup.side.slots_left": "Posti limitati disponibili",
     "signup.title": "Iscrizione",
     "signup.intro":
-      "Assicurati uno dei 150 posti per l’edizione del 15 maggio 2027.",
+      "Assicurati uno dei posti limitati per l’edizione del 15 maggio 2027.",
     "signup.step": "Step",
     "signup.step1.title": "Dati personali",
     "signup.step2.title": "Biglietto & pagamento",
@@ -542,11 +542,11 @@ export const ui = {
     "signup.attest.replace": "Sostituisci file",
     "signup.full.title": "Posti esauriti",
     "signup.full.text":
-      "Tutti i 150 posti sono stati assegnati. Iscriviti alla lista d’attesa.",
+      "Tutti i posti sono stati assegnati. Iscriviti alla lista d’attesa.",
     "signup.full.cta": "Vai in lista d’attesa",
 
     "startlist.title": "Lista partenti",
-    "startlist.counter": "{filled} di {total} posti occupati",
+    "startlist.counter": "{filled} iscrizioni confermate",
     "startlist.search": "Cerca nome…",
     "startlist.col.number": "N°",
     "startlist.col.name": "Nome",
@@ -678,7 +678,7 @@ export const ui = {
     "signup.paid.notice": "Pagamento riuscito. Carica ora il tuo certificato medico.",
     "signup.cancelled.notice": "Pagamento annullato. Puoi riprovare in qualsiasi momento.",
     "signup.waitlist.text":
-      "I 150 posti sono al momento esauriti. Iscriviti senza impegno alla lista d’attesa – nessuna quota dovuta. Se si libera un posto, ti contatteremo.",
+      "I posti sono al momento esauriti. Iscriviti senza impegno alla lista d’attesa – nessuna quota dovuta. Se si libera un posto, ti contatteremo.",
     "signup.waitlist.success":
       "Sei in lista d’attesa. Ti contatteremo appena si libera un posto.",
     "signup.soon.title": "Le iscrizioni per il 2027 apriranno a breve",
@@ -772,7 +772,7 @@ export const ui = {
       "No hype, no glitter. Central team zone, shared start line, shared suffering.",
     "home.features.limit.title": "Limited field",
     "home.features.limit.text":
-      "Max 150 starters. Personal, family-style vibe instead of a mass start.",
+      "Strictly limited starting spots. Personal, family-style vibe instead of a mass start.",
 
     "home.newsletter.title": "Stay in the loop",
     "home.newsletter.text":
@@ -835,17 +835,17 @@ export const ui = {
 
     "signup.eyebrow": "2027",
     "signup.hero_title": "Sign up 2027",
-    "signup.hero_subtitle": "150 starting spots · May 15, 2027",
+    "signup.hero_subtitle": "Limited spots · May 15, 2027",
     "signup.badge.location": "Toblach, South Tyrol",
     "signup.badge.date": "May 15, 2027",
-    "signup.badge.slots": "150 spots",
+    "signup.badge.slots": "Limited spots",
     "signup.side.fact1": "One loop · 6.71 km · every hour on the hour",
     "signup.side.fact2": "Start and finish at the Nordic Arena",
     "signup.side.fact3": "Minimum age 18, medical certificate required",
-    "signup.side.slots_left": "{n} spots still available",
+    "signup.side.slots_left": "Limited spots available",
     "signup.title": "Sign up",
     "signup.intro":
-      "Secure one of the 150 starting spots for the May 15, 2027 edition.",
+      "Secure one of the limited starting spots for the May 15, 2027 edition.",
     "signup.step": "Step",
     "signup.step1.title": "Personal data",
     "signup.step2.title": "Ticket & payment",
@@ -880,11 +880,11 @@ export const ui = {
     "signup.attest.replace": "Replace file",
     "signup.full.title": "Race is full",
     "signup.full.text":
-      "All 150 spots are taken. Join the waiting list to be notified.",
+      "All spots are taken. Join the waiting list to be notified.",
     "signup.full.cta": "Join the waitlist",
 
     "startlist.title": "Start list",
-    "startlist.counter": "{filled} of {total} spots filled",
+    "startlist.counter": "{filled} confirmed entries",
     "startlist.search": "Search name…",
     "startlist.col.number": "No.",
     "startlist.col.name": "Name",
@@ -1016,7 +1016,7 @@ export const ui = {
     "signup.paid.notice": "Payment successful. Please upload your medical certificate now.",
     "signup.cancelled.notice": "Payment cancelled. You can try again any time.",
     "signup.waitlist.text":
-      "All 150 start slots are currently taken. Join the waiting list with no obligation – no entry fee is due. If a spot opens up, we’ll get in touch.",
+      "All start slots are currently taken. Join the waiting list with no obligation – no entry fee is due. If a spot opens up, we’ll get in touch.",
     "signup.waitlist.success":
       "You’re on the waiting list. We’ll be in touch as soon as a spot opens up.",
     "signup.soon.title": "Registration for 2027 opens soon",
