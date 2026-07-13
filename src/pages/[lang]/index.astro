@@ -106,7 +106,7 @@ const t = useTranslations(lang);
         quality={64}
         loading="lazy"
         decoding="async"
-        style={`object-position:${pos.group}`}
+        style={`object-position:${pos.portrait}`}
       />
       <div class="retro-overlay"></div>
     </div>
@@ -193,11 +193,11 @@ const t = useTranslations(lang);
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(180deg, rgba(20, 35, 55, 0.6), rgba(20, 35, 55, 0.78)),
+      linear-gradient(180deg, rgba(20, 35, 55, 0.3), rgba(20, 35, 55, 0.55)),
       radial-gradient(
         ellipse at center,
-        rgba(20, 35, 55, 0.2),
-        rgba(20, 35, 55, 0.7)
+        rgba(20, 35, 55, 0),
+        rgba(20, 35, 55, 0.35)
       );
   }
   .retro-inner {
