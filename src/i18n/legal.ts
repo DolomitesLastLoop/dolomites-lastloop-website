@@ -232,14 +232,14 @@ export const legal: Record<Lang, LegalContent> = {
 
     agb: {
       intro:
-        "Diese Teilnahmebedingungen regeln die Teilnahme an der Veranstaltung „Dolomites Last Loop“ – Backyard Ultra in Toblach (Dobbiaco), Südtirol, am 15. Mai 2027, mit maximal 150 Teilnehmern. Veranstalter ist Sport OK Toblach.",
+        "Diese Teilnahmebedingungen regeln die Teilnahme an der Veranstaltung „Dolomites Last Loop“ – Backyard Ultra in Toblach (Dobbiaco), Südtirol, am 15. Mai 2027, mit begrenzter Teilnehmerzahl. Veranstalter ist Sport OK Toblach.",
       sections: [
         {
           heading: "1. Anmeldung und Startgeld",
           blocks: [
             {
               type: "p",
-              text: "Die Anmeldung erfolgt online und wird mit vollständiger Bezahlung des Startgelds verbindlich. Die Teilnehmerzahl ist auf 150 begrenzt; bei Erreichen der Höchstzahl wird eine Warteliste geführt. Das Startgeld ist gestaffelt:",
+              text: "Die Anmeldung erfolgt online und wird mit vollständiger Bezahlung des Startgelds verbindlich. Die Teilnehmerzahl ist begrenzt; bei Erreichen der Höchstzahl wird eine Warteliste geführt. Das Startgeld ist gestaffelt:",
             },
             {
               type: "list",
@@ -695,14 +695,14 @@ export const legal: Record<Lang, LegalContent> = {
 
     agb: {
       intro:
-        "Le presenti condizioni di partecipazione disciplinano la partecipazione all’evento „Dolomites Last Loop“ – Backyard Ultra a Dobbiaco (Toblach), Alto Adige, il 15 maggio 2027, con un massimo di 150 partecipanti. L’organizzatore è Sport OK Dobbiaco.",
+        "Le presenti condizioni di partecipazione disciplinano la partecipazione all’evento „Dolomites Last Loop“ – Backyard Ultra a Dobbiaco (Toblach), Alto Adige, il 15 maggio 2027, con un numero limitato di partecipanti. L’organizzatore è Sport OK Dobbiaco.",
       sections: [
         {
           heading: "1. Iscrizione e quota di partecipazione",
           blocks: [
             {
               type: "p",
-              text: "L’iscrizione avviene online e diventa vincolante con il pagamento completo della quota. Il numero di partecipanti è limitato a 150; al raggiungimento del numero massimo viene istituita una lista d’attesa. La quota è scaglionata:",
+              text: "L’iscrizione avviene online e diventa vincolante con il pagamento completo della quota. Il numero di partecipanti è limitato; al raggiungimento del numero massimo viene istituita una lista d’attesa. La quota è scaglionata:",
             },
             {
               type: "list",
@@ -1158,14 +1158,14 @@ export const legal: Record<Lang, LegalContent> = {
 
     agb: {
       intro:
-        "These participation terms govern entry to the „Dolomites Last Loop“ event – a Backyard Ultra in Toblach (Dobbiaco), South Tyrol, on 15 May 2027, with a maximum of 150 participants. The organiser is Sport OK Toblach.",
+        "These participation terms govern entry to the „Dolomites Last Loop“ event – a Backyard Ultra in Toblach (Dobbiaco), South Tyrol, on 15 May 2027, with a limited number of participants. The organiser is Sport OK Toblach.",
       sections: [
         {
           heading: "1. Registration and entry fee",
           blocks: [
             {
               type: "p",
-              text: "Registration is completed online and becomes binding upon full payment of the entry fee. The number of participants is limited to 150; once the maximum is reached, a waiting list is kept. The entry fee is tiered:",
+              text: "Registration is completed online and becomes binding upon full payment of the entry fee. The number of participants is limited; once the maximum is reached, a waiting list is kept. The entry fee is tiered:",
             },
             {
               type: "list",
