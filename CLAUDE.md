@@ -192,6 +192,22 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
 
 > Hier neu auftretende Fehler + Ursache + Lösung notieren (Regel 4).
 
+### 2026-07-13 — Screenshot-Verifikation: GSAP-Reveal-Zwischenzustände nicht als Endzustand interpretieren
+
+- **Symptom:** Nach Scroll-Sprung (`scrollTo` instant) zeigten Screenshots der Retro-Sektion
+  nur eine graue Fläche — sah aus wie "Bild kaputt/Overlay zu dunkel", war aber nur die
+  Scroll-Reveal-Animation mitten im Fade. Sekunden später (eingeschwungen) war alles korrekt.
+- **Fast-Fehldiagnose:** Overlay wurde zweimal "gefixt", obwohl der erste Wert evtl. schon
+  sichtbar gewesen wäre. (Die Aufhellung war am Ende trotzdem nötig — Original-Overlay mit
+  0.6/0.78 + 0.2/0.7 Alpha verschluckte jedes Motiv auch im Endzustand.)
+- **Merkregel:** Bei visueller Verifikation von Sektionen mit `cinematic.ts`-Animationen
+  entweder (a) nach dem Scroll 2-3s warten und erneut screenshotten, oder (b) headless mit
+  `reducedMotion: 'reduce'` rendern (Animationen aus, Inhalt sofort sichtbar — Guard in
+  cinematic.ts). Für Crop-/Fokuspunkt-Checks ist (b) zuverlässiger.
+- **Außerdem gelernt:** Der opake Header verdeckt die oberen ~85px jedes PageHero
+  (negativer Margin unter die Nav) — bei `object-position`-Werten einrechnen. Hochformat-
+  Fotos in 56vh-Heroes zeigen auf Desktop nur ~23% der Bildhöhe.
+
 ### 2026-07-10 — Anmeldeformular live trotz Flag=false (Feature-Gate unzureichend)
 
 - **Symptom:** Öffentliches Anmelde-/Zahlungsformular auf der Live-Domain sichtbar, obwohl
