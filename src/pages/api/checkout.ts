@@ -145,6 +145,9 @@ export const POST: APIRoute = async ({ request, url }) => {
     consent_privacy,
     consent_liability_waiver,
     consent_image_rights,
+    // Anmeldesprache persistieren (Mail-Sprache unabhängig von Stripe-Metadata
+    // reproduzierbar, z.B. für spätere Mails/Admin-Resend).
+    lang,
   };
 
   try {

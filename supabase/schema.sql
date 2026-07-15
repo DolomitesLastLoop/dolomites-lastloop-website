@@ -301,3 +301,11 @@ begin
   );
 end;
 $$;
+
+-- ─────────────────────────────────────────────────────────────
+-- Anmeldesprache (de/it/en) persistieren — Mail-Sprache unabhängig von der
+-- Stripe-Session-Metadata reproduzierbar (z.B. spätere Mails/Admin-Resend).
+-- Bewusst NICHT in der View participants_public (keine öffentliche Spalte).
+-- ─────────────────────────────────────────────────────────────
+alter table public.participants
+  add column if not exists lang text check (lang in ('de', 'it', 'en'));

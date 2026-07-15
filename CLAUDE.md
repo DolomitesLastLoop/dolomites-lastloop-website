@@ -350,6 +350,14 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   auf `@lib/env` umstellen.
 
 ## Nächste Schritte
+- [ ] **Warteliste-Mail-Lücke im direkten Pfad fixen:** Wer sich anmeldet, wenn bereits
+  alle Plätze vergeben sind (direkter Warteliste-Pfad in `src/pages/api/checkout.ts`,
+  Block `if (isFull)` — Upsert mit `ticket_status: "waitlist"`, KEINE Zahlung), erhält
+  aktuell **gar keine E-Mail**. `sendWaitlistNotification` läuft nur im
+  Webhook-Overflow-Pfad (bezahlt + auto-erstattet). Lösung: `sendWaitlistNotification`
+  auch im direkten Pfad aufrufen — dafür eine Textvariante ohne den
+  Rückerstattungs-Passus ergänzen (im direkten Pfad fand keine Zahlung statt).
+  Befund vom 2026-07-15, bewusst als separater Punkt zurückgestellt.
 - [x] **Upstash-Keys im Vercel-Dashboard setzen** (`UPSTASH_REDIS_REST_URL`/`_TOKEN`) → Rate-Limiting scharf schalten *(2026-07-11 in Production verifiziert: `/api/newsletter` liefert ab dem 4. Request 429 + `Retry-After` → Keys aktiv)*
 - [ ] **Brevo-Keys im Vercel-Dashboard setzen** (`BREVO_API_KEY`/`BREVO_LIST_ID`) → Newsletter geht live an Brevo
 - [ ] **`supabase/schema.sql` im Supabase SQL-Editor ausführen** → View `participants_public` anlegen

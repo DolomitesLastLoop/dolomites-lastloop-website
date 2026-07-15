@@ -7,6 +7,7 @@ import {
   sendRegistrationConfirmation,
   sendWaitlistNotification,
 } from "@lib/email";
+import { generateTicketPdf } from "@lib/ticket";
 import { env } from "@lib/env";
 
 export const prerender = false;
@@ -84,10 +85,28 @@ export const POST: APIRoute = async ({ request }) => {
 
       // ── Bestätigt: Upload-Token erzeugen + Bestätigungsmail ─────────────────
       const attestToken = crypto.randomBytes(32).toString("hex");
-      await supabase
+      const { data: tokenRow } = await supabase
         .from("participants")
         .update({ attest_token: attestToken })
-        .eq("id", participantId);
+        .eq("id", participantId)
+        .select("nachname")
+        .single();
+
+      // PDF-Ticket nur hier im confirmed-Pfad (Overflow kehrt oben zurück).
+      // Ein PDF-Fehler darf weder Mail noch payment_status blockieren.
+      let ticketPdf: Buffer | null = null;
+      try {
+        ticketPdf = Buffer.from(
+          await generateTicketPdf({
+            vorname: updated.vorname,
+            nachname: tokenRow?.nachname ?? "",
+            startnummer: updated.startnummer,
+            lang,
+          }),
+        );
+      } catch (pdfErr) {
+        console.error("Ticket PDF generation failed", pdfErr);
+      }
 
       try {
         await sendRegistrationConfirmation(
@@ -98,6 +117,7 @@ export const POST: APIRoute = async ({ request }) => {
           attestToken,
           lang,
           priceLabel,
+          ticketPdf,
         );
         await supabase
           .from("participants")
