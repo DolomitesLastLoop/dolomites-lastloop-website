@@ -365,7 +365,22 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 - [ ] Domain ändern
 - [ ] Stripe einrichten
 - [ ] Datenschutz, AGB usw. einrichten
+- [ ] **Ticket-PDF-Fixes end-to-end verifizieren (vor Live-Gang der Registrierung):**
+  siehe Unterabschnitt unten.
 - [ ] **Rechtstexte finalisieren:** 18× `[AUSFÜLLEN]` in `src/i18n/legal.ts` ausfüllen. **Danach zwingend:** `noindex` in `src/pages/[lang]/[legal].astro` wieder entfernen (aktuell tragen alle 6 Legal-Seiten `noindex,nofollow`, weil sie über den Footer crawlbar, aber inhaltlich unfertig sind) — sonst bleiben Impressum/Datenschutz dauerhaft aus dem Google-Index. *Details siehe Unterabschnitt direkt unten.*
+
+### Ticket-PDF-Fixes end-to-end verifizieren (vor Live-Gang der Registrierung)
+
+Die drei Ticket-Fixes vom 18.07. (Logo ohne Box, zentrierte Startnummer,
+Panorama-Foto-Streifen mit HHW8254) wurden bisher nur lokal über den
+Test-Renderer verifiziert, NICHT über den echten Webhook-Pfad (Stripe →
+confirm_participant → generateTicketPdf → Resend-Mail mit Anhang).
+
+Vor dem eigentlichen Öffnen der Registrierung (PUBLIC_REGISTRATION_ENABLED=true
+in Production) sollte ein echter End-to-End-Testkauf gemacht werden, der das
+finale Ticket-Design im tatsächlichen Mail-Anhang bestätigt — als Teil des
+ohnehin nötigen finalen Gesamt-Durchlaufs vor Live-Gang, nicht als separater
+Schritt.
 
 ### Rechtstexte-Platzhalter finalisieren (Ziel: Samstag 18.07.)
 
