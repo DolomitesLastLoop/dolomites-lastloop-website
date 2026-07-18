@@ -4,7 +4,11 @@
 // Beschreibung und Veranstalter — keine Geburts-/Kontakt-/Zahlungsdaten.
 import { PDFDocument, StandardFonts, rgb, degrees } from "@cantoo/pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
-import { BEBAS_TTF_B64, LOGO_JPEG_B64 } from "./ticket-assets";
+import {
+  BEBAS_TTF_B64,
+  LOGO_WHITE_PNG_B64,
+  PHOTO_STRIP_JPEG_B64,
+} from "./ticket-assets";
 
 type Lang = "de" | "it" | "en";
 
@@ -65,6 +69,38 @@ const BAND_W = 150;
 const FOOTER_H = 36;
 const CONTENT_X = BAND_W + 42;
 const CONTENT_W = PAGE_W - CONTENT_X - 42;
+// Panorama-Foto-Streifen über dem Sand-Footer (Crop-Aspect dazu passend in
+// scripts/gen-ticket-assets.mjs: (PAGE_W − BAND_W) / STRIP_H ≈ 4.69)
+const STRIP_H = 95;
+
+// Fontkit-Instanz der Bebas für Ink-Metriken (Glyphen-Bounding-Box, Cap-Height).
+// pdf-lib positioniert Text an der Baseline und misst nur die Advance-Breite
+// inkl. Seitenbearings — für optisch zentrierte Ziffern (z. B. die schmale "1")
+// braucht es die echte Tinten-Box.
+let bebasFkCache: ReturnType<typeof fontkit.create> | null = null;
+function bebasInk(text: string, size: number) {
+  if (!bebasFkCache) {
+    bebasFkCache = fontkit.create(Buffer.from(BEBAS_TTF_B64, "base64"));
+  }
+  const fk = bebasFkCache;
+  const run = fk.layout(text);
+  const scale = size / fk.unitsPerEm;
+  let x = 0;
+  let minX = Infinity;
+  let maxX = -Infinity;
+  for (let i = 0; i < run.glyphs.length; i++) {
+    const bb = run.glyphs[i].bbox;
+    const pos = run.positions[i];
+    minX = Math.min(minX, x + pos.xOffset + bb.minX);
+    maxX = Math.max(maxX, x + pos.xOffset + bb.maxX);
+    x += pos.xAdvance;
+  }
+  return {
+    left: minX * scale,
+    width: (maxX - minX) * scale,
+    capHeight: fk.capHeight * scale,
+  };
+}
 
 export async function generateTicketPdf(opts: {
   vorname: string;
@@ -85,7 +121,10 @@ export async function generateTicketPdf(opts: {
   });
   const helv = await doc.embedFont(StandardFonts.Helvetica);
   const helvBold = await doc.embedFont(StandardFonts.HelveticaBold);
-  const logo = await doc.embedJpg(Buffer.from(LOGO_JPEG_B64, "base64"));
+  const logo = await doc.embedPng(Buffer.from(LOGO_WHITE_PNG_B64, "base64"));
+  const photoStrip = await doc.embedJpg(
+    Buffer.from(PHOTO_STRIP_JPEG_B64, "base64"),
+  );
 
   const page = doc.addPage([PAGE_W, PAGE_H]);
 
@@ -100,17 +139,25 @@ export async function generateTicketPdf(opts: {
     color: SAND,
   });
 
-  // ── Navy-Band: Logo im weißen Kasten + vertikale Wortmarke ────────────────
-  const logoBox = 72;
-  const logoX = (BAND_W - logoBox) / 2;
-  const logoY = PAGE_H - logoBox - 28;
-  page.drawRectangle({
-    x: logoX - 4,
-    y: logoY - 4,
-    width: logoBox + 8,
-    height: logoBox + 8,
-    color: WHITE,
+  // Panorama-Foto (Wisthaler) über dem Sand-Footer, mit Gold-Abschlusskante
+  page.drawImage(photoStrip, {
+    x: BAND_W,
+    y: FOOTER_H,
+    width: PAGE_W - BAND_W,
+    height: STRIP_H,
   });
+  page.drawRectangle({
+    x: BAND_W,
+    y: FOOTER_H + STRIP_H,
+    width: PAGE_W - BAND_W,
+    height: 1.5,
+    color: GOLD,
+  });
+
+  // ── Navy-Band: Logo (Weiß-Negativ, transparent) + vertikale Wortmarke ─────
+  const logoBox = 78;
+  const logoX = (BAND_W - logoBox) / 2;
+  const logoY = PAGE_H - logoBox - 24;
   page.drawImage(logo, { x: logoX, y: logoY, width: logoBox, height: logoBox });
 
   // Vertikal (90° gedreht, von unten nach oben), mittig im Band
@@ -150,7 +197,7 @@ export async function generateTicketPdf(opts: {
   page.drawText(name, { x: CONTENT_X, y, size: nameSize, font: bebas, color: TEXT });
 
   // Startnummer-Block (Label + Gold-Zahl in Rahmen-Box)
-  y -= 30;
+  y -= 24;
   page.drawText(c.bibLabel, {
     x: CONTENT_X,
     y,
@@ -162,8 +209,11 @@ export async function generateTicketPdf(opts: {
   if (opts.startnummer !== null) {
     const num = String(opts.startnummer);
     const numSize = 54;
-    const numW = bebas.widthOfTextAtSize(num, numSize);
-    const boxW = Math.max(numW + 36, 86);
+    // Optische Zentrierung über die Tinten-Box statt Advance-Breite/heightAtSize:
+    // horizontal via Glyphen-BBox, vertikal via Cap-Height (Ziffern sind
+    // Versalhöhe ohne Unterlängen) — mittig bei 1- bis 3-stelligen Nummern.
+    const ink = bebasInk(num, numSize);
+    const boxW = Math.max(ink.width + 36, 86);
     const boxH = 64;
     y -= boxH;
     page.drawRectangle({
@@ -175,8 +225,8 @@ export async function generateTicketPdf(opts: {
       borderWidth: 2,
     });
     page.drawText(num, {
-      x: CONTENT_X + (boxW - numW) / 2,
-      y: y + (boxH - bebas.heightAtSize(numSize)) / 2 + 6,
+      x: CONTENT_X + (boxW - ink.width) / 2 - ink.left,
+      y: y + (boxH - ink.capHeight) / 2,
       size: numSize,
       font: bebas,
       color: GOLD,
@@ -195,15 +245,15 @@ export async function generateTicketPdf(opts: {
   }
 
   // Datum + Ort
-  y -= 34;
+  y -= 28;
   page.drawText(c.date, { x: CONTENT_X, y, size: 13, font: helvBold, color: TEXT });
   y -= 19;
   page.drawText(c.venue, { x: CONTENT_X, y, size: 11, font: helv, color: TEXT });
 
   // Goldlinie + Format-Zeile (beschreibt das Rennformat — kein Distanz-Feld)
-  y -= 24;
+  y -= 20;
   page.drawRectangle({ x: CONTENT_X, y, width: 56, height: 2, color: GOLD });
-  y -= 22;
+  y -= 18;
   let fmtSize = 15;
   while (fmtSize > 9 && bebas.widthOfTextAtSize(c.format, fmtSize) > CONTENT_W) {
     fmtSize -= 1;
