@@ -686,7 +686,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "Il consenso è facoltativo e può essere revocato in qualsiasi momento con effetto per il futuro ([E-MAIL PRIVACY DA INSERIRE]). La revoca non pregiudica la liceità del trattamento effettuato fino a quel momento; le immagini già pubblicate potrebbero non dover essere ritirate, qualora ciò risulti impossibile o comporti uno sforzo sproporzionato.",
+              text: "Il consenso è facoltativo e può essere revocato in qualsiasi momento con effetto per il futuro (info@worldcup-dobbiaco.it). La revoca non pregiudica la liceità del trattamento effettuato fino a quel momento; le immagini già pubblicate potrebbero non dover essere ritirate, qualora ciò risulti impossibile o comporti uno sforzo sproporzionato.",
             },
           ],
         },
@@ -1149,7 +1149,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "Consent is voluntary and can be withdrawn at any time with effect for the future ([PRIVACY EMAIL TO BE FILLED IN]). Withdrawal does not affect the lawfulness of processing carried out beforehand; images already published may not need to be withdrawn where this is impossible or involves disproportionate effort.",
+              text: "Consent is voluntary and can be withdrawn at any time with effect for the future (info@worldcup-dobbiaco.it). Withdrawal does not affect the lawfulness of processing carried out beforehand; images already published may not need to be withdrawn where this is impossible or involves disproportionate effort.",
             },
           ],
         },
