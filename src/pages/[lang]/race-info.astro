@@ -28,6 +28,18 @@ const ruleKeys = [
 
 // Visually highlight the safety-critical rules
 const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8, 10)
+
+// Höhenprofil aus der GPX-Aufzeichnung der Strecke (6.749 m, 4340 Trackpunkte).
+// Auf 200 gleichmässige Distanz-Bins resampelt, geglättet (±3,5 %), jeder 5. Bin
+// als Stützpunkt. Skalierung: Grundlinie y=180 (1223 m), Gipfel y=50 (1268 m).
+// Höchster Punkt bei 57 % der Strecke → x=342.
+const profilePath =
+  "M0,180 L15,177.1 L30,174.9 L45,175.7 L60,174.4 L75,169.9 L90,166.3 " +
+  "L105,167.4 L120,166.6 L135,159.6 L150,143 L165,121.9 L180,99.7 L195,81.9 " +
+  "L210,69.2 L225,63.9 L240,62.3 L255,60.5 L270,57.1 L285,51.8 L300,52.9 " +
+  "L315,50.1 L330,51.4 L345,50.2 L360,54.5 L375,56.6 L390,57.3 L405,55.1 " +
+  "L420,52.7 L435,51.1 L450,52 L465,54.2 L480,62.7 L495,75.8 L510,92.4 " +
+  "L525,108.3 L540,124.6 L555,141.6 L570,158.6 L585,170.6 L600,178";
 ---
 
 <BaseLayout
@@ -70,11 +82,11 @@ const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8
                 </linearGradient>
               </defs>
               <path
-                d="M0,180 C30,170 120,80 210,60 L390,50 C470,60 540,160 600,180 L600,200 L0,200 Z"
+                d={`${profilePath} L600,200 L0,200 Z`}
                 fill="url(#prof)"
               />
               <path
-                d="M0,180 C30,170 120,80 210,60 L390,50 C470,60 540,160 600,180"
+                d={profilePath}
                 fill="none"
                 stroke="#2d4a6b"
                 stroke-width="2.5"
@@ -83,12 +95,12 @@ const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8
               />
               <line x1="0" y1="180" x2="600" y2="180" stroke="#ddd8cf" stroke-width="1" stroke-dasharray="3 5" />
               <circle cx="0" cy="180" r="6" fill="#2d4a6b" />
-              <circle cx="300" cy="55" r="6" fill="#2d4a6b" />
-              <circle cx="600" cy="180" r="6" fill="#2d4a6b" />
+              <circle cx="342" cy="50.4" r="6" fill="#2d4a6b" />
+              <circle cx="600" cy="178" r="6" fill="#2d4a6b" />
             </svg>
             <div class="profile-labels">
               <span>{t("race.highlight.start.title")}</span>
-              <span>{t("race.highlight.top.title")}</span>
+              <span class="pl-top">{t("race.highlight.top.title")}</span>
               <span>{t("race.highlight.finish.title")}</span>
             </div>
           </div>
@@ -184,6 +196,7 @@ const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8
     box-shadow: var(--shadow-card);
   }
   .profile-labels {
+    position: relative;
     display: flex;
     justify-content: space-between;
     margin-top: var(--space-2);
@@ -191,6 +204,14 @@ const criticalIndexes = new Set([7, 8, 10]); // rules 8, 9, 11 (zero-based: 7, 8
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-text-dim);
+  }
+  /* Gipfel-Label exakt über den Scheitelpunkt der Kurve (57 % der Strecke).
+     Absolut positioniert → fällt aus dem Flex-Fluss, Start/Ziel bleiben an den Rändern. */
+  .profile-labels .pl-top {
+    position: absolute;
+    left: 57%;
+    transform: translateX(-50%);
+    white-space: nowrap;
   }
   .course-photo {
     margin: 0;

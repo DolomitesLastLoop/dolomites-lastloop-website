@@ -126,14 +126,14 @@ export const ui = {
     "race.highlight.top.title": "Höchster Punkt",
     "race.highlight.top.text": "Mitte des Loops am Toblacher See.",
     "race.highlight.finish.title": "Ziel",
-    "race.highlight.finish.text": "Zurück zur Nordic Arena im Gefälle.",
+    "race.highlight.finish.text": "Leicht bergab zurück zur Nordic Arena.",
     "race.title": "Race Info",
     "race.what.title": "Was ist ein Backyard Ultra?",
     "race.what.text":
       "Ein Backyard Ultra ist ein Ausdauerrennen ohne fixe Distanz: Jede volle Stunde startet ein Loop von 6,71 km. Wer die Runde rechtzeitig beendet, geht zur nächsten Stunde wieder an den Start. Wer nicht rechtzeitig zurück ist, scheidet aus. Es gibt nur einen Sieger: den letzten Läufer, der noch eine Runde komplett mehr schafft als alle anderen.",
     "race.course.title": "Strecke",
     "race.course.text":
-      "6,71 km ab Nordic Arena Toblach, Richtung Toblacher See. Die ersten Kilometer steigen leicht an, der höchste Punkt liegt in der Mitte der Schleife, danach geht es im Gefälle zurück zum Start. Geteilte Asphalt- und Schotterabschnitte, breit und gut markiert.",
+      "6,71 km ab der Nordic Arena Toblach in Richtung Toblacher See; abwechslungsreiche Strecke mit anfänglich leichter Steigung bis zum höchsten Punkt in der Streckenmitte, anschließend angenehmes Gefälle zurück zum Ausgangspunkt; Wechsel zwischen Asphalt- und Schotterwegen; breite, gut markierte und durchgehend gut begehbare Route.",
     "race.rules.title": "Regeln",
     "race.rules.1": "Start jede volle Stunde gemeinsam (Corral).",
     "race.rules.2":
@@ -151,7 +151,7 @@ export const ui = {
     "race.rules.10":
       "Bei medizinischen Bedenken kann die Rennleitung einen Läufer jederzeit aus dem Rennen nehmen.",
     "race.rules.11":
-      "Bei Verdacht auf Einnahme von Schmerzmitteln kann der Veranstalter einen Dopingtest anordnen.",
+      "Wir appellieren an die Vernunft der Teilnehmer: Verzichte auf Schmerzmittel und andere leistungsbeeinflussende Substanzen – sie bergen bei einem Backyard Ultra ein erhöhtes Risiko für deine eigene Gesundheit.",
     "race.rules.12":
       "Auf der Strecke sind weder Crew-Mitglieder noch andere Personen erlaubt. Es ist strengstens untersagt, mit den Athleten mitzulaufen.",
 
@@ -465,14 +465,14 @@ export const ui = {
     "race.highlight.top.title": "Punto più alto",
     "race.highlight.top.text": "Metà loop verso il Lago di Dobbiaco.",
     "race.highlight.finish.title": "Arrivo",
-    "race.highlight.finish.text": "Ritorno alla Nordic Arena in discesa.",
+    "race.highlight.finish.text": "Ritorno alla Nordic Arena in leggera discesa.",
     "race.title": "Info gara",
     "race.what.title": "Cos’è una Backyard Ultra?",
     "race.what.text":
       "Una Backyard Ultra è una gara di resistenza senza distanza fissa: ogni ora esatta parte un loop di 6,71 km. Chi completa il giro in tempo riparte all’ora successiva. Chi non torna in tempo è fuori. Vince un solo atleta: l’ultimo che riesce a portare a termine un giro in più di tutti gli altri.",
     "race.course.title": "Percorso",
     "race.course.text":
-      "6,71 km dalla Nordic Arena di Dobbiaco verso il Lago di Dobbiaco. I primi chilometri salgono leggermente, il punto più alto è a metà giro, poi discesa verso l’arrivo. Asfalto e sterrato, largo e ben segnalato.",
+      "6,71 km dalla Nordic Arena di Dobbiaco in direzione del Lago di Dobbiaco; percorso vario, con una leggera salita iniziale fino al punto più alto a metà giro e una piacevole discesa che riporta al punto di partenza; alternanza di tratti in asfalto e sterrato; percorso ampio, ben segnalato e sempre facilmente percorribile.",
     "race.rules.title": "Regolamento",
     "race.rules.1": "Partenza ogni ora esatta in gruppo (corral).",
     "race.rules.2":
@@ -490,7 +490,7 @@ export const ui = {
     "race.rules.10":
       "In caso di problemi medici, la direzione può ritirare un atleta dalla gara in qualsiasi momento.",
     "race.rules.11":
-      "In caso di sospetto consumo di antidolorifici, l’organizzatore può disporre un test antidoping.",
+      "Facciamo appello al buon senso dei partecipanti: rinuncia agli antidolorifici e ad altre sostanze che influenzano la prestazione – in una Backyard Ultra comportano un rischio maggiore per la tua salute.",
     "race.rules.12":
       "Sul percorso non sono ammessi né i membri dell’equipaggio né altre persone. È severamente vietato correre insieme agli atleti.",
 
@@ -805,14 +805,14 @@ export const ui = {
     "race.highlight.top.title": "Highest point",
     "race.highlight.top.text": "Mid-loop near Lake Toblach.",
     "race.highlight.finish.title": "Finish",
-    "race.highlight.finish.text": "Back to the Nordic Arena downhill.",
+    "race.highlight.finish.text": "A gentle downhill back to the Nordic Arena.",
     "race.title": "Race info",
     "race.what.title": "What is a Backyard Ultra?",
     "race.what.text":
       "A Backyard Ultra is an endurance race with no fixed distance: every hour on the hour a 6.71 km loop starts. Finish the loop in time, you start again the next hour. Miss the cutoff, you’re out. There’s only one winner: the last runner to complete one more loop than everyone else.",
     "race.course.title": "Course",
     "race.course.text":
-      "6.71 km from the Nordic Arena in Toblach toward Lake Toblach. The first kilometres climb gently, the highest point is mid-loop, then a descent back to the start. Mixed asphalt and gravel, wide and well marked.",
+      "6.71 km from the Nordic Arena in Toblach toward Lake Toblach; a varied course with a gentle climb at the start up to the highest point at mid-loop, followed by an easy descent back to the start; alternating asphalt and gravel sections; a wide, well-marked route that is easy to run throughout.",
     "race.rules.title": "Rules",
     "race.rules.1": "Common start every hour on the hour (corral).",
     "race.rules.2":
@@ -829,7 +829,7 @@ export const ui = {
     "race.rules.10":
       "In case of medical concern, the race directors can withdraw a runner at any time.",
     "race.rules.11":
-      "If use of painkillers is suspected, the organizer may order a doping test.",
+      "We appeal to every runner’s common sense: avoid painkillers and other performance-altering substances – in a Backyard Ultra they carry an increased risk to your own health.",
     "race.rules.12":
       "No crew members or other persons are allowed on the course. Running alongside athletes is strictly prohibited.",
 
