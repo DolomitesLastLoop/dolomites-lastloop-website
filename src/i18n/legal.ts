@@ -2,7 +2,9 @@ import type { Lang } from "./ui";
 
 // Strukturierte Rechtstexte (analog zu faq.ts).
 // Block-Modell, gerendert in src/pages/[lang]/[legal].astro.
-// Offene Werte sind durchgehend mit [AUSFÜLLEN] markiert.
+// Stand 08.08.2026: alle Platzhalter ausgefüllt, anwaltlich geprüft.
+// Startgeld-Stufen, Stornobedingungen und Rückerstattungstext müssen zwischen
+// AGB (§1/§2) und der Rückerstattungsseite synchron gehalten werden.
 
 export type LegalBlock =
   | { type: "p"; text: string }
@@ -149,7 +151,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "Für den Newsletter-Versand setzen wir [NEWSLETTER-TOOL AUSFÜLLEN] als Auftragsverarbeiter ein.",
+              text: "Für den Newsletter-Versand setzen wir Sendinblue SAS (handelnd als Brevo), 9–17 rue Salneuve, 75017 Paris, Frankreich, RCS Paris 498 019 298, als Auftragsverarbeiter ein.",
             },
           ],
         },
@@ -175,7 +177,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Wir speichern personenbezogene Daten nur so lange, wie es für die genannten Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen. Teilnehmerdaten werden bis [SPEICHERDAUER AUSFÜLLEN] nach dem Event aufbewahrt und anschließend gelöscht oder anonymisiert. Gesundheitsdaten (Attest) werden nach dem Event unverzüglich gelöscht, sobald sie nicht mehr benötigt werden.",
+              text: "Wir speichern personenbezogene Daten nur so lange, wie es für die genannten Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen. Teilnehmerdaten werden bis drei Monate nach dem Rennen aufbewahrt (Frist ab dem 15.05.2027) und anschließend gelöscht oder anonymisiert. Gesundheitsdaten (ärztliche Atteste) werden bis drei Monate nach dem Rennen (Frist ab dem 15.05.2027) aufbewahrt und anschließend gelöscht. Zahlungs- und buchhaltungsrelevante Daten bewahren wir gemäß Art. 2220 Codice Civile zehn Jahre auf.",
             },
           ],
         },
@@ -244,9 +246,9 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Frühanmeldung (Early-Bird): [STARTGELD FRÜH AUSFÜLLEN] €",
-                "Normaltarif: [STARTGELD NORMAL AUSFÜLLEN] €",
-                "Spätanmeldung: [STARTGELD SPÄT AUSFÜLLEN] €",
+                "Frühanmeldung (Early-Bird): 75 € (01.09.–31.12.2026)",
+                "Normaltarif: 80 € (01.01.–31.03.2027)",
+                "Spätanmeldung: 100 € (01.04.–30.04.2027)",
               ],
             },
           ],
@@ -255,13 +257,12 @@ export const legal: Record<Lang, LegalContent> = {
           heading: "2. Stornobedingungen und Rückerstattung",
           blocks: [
             {
-              type: "list",
-              items: [
-                "Bis [STORNO-DATUM 1 AUSFÜLLEN]: [STORNO-PROZENT 1 AUSFÜLLEN] % Rückerstattung des Startgelds.",
-                "Bis [STORNO-DATUM 2 AUSFÜLLEN]: [STORNO-PROZENT 2 AUSFÜLLEN] % Rückerstattung des Startgelds.",
-                "Ab [STORNO-DATUM 3 AUSFÜLLEN]: keine Rückerstattung.",
-                "Eine Übertragung des Startplatzes an eine andere Person ist bis [ÜBERTRAGUNG-DATUM AUSFÜLLEN] möglich.",
-              ],
+              type: "p",
+              text: "Stornierungen sind grundsätzlich nicht mit einer Rückerstattung des Startgelds verbunden. Ausnahme: Bei nachgewiesener Verletzung (ärztliches Attest) besteht Anspruch auf kostenlose Teilnahme im folgenden Jahr; eine Geldrückerstattung erfolgt auch in diesem Fall nicht. Anfragen zur Stornierung werden innerhalb einer Woche bearbeitet.",
+            },
+            {
+              type: "p",
+              text: "Eine Übertragung des Startplatzes an eine andere Person ist bis spätestens zwei Wochen vor dem Rennen möglich. Bei Übertragung entfällt sowohl der Anspruch auf kostenlose Teilnahme im Folgejahr als auch die Personalisierung der Startnummer.",
             },
           ],
         },
@@ -337,7 +338,7 @@ export const legal: Record<Lang, LegalContent> = {
     },
 
     barrierefreiheit: {
-      updated: "[BARRIEREFREIHEIT-PRÜFDATUM AUSFÜLLEN]",
+      updated: "Stand: 08.08.2026",
       sections: [
         {
           heading: "Unser Anspruch",
@@ -353,7 +354,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "[BARRIEREFREIHEIT-EINSCHRÄNKUNGEN AUSFÜLLEN]",
+              text: "Die Höhenprofil-Grafik auf der Rennen-Seite ist aktuell nicht vollständig für Screenreader zugänglich. Eine textliche Beschreibung der Streckendaten (Distanz, höchster Punkt, Steigungsverlauf) ist im begleitenden Fließtext vorhanden, ersetzt die Grafik aber nicht vollständig. Ein vollständiges Barrierefreiheits-Audit der Website steht noch aus.",
             },
           ],
         },
@@ -371,7 +372,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Letzte Überprüfung dieser Erklärung: [BARRIEREFREIHEIT-PRÜFDATUM AUSFÜLLEN].",
+              text: "Letzte Überprüfung dieser Erklärung: 08.08.2026.",
             },
           ],
         },
@@ -383,15 +384,15 @@ export const legal: Record<Lang, LegalContent> = {
         "Diese Rückerstattungsrichtlinie ergänzt die Teilnahmebedingungen (AGB) und fasst die wichtigsten Punkte zur Erstattung des Startgelds zusammen.",
       sections: [
         {
-          heading: "Gestaffelte Rückerstattung",
+          heading: "Stornierung und Rückerstattung",
           blocks: [
             {
-              type: "list",
-              items: [
-                "Bis [STORNO-DATUM 1 AUSFÜLLEN]: [STORNO-PROZENT 1 AUSFÜLLEN] % Rückerstattung.",
-                "Bis [STORNO-DATUM 2 AUSFÜLLEN]: [STORNO-PROZENT 2 AUSFÜLLEN] % Rückerstattung.",
-                "Ab [STORNO-DATUM 3 AUSFÜLLEN]: keine Rückerstattung.",
-              ],
+              type: "p",
+              text: "Stornierungen sind grundsätzlich nicht mit einer Rückerstattung des Startgelds verbunden. Ausnahme: Bei nachgewiesener Verletzung (ärztliches Attest) besteht Anspruch auf kostenlose Teilnahme im folgenden Jahr; eine Geldrückerstattung erfolgt auch in diesem Fall nicht. Anfragen zur Stornierung werden innerhalb einer Woche bearbeitet.",
+            },
+            {
+              type: "p",
+              text: "Eine Übertragung des Startplatzes an eine andere Person ist bis spätestens zwei Wochen vor dem Rennen möglich. Bei Übertragung entfällt sowohl der Anspruch auf kostenlose Teilnahme im Folgejahr als auch die Personalisierung der Startnummer.",
             },
           ],
         },
@@ -400,7 +401,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Einen Antrag auf Rückerstattung stellst du per E-Mail an office@worldcup-dobbiaco.it. Die Bearbeitung erfolgt in der Regel innerhalb von [BEARBEITUNGSZEIT AUSFÜLLEN] Werktagen.",
+              text: "Einen Antrag auf Rückerstattung stellst du per E-Mail an dolomiteslastloop@gmail.com. Die Bearbeitung erfolgt innerhalb von maximal einer Woche.",
             },
             {
               type: "p",
@@ -420,9 +421,9 @@ export const legal: Record<Lang, LegalContent> = {
       ],
     },
     haftungsausschluss: {
-      updated: "[STAND AUSFÜLLEN]",
+      updated: "Stand: 08.08.2026",
       intro:
-        "Die Teilnahme an der „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) erfolgt freiwillig und auf eigenes Risiko. Mit der Anmeldung erkennst du die folgenden Bedingungen an. Dieser Text ist ein Standardentwurf und muss vor dem Einsatz juristisch geprüft werden.",
+        "Die Teilnahme an der „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) erfolgt freiwillig und auf eigenes Risiko. Mit der Anmeldung erkennst du die folgenden Bedingungen an.",
       sections: [
         {
           heading: "1. Teilnahme auf eigene Gefahr",
@@ -449,10 +450,6 @@ export const legal: Record<Lang, LegalContent> = {
               type: "p",
               text: "Der Veranstalter (Sport OK Toblach) sowie dessen Helfer:innen, Partner und Sponsoren haften nicht für Personen-, Sach- oder Vermögensschäden, die im Zusammenhang mit der Teilnahme entstehen, soweit diese nicht auf Vorsatz oder grober Fahrlässigkeit des Veranstalters beruhen. Die zwingende gesetzliche Haftung, insbesondere für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit, bleibt unberührt.",
             },
-            {
-              type: "note",
-              text: "[JURISTISCH PRÜFEN] Der Umfang zulässiger Haftungsbeschränkungen richtet sich nach italienischem Recht (u. a. Art. 1229 Codice Civile). Diesen Text vor dem Live-Gang anwaltlich prüfen lassen.",
-            },
           ],
         },
         {
@@ -478,7 +475,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Der Abschluss einer ausreichenden Kranken-, Unfall- und ggf. Bergungs-/Rückholversicherung liegt in der Verantwortung der Teilnehmer:innen. [VERSICHERUNGSHINWEIS AUSFÜLLEN – ob und welcher Versicherungsschutz seitens des Veranstalters besteht.]",
+              text: "Sport OK Toblach als Veranstalter verfügt über einen entsprechenden Versicherungsschutz für die Durchführung der Veranstaltung. Teilnehmerinnen und Teilnehmern wird dennoch empfohlen, für die eigene Teilnahme eine ausreichende persönliche Unfall- und Krankenversicherung sowie ggf. eine Bergungs- und Rückholversicherung abzuschließen, da die Teilnahme auf eigene Gefahr erfolgt.",
             },
           ],
         },
@@ -612,7 +609,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "Per l’invio della newsletter ci avvaliamo di [NEWSLETTER-TOOL AUSFÜLLEN] in qualità di responsabile del trattamento.",
+              text: "Per l’invio della newsletter ci avvaliamo di Sendinblue SAS (operante con il marchio Brevo), 9–17 rue Salneuve, 75017 Parigi, Francia, RCS Paris 498 019 298, in qualità di responsabile del trattamento.",
             },
           ],
         },
@@ -638,7 +635,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Conserviamo i dati personali solo per il tempo necessario alle finalità indicate o per gli obblighi di legge. I dati dei partecipanti sono conservati fino a [SPEICHERDAUER AUSFÜLLEN] dopo l’evento e successivamente cancellati o anonimizzati. I dati sanitari (certificato) vengono cancellati senza indugio dopo l’evento, non appena non più necessari.",
+              text: "Conserviamo i dati personali solo per il tempo necessario alle finalità indicate o per gli obblighi di legge. I dati dei partecipanti sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati o anonimizzati. I dati sanitari (certificati medici) sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati. I dati rilevanti ai fini contabili e di pagamento sono conservati per dieci anni ai sensi dell’art. 2220 del Codice Civile.",
             },
           ],
         },
@@ -707,9 +704,9 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Iscrizione anticipata (Early-Bird): [STARTGELD FRÜH AUSFÜLLEN] €",
-                "Tariffa normale: [STARTGELD NORMAL AUSFÜLLEN] €",
-                "Iscrizione tardiva: [STARTGELD SPÄT AUSFÜLLEN] €",
+                "Iscrizione anticipata (Early-Bird): 75 € (01/09–31/12/2026)",
+                "Tariffa normale: 80 € (01/01–31/03/2027)",
+                "Iscrizione tardiva: 100 € (01/04–30/04/2027)",
               ],
             },
           ],
@@ -718,13 +715,12 @@ export const legal: Record<Lang, LegalContent> = {
           heading: "2. Condizioni di annullamento e rimborso",
           blocks: [
             {
-              type: "list",
-              items: [
-                "Entro [STORNO-DATUM 1 AUSFÜLLEN]: rimborso del [STORNO-PROZENT 1 AUSFÜLLEN] % della quota.",
-                "Entro [STORNO-DATUM 2 AUSFÜLLEN]: rimborso del [STORNO-PROZENT 2 AUSFÜLLEN] % della quota.",
-                "Dal [STORNO-DATUM 3 AUSFÜLLEN]: nessun rimborso.",
-                "Il trasferimento del posto di partenza a un’altra persona è possibile fino al [ÜBERTRAGUNG-DATUM AUSFÜLLEN].",
-              ],
+              type: "p",
+              text: "In linea di principio le cancellazioni non danno diritto al rimborso della quota di iscrizione. Eccezione: in caso di infortunio documentato (certificato medico) si ha diritto alla partecipazione gratuita nell’anno successivo; anche in questo caso non è previsto alcun rimborso in denaro. Le richieste di cancellazione vengono evase entro una settimana.",
+            },
+            {
+              type: "p",
+              text: "Il trasferimento del posto di partenza a un’altra persona è possibile fino a due settimane prima della gara. In caso di trasferimento decadono sia il diritto alla partecipazione gratuita nell’anno successivo sia la personalizzazione del pettorale.",
             },
           ],
         },
@@ -800,7 +796,7 @@ export const legal: Record<Lang, LegalContent> = {
     },
 
     barrierefreiheit: {
-      updated: "[BARRIEREFREIHEIT-PRÜFDATUM AUSFÜLLEN]",
+      updated: "Aggiornato al: 08/08/2026",
       sections: [
         {
           heading: "Il nostro impegno",
@@ -816,7 +812,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "[BARRIEREFREIHEIT-EINSCHRÄNKUNGEN AUSFÜLLEN]",
+              text: "Il grafico dell’altimetria nella pagina della gara non è attualmente del tutto accessibile agli screen reader. Nel testo di accompagnamento è presente una descrizione testuale dei dati del percorso (distanza, punto più alto, andamento del dislivello), che tuttavia non sostituisce completamente il grafico. Un audit completo di accessibilità del sito è ancora da svolgere.",
             },
           ],
         },
@@ -834,7 +830,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Ultima verifica della presente dichiarazione: [BARRIEREFREIHEIT-PRÜFDATUM AUSFÜLLEN].",
+              text: "Ultima verifica della presente dichiarazione: 08/08/2026.",
             },
           ],
         },
@@ -846,15 +842,15 @@ export const legal: Record<Lang, LegalContent> = {
         "La presente politica di rimborso integra le condizioni di partecipazione (Termini) e riassume i punti principali relativi al rimborso della quota di iscrizione.",
       sections: [
         {
-          heading: "Rimborso scaglionato",
+          heading: "Cancellazione e rimborso",
           blocks: [
             {
-              type: "list",
-              items: [
-                "Entro [STORNO-DATUM 1 AUSFÜLLEN]: rimborso del [STORNO-PROZENT 1 AUSFÜLLEN] %.",
-                "Entro [STORNO-DATUM 2 AUSFÜLLEN]: rimborso del [STORNO-PROZENT 2 AUSFÜLLEN] %.",
-                "Dal [STORNO-DATUM 3 AUSFÜLLEN]: nessun rimborso.",
-              ],
+              type: "p",
+              text: "In linea di principio le cancellazioni non danno diritto al rimborso della quota di iscrizione. Eccezione: in caso di infortunio documentato (certificato medico) si ha diritto alla partecipazione gratuita nell’anno successivo; anche in questo caso non è previsto alcun rimborso in denaro. Le richieste di cancellazione vengono evase entro una settimana.",
+            },
+            {
+              type: "p",
+              text: "Il trasferimento del posto di partenza a un’altra persona è possibile fino a due settimane prima della gara. In caso di trasferimento decadono sia il diritto alla partecipazione gratuita nell’anno successivo sia la personalizzazione del pettorale.",
             },
           ],
         },
@@ -863,7 +859,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "La richiesta di rimborso va inviata via e-mail a office@worldcup-dobbiaco.it. L’elaborazione avviene di norma entro [BEARBEITUNGSZEIT AUSFÜLLEN] giorni lavorativi.",
+              text: "La richiesta di rimborso va inviata via e-mail a dolomiteslastloop@gmail.com. L’elaborazione avviene entro un massimo di una settimana.",
             },
             {
               type: "p",
@@ -883,9 +879,9 @@ export const legal: Record<Lang, LegalContent> = {
       ],
     },
     haftungsausschluss: {
-      updated: "[STAND AUSFÜLLEN]",
+      updated: "Aggiornato al: 08/08/2026",
       intro:
-        "La partecipazione alla „Dolomites Last Loop“ (Backyard Ultra, Dobbiaco/Toblach) è volontaria e avviene a proprio rischio. Con l’iscrizione accetti le seguenti condizioni. Questo testo è una bozza standard e deve essere verificato legalmente prima dell’uso.",
+        "La partecipazione alla „Dolomites Last Loop“ (Backyard Ultra, Dobbiaco/Toblach) è volontaria e avviene a proprio rischio. Con l’iscrizione accetti le seguenti condizioni.",
       sections: [
         {
           heading: "1. Partecipazione a proprio rischio",
@@ -912,10 +908,6 @@ export const legal: Record<Lang, LegalContent> = {
               type: "p",
               text: "L’organizzatore (Sport OK Dobbiaco) nonché i suoi volontari, partner e sponsor non rispondono di danni a persone, cose o patrimonio derivanti dalla partecipazione, salvo che tali danni siano dovuti a dolo o colpa grave dell’organizzatore. Resta impregiudicata la responsabilità inderogabile di legge, in particolare per danni derivanti da lesioni alla vita, all’integrità fisica o alla salute.",
             },
-            {
-              type: "note",
-              text: "[DA VERIFICARE LEGALMENTE] L’ammissibilità delle limitazioni di responsabilità è disciplinata dal diritto italiano (tra cui l’art. 1229 Codice Civile). Far verificare questo testo da un legale prima della pubblicazione.",
-            },
           ],
         },
         {
@@ -941,7 +933,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "La stipula di un’adeguata assicurazione sanitaria, infortuni ed eventualmente soccorso/recupero è responsabilità dei partecipanti. [NOTA ASSICURATIVA DA INSERIRE – se e quale copertura assicurativa è prevista dall’organizzatore.]",
+              text: "In qualità di organizzatore, Sport OK Dobbiaco dispone di un’idonea copertura assicurativa per lo svolgimento dell’evento. Si raccomanda comunque ai partecipanti di stipulare per la propria partecipazione un’adeguata assicurazione personale contro gli infortuni e sanitaria, nonché eventualmente un’assicurazione per soccorso e rimpatrio, poiché la partecipazione avviene a proprio rischio.",
             },
           ],
         },
@@ -1075,7 +1067,7 @@ export const legal: Record<Lang, LegalContent> = {
             },
             {
               type: "p",
-              text: "For sending the newsletter we use [NEWSLETTER-TOOL AUSFÜLLEN] as a processor.",
+              text: "For sending the newsletter we use Sendinblue SAS (trading as Brevo), 9–17 rue Salneuve, 75017 Paris, France, RCS Paris 498 019 298, as a processor.",
             },
           ],
         },
@@ -1101,7 +1093,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "We store personal data only for as long as necessary for the stated purposes or as required by statutory retention obligations. Participant data are kept until [SPEICHERDAUER AUSFÜLLEN] after the event and then deleted or anonymised. Health data (certificate) are deleted without undue delay after the event as soon as they are no longer needed.",
+              text: "We store personal data only for as long as necessary for the stated purposes or as required by statutory retention obligations. Participant data are kept until three months after the race (period running from 15 May 2027) and then deleted or anonymised. Health data (medical certificates) are kept until three months after the race (period running from 15 May 2027) and then deleted. Payment and accounting-related data are retained for ten years in accordance with Art. 2220 of the Italian Civil Code.",
             },
           ],
         },
@@ -1170,9 +1162,9 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Early-bird registration: €[STARTGELD FRÜH AUSFÜLLEN]",
-                "Standard rate: €[STARTGELD NORMAL AUSFÜLLEN]",
-                "Late registration: €[STARTGELD SPÄT AUSFÜLLEN]",
+                "Early-bird registration: €75 (1 Sep – 31 Dec 2026)",
+                "Standard rate: €80 (1 Jan – 31 Mar 2027)",
+                "Late registration: €100 (1 Apr – 30 Apr 2027)",
               ],
             },
           ],
@@ -1181,13 +1173,12 @@ export const legal: Record<Lang, LegalContent> = {
           heading: "2. Cancellation and refund terms",
           blocks: [
             {
-              type: "list",
-              items: [
-                "Until [STORNO-DATUM 1 AUSFÜLLEN]: [STORNO-PROZENT 1 AUSFÜLLEN] % refund of the entry fee.",
-                "Until [STORNO-DATUM 2 AUSFÜLLEN]: [STORNO-PROZENT 2 AUSFÜLLEN] % refund of the entry fee.",
-                "From [STORNO-DATUM 3 AUSFÜLLEN]: no refund.",
-                "Transfer of the start spot to another person is possible until [ÜBERTRAGUNG-DATUM AUSFÜLLEN].",
-              ],
+              type: "p",
+              text: "As a matter of principle, cancellations do not entitle you to a refund of the entry fee. Exception: in the case of a documented injury (medical certificate) you are entitled to free participation in the following year; no monetary refund is granted in this case either. Cancellation requests are processed within one week.",
+            },
+            {
+              type: "p",
+              text: "The start spot may be transferred to another person up to two weeks before the race at the latest. In the event of a transfer, both the entitlement to free participation in the following year and the personalisation of the bib number lapse.",
             },
           ],
         },
@@ -1263,7 +1254,7 @@ export const legal: Record<Lang, LegalContent> = {
     },
 
     barrierefreiheit: {
-      updated: "[BARRIEREFREIHEIT-PRÜFDATUM AUSFÜLLEN]",
+      updated: "Last updated: 8 August 2026",
       sections: [
         {
           heading: "Our commitment",
@@ -1279,7 +1270,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "[BARRIEREFREIHEIT-EINSCHRÄNKUNGEN AUSFÜLLEN]",
+              text: "The elevation-profile graphic on the race page is currently not fully accessible to screen readers. A textual description of the course data (distance, highest point, gradient profile) is provided in the accompanying body text, but does not fully replace the graphic. A full accessibility audit of the website is still outstanding.",
             },
           ],
         },
@@ -1297,7 +1288,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Last review of this statement: [BARRIEREFREIHEIT-PRÜFDATUM AUSFÜLLEN].",
+              text: "Last review of this statement: 8 August 2026.",
             },
           ],
         },
@@ -1309,15 +1300,15 @@ export const legal: Record<Lang, LegalContent> = {
         "This refund policy supplements the participation terms (Terms) and summarises the key points regarding refunds of the entry fee.",
       sections: [
         {
-          heading: "Tiered refund",
+          heading: "Cancellation and refund",
           blocks: [
             {
-              type: "list",
-              items: [
-                "Until [STORNO-DATUM 1 AUSFÜLLEN]: [STORNO-PROZENT 1 AUSFÜLLEN] % refund.",
-                "Until [STORNO-DATUM 2 AUSFÜLLEN]: [STORNO-PROZENT 2 AUSFÜLLEN] % refund.",
-                "From [STORNO-DATUM 3 AUSFÜLLEN]: no refund.",
-              ],
+              type: "p",
+              text: "As a matter of principle, cancellations do not entitle you to a refund of the entry fee. Exception: in the case of a documented injury (medical certificate) you are entitled to free participation in the following year; no monetary refund is granted in this case either. Cancellation requests are processed within one week.",
+            },
+            {
+              type: "p",
+              text: "The start spot may be transferred to another person up to two weeks before the race at the latest. In the event of a transfer, both the entitlement to free participation in the following year and the personalisation of the bib number lapse.",
             },
           ],
         },
@@ -1326,7 +1317,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Submit a refund request by email to office@worldcup-dobbiaco.it. Processing usually takes place within [BEARBEITUNGSZEIT AUSFÜLLEN] business days.",
+              text: "Submit a refund request by email to dolomiteslastloop@gmail.com. Processing takes place within a maximum of one week.",
             },
             {
               type: "p",
@@ -1346,9 +1337,9 @@ export const legal: Record<Lang, LegalContent> = {
       ],
     },
     haftungsausschluss: {
-      updated: "[STAND AUSFÜLLEN]",
+      updated: "Last updated: 8 August 2026",
       intro:
-        "Participation in the „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) is voluntary and at your own risk. By registering you accept the following terms. This text is a standard draft and must be legally reviewed before use.",
+        "Participation in the „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) is voluntary and at your own risk. By registering you accept the following terms.",
       sections: [
         {
           heading: "1. Participation at your own risk",
@@ -1375,10 +1366,6 @@ export const legal: Record<Lang, LegalContent> = {
               type: "p",
               text: "The organiser (Sport OK Toblach) as well as its volunteers, partners and sponsors are not liable for personal injury, property or financial damage arising in connection with participation, unless such damage is due to intent or gross negligence on the part of the organiser. Mandatory statutory liability, in particular for damage resulting from injury to life, body or health, remains unaffected.",
             },
-            {
-              type: "note",
-              text: "[LEGAL REVIEW REQUIRED] The permissible scope of liability limitations is governed by Italian law (including Art. 1229 of the Civil Code). Have this text reviewed by a lawyer before going live.",
-            },
           ],
         },
         {
@@ -1404,7 +1391,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Taking out adequate health, accident and, where applicable, rescue/repatriation insurance is the responsibility of the participants. [INSURANCE NOTE TO BE FILLED IN – whether and what insurance cover is provided by the organiser.]",
+              text: "As the organiser, Sport OK Toblach holds appropriate insurance cover for staging the event. Participants are nevertheless advised to take out adequate personal accident and health insurance — and, where applicable, rescue and repatriation insurance — for their own participation, as participation is at your own risk.",
             },
           ],
         },

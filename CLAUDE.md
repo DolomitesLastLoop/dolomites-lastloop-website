@@ -364,10 +364,14 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
 - [ ] Stripe einrichten
-- [ ] Datenschutz, AGB usw. einrichten
+- [ ] **Dritten Stripe-Preis „Spätanmeldung" (100 €) im Live-Konto anlegen** — die AGB nennen
+  seit 2026-08-08 drei Startgeld-Stufen (75 € / 80 € / 100 €), Stripe kennt bisher nur zwei
+  (Early-Bird / Standard). Preis-ID als `STRIPE_PRICE_*` in `.env` + Vercel-Dashboard nachziehen
+  und in `src/pages/api/checkout.ts` verdrahten, sonst ist die dritte Stufe nicht buchbar.
+- [x] **Datenschutz, AGB usw. einrichten** *(2026-08-08 erledigt — alle Rechtstexte final)*
 - [ ] **Ticket-PDF-Fixes end-to-end verifizieren (vor Live-Gang der Registrierung):**
   siehe Unterabschnitt unten.
-- [ ] **Rechtstexte finalisieren:** 18× `[AUSFÜLLEN]` in `src/i18n/legal.ts` ausfüllen. **Danach zwingend:** `noindex` in `src/pages/[lang]/[legal].astro` wieder entfernen (aktuell tragen alle 6 Legal-Seiten `noindex,nofollow`, weil sie über den Footer crawlbar, aber inhaltlich unfertig sind) — sonst bleiben Impressum/Datenschutz dauerhaft aus dem Google-Index. *Details siehe Unterabschnitt direkt unten.*
+- [x] **Rechtstexte finalisieren** *(2026-08-08 erledigt — alle Platzhalter in `src/i18n/legal.ts` ausgefüllt, `noindex` aus `src/pages/[lang]/[legal].astro` entfernt; Details siehe Unterabschnitt unten)*
 
 ### Ticket-PDF-Fixes end-to-end verifizieren (vor Live-Gang der Registrierung)
 
@@ -382,18 +386,23 @@ finale Ticket-Design im tatsächlichen Mail-Anhang bestätigt — als Teil des
 ohnehin nötigen finalen Gesamt-Durchlaufs vor Live-Gang, nicht als separater
 Schritt.
 
-### Rechtstexte-Platzhalter finalisieren (Ziel: Samstag 18.07.)
+### Rechtstexte final (Stand 2026-08-08)
 
-Verbleibende `[AUSFÜLLEN]`-Platzhalter in `src/i18n/legal.ts`:
-- Startgelder (früh/normal/spät)
-- Storno-Fristen & -Prozente + Übertragungsdatum
-- Newsletter-Tool
-- Speicherdauer (Datenschutz)
-- Barrierefreiheit: Prüfdatum + konkrete Einschränkungen
-- Bearbeitungszeit Rückerstattung
-- `[STAND AUSFÜLLEN]`
-- `[VERSICHERUNGSHINWEIS AUSFÜLLEN]`
-- `[JURISTISCH PRÜFEN]` — Haftungsausschluss-Text anwaltlich prüfen lassen
+Alle Platzhalter in `src/i18n/legal.ts` sind ausgefüllt (DE/IT/EN), die anwaltliche Prüfung
+ist erfolgt, und `noindex` wurde aus `src/pages/[lang]/[legal].astro` entfernt — die 6
+Legal-Seiten sind wieder indexierbar.
 
-Danach: `noindex`-Meta-Tag von den 6 Legal-Seiten entfernen (aktuell bewusst
-gesetzt, siehe bestehender Reminder in dieser Datei).
+Beim Pflegen dieser Texte beachten:
+- **Startgeld-Stufen und Stornotext stehen doppelt**: in den AGB (§1 / §2) *und* auf der
+  separaten Rückerstattungsseite. Beide Stellen müssen wortgleich bleiben — es gibt keine
+  gemeinsame Quelle im Code.
+- Die alte 3-Stufen-Prozent-Storno-Tabelle wurde ersatzlos entfernt. Aktuelle Regel: keine
+  Geldrückerstattung; bei nachgewiesener Verletzung Gratis-Start im Folgejahr; Übertragung
+  bis 2 Wochen vor dem Rennen (dann kein Folgejahr-Anspruch, keine personalisierte
+  Startnummer).
+- Kontakt für Storno/Rückerstattung ist `dolomiteslastloop@gmail.com` (nicht `info@` —
+  das gilt weiterhin für Datenschutz, Betroffenenrechte und Barrierefreiheit).
+- Datenschutz §7 nennt drei Fristen: Teilnehmerdaten und Gesundheitsdaten (ärztliche Atteste)
+  jeweils 3 Monate nach dem Rennen (Frist ab 15.05.2027), Zahlungs-/Buchhaltungsdaten
+  10 Jahre gem. Art. 2220 CC. Die Attest-Frist ist ein Löschversprechen im Rechtstext — bei
+  Änderung der tatsächlichen Praxis (Supabase-Bucket `atteste`) hier zwingend nachziehen.
