@@ -372,6 +372,17 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 - [ ] **Ticket-PDF-Fixes end-to-end verifizieren (vor Live-Gang der Registrierung):**
   siehe Unterabschnitt unten.
 - [x] **Rechtstexte finalisieren** *(2026-08-08 erledigt — alle Platzhalter in `src/i18n/legal.ts` ausgefüllt, `noindex` aus `src/pages/[lang]/[legal].astro` entfernt; Details siehe Unterabschnitt unten)*
+- [ ] **Attest-Löschung umsetzen (rechtlich zugesichert, technisch noch NICHT vorhanden):**
+  Die Datenschutzerklärung enthält seit 2026-08-08 eine **echte Löschpflicht** — Gesundheitsdaten
+  (ärztliche Atteste) werden „bis drei Monate nach dem Rennen (Frist ab dem 15.05.2027)
+  aufbewahrt und anschließend gelöscht". Betroffen ist der private Supabase-Bucket `atteste`
+  (plus `participants.attest_url` / `attest_status`). Aktuell löscht **nichts** automatisch —
+  die Zusage steht nur im Rechtstext. **Deadline: 15.08.2027.** Nötig ist entweder ein
+  automatisierter Cleanup-Job (z. B. Supabase-Cron/Edge-Function oder Vercel-Cron, der Objekte
+  im Bucket nach Ablauf der Frist entfernt und `attest_url` leert) **oder** mindestens ein
+  fest terminierter manueller Reminder-Prozess mit dokumentierter Durchführung. Ohne eines von
+  beidem ist die Datenschutzerklärung ab dem 15.08.2027 unzutreffend. *(Kein Code dafür
+  geschrieben — bewusst als offener Punkt festgehalten.)*
 
 ### Ticket-PDF-Fixes end-to-end verifizieren (vor Live-Gang der Registrierung)
 
@@ -404,5 +415,9 @@ Beim Pflegen dieser Texte beachten:
   das gilt weiterhin für Datenschutz, Betroffenenrechte und Barrierefreiheit).
 - Datenschutz §7 nennt drei Fristen: Teilnehmerdaten und Gesundheitsdaten (ärztliche Atteste)
   jeweils 3 Monate nach dem Rennen (Frist ab 15.05.2027), Zahlungs-/Buchhaltungsdaten
-  10 Jahre gem. Art. 2220 CC. Die Attest-Frist ist ein Löschversprechen im Rechtstext — bei
-  Änderung der tatsächlichen Praxis (Supabase-Bucket `atteste`) hier zwingend nachziehen.
+  10 Jahre gem. Art. 2220 CC.
+- ⚠️ **Die Attest-Frist ist eine echte, nach außen zugesicherte Löschpflicht**, keine bloße
+  Formulierung: Atteste im privaten Supabase-Bucket `atteste` müssen bis zum **15.08.2027**
+  tatsächlich gelöscht sein. Es gibt dafür **noch keinen Mechanismus** — Cleanup-Job oder
+  manueller Reminder-Prozess sind offen (siehe „Nächste Schritte"). Wird die Frist im Text
+  geändert, hier und im To-do mitziehen; wird die Praxis geändert, den Text mitziehen.
