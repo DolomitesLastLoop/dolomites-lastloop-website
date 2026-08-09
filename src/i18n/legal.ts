@@ -165,8 +165,10 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Hosting: Vercel Inc. – Auslieferung der Website (Serverstandort EU, sofern verfügbar).",
-                "Datenbank/Speicher: Supabase – Speicherung der Teilnehmer- und Anmeldedaten.",
+                "Hosting: Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA – Auslieferung der Website (Serverstandort EU, sofern verfügbar). Für etwaige Datenzugriffe aus den USA stützt sich Vercel auf das EU-U.S. Data Privacy Framework (DPF).",
+                "Datenbank/Speicher: Supabase Pte. Ltd., 65 Chulia Street #38-02/03, OCBC Centre, Singapur 049513 – Speicherung der Teilnehmer- und Anmeldedaten. Die Datenbank für dieses Projekt ist in einem Rechenzentrum in Paris (EU, AWS eu-west-3) gehostet; für etwaige Datenzugriffe außerhalb der EU stützt sich Supabase auf EU-Standardvertragsklauseln.",
+                "E-Mail-Versand: Plus Five Five, Inc. (handelnd als Resend), 2261 Market Street #5039, San Francisco, CA 94114, USA – Versand der Bestätigungs- und Ticket-E-Mails. Die Übermittlung in die USA stützt sich auf das EU-U.S. Data Privacy Framework (DPF).",
+                "Rate-Limiting/Schutz vor Missbrauch: Upstash Inc., USA – Verarbeitung von IP-Adressen zur Begrenzung der Anfragen. Die Verarbeitung erfolgt in einem Rechenzentrum in Frankfurt am Main (EU); ergänzend stützt sich Upstash für etwaige Datenzugriffe auf das EU-U.S. Data Privacy Framework (DPF).",
                 "Es kommen keine Google Analytics oder vergleichbaren Tracking-Tools zum Einsatz.",
               ],
             },
@@ -623,8 +625,10 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Hosting: Vercel Inc. – distribuzione del sito (server nell’UE, se disponibile).",
-                "Database/archiviazione: Supabase – memorizzazione dei dati di iscrizione e dei partecipanti.",
+                "Hosting: Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA – distribuzione del sito (server nell’UE, se disponibile). Per eventuali accessi ai dati dagli USA Vercel si avvale dell’EU-U.S. Data Privacy Framework (DPF).",
+                "Database/archiviazione: Supabase Pte. Ltd., 65 Chulia Street #38-02/03, OCBC Centre, Singapore 049513 – memorizzazione dei dati di iscrizione e dei partecipanti. Il database di questo progetto è ospitato in un data center di Parigi (UE, AWS eu-west-3); per eventuali accessi ai dati al di fuori dell’UE Supabase si avvale delle clausole contrattuali tipo dell’UE.",
+                "Invio delle e-mail: Plus Five Five, Inc. (operante con il marchio Resend), 2261 Market Street #5039, San Francisco, CA 94114, USA – invio delle e-mail di conferma e del biglietto. Il trasferimento negli USA si basa sull’EU-U.S. Data Privacy Framework (DPF).",
+                "Limitazione delle richieste/protezione dagli abusi: Upstash Inc., USA – trattamento degli indirizzi IP per limitare il numero di richieste. Il trattamento avviene in un data center di Francoforte sul Meno (UE); in via integrativa, per eventuali accessi ai dati Upstash si avvale dell’EU-U.S. Data Privacy Framework (DPF).",
                 "Non vengono utilizzati Google Analytics o strumenti di tracciamento analoghi.",
               ],
             },
@@ -1081,8 +1085,10 @@ export const legal: Record<Lang, LegalContent> = {
             {
               type: "list",
               items: [
-                "Hosting: Vercel Inc. – delivery of the website (server location in the EU where available).",
-                "Database/storage: Supabase – storage of participant and registration data.",
+                "Hosting: Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA – delivery of the website (server location in the EU where available). For any data access from the USA, Vercel relies on the EU-U.S. Data Privacy Framework (DPF).",
+                "Database/storage: Supabase Pte. Ltd., 65 Chulia Street #38-02/03, OCBC Centre, Singapore 049513 – storage of participant and registration data. The database for this project is hosted in a data centre in Paris (EU, AWS eu-west-3); for any data access outside the EU, Supabase relies on the EU standard contractual clauses.",
+                "Email delivery: Plus Five Five, Inc. (trading as Resend), 2261 Market Street #5039, San Francisco, CA 94114, USA – sending of confirmation and ticket emails. Transfers to the USA are based on the EU-U.S. Data Privacy Framework (DPF).",
+                "Rate limiting/abuse protection: Upstash Inc., USA – processing of IP addresses to limit the number of requests. Processing takes place in a data centre in Frankfurt am Main (EU); in addition, Upstash relies on the EU-U.S. Data Privacy Framework (DPF) for any data access.",
                 "No Google Analytics or comparable tracking tools are used.",
               ],
             },
