@@ -13,7 +13,14 @@ export type LegalBlock =
   | { type: "list"; items: string[] };
 
 export type LegalSection = { id?: string; heading: string; blocks: LegalBlock[] };
-export type LegalPage = { updated?: string; intro?: string; sections: LegalSection[] };
+// aiNotice: KI-Transparenzhinweis. Gerendert direkt unter `updated` (falls
+// vorhanden), sonst am Ende des Textes — siehe src/pages/[lang]/[legal].astro.
+export type LegalPage = {
+  updated?: string;
+  intro?: string;
+  aiNotice?: string;
+  sections: LegalSection[];
+};
 
 export type LegalSlug =
   | "impressum"
@@ -77,6 +84,8 @@ export const legal: Record<Lang, LegalContent> = {
     datenschutz: {
       intro:
         "Diese Datenschutzerklärung informiert dich gemäß der Datenschutz-Grundverordnung (EU) 2016/679 (DSGVO) sowie dem italienischen Datenschutzrecht (D.Lgs. 196/2003 i.d.F. des D.Lgs. 101/2018) über die Verarbeitung deiner personenbezogenen Daten im Rahmen der Veranstaltung „Dolomites Last Loop“.",
+      aiNotice:
+        "Dieser Text wurde mit KI-Unterstützung erstellt und vor Veröffentlichung geprüft.",
       sections: [
         {
           heading: "1. Verantwortlicher",
@@ -248,6 +257,8 @@ export const legal: Record<Lang, LegalContent> = {
     agb: {
       intro:
         "Diese Teilnahmebedingungen regeln die Teilnahme an der Veranstaltung „Dolomites Last Loop“ – Backyard Ultra in Toblach (Dobbiaco), Südtirol, am 15. Mai 2027, mit begrenzter Teilnehmerzahl. Veranstalter ist Sport OK Toblach.",
+      aiNotice:
+        "Dieser Text wurde mit KI-Unterstützung erstellt und vor Veröffentlichung geprüft.",
       sections: [
         {
           heading: "1. Anmeldung und Startgeld",
@@ -352,6 +363,8 @@ export const legal: Record<Lang, LegalContent> = {
 
     barrierefreiheit: {
       updated: "Stand: 08.08.2026",
+      aiNotice:
+        "Dieser Text wurde mit KI-Unterstützung erstellt und vor Veröffentlichung geprüft.",
       sections: [
         {
           heading: "Unser Anspruch",
@@ -395,6 +408,8 @@ export const legal: Record<Lang, LegalContent> = {
     rueckerstattung: {
       intro:
         "Diese Rückerstattungsrichtlinie ergänzt die Teilnahmebedingungen (AGB) und fasst die wichtigsten Punkte zur Erstattung des Startgelds zusammen.",
+      aiNotice:
+        "Dieser Text wurde mit KI-Unterstützung erstellt und vor Veröffentlichung geprüft.",
       sections: [
         {
           heading: "Stornierung und Rückerstattung",
@@ -437,6 +452,8 @@ export const legal: Record<Lang, LegalContent> = {
       updated: "Stand: 08.08.2026",
       intro:
         "Die Teilnahme an der „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) erfolgt freiwillig und auf eigenes Risiko. Mit der Anmeldung erkennst du die folgenden Bedingungen an.",
+      aiNotice:
+        "Dieser Text wurde mit KI-Unterstützung erstellt und vor Veröffentlichung geprüft.",
       sections: [
         {
           heading: "1. Teilnahme auf eigene Gefahr",
@@ -548,6 +565,8 @@ export const legal: Record<Lang, LegalContent> = {
     datenschutz: {
       intro:
         "La presente informativa sulla privacy ti informa, ai sensi del Regolamento (UE) 2016/679 (GDPR) e della normativa italiana in materia di protezione dei dati personali (D.Lgs. 196/2003 come modificato dal D.Lgs. 101/2018), sul trattamento dei tuoi dati personali nell’ambito dell’evento „Dolomites Last Loop“.",
+      aiNotice:
+        "Questo testo è stato redatto con l’ausilio dell’intelligenza artificiale e verificato prima della pubblicazione.",
       sections: [
         {
           heading: "1. Titolare del trattamento",
@@ -719,6 +738,8 @@ export const legal: Record<Lang, LegalContent> = {
     agb: {
       intro:
         "Le presenti condizioni di partecipazione disciplinano la partecipazione all’evento „Dolomites Last Loop“ – Backyard Ultra a Dobbiaco (Toblach), Alto Adige, il 15 maggio 2027, con un numero limitato di partecipanti. L’organizzatore è Sport OK Dobbiaco.",
+      aiNotice:
+        "Questo testo è stato redatto con l’ausilio dell’intelligenza artificiale e verificato prima della pubblicazione.",
       sections: [
         {
           heading: "1. Iscrizione e quota di partecipazione",
@@ -823,6 +844,8 @@ export const legal: Record<Lang, LegalContent> = {
 
     barrierefreiheit: {
       updated: "Aggiornato al: 08/08/2026",
+      aiNotice:
+        "Questo testo è stato redatto con l’ausilio dell’intelligenza artificiale e verificato prima della pubblicazione.",
       sections: [
         {
           heading: "Il nostro impegno",
@@ -866,6 +889,8 @@ export const legal: Record<Lang, LegalContent> = {
     rueckerstattung: {
       intro:
         "La presente politica di rimborso integra le condizioni di partecipazione (Termini) e riassume i punti principali relativi al rimborso della quota di iscrizione.",
+      aiNotice:
+        "Questo testo è stato redatto con l’ausilio dell’intelligenza artificiale e verificato prima della pubblicazione.",
       sections: [
         {
           heading: "Cancellazione e rimborso",
@@ -908,6 +933,8 @@ export const legal: Record<Lang, LegalContent> = {
       updated: "Aggiornato al: 08/08/2026",
       intro:
         "La partecipazione alla „Dolomites Last Loop“ (Backyard Ultra, Dobbiaco/Toblach) è volontaria e avviene a proprio rischio. Con l’iscrizione accetti le seguenti condizioni.",
+      aiNotice:
+        "Questo testo è stato redatto con l’ausilio dell’intelligenza artificiale e verificato prima della pubblicazione.",
       sections: [
         {
           heading: "1. Partecipazione a proprio rischio",
@@ -1019,6 +1046,8 @@ export const legal: Record<Lang, LegalContent> = {
     datenschutz: {
       intro:
         "This privacy policy informs you, in accordance with the General Data Protection Regulation (EU) 2016/679 (GDPR) and Italian data protection law (Legislative Decree 196/2003 as amended by Legislative Decree 101/2018), about the processing of your personal data in connection with the „Dolomites Last Loop“ event.",
+      aiNotice:
+        "This text was drafted with AI assistance and reviewed prior to publication.",
       sections: [
         {
           heading: "1. Data Controller",
@@ -1190,6 +1219,8 @@ export const legal: Record<Lang, LegalContent> = {
     agb: {
       intro:
         "These participation terms govern entry to the „Dolomites Last Loop“ event – a Backyard Ultra in Toblach (Dobbiaco), South Tyrol, on 15 May 2027, with a limited number of participants. The organiser is Sport OK Toblach.",
+      aiNotice:
+        "This text was drafted with AI assistance and reviewed prior to publication.",
       sections: [
         {
           heading: "1. Registration and entry fee",
@@ -1294,6 +1325,8 @@ export const legal: Record<Lang, LegalContent> = {
 
     barrierefreiheit: {
       updated: "Last updated: 8 August 2026",
+      aiNotice:
+        "This text was drafted with AI assistance and reviewed prior to publication.",
       sections: [
         {
           heading: "Our commitment",
@@ -1337,6 +1370,8 @@ export const legal: Record<Lang, LegalContent> = {
     rueckerstattung: {
       intro:
         "This refund policy supplements the participation terms (Terms) and summarises the key points regarding refunds of the entry fee.",
+      aiNotice:
+        "This text was drafted with AI assistance and reviewed prior to publication.",
       sections: [
         {
           heading: "Cancellation and refund",
@@ -1379,6 +1414,8 @@ export const legal: Record<Lang, LegalContent> = {
       updated: "Last updated: 8 August 2026",
       intro:
         "Participation in the „Dolomites Last Loop“ (Backyard Ultra, Toblach/Dobbiaco) is voluntary and at your own risk. By registering you accept the following terms.",
+      aiNotice:
+        "This text was drafted with AI assistance and reviewed prior to publication.",
       sections: [
         {
           heading: "1. Participation at your own risk",

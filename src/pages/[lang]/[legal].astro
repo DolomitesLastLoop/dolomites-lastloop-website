@@ -41,6 +41,7 @@ const page = legal[lang][slug as LegalSlug];
       <p class="eyebrow">Legal</p>
       <h1>{title}</h1>
       {page.updated && <p class="updated">{page.updated}</p>}
+      {page.updated && page.aiNotice && <p class="ai-notice">{page.aiNotice}</p>}
     </div>
   </section>
 
@@ -68,6 +69,12 @@ const page = legal[lang][slug as LegalSlug];
           </div>
         ))
       }
+
+      {
+        !page.updated && page.aiNotice && (
+          <p class="ai-notice ai-notice--end">{page.aiNotice}</p>
+        )
+      }
     </div>
   </section>
 </BaseLayout>
@@ -81,6 +88,16 @@ const page = legal[lang][slug as LegalSlug];
     margin-top: var(--space-2);
     color: var(--color-text-muted);
     font-size: 0.95rem;
+  }
+  .ai-notice {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+  .ai-notice--end {
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
   }
   .legal .intro {
     color: var(--color-text-muted);

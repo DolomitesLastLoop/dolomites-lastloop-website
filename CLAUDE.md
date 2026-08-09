@@ -458,6 +458,8 @@ ist erfolgt, und `noindex` wurde aus `src/pages/[lang]/[legal].astro` entfernt �
 Legal-Seiten sind wieder indexierbar.
 
 Beim Pflegen dieser Texte beachten:
+- Feld `aiNotice` in `LegalPage` = KI-Transparenzhinweis; gesetzt auf 5 der 6 Seiten
+  (Impressum ausgenommen), gerendert unter der `updated`-Zeile bzw. am Textende.
 - **Startgeld-Stufen und Stornotext stehen doppelt**: in den AGB (§1 / §2) *und* auf der
   separaten Rückerstattungsseite. Beide Stellen müssen wortgleich bleiben — es gibt keine
   gemeinsame Quelle im Code.
