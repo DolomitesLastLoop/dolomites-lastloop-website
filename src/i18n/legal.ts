@@ -143,15 +143,26 @@ export const legal: Record<Lang, LegalContent> = {
           ],
         },
         {
-          heading: "5. Newsletter",
+          heading: "5. Newsletter und Teilnehmer-Kommunikation",
           blocks: [
             {
               type: "p",
-              text: "Sofern du dich für unseren Newsletter anmeldest, verarbeiten wir deine E-Mail-Adresse und deinen Namen auf Grundlage deiner Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Der Versand erfolgt im Double-Opt-in-Verfahren. Du kannst dich jederzeit über den Abmeldelink in jeder E-Mail oder per Nachricht an uns wieder abmelden.",
+              text: "Für den E-Mail-Versand führen wir zwei getrennte Verteiler. Sie unterscheiden sich in Zweck und Rechtsgrundlage:",
+            },
+            {
+              type: "list",
+              items: [
+                "Newsletter (freiwillig): Sofern du dich für unseren Newsletter anmeldest, verarbeiten wir deine E-Mail-Adresse und deinen Namen auf Grundlage deiner Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Du kannst dich jederzeit über den Abmeldelink in jeder E-Mail oder per Nachricht an uns wieder abmelden.",
+                "Teilnehmerinformationen (keine Einwilligung erforderlich): Nach deiner verbindlichen Anmeldung nehmen wir Vorname, Nachname und E-Mail-Adresse in einen separaten Teilnehmerverteiler auf. Darüber versenden wir ausschließlich organisatorische und sicherheitsrelevante Informationen zum Rennen – etwa Startzeiten, Änderungen an Strecke oder Ablauf sowie Wetter- und Sicherheitshinweise. Diese Verarbeitung ist zur Erfüllung des Teilnahmevertrags erforderlich (Art. 6 Abs. 1 lit. b DSGVO); eine Einwilligung ist dafür weder nötig noch holen wir eine ein. Diese Nachrichten enthalten keine Werbung.",
+              ],
+            },
+            {
+              type: "note",
+              text: "Die beiden Verteiler sind voneinander unabhängig: Eine Abmeldung vom Newsletter beendet den Empfang der Teilnehmerinformationen nicht – diese gehören zur Durchführung des Rennens und werden versandt, solange deine Anmeldung besteht. Umgekehrt gilt deine Anmeldung zum Rennen nicht als Einwilligung in den Newsletter. Für die Speicherdauer gelten die unter Punkt 7 genannten Fristen.",
             },
             {
               type: "p",
-              text: "Für den Newsletter-Versand setzen wir Sendinblue SAS (handelnd als Brevo), 9–17 rue Salneuve, 75017 Paris, Frankreich, RCS Paris 498 019 298, als Auftragsverarbeiter ein.",
+              text: "Für beide Verteiler setzen wir Sendinblue SAS (handelnd als Brevo), 9–17 rue Salneuve, 75017 Paris, Frankreich, RCS Paris 498 019 298, als Auftragsverarbeiter ein.",
             },
           ],
         },
@@ -603,15 +614,26 @@ export const legal: Record<Lang, LegalContent> = {
           ],
         },
         {
-          heading: "5. Newsletter",
+          heading: "5. Newsletter e comunicazioni ai partecipanti",
           blocks: [
             {
               type: "p",
-              text: "Se ti iscrivi alla nostra newsletter, trattiamo il tuo indirizzo e-mail e il tuo nome sulla base del tuo consenso (art. 6, par. 1, lett. a GDPR). L’invio avviene con procedura double opt-in. Puoi annullare l’iscrizione in qualsiasi momento tramite il link di disiscrizione presente in ogni e-mail o contattandoci.",
+              text: "Per l’invio di e-mail gestiamo due liste distinte, che si differenziano per finalità e base giuridica:",
+            },
+            {
+              type: "list",
+              items: [
+                "Newsletter (facoltativa): se ti iscrivi alla nostra newsletter, trattiamo il tuo indirizzo e-mail e il tuo nome sulla base del tuo consenso (art. 6, par. 1, lett. a GDPR). Puoi annullare l’iscrizione in qualsiasi momento tramite il link di disiscrizione presente in ogni e-mail o contattandoci.",
+                "Comunicazioni ai partecipanti (non è richiesto il consenso): dopo la tua iscrizione vincolante inseriamo nome, cognome e indirizzo e-mail in una lista separata dedicata ai partecipanti. Tramite questa lista inviamo esclusivamente informazioni organizzative e di sicurezza relative alla gara, come orari di partenza, modifiche al percorso o allo svolgimento e avvisi meteo e di sicurezza. Questo trattamento è necessario all’esecuzione del contratto di partecipazione (art. 6, par. 1, lett. b GDPR); non è quindi richiesto alcun consenso, né viene raccolto. Questi messaggi non contengono pubblicità.",
+              ],
+            },
+            {
+              type: "note",
+              text: "Le due liste sono indipendenti tra loro: la disiscrizione dalla newsletter non interrompe la ricezione delle comunicazioni ai partecipanti, che fanno parte dell’organizzazione della gara e vengono inviate finché la tua iscrizione è attiva. Viceversa, l’iscrizione alla gara non costituisce consenso alla newsletter. Per i tempi di conservazione valgono i termini indicati al punto 7.",
             },
             {
               type: "p",
-              text: "Per l’invio della newsletter ci avvaliamo di Sendinblue SAS (operante con il marchio Brevo), 9–17 rue Salneuve, 75017 Parigi, Francia, RCS Paris 498 019 298, in qualità di responsabile del trattamento.",
+              text: "Per entrambe le liste ci avvaliamo di Sendinblue SAS (operante con il marchio Brevo), 9–17 rue Salneuve, 75017 Parigi, Francia, RCS Paris 498 019 298, in qualità di responsabile del trattamento.",
             },
           ],
         },
@@ -1063,15 +1085,26 @@ export const legal: Record<Lang, LegalContent> = {
           ],
         },
         {
-          heading: "5. Newsletter",
+          heading: "5. Newsletter and participant communications",
           blocks: [
             {
               type: "p",
-              text: "If you sign up for our newsletter, we process your email address and name on the basis of your consent (Art. 6(1)(a) GDPR). Sending uses a double opt-in procedure. You can unsubscribe at any time via the unsubscribe link in every email or by contacting us.",
+              text: "We keep two separate mailing lists. They differ in purpose and legal basis:",
+            },
+            {
+              type: "list",
+              items: [
+                "Newsletter (optional): If you sign up for our newsletter, we process your email address and name on the basis of your consent (Art. 6(1)(a) GDPR). You can unsubscribe at any time via the unsubscribe link in every email or by contacting us.",
+                "Participant information (no consent required): Once your registration is binding, we add your first name, last name and email address to a separate participant list. We use it exclusively for organisational and safety-related information about the race, such as start times, changes to the course or schedule, and weather and safety notices. This processing is necessary for the performance of the participation contract (Art. 6(1)(b) GDPR); no consent is required for it and none is obtained. These messages contain no advertising.",
+              ],
+            },
+            {
+              type: "note",
+              text: "The two lists are independent of each other: unsubscribing from the newsletter does not stop participant information, which is part of running the race and is sent for as long as your registration is active. Conversely, registering for the race does not constitute consent to the newsletter. Retention periods are those set out in point 7.",
             },
             {
               type: "p",
-              text: "For sending the newsletter we use Sendinblue SAS (trading as Brevo), 9–17 rue Salneuve, 75017 Paris, France, RCS Paris 498 019 298, as a processor.",
+              text: "For both lists we use Sendinblue SAS (trading as Brevo), 9–17 rue Salneuve, 75017 Paris, France, RCS Paris 498 019 298, as a processor.",
             },
           ],
         },

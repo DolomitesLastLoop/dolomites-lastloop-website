@@ -1,15 +1,26 @@
 // Brevo (ex-Sendinblue) Contact-API.
-// Trägt einen Kontakt in die konfigurierte Liste ein.
+// Trägt einen Kontakt in eine der konfigurierten Listen ein.
 // Keys kommen ausschließlich aus Env-Vars (nie hardcoden):
-//   BREVO_API_KEY  – v3 API-Key (xkeysib-…)
-//   BREVO_LIST_ID  – numerische Listen-ID
+//   BREVO_API_KEY              – v3 API-Key (xkeysib-…)
+//   BREVO_LIST_ID              – Newsletter-Liste (numerisch)
+//   BREVO_PARTICIPANT_LIST_ID  – Liste der bestätigten Teilnehmer (numerisch)
+//
+// Gelesen wird runtime-first über @lib/env: statisches `import.meta.env.X` würde
+// von Vite zur BUILD-Zeit als Literal eingebacken (vgl. Fehlerprotokoll 2026-07-11).
 //
 // Robust gegen die dotenv-Falle: ein lokal als z. B. "#3" notierter Wert wird
 // von Vite/dotenv ab "#" als Kommentar abgeschnitten; daher filtern wir den
 // Wert defensiv auf reine Ziffern.
 
-const API_KEY = import.meta.env.BREVO_API_KEY as string | undefined;
-const RAW_LIST_ID = import.meta.env.BREVO_LIST_ID as string | undefined;
+import { env } from "@lib/env";
+
+/** Zielliste. "newsletter" = Einwilligung, "participants" = Vertragserfüllung. */
+export type BrevoList = "newsletter" | "participants";
+
+const LIST_ENV_VAR: Record<BrevoList, string> = {
+  newsletter: "BREVO_LIST_ID",
+  participants: "BREVO_PARTICIPANT_LIST_ID",
+};
 
 function parseListId(raw: string | undefined): number | null {
   if (!raw) return null;
@@ -29,19 +40,31 @@ export interface BrevoResult {
 export async function addBrevoContact(input: {
   email: string;
   name?: string;
+  lastName?: string;
+  /** Default "newsletter" – hält das Verhalten von /api/newsletter unverändert. */
+  list?: BrevoList;
 }): Promise<BrevoResult> {
-  const listId = parseListId(RAW_LIST_ID);
-  if (!API_KEY || !listId) {
+  const apiKey = env("BREVO_API_KEY");
+  const listId = parseListId(env(LIST_ENV_VAR[input.list ?? "newsletter"]));
+  if (!apiKey || !listId) {
     return { ok: false, skipped: true, error: "Brevo nicht konfiguriert" };
   }
 
+  // Attributnamen laut Brevo-Konto: VORNAME (firstname) / NACHNAME (lastname).
+  // Ein unbekanntes Attribut wird von Brevo still verworfen – der Kontakt landet
+  // dann ohne Namen in der Liste, ohne dass der Request fehlschlägt.
   const firstName = (input.name ?? "").trim();
+  const lastName = (input.lastName ?? "").trim();
+  const attributes: Record<string, string> = {};
+  if (firstName) attributes.VORNAME = firstName;
+  if (lastName) attributes.NACHNAME = lastName;
+
   const body: Record<string, unknown> = {
     email: input.email,
     listIds: [listId],
     updateEnabled: true, // bestehende Kontakte aktualisieren statt 400 werfen
   };
-  if (firstName) body.attributes = { FIRSTNAME: firstName };
+  if (Object.keys(attributes).length > 0) body.attributes = attributes;
 
   try {
     const res = await fetch("https://api.brevo.com/v3/contacts", {
@@ -49,7 +72,7 @@ export async function addBrevoContact(input: {
       headers: {
         accept: "application/json",
         "content-type": "application/json",
-        "api-key": API_KEY,
+        "api-key": apiKey,
       },
       body: JSON.stringify(body),
     });

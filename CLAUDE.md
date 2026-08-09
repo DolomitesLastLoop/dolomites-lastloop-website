@@ -180,11 +180,24 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
 - Atteste sind sensible Gesundheitsdaten → Bucket privat halten, nur signierte URLs.
 - Deployment: Repo mit Vercel verbinden, Env-Vars aus `.env.example` im
   Vercel-Dashboard setzen.
-- **Brevo Newsletter**: `BREVO_API_KEY` + `BREVO_LIST_ID` müssen im **Vercel-Dashboard**
-  gesetzt werden (Production + Preview). `BREVO_LIST_ID` ist eine reine Zahl. Lokal in
-  `.env` Werte mit `#` quoten/ohne `#` schreiben (dotenv schneidet sonst ab `#` ab –
-  `src/lib/brevo.ts` filtert defensiv auf Ziffern). Fehlt die Config, wird Brevo still
-  übersprungen und nur Supabase (Admin-Panel) befüllt.
+- **Brevo – zwei Listen, zwei Rechtsgrundlagen**: `src/lib/brevo.ts` schreibt in zwei
+  getrennte Listen, gesteuert über `addBrevoContact({ list })`:
+  - `list: "newsletter"` (Default) → `BREVO_LIST_ID` (=3), Aufrufer `/api/newsletter`.
+    Rechtsgrundlage **Einwilligung** (Art. 6 Abs. 1 lit. a).
+  - `list: "participants"` → `BREVO_PARTICIPANT_LIST_ID` (=4 „DLL Teilnehmer 2027"),
+    Aufrufer `stripe-webhook.ts` im confirmed-Pfad. Rechtsgrundlage **Vertragserfüllung**
+    (Art. 6 Abs. 1 lit. b) für Sicherheits-/Organisationsinfos – keine Einwilligung nötig.
+    Der Sync läuft **nach** dem Mailversand in eigenem try/catch und darf Bestätigungsmail,
+    Ticket-PDF und Webhook-Response nie beeinflussen (nur `console.error`).
+  `BREVO_API_KEY` + **beide** Listen-IDs müssen im **Vercel-Dashboard** gesetzt werden
+  (Production + Preview); Listen-IDs sind reine Zahlen. Lokal in `.env` Werte mit `#`
+  quoten/ohne `#` schreiben (dotenv schneidet sonst ab `#` ab – `brevo.ts` filtert
+  defensiv auf Ziffern). Fehlt die Config, wird Brevo still übersprungen und nur
+  Supabase (Admin-Panel) befüllt.
+- **Brevo-Attributnamen**: Das Konto nutzt `VORNAME`/`NACHNAME` (nicht `FIRSTNAME`/
+  `LASTNAME`). Unbekannte Attribute verwirft Brevo **still** – der Kontakt landet ohne
+  Namen in der Liste, der Request meldet trotzdem Erfolg. Vor dem Ergänzen neuer
+  Attribute die Liste per Brevo-API (`/v3/contacts/attributes`) prüfen.
 
 ---
 
@@ -393,7 +406,9 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   Rückerstattungs-Passus ergänzen (im direkten Pfad fand keine Zahlung statt).
   Befund vom 2026-07-15, bewusst als separater Punkt zurückgestellt.
 - [x] **Upstash-Keys im Vercel-Dashboard setzen** (`UPSTASH_REDIS_REST_URL`/`_TOKEN`) → Rate-Limiting scharf schalten *(2026-07-11 in Production verifiziert: `/api/newsletter` liefert ab dem 4. Request 429 + `Retry-After` → Keys aktiv)*
-- [ ] **Brevo-Keys im Vercel-Dashboard setzen** (`BREVO_API_KEY`/`BREVO_LIST_ID`) → Newsletter geht live an Brevo
+- [ ] **Brevo-Keys im Vercel-Dashboard setzen** (`BREVO_API_KEY`, `BREVO_LIST_ID`,
+  `BREVO_PARTICIPANT_LIST_ID=4`) → Newsletter **und** Teilnehmer-Sync gehen live an Brevo.
+  Ohne die Vars laufen beide Pfade still im `skipped`-Modus (Code läuft, synct nichts).
 - [ ] **`supabase/schema.sql` im Supabase SQL-Editor ausführen** → View `participants_public` anlegen
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
@@ -406,17 +421,22 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 - [ ] **Ticket-PDF-Fixes end-to-end verifizieren (vor Live-Gang der Registrierung):**
   siehe Unterabschnitt unten.
 - [x] **Rechtstexte finalisieren** *(2026-08-08 erledigt — alle Platzhalter in `src/i18n/legal.ts` ausgefüllt, `noindex` aus `src/pages/[lang]/[legal].astro` entfernt; Details siehe Unterabschnitt unten)*
-- [ ] **Attest-Löschung umsetzen (rechtlich zugesichert, technisch noch NICHT vorhanden):**
-  Die Datenschutzerklärung enthält seit 2026-08-08 eine **echte Löschpflicht** — Gesundheitsdaten
-  (ärztliche Atteste) werden „bis drei Monate nach dem Rennen (Frist ab dem 15.05.2027)
-  aufbewahrt und anschließend gelöscht". Betroffen ist der private Supabase-Bucket `atteste`
-  (plus `participants.attest_url` / `attest_status`). Aktuell löscht **nichts** automatisch —
-  die Zusage steht nur im Rechtstext. **Deadline: 15.08.2027.** Nötig ist entweder ein
-  automatisierter Cleanup-Job (z. B. Supabase-Cron/Edge-Function oder Vercel-Cron, der Objekte
-  im Bucket nach Ablauf der Frist entfernt und `attest_url` leert) **oder** mindestens ein
-  fest terminierter manueller Reminder-Prozess mit dokumentierter Durchführung. Ohne eines von
-  beidem ist die Datenschutzerklärung ab dem 15.08.2027 unzutreffend. *(Kein Code dafür
-  geschrieben — bewusst als offener Punkt festgehalten.)*
+- [ ] **Datenlöschung nach dem Rennen (rechtlich zugesichert, technisch noch NICHT vorhanden)
+  — Deadline ~15.08.2027 (3 Monate nach dem 15.05.2027):** Die Datenschutzerklärung enthält
+  seit 2026-08-08 eine **echte Löschpflicht** (Punkt 7). Betroffen sind drei Speicherorte:
+  - **Supabase `participants`-Tabelle** — Teilnehmerdaten löschen bzw. anonymisieren
+  - **Supabase Storage-Bucket `atteste`** — Gesundheitsdaten löschen (plus
+    `participants.attest_url` / `attest_status` leeren)
+  - **Brevo Liste 4 „DLL Teilnehmer 2027"** — Kontakte entfernen (seit 2026-08-09 füllt der
+    Stripe-Webhook diese Liste; §5 der Datenschutzerklärung verweist für die Speicherdauer
+    auf Punkt 7, die Zusage gilt damit auch hier)
+
+  Aktuell löscht **nichts** automatisch — die Zusage steht nur im Rechtstext. Nötig ist
+  entweder ein automatisierter Cleanup-Job (z. B. Supabase-Cron/Edge-Function oder
+  Vercel-Cron), der **alle drei** anstößt, **oder** ein dokumentierter Manual-Prozess mit
+  fest terminiertem Reminder und festgehaltener Durchführung. Ohne eines von beidem ist die
+  Datenschutzerklärung ab dem 15.08.2027 unzutreffend. *(Kein Code dafür geschrieben —
+  bewusst als offener Punkt festgehalten.)*
 
 ### Ticket-PDF-Fixes end-to-end verifizieren (vor Live-Gang der Registrierung)
 

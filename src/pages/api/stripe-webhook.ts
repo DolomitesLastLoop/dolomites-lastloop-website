@@ -8,6 +8,7 @@ import {
   sendWaitlistNotification,
 } from "@lib/email";
 import { generateTicketPdf } from "@lib/ticket";
+import { addBrevoContact } from "@lib/brevo";
 import { env } from "@lib/env";
 
 export const prerender = false;
@@ -126,6 +127,24 @@ export const POST: APIRoute = async ({ request }) => {
       } catch (mailErr) {
         // Mail-Fehler darf den Bezahlstatus NICHT blockieren.
         console.error("Email send failed", mailErr);
+      }
+
+      // Sync in die Brevo-Teilnehmerliste: Nice-to-have, kein kritischer Pfad.
+      // Bewusst NACH dem Mailversand — der Handler ist sequenziell, ein hängender
+      // Brevo-Request würde sonst Ticket-Mail und maxDuration-Budget gefährden.
+      // addBrevoContact wirft nie; das try/catch ist reine Absicherung.
+      try {
+        const brevo = await addBrevoContact({
+          email: updated.email,
+          name: updated.vorname,
+          lastName: tokenRow?.nachname ?? "",
+          list: "participants",
+        });
+        if (!brevo.ok && !brevo.skipped) {
+          console.error("[webhook] Brevo participant sync:", brevo.error);
+        }
+      } catch (brevoErr) {
+        console.error("[webhook] Brevo participant sync failed", brevoErr);
       }
     } catch (err) {
       console.error("Webhook DB error", err);
