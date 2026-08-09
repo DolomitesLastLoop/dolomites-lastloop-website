@@ -192,6 +192,40 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
 
 > Hier neu auftretende Fehler + Ursache + Lösung notieren (Regel 4).
 
+### 2026-08-09 — Google-Maps-Iframe geblockt: ZWEI Blocker, der zweite (COEP) schweigt
+
+- **Symptom:** Auf `/{lang}/kontakt` statt der Karte Chromes Platzhalter „This content is
+  blocked. Contact the site owner to fix the issue."
+- **Ursache 1 (laut, CSP):** Die CSP in `vercel.json` deklarierte **weder `frame-src` noch
+  `child-src`** → Fallback auf `default-src 'self'` → jedes Cross-Origin-Iframe geblockt.
+  Erzeugt die sichtbare Chrome-Meldung und einen Console-Error.
+- **Ursache 2 (STILL, COEP):** `Cross-Origin-Embedder-Policy: credentialless` (seit der
+  Härtung 2026-06-16) blockt Cross-Origin-Iframes zusätzlich, wenn das eingebettete
+  Dokument nicht selbst COEP setzt. Google Maps sendet **kein** COEP (per curl belegt:
+  die Endantwort von `/maps/embed` hat weder COEP noch `X-Frame-Options`).
+- ⚠️ **Kernlektion:** Der COEP-Block ist **komplett still** — kein Console-Error, keine
+  Warnung, nur ein leeres Iframe. Wer nur die CSP fixt, sieht die Karte weiterhin nicht und
+  hat *keinen* Hinweis in der Console. Eine leere Console ist hier **kein** Beweis, dass es
+  nicht am Browser-Enforcement liegt.
+- **Lösung (beide nötig, keiner allein reicht):**
+  1. `vercel.json`: `frame-src 'self' https://www.google.com;` ergänzt. Exakter Host statt
+     Wildcard — die Embed-URL redirected `/maps?q=…&output=embed` → `/maps/embed`, bleibt
+     aber auf `www.google.com`. Kein `child-src` nötig (`frame-src` hat Vorrang).
+  2. `src/pages/[lang]/kontakt.astro`: `credentialless`-Attribut am `<iframe>`. Browser
+     ohne Support ignorieren das unbekannte Attribut.
+  - COEP bewusst **nicht** global gelockert — die Härtung von 2026-06-16 bleibt intakt.
+- **Verifiziert (Live-URL nach Deploy, headless Chromium, frischer Kontext):** Karte rendert
+  auf Desktop 1440×900 und Mobile-Viewport 390×844, je 0 Console-Errors. Gegenprobe auf
+  derselben Seite: identisches Iframe **ohne** `credentialless` → leer; Kontrolle mit
+  gleicher DOM-Ersetzung **mit** `credentialless` → rendert. Damit ist Ursache 2 als
+  eigenständiger Blocker bewiesen, nicht bloß vermutet.
+- **Offen / nicht verifiziert:** Nur Chromium getestet. **Safari kennt `credentialless`
+  nicht** — ob die Karte im iOS-Safari lädt, ist ungeprüft. Falls dort weiterhin leer, wäre
+  der nächste Schritt ein route-spezifischer COEP-Override nur für `/*/kontakt`, nicht global.
+- **Merkregel:** Beim Einbetten fremder Iframes IMMER beide Ebenen prüfen — CSP `frame-src`
+  **und** COEP. Und: `vercel.json`-Header greifen **nicht** im Dev-Server (`npm run dev`) —
+  „geht lokal" sagt über CSP/COEP nichts aus.
+
 ### 2026-07-13 — Screenshot-Verifikation: GSAP-Reveal-Zwischenzustände nicht als Endzustand interpretieren
 
 - **Symptom:** Nach Scroll-Sprung (`scrollTo` instant) zeigten Screenshots der Retro-Sektion
