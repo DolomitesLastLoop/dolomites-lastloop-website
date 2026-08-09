@@ -24,3 +24,14 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+// Declaration merging in Astro's global JSX namespace (astro/astro-jsx.d.ts).
+// `credentialless` is a COEP opt-out attribute that is not part of the HTML
+// standard yet, so Astro's IframeHTMLAttributes does not declare it. It is
+// required on the Google Maps embed in src/pages/[lang]/kontakt.astro — see the
+// 2026-08-09 entry in CLAUDE.md. Browsers without support ignore it.
+declare namespace astroHTML.JSX {
+  interface IframeHTMLAttributes {
+    credentialless?: boolean | "true" | "false";
+  }
+}
