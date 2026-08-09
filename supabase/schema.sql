@@ -302,6 +302,21 @@ begin
 end;
 $$;
 
+-- KRITISCH: Execute-Rechte einschränken (2026-08-09). Jedes CREATE FUNCTION
+-- vergibt per Postgres-Default EXECUTE an PUBLIC — anon/authenticated erben das
+-- und könnten via PostgREST fremde Teilnehmer bestätigen bzw. mit beliebigem
+-- p_max das Kapazitäts-Gate aushebeln. Der Aufruf erfolgt ausschließlich
+-- serverseitig aus src/pages/api/stripe-webhook.ts mit dem Service-Role-Key.
+-- Das REVOKE muss `public` einschließen — nur anon/authenticated zu entziehen
+-- lässt den PUBLIC-Grant stehen und wirkt nicht.
+revoke execute on function public.confirm_participant(uuid, integer)
+  from public, anon, authenticated;
+grant execute on function public.confirm_participant(uuid, integer)
+  to service_role;
+-- SECURITY DEFINER ohne festen search_path ist angreifbar (Supabase-Advisor
+-- 0011_function_search_path_mutable) — analog register_login_attempt.
+alter function public.confirm_participant(uuid, integer) set search_path = public;
+
 -- ─────────────────────────────────────────────────────────────
 -- Anmeldesprache (de/it/en) persistieren — Mail-Sprache unabhängig von der
 -- Stripe-Session-Metadata reproduzierbar (z.B. spätere Mails/Admin-Resend).
