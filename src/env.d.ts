@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly STRIPE_WEBHOOK_SECRET: string;
   readonly STRIPE_PRICE_EARLY_BIRD: string;
   readonly STRIPE_PRICE_STANDARD: string;
+  readonly STRIPE_PRICE_LATE: string;
   readonly RESEND_API_KEY: string;
   readonly EMAIL_FROM: string;
   readonly EMAIL_REPLY_TO: string;

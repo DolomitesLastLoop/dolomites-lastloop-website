@@ -61,6 +61,15 @@ export const POST: APIRoute = async ({ request, url }) => {
   // (das Verstecken des Formulars allein ist kein Schutz). Fail-safe via @lib/registration.
   if (!isRegistrationEnabled()) return bad("Registration closed", 403);
 
+  // Zweites, datumsbasiertes Gate: Preis serverseitig bestimmen — der Client darf
+  // den Tarif nicht wählen. Außerhalb der AGB-Anmeldefenster (vor dem 01.09.2026,
+  // ab dem 01.05.2027) gibt es KEINEN gültigen Tarif → die Anmeldung ist technisch
+  // zu, auch wenn PUBLIC_REGISTRATION_ENABLED noch auf 'true' steht. Das Gate steht
+  // bewusst vor jedem DB-Schreibzugriff, damit nach Anmeldeschluss auch kein
+  // Warteliste-Eintrag mehr entsteht.
+  const tier = currentTier();
+  if (!tier) return bad("Registration closed", 403);
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();
@@ -123,9 +132,6 @@ export const POST: APIRoute = async ({ request, url }) => {
 
   // Codice Fiscale wird bewusst NICHT geblockt (nur Soft-Warnung im Client).
 
-  // Preis serverseitig bestimmen — der Client darf den Tarif nicht wählen.
-  const tier = currentTier();
-
   // Gemeinsame Datensatz-Felder für Insert/Upsert.
   const baseFields = {
     vorname,
@@ -185,7 +191,7 @@ export const POST: APIRoute = async ({ request, url }) => {
     const priceId = priceIdFor(tier);
     if (!priceId) {
       return bad(
-        "Stripe Preise nicht konfiguriert. Setze STRIPE_PRICE_EARLY_BIRD / STRIPE_PRICE_STANDARD.",
+        "Stripe Preise nicht konfiguriert. Setze STRIPE_PRICE_EARLY_BIRD / STRIPE_PRICE_STANDARD / STRIPE_PRICE_LATE.",
         500,
       );
     }

@@ -186,6 +186,7 @@ export const ui = {
     "signup.back": "Zurück",
     "signup.ticket.earlybird": "Early Bird",
     "signup.ticket.standard": "Standard",
+    "signup.ticket.late": "Spätanmeldung",
     "signup.ticket.included":
       "Inkludiert: Startplatz, Startnummer, Teamzone, Verpflegung, Finisher-Geschenk.",
     "signup.ticket.checkout": "Zur Zahlung",
@@ -334,7 +335,8 @@ export const ui = {
       "Ich akzeptiere die <a href=\"{href}\">Haftungsfreistellung / den Haftungsausschluss</a>.",
     "signup.consent.image":
       "Ich stimme zu, dass während des Events erstellte <a href=\"{href}\">Foto-/Videoaufnahmen</a> für Marketing-Zwecke verwendet werden dürfen.",
-    "signup.price.note": "Early-Bird-Preis bis 15.02.2027, danach automatisch Standard.",
+    "signup.price.note":
+      "Preisstufen: 75 € bis 31.12.2026, 80 € bis 31.03.2027, 100 € bis 30.04.2027 (Anmeldeschluss).",
     "signup.paid.notice": "Zahlung erfolgreich. Bitte lade jetzt dein ärztliches Attest hoch.",
     "signup.cancelled.notice": "Zahlung abgebrochen. Du kannst es jederzeit erneut versuchen.",
     "signup.waitlist.text":
@@ -344,6 +346,9 @@ export const ui = {
     "signup.soon.title": "Die Anmeldung für 2027 öffnet in Kürze",
     "signup.soon.text":
       "Trag dich in den Newsletter ein, dann verpasst du den Anmeldestart nicht.",
+    "signup.closed.title": "Die Anmeldung für 2027 ist geschlossen",
+    "signup.closed.text":
+      "Der Anmeldeschluss war der 30. April 2027. Bereits angemeldete Teilnehmer können ihr ärztliches Attest weiterhin über den Link aus der Bestätigungs-Email hochladen.",
     "footer.liability": "Haftungsausschluss",
   },
 
@@ -526,6 +531,7 @@ export const ui = {
     "signup.back": "Indietro",
     "signup.ticket.earlybird": "Early Bird",
     "signup.ticket.standard": "Standard",
+    "signup.ticket.late": "Iscrizione tardiva",
     "signup.ticket.included":
       "Incluso: posto di partenza, pettorale, area team, ristoro, gadget finisher.",
     "signup.ticket.checkout": "Vai al pagamento",
@@ -674,7 +680,8 @@ export const ui = {
       "Accetto la <a href=\"{href}\">manleva / esclusione di responsabilità</a>.",
     "signup.consent.image":
       "Acconsento all’uso di <a href=\"{href}\">foto/video</a> realizzati durante l’evento per scopi di marketing.",
-    "signup.price.note": "Prezzo Early Bird fino al 15.02.2027, poi automaticamente Standard.",
+    "signup.price.note":
+      "Tariffe: 75 € fino al 31/12/2026, 80 € fino al 31/03/2027, 100 € fino al 30/04/2027 (chiusura iscrizioni).",
     "signup.paid.notice": "Pagamento riuscito. Carica ora il tuo certificato medico.",
     "signup.cancelled.notice": "Pagamento annullato. Puoi riprovare in qualsiasi momento.",
     "signup.waitlist.text":
@@ -684,6 +691,9 @@ export const ui = {
     "signup.soon.title": "Le iscrizioni per il 2027 apriranno a breve",
     "signup.soon.text":
       "Iscriviti alla newsletter per non perderti l’apertura delle iscrizioni.",
+    "signup.closed.title": "Le iscrizioni per il 2027 sono chiuse",
+    "signup.closed.text":
+      "Il termine per l’iscrizione era il 30 aprile 2027. Chi è già iscritto può continuare a caricare il certificato medico tramite il link ricevuto nell’email di conferma.",
     "footer.liability": "Esclusione di responsabilità",
   },
 
@@ -864,6 +874,7 @@ export const ui = {
     "signup.back": "Back",
     "signup.ticket.earlybird": "Early Bird",
     "signup.ticket.standard": "Standard",
+    "signup.ticket.late": "Late registration",
     "signup.ticket.included":
       "Included: starting spot, bib, team zone, aid, finisher gift.",
     "signup.ticket.checkout": "Go to checkout",
@@ -1012,7 +1023,8 @@ export const ui = {
       "I accept the <a href=\"{href}\">liability waiver / disclaimer</a>.",
     "signup.consent.image":
       "I agree that <a href=\"{href}\">photos/videos</a> taken during the event may be used for marketing purposes.",
-    "signup.price.note": "Early-bird price until 2027-02-15, then automatically standard.",
+    "signup.price.note":
+      "Price tiers: €75 until 31 Dec 2026, €80 until 31 Mar 2027, €100 until 30 Apr 2027 (registration deadline).",
     "signup.paid.notice": "Payment successful. Please upload your medical certificate now.",
     "signup.cancelled.notice": "Payment cancelled. You can try again any time.",
     "signup.waitlist.text":
@@ -1022,6 +1034,9 @@ export const ui = {
     "signup.soon.title": "Registration for 2027 opens soon",
     "signup.soon.text":
       "Sign up for the newsletter so you don’t miss the registration opening.",
+    "signup.closed.title": "Registration for 2027 is closed",
+    "signup.closed.text":
+      "The registration deadline was 30 April 2027. Participants who have already registered can still upload their medical certificate via the link in their confirmation email.",
     "footer.liability": "Disclaimer",
   },
 } as const;

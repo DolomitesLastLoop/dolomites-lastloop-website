@@ -60,7 +60,7 @@ export interface Participant {
   postal_code: string | null;
   city: string | null;
   country: string | null;
-  price_type: "early_bird" | "standard" | null;
+  price_type: "early_bird" | "standard" | "late" | null;
   consent_privacy: boolean | null;
   consent_liability_waiver: boolean | null;
   consent_image_rights: boolean | null;

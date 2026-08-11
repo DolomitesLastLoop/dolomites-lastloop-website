@@ -4,6 +4,7 @@ import PageHero from "@components/PageHero.astro";
 import RegistrationFlow from "@components/RegistrationFlow.astro";
 import { photo, pos } from "@lib/photos";
 import { isRegistrationEnabled } from "@lib/registration";
+import { registrationWindowState } from "@lib/stripe";
 import { getAdminClient } from "@lib/supabase";
 import { useTranslations, type Lang } from "@i18n/utils";
 
@@ -15,7 +16,11 @@ const t = useTranslations(lang);
 // Feature-Flag: solange nicht 'true', ist die öffentliche Anmeldung deaktiviert.
 // Zentrale, fail-safe Auswertung in @lib/registration — dieselbe Quelle gatet auch
 // den Zahlungs-Endpoint (/api/checkout).
-const registrationEnabled = isRegistrationEnabled();
+// Zweite, datumsbasierte Bedingung: außerhalb der AGB-Anmeldefenster gibt es keinen
+// gültigen Tarif. `windowState` unterscheidet dabei "noch nicht offen" (before) von
+// "Anmeldeschluss vorbei" (after) — dieselbe Grenze gatet serverseitig /api/checkout.
+const windowState = registrationWindowState();
+const registrationEnabled = isRegistrationEnabled() && windowState === "open";
 
 // Auch bei deaktiviertem Flag muss ein bereits bezahlter Teilnehmer Schritt 3
 // (Attest) erreichen: nach Stripe-Erfolg (?status=success) oder über den
@@ -119,8 +124,8 @@ if (params.get("status") === "success" && !isMagicLink) {
         />
         <section class="section">
           <div class="container-narrow text-center soon">
-            <h2>{t("signup.soon.title")}</h2>
-            <p>{t("signup.soon.text")}</p>
+            <h2>{windowState === "after" ? t("signup.closed.title") : t("signup.soon.title")}</h2>
+            <p>{windowState === "after" ? t("signup.closed.text") : t("signup.soon.text")}</p>
           </div>
         </section>
       </>
