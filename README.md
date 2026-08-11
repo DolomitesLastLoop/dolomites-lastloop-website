@@ -42,10 +42,13 @@ automatisch auf `/de`.
 ## Stripe einrichten
 
 1. Test- und Live-API-Keys aus dem Stripe Dashboard übernehmen.
-2. Zwei Produkte/Preise anlegen:
-   - **Early Bird** (z. B. 80 €)
-   - **Standard** (z. B. 100 €)
-3. Preis-IDs in `STRIPE_PRICE_EARLY_BIRD` und `STRIPE_PRICE_STANDARD` eintragen.
+2. Drei Produkte/Preise anlegen — Beträge und Fenster laut AGB §1:
+   - **Early Bird** 75 € (01.09.2026 – 31.12.2026)
+   - **Standard** 80 € (01.01.2027 – 31.03.2027)
+   - **Spätanmeldung** 100 € (01.04.2027 – 30.04.2027)
+3. Preis-IDs in `STRIPE_PRICE_EARLY_BIRD`, `STRIPE_PRICE_STANDARD` und
+   `STRIPE_PRICE_LATE` eintragen. Die Datumsfenster selbst stehen im Code
+   (`TIER_WINDOWS` in `src/lib/stripe.ts`), nicht in Stripe.
 4. Webhook erstellen → Endpoint: `https://DOMAIN/api/stripe-webhook`
    - Event: `checkout.session.completed`
    - Signing Secret in `STRIPE_WEBHOOK_SECRET` eintragen.

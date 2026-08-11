@@ -3,7 +3,7 @@ import PageHero from "@components/PageHero.astro";
 import { photo, pos } from "@lib/photos";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 import { getAdminClient, MAX_PARTICIPANTS } from "@lib/supabase";
-import { currentTier, TIER_PRICE_LABEL } from "@lib/stripe";
+import { currentTier, TIER_LABEL_KEY, TIER_PRICE_LABEL, TIER_WINDOWS } from "@lib/stripe";
 
 interface Props {
   lang: Lang;
@@ -46,11 +46,14 @@ try {
   isFull = false;
 }
 
-// Preis serverseitig nach Datum bestimmen (Early-Bird bis 15.02.2027).
-const tier = currentTier();
-const priceLabel = TIER_PRICE_LABEL[tier];
-const tierName =
-  tier === "early_bird" ? t("signup.ticket.earlybird") : t("signup.ticket.standard");
+// Preis serverseitig nach Datum bestimmen (Anmeldefenster laut AGB, siehe @lib/stripe).
+// Außerhalb der Fenster liefert currentTier() null; für die reine ANZEIGE fallen wir
+// dann auf die erste Stufe zurück, damit die Preisbox in Dev und auf der Test-Route
+// (/[lang]/anmeldung-test, ignoriert das Feature-Flag, in Prod 404) nicht leer ist.
+// Die echte Sperre liegt serverseitig in /api/checkout und in anmeldung.astro.
+const displayTier = currentTier() ?? TIER_WINDOWS[0].id;
+const priceLabel = TIER_PRICE_LABEL[displayTier];
+const tierName = t(TIER_LABEL_KEY[displayTier]);
 
 const today = new Date();
 const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());

@@ -241,7 +241,7 @@ alter table public.participants
   add column if not exists city text,
   add column if not exists country text,
   add column if not exists price_type text
-    check (price_type in ('early_bird', 'standard')),
+    check (price_type in ('early_bird', 'standard', 'late')),
   add column if not exists consent_privacy boolean,
   add column if not exists consent_liability_waiver boolean,
   add column if not exists consent_image_rights boolean,
@@ -251,6 +251,13 @@ alter table public.participants
 alter table public.participants drop constraint if exists participants_ticket_status_check;
 alter table public.participants add constraint participants_ticket_status_check
   check (ticket_status in ('pending', 'confirmed', 'waitlist', 'cancelled', 'failed'));
+
+-- price_type um 'late' erweitern (dritte Startgeld-Stufe „Spätanmeldung", AGB §1).
+-- Nötig für bestehende Datenbanken: der Inline-Check oben greift dort nicht mehr,
+-- weil `add column if not exists` bei vorhandener Spalte ein No-Op ist.
+alter table public.participants drop constraint if exists participants_price_type_check;
+alter table public.participants add constraint participants_price_type_check
+  check (price_type in ('early_bird', 'standard', 'late'));
 
 -- ─────────────────────────────────────────────────────────────
 -- confirm_participant v2: atomares Kapazitäts-GATE.

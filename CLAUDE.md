@@ -413,10 +413,21 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
 - [ ] Stripe einrichten
-- [ ] **Dritten Stripe-Preis „Spätanmeldung" (100 €) im Live-Konto anlegen** — die AGB nennen
-  seit 2026-08-08 drei Startgeld-Stufen (75 € / 80 € / 100 €), Stripe kennt bisher nur zwei
-  (Early-Bird / Standard). Preis-ID als `STRIPE_PRICE_*` in `.env` + Vercel-Dashboard nachziehen
-  und in `src/pages/api/checkout.ts` verdrahten, sonst ist die dritte Stufe nicht buchbar.
+- [x] **Dritte Startgeld-Stufe „Spätanmeldung" (100 €) verdrahtet** *(2026-08-11)* — `src/lib/stripe.ts`
+  ist von der einen `EARLY_BIRD_DEADLINE` auf ein Fenster-Modell `TIER_WINDOWS` umgestellt, das
+  exakt den AGB §1 folgt (75 € bis 31.12.2026 / 80 € bis 31.03.2027 / 100 € bis 30.04.2027).
+  Dabei wurden auch die **bestehenden zwei Stufen korrigiert** — sie standen vorher auf 80 €/100 €
+  mit Grenze 15.02.2027 und widersprachen damit den Rechtstexten.
+  - `currentTier()` liefert jetzt `Tier | null`; `null` = kein offenes Fenster → `/api/checkout`
+    antwortet 403 **vor** jedem DB-Write, `/[lang]/anmeldung` zeigt `signup.closed.*`. Damit ist
+    die Anmeldung nach dem 30.04.2027 automatisch zu, unabhängig von `PUBLIC_REGISTRATION_ENABLED`.
+  - Fenster sind **halboffen** (`from` inklusiv, `until` exklusiv). Ein „…23:59:59"-Ende hätte eine
+    Sekundenlücke zwischen zwei Stufen erzeugt, in der die Anmeldung kurzzeitig geschlossen wäre.
+  - Env-Var `STRIPE_PRICE_LATE`, DB-Wert `price_type='late'`. Der CHECK-Constraint
+    `participants_price_type_check` wurde bereits in Supabase migriert (2026-08-11); `schema.sql`
+    enthält den passenden idempotenten Block für Neuinstallationen.
+  - **Offen:** Die drei Price-IDs müssen im Vercel-Dashboard (Production + Preview) gesetzt sein,
+    sonst liefert `/api/checkout` 500 („Stripe Preise nicht konfiguriert").
 - [x] **Datenschutz, AGB usw. einrichten** *(2026-08-08 erledigt — alle Rechtstexte final)*
 - [ ] **Ticket-PDF-Fixes end-to-end verifizieren (vor Live-Gang der Registrierung):**
   siehe Unterabschnitt unten.
