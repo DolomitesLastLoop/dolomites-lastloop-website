@@ -397,6 +397,36 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   auf `@lib/env` umstellen.
 
 ## Nächste Schritte
+
+### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
+
+- [ ] **Vercel-Preview-Verifikation für 269 Galerie-Bilder — NOCH OFFEN nach diesem Commit.**
+  `src/pages/[lang]/galerie.astro` liest die Bildliste mit `fs.readdirSync(process.cwd() +
+  "/public/images")` **zur Laufzeit** (`prerender = false`). Ob der Serverless-Bundle auf
+  Vercel den `public/`-Ordner überhaupt mitbringt, ist **nur lokal im Dev-Server belegt**,
+  nicht auf einer echten Preview-URL. Bei einem Fehlschlag greift der `try/catch` in
+  Zeile 26–28 und die Galerie fällt **still auf leer** zurück — kein Fehler, keine Meldung.
+  Vor dem Merge nach `main` auf der Preview-URL zählen: Tag 222 + Nacht 36 = **258 Kacheln**
+  (269 Dateien minus `Logo.jpeg` minus 10 dedupte Rohdateien). Zusätzlich im Blick behalten:
+  Bundle-Größe (`public/images` ist von 34 auf 47 MB gewachsen).
+- [ ] **Tag/Nacht-Grenze bei `00899` ist manuell gesichtet, nicht gemessen.** Die
+  Sieder-Fotos haben **kein EXIF-Aufnahmedatum** (beim Export gestript — per Byte-Scan der
+  JPEG-Header geprüft). Die Regel `Number(sieder[1]) >= 899` in `isNight()` stammt aus dem
+  Ansehen aller 74 Bilder als Kontaktbogen. Sitzt plausibel (`00874` noch Dämmerung,
+  `00899` bereits Stirnlampen), ist aber eine Sichtentscheidung — bei Bedarf nachprüfen
+  oder beim Fotografen die Originale mit EXIF anfragen.
+- [ ] **Drei Bilder erscheinen doppelt in der Galerie:** `day-running-1`, `emotion-smile`
+  und `night-runners` liegen je als `.jpg` **und** `.webp` in `public/images`. Der Scan in
+  `galerie.astro` filtert auf `/\.(jpe?g|png|webp)$/i` und nimmt damit beide Varianten —
+  `semanticRawMap` dedupliziert nur Roh-gegen-Semantik, nicht Format-gegen-Format.
+  Vorbefund, nicht durch die Sieder-Änderung entstanden.
+- [ ] **30 tote i18n-Keys `gallery.alt.*` in `src/i18n/ui.ts`** (10 je Sprache). Sie werden
+  **nirgends referenziert** — die Galerie rendert `alt=""` (dekorativ), die Lightbox nimmt
+  den Dateinamen. Entweder verdrahten (echte Alt-Texte) oder löschen; aktuell sind sie
+  irreführend, weil sie den Eindruck gepflegter Alt-Texte erwecken.
+
+### Übrige offene Punkte
+
 - [ ] **Warteliste-Mail-Lücke im direkten Pfad fixen:** Wer sich anmeldet, wenn bereits
   alle Plätze vergeben sind (direkter Warteliste-Pfad in `src/pages/api/checkout.ts`,
   Block `if (isFull)` — Upsert mit `ticket_status: "waitlist"`, KEINE Zahlung), erhält

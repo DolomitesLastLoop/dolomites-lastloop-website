@@ -256,7 +256,12 @@ export const ui = {
       "Bilder aus Toblach – Tag und Nacht in den Dolomiten.",
     "gallery.section.day": "Tag",
     "gallery.section.night": "Nacht",
-    "gallery.credit": "© Harald Wisthaler – www.wisthaler.com",
+    // Sammel-Credit im Seitenkopf. Pro Kachel/Lightbox greift der
+    // fotografenspezifische Credit unten (aus dem Dateinamen abgeleitet).
+    "gallery.credit":
+      "Fotos: © Harald Wisthaler – www.wisthaler.com · © Gregor Sieder",
+    "gallery.credit.wisthaler": "© Harald Wisthaler – www.wisthaler.com",
+    "gallery.credit.sieder": "© Gregor Sieder",
     "gallery.close": "Schließen",
     "gallery.download": "Foto herunterladen",
     "gallery.alt.hero_start": "Startlinie mit allen Läufern",
@@ -601,7 +606,10 @@ export const ui = {
       "Immagini da Dobbiaco – giorno e notte tra le Dolomiti.",
     "gallery.section.day": "Giorno",
     "gallery.section.night": "Notte",
-    "gallery.credit": "© Harald Wisthaler – www.wisthaler.com",
+    "gallery.credit":
+      "Foto: © Harald Wisthaler – www.wisthaler.com · © Gregor Sieder",
+    "gallery.credit.wisthaler": "© Harald Wisthaler – www.wisthaler.com",
+    "gallery.credit.sieder": "© Gregor Sieder",
     "gallery.close": "Chiudi",
     "gallery.download": "Scarica la foto",
     "gallery.alt.hero_start": "Linea di partenza con tutti gli atleti",
@@ -944,7 +952,10 @@ export const ui = {
       "Photos from Toblach – day and night in the Dolomites.",
     "gallery.section.day": "Day",
     "gallery.section.night": "Night",
-    "gallery.credit": "© Harald Wisthaler – www.wisthaler.com",
+    "gallery.credit":
+      "Photos: © Harald Wisthaler – www.wisthaler.com · © Gregor Sieder",
+    "gallery.credit.wisthaler": "© Harald Wisthaler – www.wisthaler.com",
+    "gallery.credit.sieder": "© Gregor Sieder",
     "gallery.close": "Close",
     "gallery.download": "Download photo",
     "gallery.alt.hero_start": "Starting line with all runners",
