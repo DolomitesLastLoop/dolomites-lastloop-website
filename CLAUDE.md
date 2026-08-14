@@ -397,6 +397,65 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   auf `@lib/env` umstellen.
 
 ## Nächste Schritte
+
+### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
+
+- [x] **Vercel-Preview-Verifikation für die Galerie-Bilder** *(2026-08-14 erledigt, Commit
+  `a715aea`, Deployment `dpl_AbjHdAdg7ZQFKsj2i2aZSRRhJNoA`)*. Die offene Frage war, ob der
+  Laufzeit-`fs.readdirSync(process.cwd() + "/public/images")` in
+  `src/pages/[lang]/galerie.astro` (`prerender = false`) im Serverless-Bundle überhaupt
+  etwas findet — bei einem Fehlschlag greift der `try/catch` und die Galerie fällt **still
+  auf leer** zurück, ohne Fehler oder Meldung. **Er funktioniert.** Auf der Preview gemessen:
+  - **258 Kacheln** (Tag 222 / Nacht 36), identisch zum lokalen Dev-Server. Gegenprobe
+    Production: **184** — exakt 258 − 74, also die Differenz der neuen Fotos.
+  - **258 von 258 Bild-URLs liefern HTTP 200** (HEAD-Check über alle `data-src`), inklusive
+    der URL-kodierten `©`-Präfixe (`%C2%A9gregorsieder…`).
+  - Browser-Render mit vollständigem Durchscrollen: 258 geladen, **0 kaputt, 0 pending**.
+  - **0 Console-Errors** — hier greifen CSP/COEP aus `vercel.json`, anders als im Dev-Server.
+  - ⚠️ Stolperfalle für die nächste Preview-Prüfung: Playwright meldete 5 „fehlgeschlagene"
+    Requests auf `/_image?href=/_astro/…`. Das war **Deployment Protection**, kein Defekt —
+    dieselbe URL liefert mit Session-Cookie HTTP 200 (byte-identisch zu Production), ohne
+    Cookie 302 → SSO. Preview-URLs immer mit `_vercel_share`-Cookie prüfen, sonst erscheinen
+    Prefetch-Subressourcen fälschlich als kaputt.
+  - Offen bleibt nur die Beobachtung der Bundle-Größe: `public/images` ist von 34 auf 47 MB
+    gewachsen. Beim nächsten Foto-Nachschlag im Blick behalten.
+- [ ] **Tag/Nacht-Grenze bei `00899` ist manuell gesichtet, nicht gemessen.** Die
+  Sieder-Fotos haben **kein EXIF-Aufnahmedatum** (beim Export gestript — per Byte-Scan der
+  JPEG-Header geprüft). Die Regel `Number(sieder[1]) >= 899` in `isNight()` stammt aus dem
+  Ansehen aller 74 Bilder als Kontaktbogen. Sitzt plausibel (`00874` noch Dämmerung,
+  `00899` bereits Stirnlampen), ist aber eine Sichtentscheidung — bei Bedarf nachprüfen
+  oder beim Fotografen die Originale mit EXIF anfragen.
+- [ ] **Drei Bilder erscheinen doppelt in der Galerie:** `day-running-1`, `emotion-smile`
+  und `night-runners` liegen je als `.jpg` **und** `.webp` in `public/images`. Der Scan in
+  `galerie.astro` filtert auf `/\.(jpe?g|png|webp)$/i` und nimmt damit beide Varianten —
+  `semanticRawMap` dedupliziert nur Roh-gegen-Semantik, nicht Format-gegen-Format.
+  Vorbefund, nicht durch die Sieder-Änderung entstanden.
+- [ ] **30 tote i18n-Keys `gallery.alt.*` in `src/i18n/ui.ts`** (10 je Sprache). Sie werden
+  **nirgends referenziert** — die Galerie rendert `alt=""` (dekorativ), die Lightbox nimmt
+  den Dateinamen. Entweder verdrahten (echte Alt-Texte) oder löschen; aktuell sind sie
+  irreführend, weil sie den Eindruck gepflegter Alt-Texte erwecken.
+
+### Übrige offene Punkte
+
+> Die folgenden zwei Punkte standen bis 2026-08-14 nur in
+> `DLL-Kontext zur Chatübergabe.md` (Übergabe vom 12.08., Punkte 3 und 4) und waren nie
+> nach CLAUDE.md übernommen — dieses Dokument ist ungetrackt und überlebt keinen Clone.
+> Deshalb hier nachgezogen.
+
+- [ ] **`.gitignore` liegt seit mehreren Sessions unstaged/modifiziert im Working Tree**,
+  nie bewusst angeschaut. Der Diff stammt vom Agentic-OS-Setup (Block „Agentic OS Template –
+  Downstream Ignore Defaults", 26 Zeilen: Runtime-State, Deploy-Artefakte, Tool-State).
+  Klären, ob das so gewollt ist, und dann committen oder verwerfen — solange es offen liegt,
+  verschmutzt es jedes `git status` und erhöht das Risiko, dass es versehentlich in einem
+  fremden Commit mitgeht.
+- [ ] **`src/pages/api/stripe-webhook.ts:43` — Fallback `?? "early_bird"`.**
+  `const tier = (session.metadata?.tier as Tier) ?? "early_bird";` speist in Zeile 44
+  `TIER_PRICE_LABEL[tier]` für das **Preis-Label in der Bestätigungsmail**. Fehlt das
+  `tier`-Metadatum, zeigt die Mail damit stillschweigend „Early Bird" an, egal welche Stufe
+  tatsächlich bezahlt wurde. **Rein kosmetisch, keine Abrechnungsrelevanz** — der bezahlte
+  Betrag kommt von Stripe, nicht aus diesem Label. Bewusst nicht angefasst; aufräumen, wenn
+  ohnehin am Webhook gearbeitet wird.
+
 - [ ] **Warteliste-Mail-Lücke im direkten Pfad fixen:** Wer sich anmeldet, wenn bereits
   alle Plätze vergeben sind (direkter Warteliste-Pfad in `src/pages/api/checkout.ts`,
   Block `if (isFull)` — Upsert mit `ticket_status: "waitlist"`, KEINE Zahlung), erhält

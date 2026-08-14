@@ -27,9 +27,16 @@ try {
   console.error("Gallery: cannot read images dir", err);
 }
 
+// Two photographers shoot this race. The © prefix in the raw filenames is the
+// only thing that tells them apart, so it drives both the credit and the
+// day/night bucketing — no hand-maintained list that can go stale.
+const SIEDER_RE = /^©gregorsieder_Dolomites-Last-Loop_(\d{5})\.jpe?g$/i;
+const isSieder = (name: string) => SIEDER_RE.test(name);
+
 // Bucket day / night.
 // HHW0xxx (low numbers from a fresh sensor cycle) = night.
 // Named "night-*", "emotion-smile", "portrait-exhausted" = night.
+// Sieder's sequence is chronological: everything from 00899 on is after dusk.
 // Everything else = day.
 const isNight = (name: string) => {
   if (/^night-/i.test(name)) return true;
@@ -37,8 +44,17 @@ const isNight = (name: string) => {
   if (/^portrait-exhausted/i.test(name)) return true;
   // raw Wisthaler night batch
   if (/HHW0[0-2]\d{2}\.jpg$/i.test(name)) return true;
+  const sieder = name.match(SIEDER_RE);
+  if (sieder) return Number(sieder[1]) >= 899;
   return false;
 };
+
+const creditFor = (name: string) =>
+  isSieder(name) ? t("gallery.credit.sieder") : t("gallery.credit.wisthaler");
+
+// Newest batch first inside each bucket, alphabetical within a batch.
+const byBatch = (a: string, b: string) =>
+  Number(isSieder(b)) - Number(isSieder(a)) || (a < b ? -1 : a > b ? 1 : 0);
 
 // Deduplicate: the 10 semantic-named photos are copies of raw originals.
 // Skip the raw originals if their semantic version exists.
@@ -64,8 +80,8 @@ files = files.filter((f) => {
   return true;
 });
 
-const day = files.filter((f) => !isNight(f)).sort();
-const night = files.filter((f) => isNight(f)).sort();
+const day = files.filter((f) => !isNight(f)).sort(byBatch);
+const night = files.filter((f) => isNight(f)).sort(byBatch);
 
 const encodeSrc = (f: string) =>
   "/images/" + encodeURIComponent(f);
@@ -108,6 +124,7 @@ const isLarge = (idx: number) => idx % 7 === 0;
                 data-src={encodeSrc(f)}
                 data-name={f}
                 data-alt={f}
+                data-credit={creditFor(f)}
               >
                 <img
                   src={encodeSrc(f)}
@@ -128,7 +145,7 @@ const isLarge = (idx: number) => idx % 7 === 0;
                 >
                   ↓
                 </a>
-                <span class="hover-overlay">{t("gallery.credit")}</span>
+                <span class="hover-overlay">{creditFor(f)}</span>
               </figure>
             ))}
           </div>
@@ -157,6 +174,7 @@ const isLarge = (idx: number) => idx % 7 === 0;
                 data-src={encodeSrc(f)}
                 data-name={f}
                 data-alt={f}
+                data-credit={creditFor(f)}
               >
                 <img
                   src={encodeSrc(f)}
@@ -176,7 +194,7 @@ const isLarge = (idx: number) => idx % 7 === 0;
                 >
                   ↓
                 </a>
-                <span class="hover-overlay">{t("gallery.credit")}</span>
+                <span class="hover-overlay">{creditFor(f)}</span>
               </figure>
             ))}
           </div>
@@ -212,7 +230,7 @@ const isLarge = (idx: number) => idx % 7 === 0;
     <figure class="lb-stage">
       <img id="lb-image" src="" alt="" />
       <figcaption>
-        <span class="lb-credit">{t("gallery.credit")}</span>
+        <span class="lb-credit" id="lb-credit">{t("gallery.credit.wisthaler")}</span>
       </figcaption>
     </figure>
     <button class="lb-nav lb-next" type="button" aria-label="Next">›</button>
@@ -591,11 +609,13 @@ const isLarge = (idx: number) => idx % 7 === 0;
     src: t.dataset.src || "",
     name: t.dataset.name || "",
     alt: t.dataset.alt || "",
+    credit: t.dataset.credit || "",
   }));
 
   const lb = document.getElementById("lightbox") as HTMLElement | null;
   const lbImg = document.getElementById("lb-image") as HTMLImageElement | null;
   const lbDl = document.getElementById("lb-download") as HTMLAnchorElement | null;
+  const lbCredit = document.getElementById("lb-credit") as HTMLElement | null;
   const closeBtn = document.querySelector<HTMLButtonElement>(".lb-close");
   const prevBtn = document.querySelector<HTMLButtonElement>(".lb-prev");
   const nextBtn = document.querySelector<HTMLButtonElement>(".lb-next");
@@ -611,6 +631,7 @@ const isLarge = (idx: number) => idx % 7 === 0;
       lbDl.href = data[idx].src;
       lbDl.setAttribute("download", data[idx].name);
     }
+    if (lbCredit && data[idx].credit) lbCredit.textContent = data[idx].credit;
     lb.hidden = false;
     document.body.style.overflow = "hidden";
     // next frame so the transition can run

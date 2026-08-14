@@ -5,12 +5,21 @@
  * step quality down (78 → 72 → 66 → 60 → 52 → 44) if still too big.
  *
  * Run: node scripts/compress-images.mjs
+ *
+ * Nur eine Teilmenge bearbeiten (Substring-Match auf dem Dateinamen):
+ *   node scripts/compress-images.mjs --only=©gregorsieder
+ * Ohne Filter läuft das Script über ALLE JPGs — bereits komprimierte Bilder
+ * werden dann erneut durch mozjpeg gejagt (Generationsverlust). Beim Nachlegen
+ * neuer Fotos deshalb immer filtern.
  */
 import fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 
 const DIR = path.resolve(process.cwd(), "public", "images");
+const ONLY = process.argv
+  .find((a) => a.startsWith("--only="))
+  ?.slice("--only=".length);
 const TARGET_BYTES = 200 * 1024;
 const SIZE_LADDER = [1920, 1600, 1400, 1200, 1024];
 const QUALITY_STEPS = [80, 72, 64, 56, 48, 40, 32];
@@ -74,7 +83,16 @@ async function main() {
   const entries = await fs.readdir(DIR);
   const files = entries
     .filter((f) => /\.(jpe?g)$/i.test(f))
-    .filter((f) => !f.startsWith("."));
+    .filter((f) => !f.startsWith("."))
+    .filter((f) => !ONLY || f.includes(ONLY));
+
+  if (ONLY) {
+    console.log(`Filter --only=${ONLY} → ${files.length} von ${entries.length} Dateien`);
+    if (files.length === 0) {
+      console.error("Filter matcht keine Datei — Abbruch.");
+      process.exit(1);
+    }
+  }
 
   console.log(`Compressing ${files.length} files in ${DIR}`);
   console.log(
