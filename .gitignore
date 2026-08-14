@@ -13,9 +13,8 @@ yarn-error.log*
 pnpm-debug.log*
 
 # environment variables
-.env
-.env.production
-.env.local
+.env*
+!.env.example
 
 # macOS
 .DS_Store
@@ -28,14 +27,38 @@ pnpm-debug.log*
 # astro
 .astro/
 
-# Asset Ordner (nicht versionieren)
+# Asset Ordner / Grossdateien (nicht versionieren)
 web/
 web-2/
+web-2.zip
 Dolomites Last Loop Avatar/
+Gregor Fotos DLL/
+Sport OK Daten/
 graphify-out/
-node_modules/
-dist/
-.astro/
 Ergebnisliste Dolomites Last Loop 2026.pdf
-.vercel
-.env*
+
+
+# Agentic OS Template - Downstream Ignore Defaults
+
+# Runtime State (work logs are session-local; private is never committed)
+.agentcortex/context/work/*.md
+.agentcortex/context/work/*.lock.json
+!.agentcortex/context/work/.gitkeep.md
+.agentcortex/context/.guard_receipt.json
+.agentcortex/context/.guard_locks/
+.agentcortex/context/private/
+.agent/private/
+
+# Deploy Artifacts
+.agentcortex-src/
+*.acx-incoming
+*.acx-local
+
+# Third-party AI Tool Local State
+.openrouter/
+.claude-chat/
+.cursor/
+.antigravity/scratch/
+
+# End Agentic OS Template - Downstream Ignore Defaults
+
