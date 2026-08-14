@@ -400,15 +400,25 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 
 ### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
 
-- [ ] **Vercel-Preview-Verifikation für 269 Galerie-Bilder — NOCH OFFEN nach diesem Commit.**
-  `src/pages/[lang]/galerie.astro` liest die Bildliste mit `fs.readdirSync(process.cwd() +
-  "/public/images")` **zur Laufzeit** (`prerender = false`). Ob der Serverless-Bundle auf
-  Vercel den `public/`-Ordner überhaupt mitbringt, ist **nur lokal im Dev-Server belegt**,
-  nicht auf einer echten Preview-URL. Bei einem Fehlschlag greift der `try/catch` in
-  Zeile 26–28 und die Galerie fällt **still auf leer** zurück — kein Fehler, keine Meldung.
-  Vor dem Merge nach `main` auf der Preview-URL zählen: Tag 222 + Nacht 36 = **258 Kacheln**
-  (269 Dateien minus `Logo.jpeg` minus 10 dedupte Rohdateien). Zusätzlich im Blick behalten:
-  Bundle-Größe (`public/images` ist von 34 auf 47 MB gewachsen).
+- [x] **Vercel-Preview-Verifikation für die Galerie-Bilder** *(2026-08-14 erledigt, Commit
+  `a715aea`, Deployment `dpl_AbjHdAdg7ZQFKsj2i2aZSRRhJNoA`)*. Die offene Frage war, ob der
+  Laufzeit-`fs.readdirSync(process.cwd() + "/public/images")` in
+  `src/pages/[lang]/galerie.astro` (`prerender = false`) im Serverless-Bundle überhaupt
+  etwas findet — bei einem Fehlschlag greift der `try/catch` und die Galerie fällt **still
+  auf leer** zurück, ohne Fehler oder Meldung. **Er funktioniert.** Auf der Preview gemessen:
+  - **258 Kacheln** (Tag 222 / Nacht 36), identisch zum lokalen Dev-Server. Gegenprobe
+    Production: **184** — exakt 258 − 74, also die Differenz der neuen Fotos.
+  - **258 von 258 Bild-URLs liefern HTTP 200** (HEAD-Check über alle `data-src`), inklusive
+    der URL-kodierten `©`-Präfixe (`%C2%A9gregorsieder…`).
+  - Browser-Render mit vollständigem Durchscrollen: 258 geladen, **0 kaputt, 0 pending**.
+  - **0 Console-Errors** — hier greifen CSP/COEP aus `vercel.json`, anders als im Dev-Server.
+  - ⚠️ Stolperfalle für die nächste Preview-Prüfung: Playwright meldete 5 „fehlgeschlagene"
+    Requests auf `/_image?href=/_astro/…`. Das war **Deployment Protection**, kein Defekt —
+    dieselbe URL liefert mit Session-Cookie HTTP 200 (byte-identisch zu Production), ohne
+    Cookie 302 → SSO. Preview-URLs immer mit `_vercel_share`-Cookie prüfen, sonst erscheinen
+    Prefetch-Subressourcen fälschlich als kaputt.
+  - Offen bleibt nur die Beobachtung der Bundle-Größe: `public/images` ist von 34 auf 47 MB
+    gewachsen. Beim nächsten Foto-Nachschlag im Blick behalten.
 - [ ] **Tag/Nacht-Grenze bei `00899` ist manuell gesichtet, nicht gemessen.** Die
   Sieder-Fotos haben **kein EXIF-Aufnahmedatum** (beim Export gestript — per Byte-Scan der
   JPEG-Header geprüft). Die Regel `Number(sieder[1]) >= 899` in `isNight()` stammt aus dem
@@ -426,6 +436,25 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   irreführend, weil sie den Eindruck gepflegter Alt-Texte erwecken.
 
 ### Übrige offene Punkte
+
+> Die folgenden zwei Punkte standen bis 2026-08-14 nur in
+> `DLL-Kontext zur Chatübergabe.md` (Übergabe vom 12.08., Punkte 3 und 4) und waren nie
+> nach CLAUDE.md übernommen — dieses Dokument ist ungetrackt und überlebt keinen Clone.
+> Deshalb hier nachgezogen.
+
+- [ ] **`.gitignore` liegt seit mehreren Sessions unstaged/modifiziert im Working Tree**,
+  nie bewusst angeschaut. Der Diff stammt vom Agentic-OS-Setup (Block „Agentic OS Template –
+  Downstream Ignore Defaults", 26 Zeilen: Runtime-State, Deploy-Artefakte, Tool-State).
+  Klären, ob das so gewollt ist, und dann committen oder verwerfen — solange es offen liegt,
+  verschmutzt es jedes `git status` und erhöht das Risiko, dass es versehentlich in einem
+  fremden Commit mitgeht.
+- [ ] **`src/pages/api/stripe-webhook.ts:43` — Fallback `?? "early_bird"`.**
+  `const tier = (session.metadata?.tier as Tier) ?? "early_bird";` speist in Zeile 44
+  `TIER_PRICE_LABEL[tier]` für das **Preis-Label in der Bestätigungsmail**. Fehlt das
+  `tier`-Metadatum, zeigt die Mail damit stillschweigend „Early Bird" an, egal welche Stufe
+  tatsächlich bezahlt wurde. **Rein kosmetisch, keine Abrechnungsrelevanz** — der bezahlte
+  Betrag kommt von Stripe, nicht aus diesem Label. Bewusst nicht angefasst; aufräumen, wenn
+  ohnehin am Webhook gearbeitet wird.
 
 - [ ] **Warteliste-Mail-Lücke im direkten Pfad fixen:** Wer sich anmeldet, wenn bereits
   alle Plätze vergeben sind (direkter Warteliste-Pfad in `src/pages/api/checkout.ts`,
