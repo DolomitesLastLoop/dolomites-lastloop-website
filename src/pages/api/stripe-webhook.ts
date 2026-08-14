@@ -13,6 +13,23 @@ import { env } from "@lib/env";
 
 export const prerender = false;
 
+/**
+ * Preis-Label aus dem TATSÄCHLICH gezahlten Betrag der Session.
+ * `amount_total` ist die kleinste Währungseinheit (Cent) und enthält bereits
+ * Rabatte und Steuern. Bewusst gegenüber TIER_PRICE_LABEL bevorzugt: das
+ * Tier-Label ist eine Konstante und kann vom Gezahlten abweichen (falsch
+ * verdrahtete Price-ID, fehlendes tier-Metadatum, veralteter Tarif).
+ * `null` nur, wenn Stripe keinen Betrag mitliefert → Aufrufer fällt zurück.
+ */
+function paidAmountLabel(session: Stripe.Checkout.Session): string | null {
+  const cents = session.amount_total;
+  if (typeof cents !== "number") return null; // bewusst nicht truthy — 0 ist gültig
+  const code = (session.currency ?? "eur").toLowerCase();
+  const symbol = code === "eur" ? "€" : code.toUpperCase();
+  const major = cents / 100;
+  return `${symbol} ${Number.isInteger(major) ? major : major.toFixed(2)}`;
+}
+
 export const POST: APIRoute = async ({ request }) => {
   const sig = request.headers.get("stripe-signature");
   const secret = env("STRIPE_WEBHOOK_SECRET");
@@ -41,7 +58,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
     const lang = session.metadata?.lang ?? "de";
     const tier = (session.metadata?.tier as Tier) ?? "early_bird";
-    const priceLabel = TIER_PRICE_LABEL[tier] ?? "";
+    const priceLabel = paidAmountLabel(session) ?? TIER_PRICE_LABEL[tier] ?? "";
 
     try {
       const supabase = getAdminClient();

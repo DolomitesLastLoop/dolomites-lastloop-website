@@ -419,7 +419,7 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   verifiziert. Die 1 € wurden bewusst **nicht** erstattet.
 - **Gegenprobe auf Seiteneffekte (alle drei leer):** `participants` = 0 Zeilen,
   Brevo-Liste 4 „DLL Teilnehmer 2027" = 0 Kontakte, keine Mail. Der Handler steigt bei
-  fehlendem `participant_id` in `stripe-webhook.ts:39` mit 200 aus, **bevor**
+  fehlendem `participant_id` in `stripe-webhook.ts:56` mit 200 aus, **bevor**
   `getAdminClient()`, `confirm_participant`, Resend oder Brevo aufgerufen werden.
 - ❗ **Noch NICHT belegt: die Kette hinter dem 200.** `confirm_participant`,
   Startnummern-Vergabe, Bestätigungsmail, Ticket-PDF und Brevo-Sync sind über den
@@ -507,13 +507,34 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
     (8,1 MB).** Alle drei lagen untracked und von keiner Regel erfasst im Working Tree — ein
     unbedachtes `git add .` hätte 1,75 GB in die History geschrieben. Vor dem Commit per
     `git log --all -- <pfad>` verifiziert, dass keiner der drei je committet war.
-- [ ] **`src/pages/api/stripe-webhook.ts:43` — Fallback `?? "early_bird"`.**
-  `const tier = (session.metadata?.tier as Tier) ?? "early_bird";` speist in Zeile 44
-  `TIER_PRICE_LABEL[tier]` für das **Preis-Label in der Bestätigungsmail**. Fehlt das
-  `tier`-Metadatum, zeigt die Mail damit stillschweigend „Early Bird" an, egal welche Stufe
-  tatsächlich bezahlt wurde. **Rein kosmetisch, keine Abrechnungsrelevanz** — der bezahlte
-  Betrag kommt von Stripe, nicht aus diesem Label. Bewusst nicht angefasst; aufräumen, wenn
-  ohnehin am Webhook gearbeitet wird.
+- [x] **`src/pages/api/stripe-webhook.ts:61` — Preis-Label kommt jetzt vom gezahlten Betrag**
+  *(2026-08-14 erledigt, Branch `fix/webhook-price-label`)*. Vorher speiste
+  `const tier = (session.metadata?.tier as Tier) ?? "early_bird";` (heute Zeile 60) über
+  `TIER_PRICE_LABEL[tier]` das **Preis-Label der Bestätigungsmail**: fehlte das
+  `tier`-Metadatum, zeigte die Mail stillschweigend „€ 75", egal was tatsächlich bezahlt
+  wurde. Genau so beim Live-Testkauf vom 14.08. (1 € gezahlt, Label hätte „€ 75" gezeigt).
+  - **Fix:** Helper `paidAmountLabel()` (Zeile 24) leitet das Label aus `session.amount_total`
+    ab (Cent, enthält bereits Rabatte und Steuern). `TIER_PRICE_LABEL[tier]` ist nur noch
+    Rückfallebene: `paidAmountLabel(session) ?? TIER_PRICE_LABEL[tier] ?? ""`.
+  - ⚠️ Der Guard prüft `typeof cents !== "number"`, **nicht** truthy — `amount_total: 0`
+    (100-%-Gutschein) ist ein gültiger Betrag und darf nicht in den Tier-Fallback rutschen.
+  - **Verifiziert** per `stripe listen` + `stripe trigger` gegen den lokalen Dev-Server:
+    echtes Event `evt_1U4NXDCNTb5ewxPQtfZYgenb`, `[200]`, `amount_total 3000/usd` → `USD 30`
+    statt vormals `€ 75`. Dazu sechs selbst signierte Events: 100 → `€ 1`, 7500 → `€ 75`,
+    7550 → `€ 75.50`, 0 → `€ 0`, `null`+`tier=late` → Fallback `€ 100`, 100+`tier=late`
+    → `€ 1` (Betrag schlägt Metadatum). Alle **ohne** `participant_id`, der Handler kehrt
+    damit am Guard (Zeile 56) zurück — kein Supabase-, Resend- oder Brevo-Zugriff, keine
+    Startnummer verbraucht.
+  - **Nicht belegt:** das gerenderte Mail-HTML (`src/lib/email.ts:176`). Dafür braucht es
+    einen Kauf **mit** `participant_id` → Teil des ohnehin offenen End-to-End-Durchlaufs.
+  - ⚠️ **Merkregel für Webhook-Tests:** Das CLI-Profil `default` ist **live**
+    (`acct_1To4lEFkID7E6ePc`) — immer explizit
+    `--project-name "amateursportverein sport ok toblach sandbox"` setzen
+    (`acct_1To4lwCNTb5ewxPQ`, Test-Keys). Das Signing-Secret der CLI per
+    `STRIPE_WEBHOOK_SECRET=… npm run dev` übergeben; `src/lib/env.ts` liest `process.env`
+    zuerst, die `.env` muss dafür nicht angefasst werden. Achtung auch bei Price-IDs: die
+    Kontokennung steckt drin — `price_1U4LzC**FkID7E6ePc**XoTvPETt` (der „lokale" 1-€-Preis)
+    gehört zum **Live**-Konto.
 
 - [ ] **Warteliste-Mail-Lücke im direkten Pfad fixen:** Wer sich anmeldet, wenn bereits
   alle Plätze vergeben sind (direkter Warteliste-Pfad in `src/pages/api/checkout.ts`,
