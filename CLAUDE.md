@@ -398,6 +398,57 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 
 ## Nächste Schritte
 
+### Webhook-Verifikation (Stand 2026-08-14) — Zustellung belegt, Kette noch nicht
+
+**Der Live-Webhook ist korrekt verdrahtet und die Zustellung ist durch einen echten
+1-€-Live-Testkauf bewiesen.**
+
+- Endpoint `we_1U4L52FkID7E6ePcjGNz3CNJ` (angelegt 2026-08-14 15:23 CEST):
+  URL `https://www.dolomiteslastloop.com/api/stripe-webhook`, Events
+  `checkout.session.completed` **und** `checkout.session.expired`, `status: enabled`,
+  `livemode: true`.
+- ⚠️ **Die URL MUSS `www.` enthalten.** `dolomiteslastloop.com` ist in Vercel ein
+  308-Redirect auf `www.dolomiteslastloop.com`, und **Stripe folgt bei der Zustellung
+  keinen Redirects**. Ohne `www` schlägt jede Zustellung fehl, und zwar **spurlos** —
+  der Redirect passiert am Edge, in den Function-Logs taucht nichts auf. Eine leere
+  Log-Ansicht ist hier also kein Beweis, dass Stripe nichts geschickt hat.
+- **Beleg (2026-08-14):** Live-Session `cs_live_a1qwMHO6qq2…` über 1,00 € (inline
+  `price_data`, bewusst **ohne** `participant_id`-Metadatum), bezahlt 16:14 CEST
+  → Vercel-Log `POST /api/stripe-webhook 200` um 16:14:16 CEST auf `dpl_E3wqJJ…`.
+  Damit sind Ziel-URL, Signaturprüfung und `STRIPE_WEBHOOK_SECRET` in Production
+  verifiziert. Die 1 € wurden bewusst **nicht** erstattet.
+- **Gegenprobe auf Seiteneffekte (alle drei leer):** `participants` = 0 Zeilen,
+  Brevo-Liste 4 „DLL Teilnehmer 2027" = 0 Kontakte, keine Mail. Der Handler steigt bei
+  fehlendem `participant_id` in `stripe-webhook.ts:39` mit 200 aus, **bevor**
+  `getAdminClient()`, `confirm_participant`, Resend oder Brevo aufgerufen werden.
+- ❗ **Noch NICHT belegt: die Kette hinter dem 200.** `confirm_participant`,
+  Startnummern-Vergabe, Bestätigungsmail, Ticket-PDF und Brevo-Sync sind über den
+  echten Webhook-Pfad nie gelaufen. Dafür braucht es einen vollständigen Kauf **mit**
+  `participant_id` — sinnvoll ab dem 01.09.2026, wenn sich das Anmeldefenster von
+  selbst öffnet und kein `TIER_WINDOWS`-Trick nötig ist. Deckt sich mit dem offenen
+  Punkt „Ticket-PDF-Fixes end-to-end verifizieren".
+- **Kein Staging:** Es existiert genau **ein** Supabase-Projekt
+  (`vsicpbxscbtxqbmarlly`), Preview und Production teilen es sich. Jeder Preview-Branch-
+  Test mit echtem Checkout schreibt damit in die **Live-Datenbank** und verbrennt über
+  `confirm_participant` eine echte Startnummer. Vor solchen Tests bewusst entscheiden.
+- **Vercel-Env-Fallstrick:** Die Spalte `created` in `vercel env ls` ändert sich bei einer
+  Wertänderung **nicht** — sie sagt nichts darüber aus, wie alt der Wert ist. Wer wissen
+  will, wann eine Variable zuletzt angefasst wurde, braucht `updatedAt` aus
+  `GET /v9/projects/<id>/env`. (Aufgesessen am 2026-08-14: die gesamte Stripe-Config sah
+  „64 Tage alt" aus, war aber am 11.08. um 19:22–19:24 komplett neu gesetzt worden.)
+  Ergänzend: Variablen vom Typ `sensitive` (u. a. `PUBLIC_SUPABASE_URL`) sind
+  **unwiderruflich nicht auslesbar** — weder per API noch im Dashboard.
+
+- [x] **Lokale `.env`: toter 1-€-Testpreis ersetzt** *(2026-08-14 erledigt)*. Der alte
+  `price_1U3JYEFkID7E6ePcz7xDu0Bj` gehört zum archivierten Produkt `prod_V3QPGoicearXx8`
+  („TEST — NICHT FÜR ECHTE ANMELDUNGEN"); Stripe lehnt ihn ab mit *„Price is not available
+  to be purchased because its product is not active."* Ersetzt durch
+  `price_1U4LzCFkID7E6ePcXoTvPETt` (Produkt `prod_V4Uz4lQmdwaVBB` „Lokaler Test-Preis
+  (1 EUR)", beide aktiv). Nur in der lokalen `.env` — **Production war nie betroffen** und
+  bleibt auf dem echten Early-Bird-Preis (`prod_V3OuWKVWi6R90h`, 75 €).
+  ⚠️ Merkregel: Ein archiviertes **Produkt** macht auch einen weiterhin „aktiven" **Preis**
+  unbrauchbar — beim Debuggen von Checkout-Fehlern immer beide Ebenen prüfen.
+
 ### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
 
 - [x] **Vercel-Preview-Verifikation für die Galerie-Bilder** *(2026-08-14 erledigt, Commit
@@ -442,12 +493,20 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 > nach CLAUDE.md übernommen — dieses Dokument ist ungetrackt und überlebt keinen Clone.
 > Deshalb hier nachgezogen.
 
-- [ ] **`.gitignore` liegt seit mehreren Sessions unstaged/modifiziert im Working Tree**,
-  nie bewusst angeschaut. Der Diff stammt vom Agentic-OS-Setup (Block „Agentic OS Template –
-  Downstream Ignore Defaults", 26 Zeilen: Runtime-State, Deploy-Artefakte, Tool-State).
-  Klären, ob das so gewollt ist, und dann committen oder verwerfen — solange es offen liegt,
-  verschmutzt es jedes `git status` und erhöht das Risiko, dass es versehentlich in einem
-  fremden Commit mitgeht.
+- [x] **`.gitignore` aufgeräumt und committet** *(2026-08-14 erledigt, Commit `489f46e`)*.
+  Der unstaged Diff stammte vom Agentic-OS-Setup (Block „Agentic OS Template – Downstream
+  Ignore Defaults", 26 Zeilen: Runtime-State, Deploy-Artefakte, Tool-State) — geprüft und
+  unverändert übernommen. Zusätzlich bereinigt: vier Dubletten (`node_modules/`, `dist/`,
+  `.astro/`, `.vercel`) und die `.env`-Regeln auf `.env*` zusammengeführt.
+  - ⚠️ **Dabei `!.env.example` ergänzt.** `.env.example` ist tracked und wird von `.env*`
+    gematcht. Solange die Datei im Index steht, greift `.gitignore` nicht — würde sie aber
+    je entfernt und neu hinzugefügt, wäre sie **still** ignoriert. Merkregel: Vor dem
+    Zusammenfassen von Ignore-Regeln zu einem Wildcard prüfen, ob darunter etwas Getracktes
+    liegt (`git ls-files | grep …`).
+  - **Neu ignoriert: `web-2.zip` (255 MB), `Gregor Fotos DLL/` (1,5 GB), `Sport OK Daten/`
+    (8,1 MB).** Alle drei lagen untracked und von keiner Regel erfasst im Working Tree — ein
+    unbedachtes `git add .` hätte 1,75 GB in die History geschrieben. Vor dem Commit per
+    `git log --all -- <pfad>` verifiziert, dass keiner der drei je committet war.
 - [ ] **`src/pages/api/stripe-webhook.ts:43` — Fallback `?? "early_bird"`.**
   `const tier = (session.metadata?.tier as Tier) ?? "early_bird";` speist in Zeile 44
   `TIER_PRICE_LABEL[tier]` für das **Preis-Label in der Bestätigungsmail**. Fehlt das
@@ -471,7 +530,10 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 - [ ] **`supabase/schema.sql` im Supabase SQL-Editor ausführen** → View `participants_public` anlegen
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
-- [ ] Stripe einrichten
+- [x] **Stripe einrichten** *(2026-08-14 erledigt)* — Live-Keys, die drei Preise (75/80/100 €)
+  und der Webhook-Endpoint stehen; Zustellung per echtem 1-€-Testkauf belegt. Details,
+  Belege und der **noch offene** Rest (Kette hinter dem 200: Startnummer, Mail, Ticket-PDF,
+  Brevo) im Abschnitt **„Webhook-Verifikation (Stand 2026-08-14)"** oben.
 - [x] **Dritte Startgeld-Stufe „Spätanmeldung" (100 €) verdrahtet** *(2026-08-11)* — `src/lib/stripe.ts`
   ist von der einen `EARLY_BIRD_DEADLINE` auf ein Fenster-Modell `TIER_WINDOWS` umgestellt, das
   exakt den AGB §1 folgt (75 € bis 31.12.2026 / 80 € bis 31.03.2027 / 100 € bis 30.04.2027).
