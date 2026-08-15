@@ -449,6 +449,44 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   ⚠️ Merkregel: Ein archiviertes **Produkt** macht auch einen weiterhin „aktiven" **Preis**
   unbrauchbar — beim Debuggen von Checkout-Fehlern immer beide Ebenen prüfen.
 
+### Athleten-Freiplätze (Stand 2026-08-15, Branch `feat/athlete-discount-code`)
+
+100-%-Rabattcode für eingeladene Athleten, einlösbar im Early-Bird-Fenster.
+
+- **Stripe (live, `acct_1To4lEFkID7E6ePc`):** Coupon `n7mskSv2` („Athleten-Freiplatz 2027",
+  `percent_off: 100`, `duration: once`) mit Promotion Code `promo_1U4h2HFkID7E6ePcF93jT7RH`
+  — 20 Einlösungen, Ablauf 31.12.2026 23:59:59 MEZ (Unix `1798757999`, exakt **1 Sekunde**
+  vor `TIER_WINDOWS.early_bird.until` aus `src/lib/stripe.ts`).
+- ⚠️ **Der Code-String steht bewusst NIRGENDS im Repo** — nicht hier, nicht in Kommentaren,
+  nicht in Tests. Das Repo liegt auf GitHub; ein Klartext-Code wäre faktisch öffentlich.
+  Nachschauen: **[siehe Stripe Dashboard]** → Coupons → „Athleten-Freiplatz 2027".
+- ⚠️ Ein Promotion Code ist **unwiderruflich**: er lässt sich nur auf `active: false` setzen,
+  nie löschen und nie umbenennen. Der String ist im Konto dauerhaft belegt.
+- `src/pages/api/checkout.ts` setzt `allow_promotion_codes: true` (Commit `1fbc1f7`). Damit ist
+  das Code-Feld für **alle** Besucher sichtbar — der Schutz liegt allein in der Geheimhaltung
+  des Strings und im Limit von 20. Jede Einlösung verbraucht über `confirm_participant` eine
+  echte Startnummer. Wer das dichter will: Code serverseitig per `discounts: [{promotion_code}]`
+  setzen (Feld bleibt unsichtbar), braucht aber einen Athleten-Token-Mechanismus.
+- **Kein Webhook-Fix nötig — geprüft, nicht angenommen.** `stripe-webhook.ts` gatet
+  ausschließlich auf `event.type === "checkout.session.completed"` (Z. 53) und
+  `session.metadata.participant_id` (Z. 55) — **nie** auf `payment_status` oder
+  `payment_intent`. Genau das verlangt Stripe für *no-cost orders*: solche Sessions haben
+  **keinen PaymentIntent** und melden `payment_status: 'no_payment_required'` statt `'paid'`.
+  Auch der Overflow-Refund (Z. 80–91) ist durch `if (paymentIntent)` abgesichert und
+  überspringt korrekt, wenn nichts gezahlt wurde. `apiVersion` ist `2024-06-20`; no-cost
+  orders verlangen ≥ `2023-08-16`.
+- **Verifiziert (2026-08-15):** Probe-Session gegen den echten Early-Bird-Preis
+  (`price_1U3I74FkID7E6ePcN5Ek6aZw`, 75 €) → `amount_subtotal 7500` → **`amount_total 0`**,
+  `discount_amount 7500`, `payment_intent: null`, `payment_method_collection: "if_required"`.
+  Session danach auf `expired` gesetzt; `times_redeemed` steht auf **0/20** — kein Athletenplatz
+  verbraucht. Dazu `astro check` 0 Errors und `npm run build` grün.
+- [ ] **Offen — kompletter Gratis-Durchlauf** (Abschluss → Webhook → `confirm_participant` →
+  Startnummer → Bestätigungsmail → Ticket-PDF). `payment_status` ist an einer *offenen* Session
+  immer `unpaid`; `no_payment_required` entsteht erst beim Abschluss. Testbar erst in
+  **Phase B**, wenn das Registrierungsfenster kurz geöffnet wird — bis 01.09.2026 liefert
+  `currentTier()` `null` und `/api/checkout` antwortet 403. Deckt sich mit dem offenen Punkt
+  „Kette hinter dem 200" oben.
+
 ### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
 
 - [x] **Vercel-Preview-Verifikation für die Galerie-Bilder** *(2026-08-14 erledigt, Commit
@@ -544,6 +582,14 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   auch im direkten Pfad aufrufen — dafür eine Textvariante ohne den
   Rückerstattungs-Passus ergänzen (im direkten Pfad fand keine Zahlung statt).
   Befund vom 2026-07-15, bewusst als separater Punkt zurückgestellt.
+  - ⚠️ **Derselbe Textmangel trifft auch Gratis-Anmeldungen (ergänzt 2026-08-15):** Rutscht
+    eine Anmeldung mit 100-%-Athletencode in den **Webhook-Overflow-Pfad**
+    (`stripe-webhook.ts:80`), läuft `sendWaitlistNotification` mit dem Rückerstattungs-Passus
+    — erstattet wurde aber nichts, weil nie etwas gezahlt wurde (`amount_total: 0`, kein
+    PaymentIntent; der Refund wird durch `if (paymentIntent)` korrekt übersprungen).
+    Technisch fehlerfrei, aber die Mail verspricht Geld zurück, das es nie gab. Die oben
+    genannte Textvariante ohne Rückerstattungs-Passus deckt diesen Fall mit ab — beim Fix
+    also beide Auslöser mitdenken, nicht nur den direkten Pfad.
 - [x] **Upstash-Keys im Vercel-Dashboard setzen** (`UPSTASH_REDIS_REST_URL`/`_TOKEN`) → Rate-Limiting scharf schalten *(2026-07-11 in Production verifiziert: `/api/newsletter` liefert ab dem 4. Request 429 + `Retry-After` → Keys aktiv)*
 - [ ] **Brevo-Keys im Vercel-Dashboard setzen** (`BREVO_API_KEY`, `BREVO_LIST_ID`,
   `BREVO_PARTICIPANT_LIST_ID=4`) → Newsletter **und** Teilnehmer-Sync gehen live an Brevo.
