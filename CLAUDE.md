@@ -450,8 +450,48 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   „64 Tage alt" aus, war aber am 11.08. um 19:22–19:24 komplett neu gesetzt worden.)
   Ergänzend: Variablen vom Typ `sensitive` (u. a. `PUBLIC_SUPABASE_URL`) sind
   **unwiderruflich nicht auslesbar** — weder per API noch im Dashboard.
+- ⚠️ **Nachtrag 2026-08-15: in diesem Projekt sind ALLE 22 Env-Variablen `type: sensitive`.**
+  Damit ist **kein einziger** Production-Wert auslesbar — auch harmlose wie
+  `STRIPE_PRICE_EARLY_BIRD` oder `PUBLIC_SITE_URL` nicht. Zwei Fallen daraus:
+  - `vercel env pull --environment=production` schreibt für jede Variable `KEY=""`. Das
+    sieht aus wie „nicht gesetzt", heißt aber „nicht auslesbar". **Niemals** daraus
+    schließen, eine Variable sei leer.
+  - `GET /v9/projects/<id>/env?decrypt=true` liefert `value: null`, ebenso der
+    Einzelabruf `/env/<envId>`. Es gibt keinen Weg zurück zum Klartext.
+  - **Konsequenz für Rückbauten:** Wer einen Wert temporär ändert, kann ihn hinterher
+    nicht „zurücklesen". Der Zielwert muss **vorher** aus einer anderen Quelle belegt
+    sein (hier: Stripe-Preisliste → `price_1U3I74FkID7E6ePcN5Ek6aZw` = 7500 EUR,
+    Produkt „Startgeld Early Bird", aktiv). Sonst rät man beim Zurücksetzen.
+- ⚠️ **`vercel deploy` wertet `.gitignore` NICHT aus** *(2026-08-15, kostete einen
+  Fehlversuch und ~11 Minuten)*. Ein CLI-Deploy aus diesem Verzeichnis lädt **2,2 GB** hoch
+  (`Gregor Fotos DLL/` 1,5 GB, `web-2/` 257 MB, `.git/` 432 MB …) und bricht dann ab mit
+  `File size limit exceeded (100 MB)`. Git-Deploys sind davon nicht betroffen, weil sie nur
+  getrackte Dateien ausliefern — deshalb fällt das erst beim ersten CLI-Deploy auf.
+  **Lösung:** vorher eine `.vercelignore` anlegen, die die großen `.gitignore`-Einträge
+  spiegelt. Danach lief der Deploy in unter 2 Minuten durch.
+- ✅ **Muster „Live-Test ohne Push":** ein temporäres Production-Fenster lässt sich
+  vollständig **ohne Commit und ohne Push** öffnen — Code lokal ändern (uncommitted),
+  `vercel deploy --prod --yes`, testen, danach
+  `vercel rollback <letztes-Git-Deployment>` und `git checkout -- <datei>`. Vorteile
+  gegenüber dem Weg über `main`: das **öffentliche** GitHub-Repo bekommt keinen
+  „Anmeldung temporär offen"-Commit, und das Schließen dauert 2 Sekunden statt eines
+  Builds. Der temporäre CLI-Build bleibt danach unter seiner eigenen Deployment-URL
+  liegen, ist aber durch Vercel Authentication geschützt (`401 Protected deployment`) —
+  **gegengeprüft**, kein offenes Anmeldefenster über die Hintertür.
+  - ⚠️ **Falle dabei:** ein CLI-Deploy übernimmt die Git-Metadaten des lokalen `HEAD`.
+    `dpl_Cby2XFiB…` steht deshalb mit `githubCommitSha: b5eb4e3` in der Vercel-API,
+    **obwohl der Build die uncommitteten Änderungen enthielt**. Die Commit-Angabe eines
+    CLI-Deployments sagt also **nichts** über seinen Inhalt aus. Verlass dich zum
+    Nachvollziehen auf `source: "cli"` und den Zeitstempel, nicht auf den SHA.
+  - Prüfen, welches Deployment tatsächlich live ist, geht **nicht** über die nach
+    Erstellzeit sortierte Deployment-Liste (der temporäre CLI-Build steht dort weiter
+    oben). Richtig ist `GET /v9/projects/<id>` → `targets.production.id`.
 
 - [x] **Lokale `.env`: toter 1-€-Testpreis ersetzt** *(2026-08-14 erledigt)*. Der alte
+  ⚠️ **Korrektur 2026-08-15:** `prod_V3QPGoicearXx8` ist inzwischen wieder `active: true`
+  (Stripe `updated` 1786722004). Es existieren damit **zwei** benutzbare 1-€-Live-Preise im
+  Konto. Vor einem Testlauf immer den tatsächlichen `active`-Zustand abfragen statt sich auf
+  den Text unten zu verlassen. Ursprünglicher Eintrag:
   `price_1U3JYEFkID7E6ePcz7xDu0Bj` gehört zum archivierten Produkt `prod_V3QPGoicearXx8`
   („TEST — NICHT FÜR ECHTE ANMELDUNGEN"); Stripe lehnt ihn ab mit *„Price is not available
   to be purchased because its product is not active."* Ersetzt durch
@@ -461,7 +501,7 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   ⚠️ Merkregel: Ein archiviertes **Produkt** macht auch einen weiterhin „aktiven" **Preis**
   unbrauchbar — beim Debuggen von Checkout-Fehlern immer beide Ebenen prüfen.
 
-### Athleten-Freiplätze (Stand 2026-08-15, Branch `feat/athlete-discount-code`)
+### Athleten-Freiplätze (Stand 2026-08-15 — ✅ vollständig verifiziert, in `main`)
 
 100-%-Rabattcode für eingeladene Athleten, einlösbar im Early-Bird-Fenster.
 
@@ -492,9 +532,36 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   `discount_amount 7500`, `payment_intent: null`, `payment_method_collection: "if_required"`.
   Session danach auf `expired` gesetzt; `times_redeemed` steht auf **0/20** — kein Athletenplatz
   verbraucht. Dazu `astro check` 0 Errors und `npm run build` grün.
-- [ ] **Offen — kompletter Gratis-Durchlauf. Versuch vom 2026-08-15 GESCHEITERT, Ursache
-  nicht abschließend geklärt.** Im offenen Fenster wurde ein zweiter Durchlauf mit dem
-  Athletencode gestartet. Verlauf laut Logs und Stripe:
+- [x] ✅ **ERLEDIGT — kompletter Gratis-Durchlauf über das Code-Eingabefeld, belegt am
+  2026-08-15 um 16:35–16:36 CEST.** Das war der letzte offene Teilaspekt; er ist jetzt
+  end-to-end nachgewiesen. Belege:
+  - Session **`cs_live_b14O8rL6qLzntahZz6AGkfkcqACjX3fIrPkfE24qEkcFcg3ArASJNxc9oc`**,
+    erstellt 16:35:22, `status: complete`.
+  - Der Rabatt wurde **über das UI-Feld** angewandt, nicht serverseitig: die Session
+    entstand mit `discounts: []` und trägt danach
+    `discounts: [{promotion_code: promo_1U4h2HFkID7E6ePcF93jT7RH}]`. Das Discount-Objekt
+    `di_1U4igyFkID7E6ePcS8tUQ6sS` hat `start: 1786804572` (= 16:36:12) — also **50 Sekunden
+    nach Session-Erstellung**. Genau dieser Zeitversatz ist der Beweis, dass der Code
+    getippt und nicht mitgegeben wurde.
+  - Rechnung: `amount_subtotal 100` → **`amount_total 0`**, `total_details.amount_discount 100`,
+    `payment_intent: null`.
+  - `times_redeemed` des Promotion Codes: **0 → 1 von 20** (vor dem Test live gegengeprüft: 0).
+  - `POST /api/stripe-webhook 200` um 16:36:13 CEST auf `dpl_Cby2XFiBi5fsA3sNT5RgTroZJEpa`,
+    genau ein Aufruf, keine Fehler.
+  - Supabase, **genau eine** Zeile (`273c658b-…`): `ticket_status confirmed`,
+    **`startnummer 1`**, `price_type early_bird`, `confirmation_email_sent true`,
+    `attest_status missing`, `attest_token` gesetzt.
+  - Sichtprüfung der Mail durch Simon: **Ticket-PDF im Anhang**, Startgeld-Label **„€ 0"**.
+    Damit greift der Label-Fix aus `60c0da0` auch im 0-€-Fall — `paidAmountLabel()` prüft
+    `typeof cents !== "number"` statt auf Truthiness, sonst hätte dort „€ 75" gestanden.
+  - ⚠️ **Korrektur einer Erwartung aus diesem Dokument:** die 0-€-Session meldet
+    `payment_status: **"paid"**`, **nicht** `"no_payment_required"` — bei
+    `payment_intent: null`. Die Annahme oben war falsch. Für uns folgenlos, weil
+    `stripe-webhook.ts` auf keines von beiden gatet; wer künftig doch auf `payment_status`
+    prüft, darf sich auf `no_payment_required` **nicht** verlassen.
+- **Der gescheiterte Vorlauf vom selben Tag (15:30) — Ursache bleibt UNBEWIESEN.** Der
+  erfolgreiche Lauf hat drei Verdächtige entlastet, aber keinen überführt. Verlauf damals
+  laut Logs und Stripe:
   - `POST /api/checkout 200` um 15:30:13 CEST → Session `cs_live_b10ZtKprFtZl…` wurde
     **erfolgreich erstellt**, DB-Zeile inkl. `stripe_session_id` geschrieben. Unsere API
     ist damit entlastet — kein 500, kein 403, kein 409.
@@ -516,44 +583,77 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
     (`applies_to` fehlt), archiviertes Produkt zum Testzeitpunkt (Re-Archivierung erfolgte
     erst 5 min später), Groß-/Kleinschreibung (`code` ist laut Stripe-Doku case-insensitive),
     Ablaufdatum, `max_redemptions`, `minimum_amount`.
-  - ⚠️ **Wichtige Einordnung:** Der einzige jemals erfolgreiche 0-€-Nachweis
-    (`cs_live_a1mgQq…`, 2026-08-15) hatte `allow_promotion_codes: null` und bekam den Rabatt
-    **serverseitig** über `discounts` gesetzt. **Der Weg über das Code-Eingabefeld im
-    Checkout war noch nie erfolgreich.** Was oben als „verifiziert" steht, deckt den UI-Pfad
-    nicht ab.
-  - Offene Beobachtung ohne Beleg: die Session hatte `adaptive_pricing.enabled: true` und
-    `payment_method_types: ["card"]` hart gesetzt. Die Stripe-Doku nennt dazu **keine**
-    Unverträglichkeit mit Promotion Codes — als Hypothese notiert, nicht als Ursache.
-  - 📸 **PFLICHT beim nächsten Versuch: Screenshot der Stripe-Fehlermeldung.** Genau daran
-    ist die Diagnose am 15.08. gescheitert. Stripe protokolliert fehlgeschlagene
-    Code-Eingaben **nirgends** — weder an der Session, noch als Event, noch in den
-    Request-Logs. Es gibt keine nachträgliche Quelle. Ohne den Wortlaut (und idealerweise
-    das ganze Fenster inkl. Betrag und Code-Feld) ist ein weiterer Testlauf wertlos: er
-    kostet erneut ein offenes Anmeldefenster und liefert wieder nur „gescheitert, Grund
-    unbekannt". **Erst Screenshot sicherstellen, dann Fenster öffnen.**
+  - ✅ **Durch den Erfolgslauf um 16:35 ENTLASTET — diese drei Hypothesen sind erledigt.**
+    Die erfolgreiche Session `cs_live_b14O8rL6…` hatte **exakt dieselbe Konfiguration** wie
+    die gescheiterte: `adaptive_pricing.enabled: true`, `payment_method_types: ["card"]`
+    hart gesetzt, `payment_method_collection: "if_required"`, `allow_promotion_codes: true`.
+    Ein Feld-für-Feld-Vergleich der beiden Session-Objekte ergibt **keinen** Unterschied in
+    der Konfiguration. Damit scheidet alles davon als Ursache aus — insbesondere auch der
+    Stripe-Support-Hinweis auf einen „known issue" mit 100-%-Coupons bei
+    `payment_method_collection: if_required`, der vorab als starker Kandidat gehandelt wurde.
+    **Es war kein Konfigurationsfehler von uns. Am Code musste nichts geändert werden.**
+  - ⚠️ **Was übrig bleibt: eine plausible, aber unbewiesene Timing-Erklärung.** Der einzige
+    verbleibende Unterschied ist der Zustand des Stripe-**Produkts** zum Zeitpunkt der
+    Code-Eingabe. `prod_V4Uz4lQmdwaVBB` wurde um **15:35:47** re-archiviert (`updated`
+    1786800947). Die gescheiterte Session entstand um 15:30:14 — aber der Code wird erst
+    eingetippt, **nachdem** das Formular ausgefüllt ist. Beim Erfolgslauf lagen zwischen
+    Session-Erstellung und Code-Anwendung 50 Sekunden; wenn es damals ~5 Minuten waren, fiel
+    die Eingabe **hinter** die Re-Archivierung. Ein Promotion Code validiert die Line Items
+    neu — gegen ein inaktives Produkt schlägt das fehl, und Stripe zeigt dafür eine generische
+    Meldung. Der frühere Eintrag oben („archiviertes Produkt … Re-Archivierung erfolgte erst
+    5 min später") hat genau das **zu früh ausgeschlossen**: er unterstellte, der Code sei
+    zeitgleich mit der Session-Erstellung eingegeben worden.
+  - **Nicht mehr rekonstruierbar und nicht mehr nötig.** Der Wortlaut der Meldung von 15:30
+    wurde nie festgehalten, und Stripe protokolliert fehlgeschlagene Code-Eingaben nirgends
+    — weder an der Session, noch als Event, noch in den Request-Logs. Da der Pfad inzwischen
+    funktioniert, ist die Nachdiagnose gegenstandslos.
+  - 📸 **Merkregel, die bleibt:** Wenn ein Live-Fenster für einen Test geöffnet wird, **erst
+    alle Aufräumarbeiten nach hinten schieben** — nicht Produkte oder Preise umstellen,
+    während noch eine Checkout-Session offen ist. Genau diese Überlappung hat am 15.08. mit
+    hoher Wahrscheinlichkeit einen kompletten Testlauf gekostet.
 
 #### Status-Übersicht Athleten-Freiplätze (Stand 2026-08-15)
 
-**5 von 6 Teilaspekten belegt — offen ist genau der Pfad, auf den es ankommt.**
+**6 von 6 Teilaspekten belegt — das Feature ist vollständig verifiziert und einsatzbereit.**
 
 | # | Teilaspekt | Status | Beleg |
 |---|---|---|---|
 | 1 | Coupon + Promotion Code in Stripe live angelegt | ✅ | `n7mskSv2` / `promo_1U4h2HFkID7E6ePcF93jT7RH`, `percent_off 100`, `valid` |
 | 2 | `allow_promotion_codes: true` in der Session | ✅ | Commit `1fbc1f7`; live gegengeprüft an `cs_live_b10ZtK…` |
 | 3 | Webhook gatet **nicht** auf `payment_status`/`payment_intent` | ✅ | Code-Review `stripe-webhook.ts:53,55`; Overflow-Refund durch `if (paymentIntent)` abgesichert |
-| 4 | 0-€-Session technisch erzeugbar (`amount_total 0`, kein PaymentIntent) | ✅ | Probe `cs_live_a1mgQq…` — aber **serverseitig** über `discounts`, nicht über das Code-Feld |
+| 4 | 0-€-Session technisch erzeugbar (`amount_total 0`, kein PaymentIntent) | ✅ | Probe `cs_live_a1mgQq…` (serverseitig über `discounts`) |
 | 5 | Kette hinter dem Webhook-200 (Startnummer → Mail → PDF) | ✅ | Live-E2E 2026-08-15, Startnummer 1, PDF im Anhang, Label „€ 1" |
-| 6 | **Einlösung über das Code-Eingabefeld im Checkout** | ❌ | Versuch gescheitert, Ursache unbekannt (s. o.) |
+| 6 | **Einlösung über das Code-Eingabefeld im Checkout** | ✅ | **Live-Lauf 2026-08-15 16:35–16:36**, `cs_live_b14O8rL6…`: `discounts: []` → Promotion Code, Discount `di_1U4igy…` 50 s **nach** Session-Erstellung, `amount_total 0`, `times_redeemed` 0→1, Webhook 200, Startnummer 1, PDF im Anhang, Label „€ 0", Brevo-Liste 4 von 0→1 |
 
-⚠️ Punkt 4 und Punkt 6 werden leicht verwechselt. Punkt 4 beweist, dass der Coupon
-rechnerisch funktioniert; er sagt **nichts** darüber, ob ein Athlet den Code selbst im
-Checkout eintippen kann. Genau das ist der einzige Weg, den echte Athleten gehen werden —
-und er ist bis heute unbewiesen.
+Punkt 4 und Punkt 6 sind bewusst getrennt geführt: Punkt 4 beweist nur, dass der Coupon
+rechnerisch funktioniert, Punkt 6 den Weg, den echte Athleten tatsächlich gehen. Seit dem
+15.08. sind **beide** belegt — der Zeitversatz von 50 Sekunden zwischen Session-Erstellung
+und Discount-Anwendung ist der harte Nachweis, dass der Code über die UI kam.
 
-**Verbrauch: `times_redeemed` = 0 von 20** (am 2026-08-15 nach dem Testlauf erneut
-abgefragt). Der gescheiterte Versuch hat **keine** Einlösung verbraucht — konsistent damit,
-dass die Session auf `amount_total: 100` und `discounts: []` stehen blieb. Es stehen also
-weiterhin alle 20 Freiplätze zur Verfügung.
+**Verbrauch: `times_redeemed` = 1 von 20** (am 2026-08-15 nach dem erfolgreichen Testlauf
+abgefragt; vor dem Test verifiziert bei 0). Der eine verbrauchte Platz ist der Testlauf
+selbst — Startnummer 1 auf `entensimon@gmail.com`. Es stehen noch 19 Freiplätze zur
+Verfügung.
+
+#### ⚠️ Offen: Testdaten vor dem Echtstart entfernen
+
+Der Testlauf hat **echte** Live-Daten hinterlassen. Vor dem 01.09.2026 (Öffnung des
+Early-Bird-Fensters) müssen weg:
+
+- [x] **Supabase `participants`** — die Zeile `273c658b-76ce-4051-b658-1414f41292ce`
+  (`entensimon@gmail.com`, Startnummer 1) *(2026-08-15 von Simon manuell gelöscht;
+  verifiziert: `count(*) = 0`, `max(startnummer) = 0` → der erste echte Teilnehmer bekommt
+  wieder die 1)*.
+- [ ] **Brevo Liste 4 „DLL Teilnehmer 2027" — NOCH OFFEN.** Der Kontakt
+  `entensimon@gmail.com` steht weiterhin drin (`totalSubscribers: 1`, geprüft 2026-08-15
+  16:49). Das Löschen in Supabase räumt Brevo **nicht** mit auf — es sind zwei getrennte
+  Systeme ohne Kopplung. Muss separat über die Brevo-Oberfläche bzw. `contacts`-API
+  entfernt werden.
+- [ ] **`times_redeemed` = 1**: nicht rücksetzbar. Ein Promotion Code lässt sich weder
+  löschen noch zurückzählen. Faktisch stehen 19 Athletenplätze zur Verfügung — entweder
+  so kommunizieren oder einen zweiten Code mit dem fehlenden Platz anlegen.
+- [ ] Der Test-Charge über 0 € braucht **keine** Erstattung (es floss kein Geld,
+  `payment_intent: null`).
 
 ### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
 
@@ -681,10 +781,13 @@ weiterhin alle 20 Freiplätze zur Verfügung.
   - Nur im Brevo-Dashboard änderbar: `https://app.brevo.com/security/authorised_ips`.
     Die Brevo-API hat für diese Einstellung **keinen** Endpoint (auch der MCP-Connector
     bietet nur Contacts/Lists/Campaigns/Templates/Senders/Attributes).
-  - ❗ **Noch nicht nachgemessen:** dass der Sync nach dem Abschalten tatsächlich
-    durchläuft. Liste 4 war zuletzt leer, und seither gab es keinen bezahlten Durchlauf.
-    Der Nachweis fällt automatisch beim nächsten echten Kauf ab — bis dahin gilt der Fix
-    als plausibel, nicht als verifiziert.
+  - [x] ✅ **Nachgemessen und bestätigt am 2026-08-15, 16:36 CEST.** Beim Athleten-Freiplatz-
+    Durchlauf (Session `cs_live_b14O8rL6…`) ist Brevo-Liste 4 „DLL Teilnehmer 2027" von
+    **0 auf 1 Kontakt** gestiegen — Baseline unmittelbar vor dem Test war nachweislich 0
+    (`lists_get_list(4)` → `totalSubscribers: 0`), danach 1 mit der Adresse des Testkaufs.
+    Zusätzlich: im gesamten Testfenster **kein einziger Log-Eintrag** auf Level
+    `error`/`warning`/`fatal` (Vercel Runtime Logs) — der IP-Fehler von 15:28 ist weg.
+    Damit ist der Fix nicht mehr nur plausibel, sondern über einen echten Kauf verifiziert.
 - [x] **`supabase/schema.sql` im Supabase SQL-Editor ausgeführt** *(am 2026-08-15 verifiziert: Funktion `confirm_participant`, View `participants_public` und die Spalten `confirmation_email_sent`/`attest_token`/`price_type`/`lang` existieren alle in `vsicpbxscbtxqbmarlly`)*
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
