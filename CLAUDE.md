@@ -421,12 +421,18 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   Brevo-Liste 4 „DLL Teilnehmer 2027" = 0 Kontakte, keine Mail. Der Handler steigt bei
   fehlendem `participant_id` in `stripe-webhook.ts:56` mit 200 aus, **bevor**
   `getAdminClient()`, `confirm_participant`, Resend oder Brevo aufgerufen werden.
-- ❗ **Noch NICHT belegt: die Kette hinter dem 200.** `confirm_participant`,
-  Startnummern-Vergabe, Bestätigungsmail, Ticket-PDF und Brevo-Sync sind über den
-  echten Webhook-Pfad nie gelaufen. Dafür braucht es einen vollständigen Kauf **mit**
-  `participant_id` — sinnvoll ab dem 01.09.2026, wenn sich das Anmeldefenster von
-  selbst öffnet und kein `TIER_WINDOWS`-Trick nötig ist. Deckt sich mit dem offenen
-  Punkt „Ticket-PDF-Fixes end-to-end verifizieren".
+- [x] **Kette hinter dem 200 — BELEGT am 2026-08-15** (Live-E2E, Fenster ~15 min offen).
+  Echter 1-€-Kauf mit `participant_id` (Session `cs_live_b13gYbtdpn7i…`, `payment_status
+  paid`) → Vercel-Log `POST /api/stripe-webhook 200` um 15:28:09 CEST. Ergebnis in
+  Supabase: `ticket_status confirmed`, **`startnummer 1`**, `price_type early_bird`,
+  `confirmation_email_sent true`, `attest_status missing`, `attest_token` gesetzt.
+  Damit sind `confirm_participant`, Startnummern-Vergabe und der Mailversand über den
+  echten Webhook-Pfad erstmals nachgewiesen.
+  - ⚠️ **Nicht mitbelegt: das Ticket-PDF im Anhang.** Ein PDF-Fehler wird in
+    `stripe-webhook.ts:125` still geloggt und blockiert die Mail nicht — aus
+    `confirmation_email_sent: true` folgt also **nicht**, dass ein PDF anhing. Der offene
+    Punkt „Ticket-PDF-Fixes end-to-end verifizieren" bleibt offen; er ist nur noch durch
+    Ansehen der zugestellten Mail zu schließen.
 - **Kein Staging:** Es existiert genau **ein** Supabase-Projekt
   (`vsicpbxscbtxqbmarlly`), Preview und Production teilen es sich. Jeder Preview-Branch-
   Test mit echtem Checkout schreibt damit in die **Live-Datenbank** und verbrennt über
@@ -480,12 +486,38 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   `discount_amount 7500`, `payment_intent: null`, `payment_method_collection: "if_required"`.
   Session danach auf `expired` gesetzt; `times_redeemed` steht auf **0/20** — kein Athletenplatz
   verbraucht. Dazu `astro check` 0 Errors und `npm run build` grün.
-- [ ] **Offen — kompletter Gratis-Durchlauf** (Abschluss → Webhook → `confirm_participant` →
-  Startnummer → Bestätigungsmail → Ticket-PDF). `payment_status` ist an einer *offenen* Session
-  immer `unpaid`; `no_payment_required` entsteht erst beim Abschluss. Testbar erst in
-  **Phase B**, wenn das Registrierungsfenster kurz geöffnet wird — bis 01.09.2026 liefert
-  `currentTier()` `null` und `/api/checkout` antwortet 403. Deckt sich mit dem offenen Punkt
-  „Kette hinter dem 200" oben.
+- [ ] **Offen — kompletter Gratis-Durchlauf. Versuch vom 2026-08-15 GESCHEITERT, Ursache
+  nicht abschließend geklärt.** Im offenen Fenster wurde ein zweiter Durchlauf mit dem
+  Athletencode gestartet. Verlauf laut Logs und Stripe:
+  - `POST /api/checkout 200` um 15:30:13 CEST → Session `cs_live_b10ZtKprFtZl…` wurde
+    **erfolgreich erstellt**, DB-Zeile inkl. `stripe_session_id` geschrieben. Unsere API
+    ist damit entlastet — kein 500, kein 403, kein 409.
+  - Die Session steht bis heute auf `status: open`, `amount_total: 100`, `discounts: []`,
+    `total_details.amount_discount: 0` → **der Code wurde nie angewandt**.
+  - `times_redeemed` des Promotion Codes: **0/20** — trotz Fehlermeldung nichts verbraucht.
+  - Kein `/api/stripe-webhook`-Aufruf danach; die Teilnehmerzeile blieb auf `pending`,
+    `startnummer null`.
+  - **Angezeigter Text laut Nutzer: „Es ist ein Fehler aufgetreten."** Dieser String
+    existiert **nachweislich nirgends im Repo** (`grep -rn` über `src/` = 0 Treffer). Auch
+    keiner unserer Pfade erzeugt ihn: die Client-Fehler in `RegistrationFlow.astro:629/632`
+    lauten „Vorgang konnte nicht gestartet werden." bzw. „Netzwerkfehler. Bitte erneut
+    versuchen.", und `signup.cancelled.notice` lautet „Zahlung abgebrochen. …". Die Meldung
+    kam also von **außerhalb unseres Codes**, mit hoher Wahrscheinlichkeit aus der
+    Stripe-Checkout-Oberfläche (Stripe lokalisiert selbst; `locale` der Session war `null`).
+  - ⚠️ **Ursache NICHT bewiesen.** Stripe protokolliert fehlgeschlagene Code-Eingaben weder
+    an der Session noch als Event — ohne Screenshot/Wortlaut aus dem Checkout ist der Grund
+    nicht rekonstruierbar. Geprüft und **ausgeschlossen**: Produkt-Einschränkung des Coupons
+    (`applies_to` fehlt), archiviertes Produkt zum Testzeitpunkt (Re-Archivierung erfolgte
+    erst 5 min später), Groß-/Kleinschreibung (`code` ist laut Stripe-Doku case-insensitive),
+    Ablaufdatum, `max_redemptions`, `minimum_amount`.
+  - ⚠️ **Wichtige Einordnung:** Der einzige jemals erfolgreiche 0-€-Nachweis
+    (`cs_live_a1mgQq…`, 2026-08-15) hatte `allow_promotion_codes: null` und bekam den Rabatt
+    **serverseitig** über `discounts` gesetzt. **Der Weg über das Code-Eingabefeld im
+    Checkout war noch nie erfolgreich.** Was oben als „verifiziert" steht, deckt den UI-Pfad
+    nicht ab.
+  - Offene Beobachtung ohne Beleg: die Session hatte `adaptive_pricing.enabled: true` und
+    `payment_method_types: ["card"]` hart gesetzt. Die Stripe-Doku nennt dazu **keine**
+    Unverträglichkeit mit Promotion Codes — als Hypothese notiert, nicht als Ursache.
 
 ### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
 
@@ -591,10 +623,24 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
     genannte Textvariante ohne Rückerstattungs-Passus deckt diesen Fall mit ab — beim Fix
     also beide Auslöser mitdenken, nicht nur den direkten Pfad.
 - [x] **Upstash-Keys im Vercel-Dashboard setzen** (`UPSTASH_REDIS_REST_URL`/`_TOKEN`) → Rate-Limiting scharf schalten *(2026-07-11 in Production verifiziert: `/api/newsletter` liefert ab dem 4. Request 429 + `Retry-After` → Keys aktiv)*
-- [ ] **Brevo-Keys im Vercel-Dashboard setzen** (`BREVO_API_KEY`, `BREVO_LIST_ID`,
-  `BREVO_PARTICIPANT_LIST_ID=4`) → Newsletter **und** Teilnehmer-Sync gehen live an Brevo.
-  Ohne die Vars laufen beide Pfade still im `skipped`-Modus (Code läuft, synct nichts).
-- [ ] **`supabase/schema.sql` im Supabase SQL-Editor ausführen** → View `participants_public` anlegen
+- [x] **Brevo-Keys im Vercel-Dashboard gesetzt** *(am 2026-08-15 als bereits erledigt
+  verifiziert)* — `BREVO_API_KEY`, `BREVO_LIST_ID`, `BREVO_PARTICIPANT_LIST_ID` stehen alle
+  drei in Production **und** Preview (`vercel env ls`). Der frühere Eintrag „offen" war veraltet.
+- [ ] **Brevo „Authorised IPs" abschalten — Teilnehmer-Sync ist dadurch aktuell TOT.**
+  Beim Live-E2E vom 2026-08-15 lief der Webhook mit `200` durch, aber der Brevo-Call wurde
+  abgelehnt. Vercel-Log, 15:28:09 CEST:
+  `[webhook] Brevo participant sync: We have detected you are using an unrecognised IP
+  address 54.80.158.237.` Gegenprobe: Liste 4 = **0 Kontakte**, der Teilnehmer existiert in
+  Brevo **gar nicht** (`404 document_not_found`).
+  - **Auswirkung auf den Rest: keine** — der Sync sitzt bewusst hinter eigenem try/catch
+    (`stripe-webhook.ts:153-165`) und nach dem Mailversand. Bestätigungsmail, Startnummer und
+    DB-Status waren korrekt. Das Design hat genau so funktioniert, wie es soll.
+  - ⚠️ **Einzelne IP freigeben löst es NICHT.** Vercels Serverless-IPs sind dynamisch; beim
+    nächsten Deploy kommt eine andere. Die Beschränkung muss **abgeschaltet** werden.
+  - Nur im Brevo-Dashboard änderbar: `https://app.brevo.com/security/authorised_ips`.
+    Die Brevo-API hat für diese Einstellung **keinen** Endpoint (auch der MCP-Connector
+    bietet nur Contacts/Lists/Campaigns/Templates/Senders/Attributes).
+- [x] **`supabase/schema.sql` im Supabase SQL-Editor ausgeführt** *(am 2026-08-15 verifiziert: Funktion `confirm_participant`, View `participants_public` und die Spalten `confirmation_email_sent`/`attest_token`/`price_type`/`lang` existieren alle in `vsicpbxscbtxqbmarlly`)*
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
 - [x] **Stripe einrichten** *(2026-08-14 erledigt)* — Live-Keys, die drei Preise (75/80/100 €)
