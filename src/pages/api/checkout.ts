@@ -218,6 +218,15 @@ export const POST: APIRoute = async ({ request, url }) => {
       payment_method_types: ["card"],
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
+      // Blendet in Checkout das Eingabefeld für Promotion Codes ein (Athleten-
+      // Freiplätze). Die Codes selbst liegen ausschließlich in Stripe — bewusst
+      // NICHT im Repo, siehe Stripe-Dashboard → Coupons.
+      // ⚠️ Ein 100-%-Code macht `amount_total` = 0. Solche Sessions haben laut
+      // Stripe („No-cost orders") KEINEN PaymentIntent und `payment_status`
+      // 'no_payment_required' statt 'paid'. Der Webhook darf deshalb nie auf
+      // `payment_status === "paid"` oder auf `payment_intent` gaten — er tut es
+      // aktuell auch nicht (stripe-webhook.ts triggert auf das Event selbst).
+      allow_promotion_codes: true,
       success_url: `${origin}/${lang}/${returnSeg}?status=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/${lang}/${returnSeg}?status=cancelled`,
       metadata: {
