@@ -34,11 +34,7 @@ export const PRICES: Record<Tier, string | undefined> = {
 // `from` des Folgefensters. Halboffene Intervalle vermeiden die Sekundenlücke, die
 // ein "…23:59:59"-Ende erzeugen würde (dort wäre die Anmeldung kurzzeitig zu).
 export const TIER_WINDOWS = [
-  // ⚠️⚠️ TEMPORÄR FÜR LIVE-E2E-TEST AM 2026-08-15 — NICHT DAUERHAFT MERGEN ⚠️⚠️
-  // `from` ist bewusst vom 2026-09-01 auf den 2026-08-01 vorgezogen, damit
-  // `currentTier()` heute `early_bird` liefert und das Anmeldefenster offen ist.
-  // RÜCKBAU: `from` zurück auf "2026-09-01T00:00:00+02:00" und diesen Block löschen.
-  { id: "early_bird", from: "2026-08-01T00:00:00+02:00", until: "2027-01-01T00:00:00+01:00" },
+  { id: "early_bird", from: "2026-09-01T00:00:00+02:00", until: "2027-01-01T00:00:00+01:00" },
   { id: "standard", from: "2027-01-01T00:00:00+01:00", until: "2027-04-01T00:00:00+02:00" },
   { id: "late", from: "2027-04-01T00:00:00+02:00", until: "2027-05-01T00:00:00+02:00" },
 ] as const satisfies ReadonlyArray<{ id: Tier; from: string; until: string }>;
