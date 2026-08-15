@@ -428,11 +428,17 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   `confirmation_email_sent true`, `attest_status missing`, `attest_token` gesetzt.
   Damit sind `confirm_participant`, Startnummern-Vergabe und der Mailversand über den
   echten Webhook-Pfad erstmals nachgewiesen.
-  - ⚠️ **Nicht mitbelegt: das Ticket-PDF im Anhang.** Ein PDF-Fehler wird in
-    `stripe-webhook.ts:125` still geloggt und blockiert die Mail nicht — aus
-    `confirmation_email_sent: true` folgt also **nicht**, dass ein PDF anhing. Der offene
-    Punkt „Ticket-PDF-Fixes end-to-end verifizieren" bleibt offen; er ist nur noch durch
-    Ansehen der zugestellten Mail zu schließen.
+  - [x] **Ticket-PDF im Anhang bestätigt** *(2026-08-15, Sichtprüfung der zugestellten
+    Mail durch Simon)*. Das war nicht aus der DB ableitbar: ein PDF-Fehler wird in
+    `stripe-webhook.ts:125` still geloggt und blockiert die Mail nicht, aus
+    `confirmation_email_sent: true` folgt also **nicht**, dass ein PDF anhing. Die Mail zu
+    Startnummer 1 hatte das PDF im Anhang — damit ist `generateTicketPdf()` erstmals über
+    den echten Webhook-Pfad belegt, nicht nur über den lokalen Test-Renderer.
+  - [x] **Preis-Label in der gerenderten Mail bestätigt: „€ 1"** *(gleiche Sichtprüfung)*.
+    Damit ist die letzte Lücke des Label-Fixes geschlossen — vorher war nur die
+    Webhook-Payload belegt (`amount_total` → `paidAmountLabel()`), nicht das tatsächlich
+    gerenderte Mail-HTML in `src/lib/email.ts:176`. Der Fix greift bis in die Zustellung:
+    gezahlt wurde 1 €, angezeigt wird „€ 1" — mit dem alten Code hätte dort „€ 75" gestanden.
 - **Kein Staging:** Es existiert genau **ein** Supabase-Projekt
   (`vsicpbxscbtxqbmarlly`), Preview und Production teilen es sich. Jeder Preview-Branch-
   Test mit echtem Checkout schreibt damit in die **Live-Datenbank** und verbrennt über
@@ -518,6 +524,36 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   - Offene Beobachtung ohne Beleg: die Session hatte `adaptive_pricing.enabled: true` und
     `payment_method_types: ["card"]` hart gesetzt. Die Stripe-Doku nennt dazu **keine**
     Unverträglichkeit mit Promotion Codes — als Hypothese notiert, nicht als Ursache.
+  - 📸 **PFLICHT beim nächsten Versuch: Screenshot der Stripe-Fehlermeldung.** Genau daran
+    ist die Diagnose am 15.08. gescheitert. Stripe protokolliert fehlgeschlagene
+    Code-Eingaben **nirgends** — weder an der Session, noch als Event, noch in den
+    Request-Logs. Es gibt keine nachträgliche Quelle. Ohne den Wortlaut (und idealerweise
+    das ganze Fenster inkl. Betrag und Code-Feld) ist ein weiterer Testlauf wertlos: er
+    kostet erneut ein offenes Anmeldefenster und liefert wieder nur „gescheitert, Grund
+    unbekannt". **Erst Screenshot sicherstellen, dann Fenster öffnen.**
+
+#### Status-Übersicht Athleten-Freiplätze (Stand 2026-08-15)
+
+**5 von 6 Teilaspekten belegt — offen ist genau der Pfad, auf den es ankommt.**
+
+| # | Teilaspekt | Status | Beleg |
+|---|---|---|---|
+| 1 | Coupon + Promotion Code in Stripe live angelegt | ✅ | `n7mskSv2` / `promo_1U4h2HFkID7E6ePcF93jT7RH`, `percent_off 100`, `valid` |
+| 2 | `allow_promotion_codes: true` in der Session | ✅ | Commit `1fbc1f7`; live gegengeprüft an `cs_live_b10ZtK…` |
+| 3 | Webhook gatet **nicht** auf `payment_status`/`payment_intent` | ✅ | Code-Review `stripe-webhook.ts:53,55`; Overflow-Refund durch `if (paymentIntent)` abgesichert |
+| 4 | 0-€-Session technisch erzeugbar (`amount_total 0`, kein PaymentIntent) | ✅ | Probe `cs_live_a1mgQq…` — aber **serverseitig** über `discounts`, nicht über das Code-Feld |
+| 5 | Kette hinter dem Webhook-200 (Startnummer → Mail → PDF) | ✅ | Live-E2E 2026-08-15, Startnummer 1, PDF im Anhang, Label „€ 1" |
+| 6 | **Einlösung über das Code-Eingabefeld im Checkout** | ❌ | Versuch gescheitert, Ursache unbekannt (s. o.) |
+
+⚠️ Punkt 4 und Punkt 6 werden leicht verwechselt. Punkt 4 beweist, dass der Coupon
+rechnerisch funktioniert; er sagt **nichts** darüber, ob ein Athlet den Code selbst im
+Checkout eintippen kann. Genau das ist der einzige Weg, den echte Athleten gehen werden —
+und er ist bis heute unbewiesen.
+
+**Verbrauch: `times_redeemed` = 0 von 20** (am 2026-08-15 nach dem Testlauf erneut
+abgefragt). Der gescheiterte Versuch hat **keine** Einlösung verbraucht — konsistent damit,
+dass die Session auf `amount_total: 100` und `discounts: []` stehen blieb. Es stehen also
+weiterhin alle 20 Freiplätze zur Verfügung.
 
 ### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
 
@@ -626,7 +662,10 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 - [x] **Brevo-Keys im Vercel-Dashboard gesetzt** *(am 2026-08-15 als bereits erledigt
   verifiziert)* — `BREVO_API_KEY`, `BREVO_LIST_ID`, `BREVO_PARTICIPANT_LIST_ID` stehen alle
   drei in Production **und** Preview (`vercel env ls`). Der frühere Eintrag „offen" war veraltet.
-- [ ] **Brevo „Authorised IPs" abschalten — Teilnehmer-Sync ist dadurch aktuell TOT.**
+- [x] **Brevo „Authorised IPs" abgeschaltet** *(2026-08-15 von Simon manuell im
+  Brevo-Dashboard erledigt)*. Damit blockiert die IP-Prüfung den Teilnehmer-Sync nicht
+  mehr — insbesondere überstehen künftige Vercel-Deploys den Wechsel der Serverless-IP,
+  der vorher jeden Sync erneut gebrochen hätte. Der Befund, der dazu führte:
   Beim Live-E2E vom 2026-08-15 lief der Webhook mit `200` durch, aber der Brevo-Call wurde
   abgelehnt. Vercel-Log, 15:28:09 CEST:
   `[webhook] Brevo participant sync: We have detected you are using an unrecognised IP
@@ -635,11 +674,17 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   - **Auswirkung auf den Rest: keine** — der Sync sitzt bewusst hinter eigenem try/catch
     (`stripe-webhook.ts:153-165`) und nach dem Mailversand. Bestätigungsmail, Startnummer und
     DB-Status waren korrekt. Das Design hat genau so funktioniert, wie es soll.
-  - ⚠️ **Einzelne IP freigeben löst es NICHT.** Vercels Serverless-IPs sind dynamisch; beim
-    nächsten Deploy kommt eine andere. Die Beschränkung muss **abgeschaltet** werden.
+  - ⚠️ **Merkregel:** Eine einzelne IP freizugeben hätte es NICHT gelöst — Vercels
+    Serverless-IPs sind dynamisch, beim nächsten Deploy kommt eine andere. Allowlists
+    funktionieren nur bei fester IP. Deshalb wurde die Beschränkung ganz abgeschaltet,
+    nicht die IP nachgetragen.
   - Nur im Brevo-Dashboard änderbar: `https://app.brevo.com/security/authorised_ips`.
     Die Brevo-API hat für diese Einstellung **keinen** Endpoint (auch der MCP-Connector
     bietet nur Contacts/Lists/Campaigns/Templates/Senders/Attributes).
+  - ❗ **Noch nicht nachgemessen:** dass der Sync nach dem Abschalten tatsächlich
+    durchläuft. Liste 4 war zuletzt leer, und seither gab es keinen bezahlten Durchlauf.
+    Der Nachweis fällt automatisch beim nächsten echten Kauf ab — bis dahin gilt der Fix
+    als plausibel, nicht als verifiziert.
 - [x] **`supabase/schema.sql` im Supabase SQL-Editor ausgeführt** *(am 2026-08-15 verifiziert: Funktion `confirm_participant`, View `participants_public` und die Spalten `confirmation_email_sent`/`attest_token`/`price_type`/`lang` existieren alle in `vsicpbxscbtxqbmarlly`)*
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
