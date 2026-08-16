@@ -789,6 +789,10 @@ Early-Bird-Fensters) müssen weg:
     `error`/`warning`/`fatal` (Vercel Runtime Logs) — der IP-Fehler von 15:28 ist weg.
     Damit ist der Fix nicht mehr nur plausibel, sondern über einen echten Kauf verifiziert.
 - [x] **`supabase/schema.sql` im Supabase SQL-Editor ausgeführt** *(am 2026-08-15 verifiziert: Funktion `confirm_participant`, View `participants_public` und die Spalten `confirmation_email_sent`/`attest_token`/`price_type`/`lang` existieren alle in `vsicpbxscbtxqbmarlly`)*
+- [x] **Vercel-Rollback vom 15.08. aufgehoben** *(2026-08-16 von Simon im Dashboard über
+  „Undo Rollback")* — die Custom-Domain hing bis dahin auf `dpl_3AxEwG4B` (Commit `b5eb4e3`,
+  15.08. 15:54); drei danach gebaute Production-Deployments waren READY, aber ohne
+  Custom-Domain-Alias. Seitdem liefert `www.dolomiteslastloop.com` wieder den aktuellen Stand.
 - [ ] **JSON-LD `SportsEvent.description` ist auf allen Sprachseiten deutsch**
   (`src/components/SeoJsonLd.astro:28-29`). Der String ist dort **hardcodiert** statt über
   `src/i18n/ui.ts` zu laufen — `/it` und `/en` liefern strukturierte Daten mit deutschem
