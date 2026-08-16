@@ -789,6 +789,15 @@ Early-Bird-Fensters) müssen weg:
     `error`/`warning`/`fatal` (Vercel Runtime Logs) — der IP-Fehler von 15:28 ist weg.
     Damit ist der Fix nicht mehr nur plausibel, sondern über einen echten Kauf verifiziert.
 - [x] **`supabase/schema.sql` im Supabase SQL-Editor ausgeführt** *(am 2026-08-15 verifiziert: Funktion `confirm_participant`, View `participants_public` und die Spalten `confirmation_email_sent`/`attest_token`/`price_type`/`lang` existieren alle in `vsicpbxscbtxqbmarlly`)*
+- [ ] **JSON-LD `SportsEvent.description` ist auf allen Sprachseiten deutsch**
+  (`src/components/SeoJsonLd.astro:28-29`). Der String ist dort **hardcodiert** statt über
+  `src/i18n/ui.ts` zu laufen — `/it` und `/en` liefern strukturierte Daten mit deutschem
+  Beschreibungstext aus, obwohl `inLanguage` korrekt auf `it`/`en` steht. Per curl gegen den
+  Dev-Server auf allen drei Sprachseiten bestätigt (2026-08-16). Vorbefund, **nicht** durch
+  den Hero-Text-Fix (`a019965`) entstanden — dort wurde nur der Inhalt korrigiert
+  („erste" → „2. Ausgabe"), nicht die Verdrahtung. Fix wäre ein eigener i18n-Key
+  (z. B. `seo.jsonld.description`) in allen drei Sprachen, angezogen über `t()` wie die
+  übrigen Meta-Texte. Bewusst als separater Scope zurückgestellt.
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
 - [x] **Stripe einrichten** *(2026-08-14 erledigt)* — Live-Keys, die drei Preise (75/80/100 €)
