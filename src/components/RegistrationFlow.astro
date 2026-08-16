@@ -178,9 +178,10 @@ const nationalities: { value: string; label: string }[] = [
       </div>
       )}
 
-      {/* Die Fehlermeldungen von validateStep1() kommen über data-Attribute herein:
-          das Client-Script läuft im Browser und kann t() nicht aufrufen. Ohne diese
-          Brücke wären alle Meldungen hartcodiert deutsch — auch auf /it und /en. */}
+      {/* Alle Fehlermeldungen des Client-Scripts kommen über data-Attribute herein:
+          das Script läuft im Browser und kann t() nicht aufrufen. Ohne diese
+          Brücke wären alle Meldungen hartcodiert deutsch — auch auf /it und /en.
+          Gilt für validateStep1() ebenso wie für Step-2-Checkout und Attest-Upload. */}
       <form
         class="signup-form"
         id="signup-form"
@@ -193,6 +194,12 @@ const nationalities: { value: string; label: string }[] = [
         data-msg-nationality-required={t("signup.field.nationality_required")}
         data-msg-taxcode-required-it={t("signup.field.taxcode_required_it")}
         data-msg-taxcode-invalid={t("signup.field.taxcode_invalid")}
+        data-msg-checkout-failed={t("signup.error.checkout_failed")}
+        data-msg-network={t("signup.error.network")}
+        data-msg-form-missing={t("signup.error.form_missing")}
+        data-msg-attest-incomplete={t("signup.error.attest_incomplete")}
+        data-msg-attest-too-large={t("signup.error.attest_too_large")}
+        data-msg-attest-failed={t("signup.error.attest_failed")}
         novalidate
       >
         <input type="hidden" name="lang" value={lang} />
@@ -232,9 +239,19 @@ const nationalities: { value: string; label: string }[] = [
               <span class="hint">{t("signup.field.age_error")}</span>
             </div>
             <div class="field">
+              {/* Einziges Feld mit wechselndem Status: für Nationalität "IT" ist der
+                  Codice Fiscale Pflicht, sonst optional. Beide Texte hängen am Span,
+                  damit das Client-Script ohne t() umschalten kann. Die übrigen
+                  Pflichtfelder bleiben bewusst unmarkiert — markiert wird nur, was
+                  von der Norm abweicht. */}
               <label for="tax_code">
                 {t("signup.field.taxcode")}
-                <span class="req" data-taxcode-req hidden>*</span>
+                <span
+                  class="field-flag"
+                  data-taxcode-req
+                  data-optional={t("signup.field.optional")}
+                  data-required={t("signup.field.required")}
+                >{t("signup.field.optional")}</span>
               </label>
               <input type="text" id="tax_code" name="tax_code" autocomplete="off" placeholder="RSSMRA…" />
               <span class="hint warn" data-cf-warn hidden>{t("signup.field.taxcode_warn")}</span>
@@ -267,10 +284,7 @@ const nationalities: { value: string; label: string }[] = [
 
           <div class="field-row">
             <div class="field">
-              <label for="nationalitaet">
-                {t("signup.field.nationality")}
-                <span class="req">*</span>
-              </label>
+              <label for="nationalitaet">{t("signup.field.nationality")}</label>
               {/* Leere Vorauswahl, damit `required` eine echte Entscheidung erzwingt.
                   `country` hat "Italien" vorausgewählt und kann deshalb nie leer sein —
                   hier muss bewusst gewählt werden, weil die Auswahl die
@@ -509,13 +523,11 @@ const nationalities: { value: string; label: string }[] = [
   @media (max-width: 640px) { .field-row-3 { grid-template-columns: 1fr; } }
   .hint.warn { color: var(--color-error); }
 
-  /* Pflichtfeld-Marker. Bewusst NUR an nationalitaet und tax_code — die übrigen
-     Pflichtfelder sind unmarkiert. Vereinheitlichung ist als eigener Punkt in
-     CLAUDE.md vermerkt. */
-  .req { color: var(--color-error); font-weight: 700; }
-  /* Explizit, obwohl .req kein display setzt: macht das hidden-Attribut am
-     tax_code-Stern unabhängig davon, ob später eine display-Regel dazukommt. */
-  .req[hidden] { display: none; }
+  /* Status-Marker, ausschließlich an tax_code. Alle anderen Felder sind entweder
+     durchgehend Pflicht (unmarkiert, wie im ganzen Formular) oder durchgehend
+     optional — nur der Codice Fiscale wechselt je nach Nationalität. */
+  .field-flag { margin-left: 0.35em; font-size: 0.85em; font-weight: 400; color: var(--color-text-muted); }
+  .field-flag.is-required { color: var(--color-error); font-weight: 700; }
 
   .consents { display: grid; gap: var(--space-3); margin-top: var(--space-5); padding-top: var(--space-5); border-top: 1px solid var(--color-border); }
   .consent { display: grid; grid-template-columns: auto 1fr; gap: var(--space-3); align-items: start; font-size: 0.92rem; line-height: 1.5; color: var(--color-text); cursor: pointer; }
@@ -615,9 +627,13 @@ const nationalities: { value: string; label: string }[] = [
   const form = () => document.getElementById("signup-form") as HTMLFormElement | null;
 
   // Übersetzte Fehlermeldungen kommen über data-Attribute am <form> vom Server —
-  // dieses Script läuft im Browser und kann t() nicht aufrufen.
+  // dieses Script läuft im Browser und kann t() nicht aufrufen. Einmal beim Start
+  // abgegriffen statt bei jedem Aufruf: sonst liefert msg() ausgerechnet im
+  // Form-fehlt-Guard von validateStep1() einen Leerstring, weil es die Texte aus
+  // genau dem Element liest, dessen Fehlen gemeldet werden soll.
+  const MSG: Record<string, string | undefined> = { ...(form()?.dataset ?? {}) };
   function msg(key: string): string {
-    return form()?.dataset[key] ?? "";
+    return MSG[key] ?? "";
   }
 
   // Soft Codice-Fiscale-Warnung (kein Blocker). Bleibt für Nicht-IT-Nationalitäten
@@ -636,7 +652,12 @@ const nationalities: { value: string; label: string }[] = [
   function syncTaxCodeRequirement() {
     const isIt = natEl?.value === "IT";
     if (taxEl) taxEl.required = isIt;
-    if (taxReq) taxReq.hidden = !isIt;
+    if (taxReq) {
+      // Der Marker bleibt immer sichtbar und wechselt nur den Text — ein
+      // erscheinendes/verschwindendes Element neben dem Label springt sonst.
+      taxReq.textContent = (isIt ? taxReq.dataset.required : taxReq.dataset.optional) ?? "";
+      taxReq.classList.toggle("is-required", isIt);
+    }
   }
   natEl?.addEventListener("change", syncTaxCodeRequirement);
   // Initialzustand — deckt Browser-Autofill und Back-Navigation ab, bei denen das
@@ -645,7 +666,7 @@ const nationalities: { value: string; label: string }[] = [
 
   function validateStep1(): string | null {
     const f = form();
-    if (!f) return "Formular nicht gefunden";
+    if (!f) return msg("msgFormMissing");
     const data = new FormData(f);
     const required = [
       "vorname", "nachname", "email", "phone", "geburtsdatum",
@@ -717,10 +738,10 @@ const nationalities: { value: string; label: string }[] = [
         btn.disabled = true;
         return;
       }
-      showError("[data-step2-error]", json.error || "Vorgang konnte nicht gestartet werden.");
+      showError("[data-step2-error]", json.error || msg("msgCheckoutFailed"));
       btn.disabled = false;
     } catch {
-      showError("[data-step2-error]", "Netzwerkfehler. Bitte erneut versuchen.");
+      showError("[data-step2-error]", msg("msgNetwork"));
       btn.disabled = false;
     }
   });
@@ -732,12 +753,12 @@ const nationalities: { value: string; label: string }[] = [
     const fileEl = document.getElementById("attest-file") as HTMLInputElement | null;
     clearError("[data-attest-error]");
     if (!idEl?.value || !tokenEl?.value || !fileEl?.files?.[0]) {
-      showError("[data-attest-error]", "Bitte den Link aus der Bestätigungs-Email verwenden und eine PDF-Datei auswählen.");
+      showError("[data-attest-error]", msg("msgAttestIncomplete"));
       return;
     }
     const file = fileEl.files[0];
     if (file.size > 5 * 1024 * 1024) {
-      showError("[data-attest-error]", "Datei ist zu groß (max 5 MB).");
+      showError("[data-attest-error]", msg("msgAttestTooLarge"));
       return;
     }
     const fd = new FormData();
@@ -756,7 +777,7 @@ const nationalities: { value: string; label: string }[] = [
       if (formWrap) formWrap.hidden = true;
       if (card) card.hidden = false;
     } catch (err: any) {
-      showError("[data-attest-error]", err?.message || "Upload fehlgeschlagen.");
+      showError("[data-attest-error]", err?.message || msg("msgAttestFailed"));
     }
   });
 

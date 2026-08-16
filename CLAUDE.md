@@ -852,41 +852,65 @@ Early-Bird-Fensters) müssen weg:
   („erste" → „2. Ausgabe"), nicht die Verdrahtung. Fix wäre ein eigener i18n-Key
   (z. B. `seo.jsonld.description`) in allen drei Sprachen, angezogen über `t()` wie die
   übrigen Meta-Texte. Bewusst als separater Scope zurückgestellt.
-- [ ] **Anmeldeformular aufräumen — zwei Halbheiten aus `feat/registration-form-fixes`
-  (2026-08-16), bewusst zusammen als EIN Task.** Beide sind Folgen derselben
-  Scope-Entscheidung: der Branch hat nur angefasst, was für Altersprüfung, Nationalität
-  und Codice Fiscale nötig war. Beide sind kosmetisch/i18n, **keine** Funktionsfehler —
-  nichts davon blockiert den Launch am 01.09.2026.
+- [x] **Anmeldeformular aufgeräumt** *(2026-08-16 erledigt, Branch
+  `chore/registration-form-cleanup`)* — die zwei Halbheiten aus
+  `feat/registration-form-fixes`, bewusst zusammen als EIN Task. Beide waren
+  kosmetisch/i18n, keine Funktionsfehler.
 
-  **(a) Pflichtfeld-Markierung ist inkonsistent.** Nur `nationalitaet` und `tax_code` tragen
-  einen roten `*` (`.req`-Span in `src/components/RegistrationFlow.astro`). Die übrigen elf
-  Pflichtfelder (Vorname, Nachname, Email, Telefon, Geburtsdatum, Straße, PLZ, Ort, Land,
-  Notfallkontakt Name + Telefon) sind unmarkiert. Der Key `signup.field.required`
-  („Pflichtfeld" / „Campo obbligatorio" / „Required field", `src/i18n/ui.ts:182/531/878`)
-  existiert bereits und wird bisher **nirgends** verwendet — er wäre der natürliche
-  Aufhänger. Beim Umsetzen auch die Gegenrichtung prüfen: bei 13 von 15 Pflichtfeldern ist
-  es meist ruhiger, stattdessen die beiden *optionalen* Felder als „(optional)" zu
-  kennzeichnen.
+  **(a) Pflichtfeld-Markierung vereinheitlicht.** Statt 13 von 15 Pflichtfeldern zu
+  markieren, ist jetzt nur noch gekennzeichnet, was von der Norm abweicht: der statische
+  `*` an `nationalitaet` ist weg, und `tax_code` — das einzige Feld mit **wechselndem**
+  Status — trägt einen dauerhaft sichtbaren Marker, der bei Nationalität „IT" von
+  `(optional)` auf `Pflichtfeld` umschlägt. Der Marker verschwindet nie, er wechselt nur
+  den Text; ein erscheinendes/verschwindendes Element neben dem Label lässt die Zeile
+  sonst springen. Neuer Key `signup.field.optional`; das seit jeher tote
+  `signup.field.required` ist damit erstmals verdrahtet. CSS `.req` → `.field-flag`
+  (gedämpft) + `.field-flag.is-required` (rot/fett); die Regel `.req[hidden]` entfiel,
+  weil nichts mehr versteckt wird.
 
-  **(b) Fehlermeldungen außerhalb von `validateStep1()` sind weiterhin hartcodiert
-  deutsch** — auch auf `/it` und `/en`. Betroffen in `RegistrationFlow.astro`:
-  „Vorgang konnte nicht gestartet werden." und „Netzwerkfehler. Bitte erneut versuchen."
-  (Step-2-Checkout-Handler) sowie „Bitte den Link aus der Bestätigungs-Email verwenden…",
-  „Datei ist zu groß (max 5 MB)." und „Upload fehlgeschlagen." (Attest-Upload). Dazu das
-  interne „Formular nicht gefunden". Die fünf Meldungen **innerhalb** von `validateStep1()`
-  sind seit dem Branch übersetzt — der Mechanismus dafür steht schon und ist
-  wiederverwendbar: `data-msg-*`-Attribute am `<form>` plus der `msg()`-Helper im
-  Client-Script (das Script läuft im Browser und kann `t()` nicht aufrufen). Es fehlen also
-  nur die zusätzlichen Keys in allen drei Sprachblöcken und je eine Zeile am `<form>`.
-  ⚠️ Beim Ergänzen von Keys daran denken: `UIKey = keyof (typeof ui)["de"]`
-  (`src/i18n/ui.ts:1055`) typisiert **nur** den `de`-Block. Ein in `it`/`en` vergessener Key
-  kompiliert sauber durch und fällt still auf Deutsch zurück (`utils.ts:19`) — `astro check`
-  fängt das **nicht**. Key-Mengen nach der Änderung explizit vergleichen.
+  **(b) Die sechs hartcodiert deutschen Meldungen** außerhalb von `validateStep1()`
+  (Step-2-Checkout, Attest-Upload, interner Form-Guard) laufen jetzt über dieselbe
+  `data-msg-*`/`msg()`-Brücke wie die bereits übersetzten. Sechs neue Keys unter
+  `signup.error.*` in allen drei Sprachblöcken.
+  - ⚠️ **`msg()` musste dafür umgebaut werden.** Es las bei *jedem* Aufruf frisch aus dem
+    `<form>` — für die Meldung „Formular fehlt" hätte es also die Texte aus genau dem
+    Element gelesen, dessen Fehlen gemeldet wird, und garantiert `""` geliefert:
+    `showError()` setzt `hidden = false` unabhängig vom Text, es wäre eine **sichtbare
+    leere** Fehlerbox erschienen. Die Strings werden jetzt einmal beim Script-Start in
+    `const MSG` abgegriffen.
+  - ⚠️ Der Typ ist `Record<string, string | undefined>`, **nicht** `…, string`:
+    `DOMStringMap` ist optional indiziert, das Spread erbt das. `astro check` fängt diesen
+    Fall — er hat ihn hier tatsächlich gefangen.
 
-  **Nicht Teil dieses Tasks, aber gleiche Ecke:** die serverseitigen Fehlertexte in
-  `src/pages/api/checkout.ts` (`bad("Pflichtfelder fehlen.")` usw.) sind ebenfalls
-  durchgehend deutsch. Die gehen einen anderen Weg (JSON-Response statt DOM) und brauchen
-  eine eigene Entscheidung — z. B. Fehlercodes statt Klartext, die der Client übersetzt.
+  **Verifiziert:** `astro check` 0 Errors/0 Warnings, `npm run build` grün,
+  i18n-Symmetrie **299 Keys in de/it/en, 0 fehlend, 0 zusätzlich** (die UIKey-Falle greift
+  also nicht), Browser-Durchlauf DE/IT/EN mit 0 Console-Errors je Sprache — Marker-Wechsel
+  in beiden Richtungen inkl. `input.required`, alle sechs Meldungen übersetzt gerendert.
+  - ⚠️ **Step 2 wurde bewusst NICHT echt durchgeklickt** — Preview und Production teilen
+    sich dasselbe Supabase-Projekt, ein echter Checkout schriebe in die Live-DB und
+    verbrennt über `confirm_participant` eine Startnummer. Stattdessen `window.fetch` für
+    `/api/` gestubbt: die echten Fehlerzweige laufen, ohne die API zu berühren
+    (gegengeprüft, dass kein Request rausging). Für künftige Formular-Tests der Weg der
+    Wahl.
+  - ⚠️ **Das Formular rendert vor dem 01.09.2026 gar nicht** (`TIER_WINDOWS[0].from`,
+    davor greift `signup.closed.*`). Für den Browser-Check wurde das Fenster temporär
+    lokal geöffnet und zurückgebaut; `git diff --exit-code -- src/lib/stripe.ts` als
+    Beleg. Wer das Formular künftig lokal ansehen will, braucht denselben Griff.
+- [ ] **Serverseitige Fehlertexte aus `/api/checkout` bleiben deutsch — bewusst
+  ausgeklammerter Scope.** `src/pages/api/checkout.ts` antwortet in den nutzerseitigen
+  Validierungsfehlern deutsch (`bad("Pflichtfelder fehlen.")`, Telefon, Nationalität,
+  Land, Codice Fiscale, Einwilligungen, Alter, „Diese Email ist bereits angemeldet.") —
+  gemischt mit englischen Interna (`"Registration closed"`, `"Invalid JSON"`,
+  `"Unknown error"`). `src/pages/api/upload-attest.ts` ebenso (`"Nur PDF-Dateien
+  erlaubt."`, `"Datei zu groß (max 5 MB)."`, `"Ungültige Upload-Berechtigung."`).
+  Beides am 2026-08-16 per grep verifiziert. Das ist der Rest,
+  den der Formular-Cleanup vom 16.08. **nicht** abdeckt, und die Lücke ist konkreter als
+  sie klingt: `RegistrationFlow.astro` zeigt `json.error || msg("msgCheckoutFailed")` bzw.
+  `err?.message || msg("msgAttestFailed")` — der Server-Text **gewinnt**, wenn er da ist.
+  Die neuen i18n-Keys greifen also nur, wenn der Server *keinen* Text liefert. Auf `/it`
+  und `/en` sieht ein Nutzer bei einer echten API-Fehlerantwort weiterhin Deutsch.
+  Lösung braucht eine eigene Entscheidung, weil der Weg ein anderer ist (JSON-Response
+  statt DOM): z. B. Fehlercodes statt Klartext, die der Client über `msg()` übersetzt.
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
 - [x] **Stripe einrichten** *(2026-08-14 erledigt)* — Live-Keys, die drei Preise (75/80/100 €)
