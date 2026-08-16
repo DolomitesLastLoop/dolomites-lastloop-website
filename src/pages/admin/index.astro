@@ -106,7 +106,18 @@ const attestApproved = participants.filter((p) => p.attest_status === "approved"
           </div>
           <div class="field-row">
             <div class="field"><label>Email<input name="email" type="email" required /></label></div>
-            <div class="field"><label>Nation<input name="nationalitaet" /></label></div>
+            <div class="field"><label>Nation
+              {/* Select statt Freitext: /api/admin/participants gleicht gegen
+                  ALLOWED_NATIONALITIES ab und verwirft unbekannte Werte still. */}
+              <select name="nationalitaet">
+                <option value="">—</option>
+                <option value="IT">IT</option>
+                <option value="DE">DE</option>
+                <option value="AT">AT</option>
+                <option value="CH">CH</option>
+                <option value="OTHER">OTHER</option>
+              </select>
+            </label></div>
           </div>
           <div class="field">
             <label>Status

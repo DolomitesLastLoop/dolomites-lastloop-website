@@ -26,9 +26,16 @@ export function isCodiceFiscale(v: string): boolean {
 }
 
 // Age in full years on a given reference day.
+//
+// UTC-Komponenten auf BEIDEN Seiten: `birth` entsteht aus
+// `new Date("YYYY-MM-DD")` und ist damit UTC-Mitternacht. Mit lokalen Gettern
+// läge der Tag in Zeitzonen mit negativem Offset einen Tag früher — das Ergebnis
+// hinge dann vom Standort des Besuchers ab, weil diese Funktion auch im Browser
+// läuft. Der Referenztag (RACE_DATE aus @lib/constants) ist aus demselben Grund
+// UTC-basiert.
 export function ageOnDay(birth: Date, day: Date): number {
-  let age = day.getFullYear() - birth.getFullYear();
-  const m = day.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && day.getDate() < birth.getDate())) age--;
+  let age = day.getUTCFullYear() - birth.getUTCFullYear();
+  const m = day.getUTCMonth() - birth.getUTCMonth();
+  if (m < 0 || (m === 0 && day.getUTCDate() < birth.getUTCDate())) age--;
   return age;
 }

@@ -334,6 +334,24 @@ export const ui = {
     "signup.country.at": "Österreich",
     "signup.country.ch": "Schweiz",
     "signup.country.other": "Anderes Land",
+    "signup.nationality.placeholder": "Bitte wählen",
+    "signup.nationality.it": "Italienisch",
+    "signup.nationality.de": "Deutsch",
+    "signup.nationality.at": "Österreichisch",
+    "signup.nationality.ch": "Schweizerisch",
+    "signup.nationality.other": "Andere",
+    "signup.field.taxcode_required_it":
+      "Für italienische Staatsangehörige ist der Codice Fiscale Pflicht.",
+    "signup.field.taxcode_invalid":
+      "Bitte einen gültigen Codice Fiscale angeben (16 Zeichen, z.B. RSSMRA85T10A562S).",
+    "signup.field.nationality_required": "Bitte eine Nationalität auswählen.",
+    // Fehlermeldungen von validateStep1() — das Client-Script kann t() nicht
+    // aufrufen und bekommt sie über data-Attribute am <form> gereicht.
+    "signup.error.required_fields": "Bitte alle Pflichtfelder ausfüllen.",
+    "signup.error.invalid_email": "Bitte gültige Email-Adresse angeben.",
+    "signup.error.invalid_phone": "Bitte eine gültige Telefonnummer angeben.",
+    "signup.error.min_age": "Du musst am Renntag mindestens 18 Jahre alt sein.",
+    "signup.error.consents": "Bitte allen drei Einwilligungen zustimmen.",
     "signup.consent.privacy":
       "Ich akzeptiere die <a href=\"{href}\">Datenschutzerklärung</a> (es werden auch Gesundheitsdaten aus dem ärztlichen Attest verarbeitet).",
     "signup.consent.liability":
@@ -682,6 +700,22 @@ export const ui = {
     "signup.country.at": "Austria",
     "signup.country.ch": "Svizzera",
     "signup.country.other": "Altro paese",
+    "signup.nationality.placeholder": "Seleziona",
+    "signup.nationality.it": "Italiana",
+    "signup.nationality.de": "Tedesca",
+    "signup.nationality.at": "Austriaca",
+    "signup.nationality.ch": "Svizzera",
+    "signup.nationality.other": "Altra",
+    "signup.field.taxcode_required_it":
+      "Per i cittadini italiani il codice fiscale è obbligatorio.",
+    "signup.field.taxcode_invalid":
+      "Inserisci un codice fiscale valido (16 caratteri, es. RSSMRA85T10A562S).",
+    "signup.field.nationality_required": "Seleziona una nazionalità.",
+    "signup.error.required_fields": "Compila tutti i campi obbligatori.",
+    "signup.error.invalid_email": "Inserisci un’email valida.",
+    "signup.error.invalid_phone": "Inserisci un numero di telefono valido.",
+    "signup.error.min_age": "Devi avere almeno 18 anni il giorno della gara.",
+    "signup.error.consents": "Accetta tutti e tre i consensi.",
     "signup.consent.privacy":
       "Accetto l’<a href=\"{href}\">informativa sulla privacy</a> (vengono trattati anche dati sanitari del certificato medico).",
     "signup.consent.liability":
@@ -1028,6 +1062,22 @@ export const ui = {
     "signup.country.at": "Austria",
     "signup.country.ch": "Switzerland",
     "signup.country.other": "Other country",
+    "signup.nationality.placeholder": "Please select",
+    "signup.nationality.it": "Italian",
+    "signup.nationality.de": "German",
+    "signup.nationality.at": "Austrian",
+    "signup.nationality.ch": "Swiss",
+    "signup.nationality.other": "Other",
+    "signup.field.taxcode_required_it":
+      "The Italian tax code is mandatory for Italian citizens.",
+    "signup.field.taxcode_invalid":
+      "Please enter a valid Italian tax code (16 characters, e.g. RSSMRA85T10A562S).",
+    "signup.field.nationality_required": "Please select a nationality.",
+    "signup.error.required_fields": "Please fill in all required fields.",
+    "signup.error.invalid_email": "Please enter a valid email address.",
+    "signup.error.invalid_phone": "Please enter a valid phone number.",
+    "signup.error.min_age": "You must be 18 or older on race day.",
+    "signup.error.consents": "Please accept all three consents.",
     "signup.consent.privacy":
       "I accept the <a href=\"{href}\">privacy policy</a> (health data from the medical certificate is also processed).",
     "signup.consent.liability":

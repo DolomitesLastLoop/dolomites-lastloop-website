@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { isAuthenticated } from "@lib/auth";
 import { getAdminClient } from "@lib/supabase";
+import { ALLOWED_NATIONALITIES } from "@lib/constants";
 
 export const prerender = false;
 
@@ -29,6 +30,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
   }
 
+  // Gleiche Allowlist wie /api/checkout. Im Admin-Panel bleibt die Nationalität
+  // optional (leeres Select = null), ein unbekannter Wert wird verworfen statt
+  // gespeichert — das Formular bietet nur die gültigen Codes an.
+  const natRaw = String(body.nationalitaet || "").trim().toUpperCase();
+  const nationalitaet = ALLOWED_NATIONALITIES.has(natRaw) ? natRaw : null;
+
   const status = ["confirmed", "pending", "waitlist"].includes(
     body.ticket_status,
   )
@@ -41,7 +48,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       vorname: body.vorname.trim(),
       nachname: body.nachname.trim(),
       email: body.email.trim().toLowerCase(),
-      nationalitaet: body.nationalitaet?.trim() || null,
+      nationalitaet,
       ticket_status: status,
       attest_status: "missing",
     });

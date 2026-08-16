@@ -826,6 +826,18 @@ Early-Bird-Fensters) müssen weg:
   („erste" → „2. Ausgabe"), nicht die Verdrahtung. Fix wäre ein eigener i18n-Key
   (z. B. `seo.jsonld.description`) in allen drei Sprachen, angezogen über `t()` wie die
   übrigen Meta-Texte. Bewusst als separater Scope zurückgestellt.
+- [ ] **Pflichtfelder im Anmeldeformular einheitlich markieren.** Seit
+  `feat/registration-form-fixes` (2026-08-16) tragen **nur** `nationalitaet` und `tax_code`
+  einen roten `*` (`.req`-Span in `src/components/RegistrationFlow.astro`). Die übrigen elf
+  Pflichtfelder (Vorname, Nachname, Email, Telefon, Geburtsdatum, Straße, PLZ, Ort, Land,
+  Notfallkontakt Name + Telefon) sind **unmarkiert** — die Kennzeichnung ist damit
+  inkonsistent. Bewusste Entscheidung von Simon beim Planungs-Go: nur die beiden Felder, um
+  die es in dem Branch ging; Vereinheitlichung als eigener Punkt. Der Key
+  `signup.field.required` („Pflichtfeld" / „Campo obbligatorio" / „Required field",
+  `src/i18n/ui.ts:182/531/878`) existiert bereits und wird bisher **nirgends** verwendet —
+  er wäre der natürliche Aufhänger. Beim Umsetzen auch entscheiden, ob stattdessen die
+  *optionalen* Felder als „(optional)" markiert werden; bei 13 von 15 Pflichtfeldern ist das
+  meist die ruhigere Variante.
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
 - [x] **Stripe einrichten** *(2026-08-14 erledigt)* — Live-Keys, die drei Preise (75/80/100 €)

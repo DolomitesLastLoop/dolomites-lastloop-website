@@ -4,6 +4,7 @@ import { photo, pos } from "@lib/photos";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 import { getAdminClient, MAX_PARTICIPANTS } from "@lib/supabase";
 import { currentTier, TIER_LABEL_KEY, TIER_PRICE_LABEL, TIER_WINDOWS } from "@lib/stripe";
+import { RACE_DATE, MIN_AGE, MAX_AGE } from "@lib/constants";
 
 interface Props {
   lang: Lang;
@@ -55,11 +56,18 @@ const displayTier = currentTier() ?? TIER_WINDOWS[0].id;
 const priceLabel = TIER_PRICE_LABEL[displayTier];
 const tierName = t(TIER_LABEL_KEY[displayTier]);
 
-const today = new Date();
-const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
-const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-const minISO = minDate.toISOString().slice(0, 10);
-const maxISO = maxDate.toISOString().slice(0, 10);
+// Grenzen des Datepickers relativ zum RENNTAG, deckungsgleich mit der Prüfung in
+// validateStep1() und /api/checkout — maxISO ist exakt das späteste Geburtsdatum,
+// das am 15.05.2027 noch 18 ergibt (2009-05-15).
+//
+// Durchgehend Date.UTC + toISOString: die frühere Konstruktion mischte lokale
+// Komponenten mit UTC-Ausgabe und lieferte in Europe/Rome einen Tag zu früh.
+const isoDay = (d: Date) => d.toISOString().slice(0, 10);
+const raceY = RACE_DATE.getUTCFullYear();
+const raceM = RACE_DATE.getUTCMonth();
+const raceD = RACE_DATE.getUTCDate();
+const minISO = isoDay(new Date(Date.UTC(raceY - MAX_AGE, raceM, raceD)));
+const maxISO = isoDay(new Date(Date.UTC(raceY - MIN_AGE, raceM, raceD)));
 
 const privacyHref = localizePath("/datenschutz", lang);
 const liabilityHref = localizePath("/haftungsausschluss", lang);
@@ -71,6 +79,17 @@ const countries: { value: string; label: string }[] = [
   { value: "Österreich", label: t("signup.country.at") },
   { value: "Schweiz", label: t("signup.country.ch") },
   { value: "Andere", label: t("signup.country.other") },
+];
+
+// Staatsangehörigkeit als ISO-3166-1-Alpha-2. Bewusst ein anderes Vokabular als
+// `countries` (Klartext): `country` ist der Wohnsitz und steht so schon in der DB,
+// `nationalitaet` ist die Staatsangehörigkeit und steuert die Codice-Fiscale-Pflicht.
+const nationalities: { value: string; label: string }[] = [
+  { value: "IT", label: t("signup.nationality.it") },
+  { value: "DE", label: t("signup.nationality.de") },
+  { value: "AT", label: t("signup.nationality.at") },
+  { value: "CH", label: t("signup.nationality.ch") },
+  { value: "OTHER", label: t("signup.nationality.other") },
 ];
 ---
 
@@ -159,7 +178,23 @@ const countries: { value: string; label: string }[] = [
       </div>
       )}
 
-      <form class="signup-form" id="signup-form" data-full={String(isFull)} novalidate>
+      {/* Die Fehlermeldungen von validateStep1() kommen über data-Attribute herein:
+          das Client-Script läuft im Browser und kann t() nicht aufrufen. Ohne diese
+          Brücke wären alle Meldungen hartcodiert deutsch — auch auf /it und /en. */}
+      <form
+        class="signup-form"
+        id="signup-form"
+        data-full={String(isFull)}
+        data-msg-required-fields={t("signup.error.required_fields")}
+        data-msg-invalid-email={t("signup.error.invalid_email")}
+        data-msg-invalid-phone={t("signup.error.invalid_phone")}
+        data-msg-min-age={t("signup.error.min_age")}
+        data-msg-consents={t("signup.error.consents")}
+        data-msg-nationality-required={t("signup.field.nationality_required")}
+        data-msg-taxcode-required-it={t("signup.field.taxcode_required_it")}
+        data-msg-taxcode-invalid={t("signup.field.taxcode_invalid")}
+        novalidate
+      >
         <input type="hidden" name="lang" value={lang} />
         <input type="hidden" name="return_path" value={basePath} />
 
@@ -197,7 +232,10 @@ const countries: { value: string; label: string }[] = [
               <span class="hint">{t("signup.field.age_error")}</span>
             </div>
             <div class="field">
-              <label for="tax_code">{t("signup.field.taxcode")}</label>
+              <label for="tax_code">
+                {t("signup.field.taxcode")}
+                <span class="req" data-taxcode-req hidden>*</span>
+              </label>
               <input type="text" id="tax_code" name="tax_code" autocomplete="off" placeholder="RSSMRA…" />
               <span class="hint warn" data-cf-warn hidden>{t("signup.field.taxcode_warn")}</span>
             </div>
@@ -229,8 +267,20 @@ const countries: { value: string; label: string }[] = [
 
           <div class="field-row">
             <div class="field">
-              <label for="nationalitaet">{t("signup.field.nationality")}</label>
-              <input type="text" id="nationalitaet" name="nationalitaet" placeholder="IT, DE, AT, CH…" />
+              <label for="nationalitaet">
+                {t("signup.field.nationality")}
+                <span class="req">*</span>
+              </label>
+              {/* Leere Vorauswahl, damit `required` eine echte Entscheidung erzwingt.
+                  `country` hat "Italien" vorausgewählt und kann deshalb nie leer sein —
+                  hier muss bewusst gewählt werden, weil die Auswahl die
+                  Codice-Fiscale-Pflicht auslöst. */}
+              <select id="nationalitaet" name="nationalitaet" required>
+                <option value="" selected disabled>{t("signup.nationality.placeholder")}</option>
+                {nationalities.map((n) => (
+                  <option value={n.value}>{n.label}</option>
+                ))}
+              </select>
             </div>
             <div class="field">
               <label for="notfallkontakt_name">{t("signup.field.emergency_name")}</label>
@@ -459,6 +509,14 @@ const countries: { value: string; label: string }[] = [
   @media (max-width: 640px) { .field-row-3 { grid-template-columns: 1fr; } }
   .hint.warn { color: var(--color-error); }
 
+  /* Pflichtfeld-Marker. Bewusst NUR an nationalitaet und tax_code — die übrigen
+     Pflichtfelder sind unmarkiert. Vereinheitlichung ist als eigener Punkt in
+     CLAUDE.md vermerkt. */
+  .req { color: var(--color-error); font-weight: 700; }
+  /* Explizit, obwohl .req kein display setzt: macht das hidden-Attribut am
+     tax_code-Stern unabhängig davon, ob später eine display-Regel dazukommt. */
+  .req[hidden] { display: none; }
+
   .consents { display: grid; gap: var(--space-3); margin-top: var(--space-5); padding-top: var(--space-5); border-top: 1px solid var(--color-border); }
   .consent { display: grid; grid-template-columns: auto 1fr; gap: var(--space-3); align-items: start; font-size: 0.92rem; line-height: 1.5; color: var(--color-text); cursor: pointer; }
   .consent input { margin-top: 0.2rem; width: 1.1rem; height: 1.1rem; accent-color: var(--color-primary); }
@@ -528,6 +586,7 @@ const countries: { value: string; label: string }[] = [
 
 <script>
   import { isValidEmail, isPlausiblePhone, isCodiceFiscale, ageOnDay } from "@lib/validation";
+  import { RACE_DATE, MIN_AGE } from "@lib/constants";
 
   function showStep(n: number) {
     document.querySelectorAll<HTMLElement>("[data-panel]").forEach((el) => {
@@ -555,12 +614,34 @@ const countries: { value: string; label: string }[] = [
 
   const form = () => document.getElementById("signup-form") as HTMLFormElement | null;
 
-  // Soft Codice-Fiscale-Warnung (kein Blocker).
+  // Übersetzte Fehlermeldungen kommen über data-Attribute am <form> vom Server —
+  // dieses Script läuft im Browser und kann t() nicht aufrufen.
+  function msg(key: string): string {
+    return form()?.dataset[key] ?? "";
+  }
+
+  // Soft Codice-Fiscale-Warnung (kein Blocker). Bleibt für Nicht-IT-Nationalitäten
+  // der einzige Hinweis; für "IT" blockt zusätzlich validateStep1() und /api/checkout.
   document.getElementById("tax_code")?.addEventListener("blur", (e) => {
     const v = (e.target as HTMLInputElement).value.trim();
     const warn = document.querySelector<HTMLElement>("[data-cf-warn]");
     if (warn) warn.hidden = v === "" || isCodiceFiscale(v);
   });
+
+  // Codice Fiscale ist nur für italienische Staatsangehörige Pflicht. Das hier ist
+  // reine Anzeigelogik — durchgesetzt wird sie in validateStep1() und /api/checkout.
+  const natEl = document.getElementById("nationalitaet") as HTMLSelectElement | null;
+  const taxEl = document.getElementById("tax_code") as HTMLInputElement | null;
+  const taxReq = document.querySelector<HTMLElement>("[data-taxcode-req]");
+  function syncTaxCodeRequirement() {
+    const isIt = natEl?.value === "IT";
+    if (taxEl) taxEl.required = isIt;
+    if (taxReq) taxReq.hidden = !isIt;
+  }
+  natEl?.addEventListener("change", syncTaxCodeRequirement);
+  // Initialzustand — deckt Browser-Autofill und Back-Navigation ab, bei denen das
+  // Select bereits einen Wert trägt, ohne dass ein change-Event gefeuert hat.
+  syncTaxCodeRequirement();
 
   function validateStep1(): string | null {
     const f = form();
@@ -569,25 +650,35 @@ const countries: { value: string; label: string }[] = [
     const required = [
       "vorname", "nachname", "email", "phone", "geburtsdatum",
       "street", "postal_code", "city", "country",
-      "notfallkontakt_name", "notfallkontakt_tel",
+      "nationalitaet", "notfallkontakt_name", "notfallkontakt_tel",
     ];
     for (const key of required) {
       if (!String(data.get(key) || "").trim()) {
-        return "Bitte alle Pflichtfelder ausfüllen.";
+        // Nationalität hat eine leere Vorauswahl — eigene Meldung, sonst sucht der
+        // Nutzer im ausgefüllten Formular nach einem vermeintlich leeren Textfeld.
+        return key === "nationalitaet" ? msg("msgNationalityRequired") : msg("msgRequiredFields");
       }
     }
     if (!isValidEmail(String(data.get("email")))) {
-      return "Bitte gültige Email-Adresse angeben.";
+      return msg("msgInvalidEmail");
     }
     if (!isPlausiblePhone(String(data.get("phone"))) || !isPlausiblePhone(String(data.get("notfallkontakt_tel")))) {
-      return "Bitte eine gültige Telefonnummer angeben.";
+      return msg("msgInvalidPhone");
     }
+    // Referenzpunkt ist der RENNTAG, nicht heute — deckungsgleich mit /api/checkout
+    // und mit dem Hinweistext am Feld (signup.field.age_error).
     const birth = new Date(String(data.get("geburtsdatum")));
-    if (Number.isNaN(birth.getTime()) || ageOnDay(birth, new Date()) < 18) {
-      return "Du musst mindestens 18 Jahre alt sein.";
+    if (Number.isNaN(birth.getTime()) || ageOnDay(birth, RACE_DATE) < MIN_AGE) {
+      return msg("msgMinAge");
+    }
+    // Codice Fiscale: Pflicht + hartes Format nur für italienische Staatsangehörige.
+    if (String(data.get("nationalitaet") || "") === "IT") {
+      const cf = String(data.get("tax_code") || "").trim();
+      if (!cf) return msg("msgTaxcodeRequiredIt");
+      if (!isCodiceFiscale(cf)) return msg("msgTaxcodeInvalid");
     }
     for (const c of ["consent_privacy", "consent_liability_waiver", "consent_image_rights"]) {
-      if (!data.get(c)) return "Bitte allen drei Einwilligungen zustimmen.";
+      if (!data.get(c)) return msg("msgConsents");
     }
     return null;
   }
