@@ -37,6 +37,19 @@ Sport OK Daten/
 graphify-out/
 Ergebnisliste Dolomites Last Loop 2026.pdf
 
+# Rohvideos (Quellmaterial bleibt lokal). DolomitlastloopQuerformat.mp4 ist
+# 120 MB — GitHub lehnt Dateien >100 MB hart ab, und das Repo ist oeffentlich.
+*.mp4
+*.mov
+*.m4v
+# Ausnahme: fuer den Hero komprimierte Web-Assets sollen versioniert werden.
+# Ohne diese Zeilen wuerde ein spaeteres public/videos/hero-loop.mp4 STILL
+# ignoriert (siehe Lektion .env.example, Commit 489f46e). Die Ausnahme muss
+# auf Datei-Ebene stehen — ein blosses "!public/videos/" wuerde NICHT greifen,
+# weil "*.mp4" die Datei selbst matcht und die letzte passende Regel gewinnt.
+!public/videos/*.mp4
+!public/videos/*.webm
+
 
 # Agentic OS Template - Downstream Ignore Defaults
 

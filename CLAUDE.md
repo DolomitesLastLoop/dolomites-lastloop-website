@@ -469,6 +469,11 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
   getrackte Dateien ausliefern — deshalb fällt das erst beim ersten CLI-Deploy auf.
   **Lösung:** vorher eine `.vercelignore` anlegen, die die großen `.gitignore`-Einträge
   spiegelt. Danach lief der Deploy in unter 2 Minuten durch.
+  - [x] ✅ **`.vercelignore` existiert seit 2026-08-16** — bis dahin stand die Lösung hier
+    nur als Text, die Datei war nie angelegt worden. Sie spiegelt die Blöcke „Asset Ordner /
+    Grossdateien" und „Rohvideos" aus `.gitignore` plus `.git/`, `node_modules/`, Build- und
+    Agenten-State. **Beim Ändern beide Dateien gemeinsam pflegen** — es gibt keine
+    gemeinsame Quelle, der Kommentarkopf in `.vercelignore` weist darauf hin.
 - ✅ **Muster „Live-Test ohne Push":** ein temporäres Production-Fenster lässt sich
   vollständig **ohne Commit und ohne Push** öffnen — Code lokal ändern (uncommitted),
   `vercel deploy --prod --yes`, testen, danach
@@ -902,3 +907,96 @@ Beim Pflegen dieser Texte beachten:
   tatsächlich gelöscht sein. Es gibt dafür **noch keinen Mechanismus** — Cleanup-Job oder
   manueller Reminder-Prozess sind offen (siehe „Nächste Schritte"). Wird die Frist im Text
   geändert, hier und im To-do mitziehen; wird die Praxis geändert, den Text mitziehen.
+
+---
+
+## Backlog (nicht dringend, nicht launch-blockierend)
+
+> Alles in diesem Abschnitt ist bewusst zurückgestellt. **Kein Punkt hier blockiert den
+> Launch am 01.09.2026** oder irgendeine andere Deadline. Nicht in eine Sprint-Planung
+> ziehen, ohne dass die jeweils genannte Voraussetzung erfüllt ist.
+
+### Hero-Video-Experiment (zurückgestellt)
+
+**Status: wartet auf neues Rohmaterial von Gregor/Kollege. Kein Termin, keine Deadline,
+blockiert den Launch am 01.09.2026 NICHT.** Die Startseite bleibt bis auf Weiteres bei der
+bestehenden Bild-Slideshow — die liefert Lighthouse Performance **100**, es gibt also keinen
+Leidensdruck.
+
+**Voraussetzung für Wiederaufnahme:** eine ruhige, **schnittfreie** Einstellung von 8–12 s
+Länge im Querformat. Solange die nicht vorliegt, ist das Thema geschlossen.
+
+#### Warum zurückgestellt — Analyse vom 2026-08-16
+
+Untersucht wurde `DolomitlastloopQuerformat.mp4` (Projekt-Root, 120,0 MB / 125.843.621 Bytes,
+untracked). Es ist das **einzige** Video im Projekt; `Gregor Fotos DLL/`, `Sport OK Daten/`
+und `web-2/` enthalten ausschließlich JPGs bzw. PDFs. Nicht durchsucht: `web-2.zip` (255 MB).
+
+- **Technisch:** H.264 High, 1920×1080, 29,97 fps, 49,58 s, **20,3 Mbit/s** (Video 19,97 +
+  AAC-Audio 0,32 — Audio ist für einen muted Hero tote Last). Als Web-Asset unbrauchbar; zum
+  Vergleich wiegt die **komplette** Startseite heute 871 KiB.
+- **⛔ Der eigentliche Blocker ist inhaltlich, nicht die Dateigröße:** per
+  `ffmpeg`-Szenenerkennung gemessen **37 harte Schnitte in 49,6 s**, mittlere
+  Einstellungslänge **1,3 s**, längste durchgehende Einstellung ~4,4 s (bei 6,1–10,5 s).
+  Das ist ein geschnittener Recap-Film (Startbogen, Rundentafel, Zieleinlauf, Zuschauer),
+  kein B-Roll. Hinter einer H1 mit `clamp(3.5rem, 10vw, 9.5rem)` flackert das und kämpft mit
+  dem Text. **Es existiert in diesen 49 s keine einzige Einstellung, die als Loop trägt** —
+  deshalb hilft auch Komprimieren nicht weiter. Die Datei wurde bewusst **nicht** komprimiert.
+- **Repo-Risiko (inzwischen entschärft):** das Repo ist öffentlich, `.git` bereits 432 MB,
+  GitHub lehnt Dateien >100 MB hart ab. Die Datei war weder in `.gitignore` noch gab es eine
+  `.vercelignore`. Beides ist seit 2026-08-16 erledigt (`*.mp4`/`*.mov`/`*.m4v` ignoriert,
+  Ausnahme `!public/videos/*.mp4` + `*.webm` für die künftigen Web-Assets).
+
+#### Performance-Baseline (Production, gemessen 2026-08-16 14:34 UTC)
+
+Lighthouse 12.8.2, mobile, `--throttling-method=simulate`, gegen `www.dolomiteslastloop.com`.
+**Diese Werte sind der Referenzpunkt, gegen den ein Video-Hero antreten muss:**
+
+| Seite | Perf | A11y | BP | SEO | FCP | LCP | TBT | CLS | Gewicht |
+|---|---|---|---|---|---|---|---|---|---|
+| `/de/` (Hero) | **100** | 95 | 100 | 100 | 1,5 s | **1,5 s** | 0 ms | 0,013 | 871 KiB |
+| `/de/anmeldung` | 96 | 94 | 100 | 100 | 1,2 s | 2,7 s | 0 ms | 0 | 391 KiB |
+
+- ⚠️ **Das entscheidende Detail — LCP-Risiko läuft über das Poster-Bild, nicht über das
+  Video:** LCP-Element der Startseite ist heute `<h1 class="hero-title">`, also **Text**.
+  Genau deshalb 1,5 s und Perf 100. Ein `<video poster="…">` macht das **Poster** zum
+  LCP-Kandidaten. Ist es schwerer oder später als der heutige Textpfad, fällt die 100 —
+  ursächlich ist dann das Poster, nicht das Video. Zielgröße Poster: **≤ 120 KB**, muss
+  `hero-start.jpg` (181 KB) unterbieten.
+- Ist-Stand Hero zum Vergleich: 5 Slides als CSS-`background-image` (`Hero.astro:11-19`),
+  Crossfade alle 6 s per JS, Ken-Burns `scale(1.04)→(1.12)`. Gewicht **628 KB** — alle fünf
+  Divs existieren ab Seitenstart, der Browser lädt also alle fünf, nicht nur das erste.
+  Vorgeladen wird nur `hero-start.jpg` (`index.astro:26` → `BaseLayout.astro:54`).
+- `Hero.astro` wird **nur** von `[lang]/index.astro:28` verwendet. Die Anmeldeseite nutzt
+  `PageHero.astro` und wäre nicht betroffen.
+
+#### Technischer Plan, falls Material kommt
+
+Branch `experiment/hero-video-background` (**noch nicht angelegt**), Rückbau muss jederzeit
+möglich bleiben.
+
+1. **Assets** nach `public/videos/`: `hero-loop.mp4` (H.264, 1080p, `-an`, `+faststart`,
+   CRF ~26), `hero-loop.webm` (VP9/AV1 als kleinere `<source>` davor), `hero-poster.webp`.
+   Erwartetes Gewicht **geschätzt, nicht gemessen**: 2–4 MB (H.264) bzw. 1,5–2,5 MB (WebM)
+   für 12 s.
+2. **`Hero.astro`**: `<video muted autoplay loop playsinline preload="metadata" poster=…>`
+   als unterste Ebene der `.hero-stage`. Overlay, Vignette, `HeroParticles`, Titel-Animation
+   und `hero-credit` bleiben unangetastet. Slideshow + Dots **nicht löschen**, sondern hinter
+   eine Prop legen — der Versuch muss in einer Zeile zurückdrehbar sein.
+   `preloadImage` in `index.astro:26` auf das Poster umstellen.
+3. **`prefers-reduced-motion`**: Video `display:none` + Poster als `background-image`.
+   Zusätzlich JS-Guard `matchMedia(…).matches` → `removeAttribute("autoplay")`, damit die
+   Datei gar nicht erst geladen wird.
+4. **Mobile < 900 px: Video gar nicht ausliefern**, nur Poster (konsequent zur bestehenden
+   Partikel-Grenze). Über `matchMedia` + `<source>` erst im JS setzen — ⚠️ CSS
+   `display:none` verhindert den Download **nicht**.
+5. **Verifikation, sonst gilt es nicht:** Preview-Deploy → Lighthouse mobile *und* desktop
+   gegen die Baseline oben. **Abbruchkriterium vorab festlegen: fällt Performance auf `/de/`
+   unter 95 oder steigt LCP über 2,0 s → Branch verwerfen.** Dazu DevTools-Netzwerk auf
+   Mobile-Viewport als Beleg, dass die Videodatei dort **0 Bytes** zieht. Preview-URL mit
+   `_vercel_share`-Cookie prüfen, sonst erscheinen Prefetch-Subressourcen fälschlich als
+   kaputt.
+- ⚠️ **CSP-Falle, still:** `vercel.json` deklariert **kein `media-src`** → Fallback auf
+  `default-src 'self'`. Selbst gehostet unter `/videos/` funktioniert. Ein externer Host
+  (Vercel Blob, Mux, Cloudinary) würde geblockt — dieselbe Klasse Fehler wie beim
+  Google-Maps-Iframe am 2026-08-09. Wer auf einen CDN wechselt, muss `media-src` ergänzen.

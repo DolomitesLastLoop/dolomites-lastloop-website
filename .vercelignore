@@ -1,0 +1,55 @@
+# .vercelignore
+#
+# WARUM DIESE DATEI EXISTIERT
+# `vercel deploy` (CLI) wertet .gitignore NICHT aus. Ohne diese Datei laedt ein
+# CLI-Deploy aus diesem Verzeichnis ~2,2 GB hoch und bricht dann ab mit
+# "File size limit exceeded (100 MB)". Git-Deploys sind nicht betroffen, weil
+# sie nur getrackte Dateien ausliefern — deshalb faellt es erst beim ersten
+# CLI-Deploy auf. Belegt am 2026-08-15 (kostete einen Fehlversuch, ~11 Minuten).
+#
+# REGEL: Was in .gitignore unter "Asset Ordner / Grossdateien" bzw. "Rohvideos"
+# steht, gehoert auch hierher. Beide Dateien beim Aendern gemeinsam pflegen.
+
+# --- Grossdateien / Rohmaterial (Spiegel von .gitignore) ---
+web/
+web-2/
+web-2.zip
+Dolomites Last Loop Avatar/
+Gregor Fotos DLL/
+Sport OK Daten/
+graphify-out/
+Ergebnisliste Dolomites Last Loop 2026.pdf
+
+# Rohvideos — DolomitlastloopQuerformat.mp4 allein sind 120 MB.
+# public/videos/ ist bewusst NICHT ausgeschlossen: dort liegen (kuenftig) die
+# komprimierten Web-Assets, die ausgeliefert werden muessen.
+*.mp4
+*.mov
+*.m4v
+!public/videos/*.mp4
+!public/videos/*.webm
+
+# --- Repo-/Build-State, gehoert nie ins Deployment ---
+.git/
+node_modules/
+dist/
+.astro/
+.vercel/
+.output/
+
+# --- Agenten-/Tooling-State (kein Laufzeitbezug) ---
+.agent/
+.agents/
+.agentcortex/
+.agentcortex-manifest
+.antigravity/
+.claude/
+.codex/
+codex/
+.githooks/
+.github/
+docs/
+installers/
+
+# --- macOS ---
+.DS_Store
