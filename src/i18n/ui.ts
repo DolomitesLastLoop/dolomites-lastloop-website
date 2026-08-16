@@ -12,7 +12,7 @@ export const ui = {
     "site.title": "Dolomites Last Loop",
     "site.tagline": "Backyard Ultra • Toblach • Dolomiten",
     "site.description":
-      "Das erste Backyard Ultra Rennen in den Dolomiten – Toblach, 15. Mai 2027.",
+      "Die 2. Ausgabe des Backyard Ultra Rennens in den Dolomiten – Toblach, 15. Mai 2027.",
     "site.event_date": "15. Mai 2027",
 
     "meta.race_info":
@@ -45,7 +45,7 @@ export const ui = {
     "hero.title": "Dolomites Last Loop",
     "hero.subtitle": "Backyard Ultra · Toblach · 15. Mai 2027",
     "hero.teaser":
-      "Das erste Backyard Ultra Rennen in den Dolomiten. Am 15. Mai 2027 in Toblach.",
+      "Die 2. Ausgabe des Backyard Ultra Rennens in den Dolomiten. Am 15. Mai 2027 in Toblach.",
     "hero.cta_signup": "Jetzt anmelden",
     "hero.cta_more": "Mehr erfahren",
     "hero.subtext":
@@ -361,7 +361,7 @@ export const ui = {
     "site.title": "Dolomites Last Loop",
     "site.tagline": "Backyard Ultra • Dobbiaco • Dolomiti",
     "site.description":
-      "La prima Backyard Ultra delle Dolomiti – Dobbiaco, 15 maggio 2027.",
+      "La 2ª edizione della gara Backyard Ultra nelle Dolomiti – Dobbiaco, 15 maggio 2027.",
     "site.event_date": "15 maggio 2027",
 
     "meta.race_info":
@@ -394,7 +394,7 @@ export const ui = {
     "hero.title": "Dolomites Last Loop",
     "hero.subtitle": "Backyard Ultra · Dobbiaco · 15 maggio 2027",
     "hero.teaser":
-      "La prima Backyard Ultra delle Dolomiti. Il 15 maggio 2027 a Dobbiaco.",
+      "La 2ª edizione della gara Backyard Ultra nelle Dolomiti. Il 15 maggio 2027 a Dobbiaco.",
     "hero.cta_signup": "Iscriviti ora",
     "hero.cta_more": "Scopri di più",
     "hero.subtext":
@@ -709,7 +709,7 @@ export const ui = {
     "site.title": "Dolomites Last Loop",
     "site.tagline": "Backyard Ultra • Toblach/Dobbiaco • Dolomites",
     "site.description":
-      "The first Backyard Ultra race in the Dolomites – Toblach, May 15, 2027.",
+      "The 2nd edition of the Backyard Ultra race in the Dolomites – Toblach, May 15, 2027.",
     "site.event_date": "May 15, 2027",
 
     "meta.race_info":
@@ -742,7 +742,7 @@ export const ui = {
     "hero.title": "Dolomites Last Loop",
     "hero.subtitle": "Backyard Ultra · Toblach · May 15, 2027",
     "hero.teaser":
-      "The first Backyard Ultra race in the Dolomites. May 15, 2027 in Toblach.",
+      "The 2nd edition of the Backyard Ultra race in the Dolomites. May 15, 2027 in Toblach.",
     "hero.cta_signup": "Sign up now",
     "hero.cta_more": "Learn more",
     "hero.subtext":
