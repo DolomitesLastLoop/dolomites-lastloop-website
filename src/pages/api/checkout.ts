@@ -1,8 +1,14 @@
 import type { APIRoute } from "astro";
 import { getAdminClient, MAX_PARTICIPANTS } from "@lib/supabase";
 import { getStripe, currentTier, priceIdFor } from "@lib/stripe";
-import { isValidEmail, isPlausiblePhone, ageOnDay } from "@lib/validation";
+import { isValidEmail, isPlausiblePhone, isCodiceFiscale, ageOnDay } from "@lib/validation";
 import { isRegistrationEnabled } from "@lib/registration";
+import {
+  RACE_DATE,
+  MIN_AGE,
+  ALLOWED_NATIONALITIES,
+  ALLOWED_COUNTRIES,
+} from "@lib/constants";
 import { env } from "@lib/env";
 
 export const prerender = false;
@@ -85,10 +91,13 @@ export const POST: APIRoute = async ({ request, url }) => {
   const nachname = String(body.nachname || "").trim();
   const email = String(body.email || "").trim().toLowerCase();
   const geburtsdatum = String(body.geburtsdatum || "").trim();
-  const nationalitaet = String(body.nationalitaet || "").trim() || null;
+  // Nationalität und Codice Fiscale immer in Großschreibung normalisieren — beide
+  // sind Codes, keine Freitexte. Bei der Nationalität hängt daran zusätzlich der
+  // Allowlist-Abgleich unten; der Wert ist über die Startliste öffentlich sichtbar.
+  const nationalitaet = String(body.nationalitaet || "").trim().toUpperCase();
   const notfallkontakt_name = String(body.notfallkontakt_name || "").trim();
   const notfallkontakt_tel = String(body.notfallkontakt_tel || "").trim();
-  const tax_code = String(body.tax_code || "").trim() || null;
+  const tax_code = String(body.tax_code || "").trim().toUpperCase() || null;
   const phone = String(body.phone || "").trim();
   const street = String(body.street || "").trim();
   const postal_code = String(body.postal_code || "").trim();
@@ -105,6 +114,7 @@ export const POST: APIRoute = async ({ request, url }) => {
     !nachname ||
     !isValidEmail(email) ||
     !geburtsdatum ||
+    !nationalitaet ||
     !notfallkontakt_name ||
     !notfallkontakt_tel ||
     !phone ||
@@ -120,17 +130,44 @@ export const POST: APIRoute = async ({ request, url }) => {
     return bad("Bitte eine gültige Telefonnummer angeben.");
   }
 
+  // Allowlists statt Freitext: beide Felder kommen aus einem <select>, aber das
+  // Frontend ist per direktem POST umgehbar. Ohne diese Prüfung ließe sich
+  // insbesondere das Codice-Fiscale-Gate unten aushebeln (Nationalität != "IT").
+  if (!ALLOWED_NATIONALITIES.has(nationalitaet)) {
+    return bad("Bitte eine gültige Nationalität auswählen.");
+  }
+  if (!ALLOWED_COUNTRIES.has(country)) {
+    return bad("Bitte ein gültiges Land auswählen.");
+  }
+
+  // Codice Fiscale ist Pflicht für italienische Staatsangehörige — nur sie haben
+  // einen. Für alle anderen Nationalitäten bleibt das Feld optional und wird nie
+  // geprüft. Serverseitig, weil das dynamische `required` im Frontend nur Anzeige ist.
+  if (nationalitaet === "IT") {
+    if (!tax_code) {
+      return bad("Für italienische Staatsangehörige ist der Codice Fiscale Pflicht.");
+    }
+    if (!isCodiceFiscale(tax_code)) {
+      return bad("Bitte einen gültigen Codice Fiscale angeben.");
+    }
+  }
+
   // Alle drei Einwilligungen sind Pflicht.
   if (!consent_privacy || !consent_liability_waiver || !consent_image_rights) {
     return bad("Bitte allen drei Einwilligungen zustimmen.");
   }
 
+  // Referenzpunkt ist der RENNTAG, nicht der Anmeldetag — so steht es auch im
+  // Hinweistext am Feld (signup.field.age_error) und in der FAQ. Wer heute 17 ist,
+  // am 15.05.2027 aber 18 wird, kommt damit durch.
   const birth = new Date(geburtsdatum);
-  if (Number.isNaN(birth.getTime()) || ageOnDay(birth, new Date()) < 18) {
-    return bad("Du musst mindestens 18 Jahre alt sein.");
+  if (Number.isNaN(birth.getTime()) || ageOnDay(birth, RACE_DATE) < MIN_AGE) {
+    return bad("Du musst am Renntag mindestens 18 Jahre alt sein.");
   }
 
-  // Codice Fiscale wird bewusst NICHT geblockt (nur Soft-Warnung im Client).
+  // Für Nicht-IT-Nationalitäten wird der Codice Fiscale bewusst NICHT geprüft und
+  // nie geblockt — dort bleibt es bei der Soft-Warnung im Client (blur-Handler in
+  // RegistrationFlow.astro). Der harte Fall für nationalitaet === "IT" steht oben.
 
   // Gemeinsame Datensatz-Felder für Insert/Upsert.
   const baseFields = {
