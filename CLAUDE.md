@@ -789,10 +789,29 @@ Early-Bird-Fensters) müssen weg:
     `error`/`warning`/`fatal` (Vercel Runtime Logs) — der IP-Fehler von 15:28 ist weg.
     Damit ist der Fix nicht mehr nur plausibel, sondern über einen echten Kauf verifiziert.
 - [x] **`supabase/schema.sql` im Supabase SQL-Editor ausgeführt** *(am 2026-08-15 verifiziert: Funktion `confirm_participant`, View `participants_public` und die Spalten `confirmation_email_sent`/`attest_token`/`price_type`/`lang` existieren alle in `vsicpbxscbtxqbmarlly`)*
-- [x] **Vercel-Rollback vom 15.08. aufgehoben** *(2026-08-16 von Simon im Dashboard über
-  „Undo Rollback")* — die Custom-Domain hing bis dahin auf `dpl_3AxEwG4B` (Commit `b5eb4e3`,
-  15.08. 15:54); drei danach gebaute Production-Deployments waren READY, aber ohne
-  Custom-Domain-Alias. Seitdem liefert `www.dolomiteslastloop.com` wieder den aktuellen Stand.
+- [x] **⚠️ MERKREGEL — `vercel rollback` pinnt die Custom-Domain DAUERHAFT und schaltet
+  das automatische Promoten für ALLE folgenden Production-Deploys ab**, nicht nur
+  vorübergehend. Muss im Vercel-Dashboard explizit über **„Undo Rollback"** aufgehoben werden
+  (Projekt-Übersicht → Production Deployment → Banner unten). Betraf uns am **2026-08-16**
+  nach dem Live-Test-Rollback vom Vortag: die Domain hing auf `dpl_3AxEwG4B` (Commit
+  `b5eb4e3`, 15.08. 15:54), **drei** danach gebaute Production-Deployments waren `READY` mit
+  `target: production`, bekamen aber **keinen Custom-Domain-Alias** — keiner ging live, bis
+  es auffiel.
+  - ⚠️ **Der Zustand ist von außen praktisch unsichtbar.** Kein Fehler, kein Banner in der
+    Deployment-Liste, `state: READY`, `aliasError: null`. Die Live-Antwort meldete
+    `x-vercel-cache: MISS` und `age: 0` — also frisch gerendert, **kein** CDN-Cache, den man
+    „wegwarten" könnte. Es sah exakt so aus wie ein erfolgreicher Deploy.
+  - **Womit man es prüft:** `vercel inspect https://www.dolomiteslastloop.com` (löst die
+    Domain auf ihr tatsächliches Deployment auf) oder `targets.production.id` aus
+    `GET /v9/projects/<id>`. **Nicht** verlässlich: die nach Erstellzeit sortierte
+    Deployment-Liste und auch **nicht** `latestDeployment` aus dem Projekt-Objekt — das ist
+    nur das neueste, nicht das aliasierte. Genau daran wären wir fast vorbeigelaufen.
+  - **Behoben und verifiziert:** Simon hat den Rollback am 2026-08-16 im Dashboard über
+    „Undo Rollback" aufgehoben. Gegenprobe mit einem bewusst **nicht** manuell promoteten
+    Test-Commit (`54f8ab9`, 16:25:52): Deployment `dpl_E7dWEmd7` startete 1 s nach dem Push,
+    war nach 36 s `READY` und trug innerhalb von ~60 s alle fünf Aliase inkl.
+    `www.dolomiteslastloop.com`. Automatisches Promoten funktioniert damit wieder — belegt,
+    nicht angenommen.
 - [ ] **JSON-LD `SportsEvent.description` ist auf allen Sprachseiten deutsch**
   (`src/components/SeoJsonLd.astro:28-29`). Der String ist dort **hardcodiert** statt über
   `src/i18n/ui.ts` zu laufen — `/it` und `/en` liefern strukturierte Daten mit deutschem
