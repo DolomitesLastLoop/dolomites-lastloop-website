@@ -180,6 +180,7 @@ export const ui = {
     "signup.field.emergency_name": "Notfallkontakt – Name",
     "signup.field.emergency_phone": "Notfallkontakt – Telefon",
     "signup.field.required": "Pflichtfeld",
+    "signup.field.optional": "(optional)",
     "signup.field.invalid_email": "Bitte gültige Email-Adresse angeben.",
     "signup.field.age_error": "Du musst am Renntag mindestens 18 Jahre alt sein.",
     "signup.continue": "Weiter",
@@ -352,6 +353,15 @@ export const ui = {
     "signup.error.invalid_phone": "Bitte eine gültige Telefonnummer angeben.",
     "signup.error.min_age": "Du musst am Renntag mindestens 18 Jahre alt sein.",
     "signup.error.consents": "Bitte allen drei Einwilligungen zustimmen.",
+    // Meldungen außerhalb von validateStep1() — Step-2-Checkout und Attest-Upload.
+    // Gehen über dieselbe data-Attribut-Brücke, weil das Script im Browser läuft.
+    "signup.error.checkout_failed": "Vorgang konnte nicht gestartet werden.",
+    "signup.error.network": "Netzwerkfehler. Bitte erneut versuchen.",
+    "signup.error.form_missing": "Formular konnte nicht gelesen werden. Bitte die Seite neu laden.",
+    "signup.error.attest_incomplete":
+      "Bitte den Link aus der Bestätigungs-Email verwenden und eine PDF-Datei auswählen.",
+    "signup.error.attest_too_large": "Datei ist zu groß (max 5 MB).",
+    "signup.error.attest_failed": "Upload fehlgeschlagen.",
     "signup.consent.privacy":
       "Ich akzeptiere die <a href=\"{href}\">Datenschutzerklärung</a> (es werden auch Gesundheitsdaten aus dem ärztlichen Attest verarbeitet).",
     "signup.consent.liability":
@@ -547,6 +557,7 @@ export const ui = {
     "signup.field.emergency_name": "Contatto emergenza – Nome",
     "signup.field.emergency_phone": "Contatto emergenza – Telefono",
     "signup.field.required": "Campo obbligatorio",
+    "signup.field.optional": "(facoltativo)",
     "signup.field.invalid_email": "Inserisci un’email valida.",
     "signup.field.age_error":
       "Devi avere almeno 18 anni il giorno della gara.",
@@ -716,6 +727,13 @@ export const ui = {
     "signup.error.invalid_phone": "Inserisci un numero di telefono valido.",
     "signup.error.min_age": "Devi avere almeno 18 anni il giorno della gara.",
     "signup.error.consents": "Accetta tutti e tre i consensi.",
+    "signup.error.checkout_failed": "Non è stato possibile avviare la procedura.",
+    "signup.error.network": "Errore di rete. Riprova.",
+    "signup.error.form_missing": "Impossibile leggere il modulo. Ricarica la pagina.",
+    "signup.error.attest_incomplete":
+      "Usa il link ricevuto nell’email di conferma e seleziona un file PDF.",
+    "signup.error.attest_too_large": "Il file è troppo grande (max 5 MB).",
+    "signup.error.attest_failed": "Caricamento non riuscito.",
     "signup.consent.privacy":
       "Accetto l’<a href=\"{href}\">informativa sulla privacy</a> (vengono trattati anche dati sanitari del certificato medico).",
     "signup.consent.liability":
@@ -910,6 +928,7 @@ export const ui = {
     "signup.field.emergency_name": "Emergency contact – Name",
     "signup.field.emergency_phone": "Emergency contact – Phone",
     "signup.field.required": "Required field",
+    "signup.field.optional": "(optional)",
     "signup.field.invalid_email": "Please enter a valid email.",
     "signup.field.age_error": "You must be 18 or older on race day.",
     "signup.continue": "Continue",
@@ -1078,6 +1097,13 @@ export const ui = {
     "signup.error.invalid_phone": "Please enter a valid phone number.",
     "signup.error.min_age": "You must be 18 or older on race day.",
     "signup.error.consents": "Please accept all three consents.",
+    "signup.error.checkout_failed": "The process could not be started.",
+    "signup.error.network": "Network error. Please try again.",
+    "signup.error.form_missing": "The form could not be read. Please reload the page.",
+    "signup.error.attest_incomplete":
+      "Please use the link from your confirmation email and select a PDF file.",
+    "signup.error.attest_too_large": "File is too large (max 5 MB).",
+    "signup.error.attest_failed": "Upload failed.",
     "signup.consent.privacy":
       "I accept the <a href=\"{href}\">privacy policy</a> (health data from the medical certificate is also processed).",
     "signup.consent.liability":
