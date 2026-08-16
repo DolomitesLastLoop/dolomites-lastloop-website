@@ -826,18 +826,41 @@ Early-Bird-Fensters) müssen weg:
   („erste" → „2. Ausgabe"), nicht die Verdrahtung. Fix wäre ein eigener i18n-Key
   (z. B. `seo.jsonld.description`) in allen drei Sprachen, angezogen über `t()` wie die
   übrigen Meta-Texte. Bewusst als separater Scope zurückgestellt.
-- [ ] **Pflichtfelder im Anmeldeformular einheitlich markieren.** Seit
-  `feat/registration-form-fixes` (2026-08-16) tragen **nur** `nationalitaet` und `tax_code`
+- [ ] **Anmeldeformular aufräumen — zwei Halbheiten aus `feat/registration-form-fixes`
+  (2026-08-16), bewusst zusammen als EIN Task.** Beide sind Folgen derselben
+  Scope-Entscheidung: der Branch hat nur angefasst, was für Altersprüfung, Nationalität
+  und Codice Fiscale nötig war. Beide sind kosmetisch/i18n, **keine** Funktionsfehler —
+  nichts davon blockiert den Launch am 01.09.2026.
+
+  **(a) Pflichtfeld-Markierung ist inkonsistent.** Nur `nationalitaet` und `tax_code` tragen
   einen roten `*` (`.req`-Span in `src/components/RegistrationFlow.astro`). Die übrigen elf
   Pflichtfelder (Vorname, Nachname, Email, Telefon, Geburtsdatum, Straße, PLZ, Ort, Land,
-  Notfallkontakt Name + Telefon) sind **unmarkiert** — die Kennzeichnung ist damit
-  inkonsistent. Bewusste Entscheidung von Simon beim Planungs-Go: nur die beiden Felder, um
-  die es in dem Branch ging; Vereinheitlichung als eigener Punkt. Der Key
-  `signup.field.required` („Pflichtfeld" / „Campo obbligatorio" / „Required field",
-  `src/i18n/ui.ts:182/531/878`) existiert bereits und wird bisher **nirgends** verwendet —
-  er wäre der natürliche Aufhänger. Beim Umsetzen auch entscheiden, ob stattdessen die
-  *optionalen* Felder als „(optional)" markiert werden; bei 13 von 15 Pflichtfeldern ist das
-  meist die ruhigere Variante.
+  Notfallkontakt Name + Telefon) sind unmarkiert. Der Key `signup.field.required`
+  („Pflichtfeld" / „Campo obbligatorio" / „Required field", `src/i18n/ui.ts:182/531/878`)
+  existiert bereits und wird bisher **nirgends** verwendet — er wäre der natürliche
+  Aufhänger. Beim Umsetzen auch die Gegenrichtung prüfen: bei 13 von 15 Pflichtfeldern ist
+  es meist ruhiger, stattdessen die beiden *optionalen* Felder als „(optional)" zu
+  kennzeichnen.
+
+  **(b) Fehlermeldungen außerhalb von `validateStep1()` sind weiterhin hartcodiert
+  deutsch** — auch auf `/it` und `/en`. Betroffen in `RegistrationFlow.astro`:
+  „Vorgang konnte nicht gestartet werden." und „Netzwerkfehler. Bitte erneut versuchen."
+  (Step-2-Checkout-Handler) sowie „Bitte den Link aus der Bestätigungs-Email verwenden…",
+  „Datei ist zu groß (max 5 MB)." und „Upload fehlgeschlagen." (Attest-Upload). Dazu das
+  interne „Formular nicht gefunden". Die fünf Meldungen **innerhalb** von `validateStep1()`
+  sind seit dem Branch übersetzt — der Mechanismus dafür steht schon und ist
+  wiederverwendbar: `data-msg-*`-Attribute am `<form>` plus der `msg()`-Helper im
+  Client-Script (das Script läuft im Browser und kann `t()` nicht aufrufen). Es fehlen also
+  nur die zusätzlichen Keys in allen drei Sprachblöcken und je eine Zeile am `<form>`.
+  ⚠️ Beim Ergänzen von Keys daran denken: `UIKey = keyof (typeof ui)["de"]`
+  (`src/i18n/ui.ts:1055`) typisiert **nur** den `de`-Block. Ein in `it`/`en` vergessener Key
+  kompiliert sauber durch und fällt still auf Deutsch zurück (`utils.ts:19`) — `astro check`
+  fängt das **nicht**. Key-Mengen nach der Änderung explizit vergleichen.
+
+  **Nicht Teil dieses Tasks, aber gleiche Ecke:** die serverseitigen Fehlertexte in
+  `src/pages/api/checkout.ts` (`bad("Pflichtfelder fehlen.")` usw.) sind ebenfalls
+  durchgehend deutsch. Die gehen einen anderen Weg (JSON-Response statt DOM) und brauchen
+  eine eigene Entscheidung — z. B. Fehlercodes statt Klartext, die der Client übersetzt.
 - [ ] **Vercel-Runtime auf Node 22.x** stellen (Astro 6)
 - [ ] Domain ändern
 - [x] **Stripe einrichten** *(2026-08-14 erledigt)* — Live-Keys, die drei Preise (75/80/100 €)
