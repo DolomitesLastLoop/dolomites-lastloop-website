@@ -811,6 +811,32 @@ Early-Bird-Fensters) müssen weg:
     `GET /v9/projects/<id>`. **Nicht** verlässlich: die nach Erstellzeit sortierte
     Deployment-Liste und auch **nicht** `latestDeployment` aus dem Projekt-Objekt — das ist
     nur das neueste, nicht das aliasierte. Genau daran wären wir fast vorbeigelaufen.
+  - ⚠️ **Nachtrag 2026-08-16: der MCP-Vercel-Connector taugt für diese Prüfung NICHT.**
+    `mcp__plugin_vercel_vercel__get_project` liefert ein **verkürztes** Projekt-Objekt —
+    `id`, `name`, `nodeVersion`, `domains`, `latestDeployment` — und **kein `targets`**.
+    Wer über den Connector prüft, bekommt also ausgerechnet das Feld, vor dem der Absatz
+    oben warnt, und hat kein Mittel, den Fehler zu bemerken: die Antwort sieht vollständig
+    aus, es fehlt keine Fehlermeldung. Bei einem gepinnten Deployment würde `latestDeployment`
+    das frische, **nicht** aliasierte Deployment zeigen und den Pin damit verschleiern.
+    - **Ausweg:** rohe API. `GET https://api.vercel.com/v9/projects/<prj_…>?teamId=<team_…>`
+      mit `Authorization: Bearer <token>`; der CLI-Token liegt unter
+      `~/Library/Application Support/com.vercel.cli/auth.json` (`.token`). Liefert
+      `targets.production` inkl. `id`, `readyState`, `aliasError` und `meta.githubCommitSha`.
+      Alternativ und ohne Token-Handling: `vercel inspect <domain>` — für die reine Frage
+      „welches Deployment liefert die Domain aus?" ist das der kürzere Weg.
+    - ⚠️ **Fallstrick beim Gegenprüfen:** die rohe v9-Antwort hat **kein**
+      `latestDeployment`-Feld (das ist eine Erfindung des Connectors). Ein Skript, das
+      `targets.production.id === latestDeployment.id` vergleicht, meldet deshalb `false`,
+      obwohl alles stimmt — `undefined` gegen eine echte ID. Nicht als Abweichung
+      fehldeuten; aufgesessen bin ich beim Verifizieren von `ea06526`.
+    - `.vercel/project.json` existiert in diesem Repo **nicht** (gitignored und lokal nicht
+      angelegt). Projekt- und Team-ID stattdessen über den Connector oder `vercel ls` holen:
+      `prj_ghU7SVl1KWhrDzTmXUPSOuBMnX1J` / `team_z7v3DKAcnhtPFJGpxyX8SgaI`.
+    - **Belegt am 2026-08-16** beim Merge von `feat/registration-form-fixes`:
+      `targets.production.id` = `dpl_5TJqJCuGoKvXaiWLGDFrCpCnLxyD`, `githubCommitSha`
+      `ea06526…` (= der Merge-Commit), `aliasError: null`, Build 34 s, alle fünf Aliase.
+      `vercel inspect` auf die Domain zeigte auf dasselbe Deployment — zwei unabhängige
+      Wege, gleiches Ergebnis. Der „Undo Rollback" hält also weiterhin.
   - **Behoben und verifiziert:** Simon hat den Rollback am 2026-08-16 im Dashboard über
     „Undo Rollback" aufgehoben. Gegenprobe mit einem bewusst **nicht** manuell promoteten
     Test-Commit (`54f8ab9`, 16:25:52): Deployment `dpl_E7dWEmd7` startete 1 s nach dem Push,
