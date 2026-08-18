@@ -82,7 +82,7 @@ const confirmCopy: Record<
     ticketNote:
       "<strong>Dein Ticket</strong> findest du als PDF im Anhang – ausgedruckt oder am Handy gezeigt genügt.",
     attest:
-      "<strong>Noch ein wichtiger Schritt:</strong> Bitte lade dein ärztliches Attest vor dem Renntag hoch:",
+      "<strong>Noch ein wichtiger Schritt:</strong> Bitte lade dein ärztliches Attest hoch – spätestens bis zum 8. Mai 2027. Es muss am Renntag noch gültig sein:",
     uploadCta: "Attest jetzt hochladen →",
     notValidYet:
       "Wichtig: Deine Anmeldung wird erst mit dem vollständig hochgeladenen ärztlichen Attest endgültig gültig.",
@@ -110,7 +110,7 @@ const confirmCopy: Record<
     ticketNote:
       "<strong>Il tuo biglietto</strong> è in allegato come PDF – basta stamparlo o mostrarlo sul telefono.",
     attest:
-      "<strong>Un passo importante:</strong> carica il tuo certificato medico prima del giorno della gara:",
+      "<strong>Un passo importante:</strong> carica il tuo certificato medico – al più tardi entro l’8 maggio 2027. Deve essere ancora valido il giorno della gara:",
     uploadCta: "Carica ora il certificato →",
     notValidYet:
       "Importante: la tua iscrizione diventa definitiva solo con il certificato medico caricato per intero.",
@@ -138,7 +138,7 @@ const confirmCopy: Record<
     ticketNote:
       "<strong>Your ticket</strong> is attached as a PDF – print it or show it on your phone.",
     attest:
-      "<strong>One important step left:</strong> please upload your medical certificate before race day:",
+      "<strong>One important step left:</strong> please upload your medical certificate — by 8 May 2027 at the latest. It must still be valid on race day:",
     uploadCta: "Upload certificate now →",
     notValidYet:
       "Important: your registration only becomes final once your medical certificate is fully uploaded.",

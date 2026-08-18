@@ -193,7 +193,7 @@ export const ui = {
     "signup.ticket.checkout": "Zur Zahlung",
     "signup.attest.title": "Ärztliches Attest hochladen",
     "signup.attest.hint":
-      "PDF, max. 5 MB. Pflicht vor dem Renntag – kann auch später nachgereicht werden.",
+      "PDF, max. 5 MB. Du kannst das Attest jetzt hochladen oder später nachreichen – spätestens bis 8. Mai 2027 (eine Woche vor dem Rennen). Es muss am Renntag noch gültig sein.",
     "signup.attest.upload": "Datei auswählen",
     "signup.attest.skip": "Später nachreichen",
     "signup.attest.success": "Attest erfolgreich hochgeladen.",
@@ -571,7 +571,7 @@ export const ui = {
     "signup.ticket.checkout": "Vai al pagamento",
     "signup.attest.title": "Carica il certificato medico",
     "signup.attest.hint":
-      "PDF, max 5 MB. Obbligatorio prima della gara – puoi caricarlo anche più tardi.",
+      "PDF, max 5 MB. Puoi caricare il certificato ora oppure più tardi – al più tardi entro l’8 maggio 2027 (una settimana prima della gara). Deve essere ancora valido il giorno della gara.",
     "signup.attest.upload": "Scegli file",
     "signup.attest.skip": "Carico più tardi",
     "signup.attest.success": "Certificato caricato con successo.",
@@ -941,7 +941,7 @@ export const ui = {
     "signup.ticket.checkout": "Go to checkout",
     "signup.attest.title": "Upload medical certificate",
     "signup.attest.hint":
-      "PDF, max 5 MB. Mandatory before race day – can be uploaded later.",
+      "PDF, max 5 MB. You can upload the certificate now or later — by 8 May 2027 at the latest (one week before the race). It must still be valid on race day.",
     "signup.attest.upload": "Choose file",
     "signup.attest.skip": "Upload later",
     "signup.attest.success": "Certificate uploaded successfully.",

@@ -7,8 +7,8 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-// Zieldatum: 15. Mai 2027, 06:00 Uhr lokale Dolomiten-Zeit (CEST = UTC+2 im Mai).
-const TARGET_ISO = "2027-05-15T06:00:00+02:00";
+// Zieldatum: 15. Mai 2027, 12:00 Uhr lokale Dolomiten-Zeit (CEST = UTC+2 im Mai).
+const TARGET_ISO = "2027-05-15T12:00:00+02:00";
 
 const units = [
   { key: "days", label: t("countdown.days") },
