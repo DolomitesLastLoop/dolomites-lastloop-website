@@ -12,7 +12,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Wann findet die Ausgabe 2027 statt?",
-        a: "Das Rennen startet am 15. Mai 2027 in Toblach. Die genaue Startuhrzeit und alle weiteren Details kommunizieren wir rechtzeitig über Newsletter und Social Media.",
+        a: "Das Rennen startet am 15. Mai 2027 um 12:00 Uhr in Toblach. Alle weiteren Details kommunizieren wir rechtzeitig über Newsletter und Social Media.",
       },
       {
         q: "Gibt es Strom, Wasser und Verpflegung?",
@@ -20,7 +20,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Welche Teilnahmebedingungen gelten?",
-        a: "Mindestalter 18 Jahre, vollständige Anmeldung inkl. Zahlung und ärztliches Attest vor dem Renntag. Mit der Anmeldung wird das Reglement vollständig akzeptiert.",
+        a: "Mindestalter 18 Jahre, vollständige Anmeldung inkl. Zahlung und ein ärztliches Attest. Das Attest kannst du nachreichen, es muss aber spätestens eine Woche vor dem Rennen bei uns sein (für 2027: bis 8. Mai 2027) und am Renntag noch gültig sein. Mit der Anmeldung wird das Reglement vollständig akzeptiert.",
       },
       {
         q: "Gibt es eine Zeitbegrenzung?",
@@ -28,7 +28,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Wie ist das Basislager organisiert?",
-        a: "Zentral an der Nordic Arena. Jeder Läufer erhält eine eigene 3×3 m Teamzone für Crew, Material und Versorgung. Aufbau ist am Tag vor dem Rennen möglich.",
+        a: "Zentral an der Nordic Arena. Jeder Läufer erhält eine eigene 3×3 m Teamzone für Crew, Material und Versorgung. Der Aufbau erfolgt am Renntag selbst, im Check-in-Fenster von 08:30 bis 11:00 Uhr; ab 10:45 Uhr dürfen keine Fahrzeuge mehr auf das Gelände. Ein Aufbau am Vortag ist nicht möglich.",
       },
       {
         q: "Welche Pflichtausrüstung brauche ich?",
@@ -58,7 +58,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Quando si svolge l’edizione 2027?",
-        a: "La gara parte il 15 maggio 2027 a Dobbiaco. L’orario esatto di partenza e tutti gli altri dettagli saranno comunicati per tempo via newsletter e social.",
+        a: "La gara parte il 15 maggio 2027 alle ore 12:00 a Dobbiaco. Tutti gli altri dettagli saranno comunicati per tempo via newsletter e social.",
       },
       {
         q: "Ci sono corrente, acqua e ristoro?",
@@ -66,7 +66,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Quali sono le condizioni di partecipazione?",
-        a: "Età minima 18 anni, iscrizione e pagamento completati, certificato medico prima della gara. L’iscrizione implica l’accettazione integrale del regolamento.",
+        a: "Età minima 18 anni, iscrizione e pagamento completati e un certificato medico. Il certificato può essere trasmesso successivamente, ma deve pervenirci al più tardi una settimana prima della gara (per il 2027: entro l’8 maggio 2027) ed essere ancora valido il giorno della gara. L’iscrizione implica l’accettazione integrale del regolamento.",
       },
       {
         q: "C’è un tempo limite?",
@@ -74,7 +74,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Come è organizzato il campo base?",
-        a: "Centrale alla Nordic Arena. Ogni atleta ha la propria area team 3×3 m per crew, materiale e rifornimenti. L’allestimento è possibile il giorno prima della gara.",
+        a: "Centrale alla Nordic Arena. Ogni atleta ha la propria area team 3×3 m per crew, materiale e rifornimenti. L’allestimento avviene il giorno stesso della gara, nella finestra di check-in dalle 08:30 alle 11:00; dalle 10:45 non sono più ammessi veicoli nell’area. Non è possibile allestire il giorno prima.",
       },
       {
         q: "Qual è il materiale obbligatorio?",
@@ -104,7 +104,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "When does the 2027 edition take place?",
-        a: "The race kicks off on May 15, 2027 in Toblach. The exact start time and all further details will be announced in time via newsletter and social channels.",
+        a: "The race kicks off on May 15, 2027 at 12:00 in Toblach. All further details will be announced in time via newsletter and social channels.",
       },
       {
         q: "Is there power, water, and food?",
@@ -112,7 +112,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "What are the participation requirements?",
-        a: "Minimum age 18, completed registration and payment, medical certificate before race day. Signing up implies full acceptance of the rules.",
+        a: "Minimum age 18, completed registration and payment, and a medical certificate. You can submit the certificate later, but it must reach us no later than one week before the race (for 2027: by 8 May 2027) and must still be valid on race day. Signing up implies full acceptance of the rules.",
       },
       {
         q: "Is there a time limit?",
@@ -120,7 +120,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "How is the base camp organised?",
-        a: "Centrally at the Nordic Arena. Each runner gets their own 3×3 m team zone for crew, gear, and supplies. Setup is possible the day before the race.",
+        a: "Centrally at the Nordic Arena. Each runner gets their own 3×3 m team zone for crew, gear, and supplies. Setup takes place on race day itself, within the check-in window from 08:30 to 11:00; from 10:45 no vehicles are allowed on site. Setting up the day before is not possible.",
       },
       {
         q: "What mandatory gear do I need?",
