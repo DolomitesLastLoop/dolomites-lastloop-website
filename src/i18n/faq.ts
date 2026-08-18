@@ -16,7 +16,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Gibt es Strom, Wasser und Verpflegung?",
-        a: "Ja. Im zentralen Basislager an der Nordic Arena gibt es Strom für die Teamzone, Wasser, Tee, Suppe und Standard-Verpflegung. Eine ausführliche Liste folgt vor Saisonstart.",
+        a: "Im zentralen Basislager an der Nordic Arena gibt es Wasser und Standard-Verpflegung. Eine allgemeine Stromversorgung für die Teamzonen gibt es nicht. Stattdessen steht eine zentrale Ladezone mit Ladetisch bereit, an der Athleten und Crew ihre eigenen elektronischen Geräte aufladen können. Eine ausführliche Liste folgt vor Saisonstart.",
       },
       {
         q: "Welche Teilnahmebedingungen gelten?",
@@ -62,7 +62,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Ci sono corrente, acqua e ristoro?",
-        a: "Sì. Nel campo base centrale alla Nordic Arena ci saranno corrente per la team zone, acqua, tè, zuppa e ristoro base. La lista dettagliata sarà pubblicata prima della gara.",
+        a: "Nel campo base centrale alla Nordic Arena ci sono acqua e ristoro base. Non è prevista una fornitura elettrica generale per le team zone. È invece disponibile una zona di ricarica centrale con tavolo di ricarica, dove atleti e crew possono ricaricare i propri dispositivi elettronici. La lista dettagliata sarà pubblicata prima della gara.",
       },
       {
         q: "Quali sono le condizioni di partecipazione?",
@@ -108,7 +108,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Is there power, water, and food?",
-        a: "Yes. The central base camp at the Nordic Arena provides power for team zones, water, tea, soup, and basic aid. A full list will be published before race day.",
+        a: "The central base camp at the Nordic Arena provides water and basic aid. There is no general power supply for the team zones. Instead, a central charging area with a charging table is available, where athletes and crew can charge their own electronic devices. A full list will be published before race day.",
       },
       {
         q: "What are the participation requirements?",
