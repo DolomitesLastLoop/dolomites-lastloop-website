@@ -295,7 +295,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Für die Teilnahme ist ein gültiges ärztliches bzw. sportärztliches Attest erforderlich. Es muss bei der Anmeldung hochgeladen werden und wird vor dem Start geprüft. Ohne gültiges Attest ist eine Teilnahme ausgeschlossen.",
+              text: "Für die Teilnahme ist ein gültiges ärztliches bzw. sportärztliches Attest erforderlich. Es kann bereits bei der Anmeldung hochgeladen oder nachgereicht werden, muss dem Veranstalter aber spätestens eine Woche vor dem Rennstart vorliegen – für die Ausgabe 2027 also bis zum 8. Mai 2027. Das Attest muss am Renntag noch gültig sein. Geht kein fristgerechtes und am Renntag gültiges Attest ein, ist eine Teilnahme ausgeschlossen; es gelten die Stornobedingungen nach Ziffer 2, eine Rückerstattung des Startgelds erfolgt nicht.",
             },
           ],
         },
@@ -469,7 +469,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Die Teilnahme setzt die volle gesundheitliche Eignung für sportliche Höchstbelastungen voraus. Ein gültiges ärztliches Attest (certificato medico agonistico) ist verpflichtend vorzulegen. Ohne fristgerecht eingereichtes Attest ist die Anmeldung nicht endgültig gültig und eine Teilnahme ausgeschlossen.",
+              text: "Die Teilnahme setzt die volle gesundheitliche Eignung für sportliche Höchstbelastungen voraus. Ein gültiges ärztliches Attest (certificato medico agonistico) ist verpflichtend vorzulegen – spätestens eine Woche vor dem Rennstart, für die Ausgabe 2027 also bis zum 8. Mai 2027 – und muss am Renntag noch gültig sein. Ohne fristgerecht eingereichtes und am Renntag gültiges Attest ist die Anmeldung nicht endgültig gültig und eine Teilnahme ausgeschlossen; das Startgeld wird in diesem Fall nicht erstattet.",
             },
           ],
         },
@@ -776,7 +776,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Per la partecipazione è necessario un certificato medico-sportivo valido. Deve essere caricato al momento dell’iscrizione e viene verificato prima della partenza. Senza certificato valido la partecipazione è esclusa.",
+              text: "Per la partecipazione è necessario un certificato medico-sportivo valido. Può essere caricato già al momento dell’iscrizione oppure trasmesso successivamente, ma deve pervenire all’organizzatore al più tardi una settimana prima della partenza della gara – per l’edizione 2027 quindi entro l’8 maggio 2027. Il certificato deve essere ancora valido il giorno della gara. In assenza di un certificato trasmesso entro i termini e valido il giorno della gara, la partecipazione è esclusa; si applicano le condizioni di annullamento di cui al punto 2 e non è previsto alcun rimborso della quota di iscrizione.",
             },
           ],
         },
@@ -950,7 +950,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "La partecipazione presuppone la piena idoneità a sforzi sportivi massimali. È obbligatorio presentare un valido certificato medico agonistico. Senza certificato presentato entro i termini, l’iscrizione non è definitivamente valida e la partecipazione è esclusa.",
+              text: "La partecipazione presuppone la piena idoneità a sforzi sportivi massimali. È obbligatorio presentare un valido certificato medico agonistico al più tardi una settimana prima della partenza della gara, per l’edizione 2027 quindi entro l’8 maggio 2027; il certificato deve essere ancora valido il giorno della gara. Senza un certificato presentato entro i termini e valido il giorno della gara, l’iscrizione non è definitivamente valida e la partecipazione è esclusa; in tal caso la quota di iscrizione non viene rimborsata.",
             },
           ],
         },
@@ -1257,7 +1257,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "A valid medical / sports-medical certificate is required to participate. It must be uploaded during registration and is checked before the start. Participation is not possible without a valid certificate.",
+              text: "A valid medical / sports-medical certificate is required to participate. It can be uploaded during registration or submitted later, but must reach the organiser no later than one week before the race start — for the 2027 edition, by 8 May 2027. The certificate must still be valid on race day. If no certificate is submitted on time and valid on race day, participation is excluded; the cancellation terms under section 2 apply and the entry fee is not refunded.",
             },
           ],
         },
@@ -1431,7 +1431,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Participation requires full medical fitness for maximum athletic exertion. A valid medical certificate (certificato medico agonistico) must be provided. Without a certificate submitted on time, the registration is not finally valid and participation is excluded.",
+              text: "Participation requires full medical fitness for maximum athletic exertion. A valid medical certificate (certificato medico agonistico) must be provided no later than one week before the race start — for the 2027 edition, by 8 May 2027 — and must still be valid on race day. Without a certificate submitted on time and valid on race day, the registration is not finally valid and participation is excluded; the entry fee is not refunded in this case.",
             },
           ],
         },
