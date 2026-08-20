@@ -316,10 +316,7 @@ const nationalities: { value: string; label: string }[] = [
               <input type="checkbox" name="consent_liability_waiver" required />
               <span set:html={t("signup.consent.liability", { href: liabilityHref })} />
             </label>
-            <label class="consent">
-              <input type="checkbox" name="consent_image_rights" required />
-              <span set:html={t("signup.consent.image", { href: imageHref })} />
-            </label>
+            <p class="consent-notice" set:html={t("signup.notice.image", { href: imageHref })} />
           </div>
 
           <p class="status status-error" data-step1-error hidden></p>
@@ -533,6 +530,13 @@ const nationalities: { value: string; label: string }[] = [
   .consent { display: grid; grid-template-columns: auto 1fr; gap: var(--space-3); align-items: start; font-size: 0.92rem; line-height: 1.5; color: var(--color-text); cursor: pointer; }
   .consent input { margin-top: 0.2rem; width: 1.1rem; height: 1.1rem; accent-color: var(--color-primary); }
   .consent :global(a) { color: var(--color-primary); text-decoration: underline; }
+  /* Kenntnisnahme, KEINE Einwilligung: bewusst ohne Checkbox und optisch abgesetzt von
+     den beiden Pflicht-Consents darüber. Foto-/Videoaufnahmen laufen über Art. 6 Abs. 1
+     lit. f DSGVO mit Widerspruchsrecht (Datenschutzerklärung Punkt 10), nicht über eine
+     Einwilligung — deshalb darf hier kein Häkchen stehen. */
+  .consent-notice { margin: 0; padding: var(--space-3) var(--space-4); border-left: 2px solid var(--color-border); background: var(--color-bg-alt); border-radius: 0 4px 4px 0; font-size: 0.86rem; line-height: 1.55; color: var(--color-text-muted); }
+  .consent-notice :global(a) { color: var(--color-primary); text-decoration: underline; }
+  .consent-notice :global(strong) { color: var(--color-text); font-weight: 600; }
 
   .price-box { display: grid; gap: var(--space-2); padding: var(--space-6); border: 1px solid var(--color-accent); border-radius: var(--radius); background: var(--color-accent-dim); }
   .price-box.waitlist { border-color: var(--color-border); background: var(--color-bg-alt); }
@@ -698,7 +702,7 @@ const nationalities: { value: string; label: string }[] = [
       if (!cf) return msg("msgTaxcodeRequiredIt");
       if (!isCodiceFiscale(cf)) return msg("msgTaxcodeInvalid");
     }
-    for (const c of ["consent_privacy", "consent_liability_waiver", "consent_image_rights"]) {
+    for (const c of ["consent_privacy", "consent_liability_waiver"]) {
       if (!data.get(c)) return msg("msgConsents");
     }
     return null;

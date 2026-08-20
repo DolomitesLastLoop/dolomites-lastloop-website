@@ -63,7 +63,6 @@ export interface Participant {
   price_type: "early_bird" | "standard" | "late" | null;
   consent_privacy: boolean | null;
   consent_liability_waiver: boolean | null;
-  consent_image_rights: boolean | null;
   confirmation_email_sent: boolean;
   ticket_status: ParticipantStatus;
   attest_url: string | null;

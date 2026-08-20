@@ -352,7 +352,7 @@ export const ui = {
     "signup.error.invalid_email": "Bitte gültige Email-Adresse angeben.",
     "signup.error.invalid_phone": "Bitte eine gültige Telefonnummer angeben.",
     "signup.error.min_age": "Du musst am Renntag mindestens 18 Jahre alt sein.",
-    "signup.error.consents": "Bitte allen drei Einwilligungen zustimmen.",
+    "signup.error.consents": "Bitte beiden Einwilligungen zustimmen.",
     // Meldungen außerhalb von validateStep1() — Step-2-Checkout und Attest-Upload.
     // Gehen über dieselbe data-Attribut-Brücke, weil das Script im Browser läuft.
     "signup.error.checkout_failed": "Vorgang konnte nicht gestartet werden.",
@@ -366,8 +366,8 @@ export const ui = {
       "Ich akzeptiere die <a href=\"{href}\">Datenschutzerklärung</a> (es werden auch Gesundheitsdaten aus dem ärztlichen Attest verarbeitet).",
     "signup.consent.liability":
       "Ich akzeptiere die <a href=\"{href}\">Haftungsfreistellung / den Haftungsausschluss</a>.",
-    "signup.consent.image":
-      "Ich stimme zu, dass während des Events erstellte <a href=\"{href}\">Foto-/Videoaufnahmen</a> für Marketing-Zwecke verwendet werden dürfen.",
+    "signup.notice.image":
+      "<strong>Hinweis (keine Einwilligung):</strong> Während des Events entstehen Foto- und Videoaufnahmen, die wir zur Dokumentation und Berichterstattung veröffentlichen – auf dieser Website, auf Social Media und in der Presse. Du musst dem nicht zustimmen; du kannst der Veröffentlichung aber jederzeit widersprechen. Wie das geht, steht unter <a href=\"{href}\">Bildrechte in der Datenschutzerklärung</a>.",
     "signup.price.note":
       "Preisstufen: 75 € bis 31.12.2026, 80 € bis 31.03.2027, 100 € bis 30.04.2027 (Anmeldeschluss).",
     "signup.paid.notice": "Zahlung erfolgreich. Bitte lade jetzt dein ärztliches Attest hoch.",
@@ -726,7 +726,7 @@ export const ui = {
     "signup.error.invalid_email": "Inserisci un’email valida.",
     "signup.error.invalid_phone": "Inserisci un numero di telefono valido.",
     "signup.error.min_age": "Devi avere almeno 18 anni il giorno della gara.",
-    "signup.error.consents": "Accetta tutti e tre i consensi.",
+    "signup.error.consents": "Accetta entrambi i consensi.",
     "signup.error.checkout_failed": "Non è stato possibile avviare la procedura.",
     "signup.error.network": "Errore di rete. Riprova.",
     "signup.error.form_missing": "Impossibile leggere il modulo. Ricarica la pagina.",
@@ -738,8 +738,8 @@ export const ui = {
       "Accetto l’<a href=\"{href}\">informativa sulla privacy</a> (vengono trattati anche dati sanitari del certificato medico).",
     "signup.consent.liability":
       "Accetto la <a href=\"{href}\">manleva / esclusione di responsabilità</a>.",
-    "signup.consent.image":
-      "Acconsento all’uso di <a href=\"{href}\">foto/video</a> realizzati durante l’evento per scopi di marketing.",
+    "signup.notice.image":
+      "<strong>Nota (non è un consenso):</strong> durante l’evento vengono realizzate foto e riprese video che pubblichiamo per documentare e raccontare la gara – su questo sito, sui social media e sulla stampa. Non devi prestare alcun consenso; puoi però opporti alla pubblicazione in qualsiasi momento. Le modalità sono indicate alla voce <a href=\"{href}\">diritti di immagine nell’informativa sulla privacy</a>.",
     "signup.price.note":
       "Tariffe: 75 € fino al 31/12/2026, 80 € fino al 31/03/2027, 100 € fino al 30/04/2027 (chiusura iscrizioni).",
     "signup.paid.notice": "Pagamento riuscito. Carica ora il tuo certificato medico.",
@@ -1096,7 +1096,7 @@ export const ui = {
     "signup.error.invalid_email": "Please enter a valid email address.",
     "signup.error.invalid_phone": "Please enter a valid phone number.",
     "signup.error.min_age": "You must be 18 or older on race day.",
-    "signup.error.consents": "Please accept all three consents.",
+    "signup.error.consents": "Please accept both consents.",
     "signup.error.checkout_failed": "The process could not be started.",
     "signup.error.network": "Network error. Please try again.",
     "signup.error.form_missing": "The form could not be read. Please reload the page.",
@@ -1108,8 +1108,8 @@ export const ui = {
       "I accept the <a href=\"{href}\">privacy policy</a> (health data from the medical certificate is also processed).",
     "signup.consent.liability":
       "I accept the <a href=\"{href}\">liability waiver / disclaimer</a>.",
-    "signup.consent.image":
-      "I agree that <a href=\"{href}\">photos/videos</a> taken during the event may be used for marketing purposes.",
+    "signup.notice.image":
+      "<strong>Note (not a consent):</strong> photos and videos are taken during the event and published to document and report on the race – on this website, on social media and in the press. You do not need to agree to this; you can, however, object to publication at any time. The <a href=\"{href}\">image rights section of the privacy policy</a> explains how.",
     "signup.price.note":
       "Price tiers: €75 until 31 Dec 2026, €80 until 31 Mar 2027, €100 until 30 Apr 2027 (registration deadline).",
     "signup.paid.notice": "Payment successful. Please upload your medical certificate now.",
