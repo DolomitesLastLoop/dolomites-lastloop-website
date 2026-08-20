@@ -441,6 +441,24 @@ Person wieder auf, weil niemand nachschlagen kann, wer widersprochen hat.
 (keine Änderungswünsche).** Damit war die frühere Merge-Sperre aufgehoben. Die Umstellung
 ist committet, auf `main` gemerged und deployed.
 
+**Abgeschlossen am 2026-08-20 — von der Entdeckung bis zum Live-Deploy:**
+
+| Schritt | Stand |
+|---|---|
+| Widerspruch entdeckt (Text sagt „freiwillig", Checkbox `required`, Server blockt) | 2026-08-20 |
+| Spalte `consent_image_rights` live gedroppt (Migration `drop_consent_image_rights`) | 2026-08-20 |
+| Rechtstext neu gefasst, der Rechtsberatung vorgelegt | 2026-08-20 |
+| Freigabe der Rechtsberatung, unverändert, ohne Änderungswünsche | 2026-08-20 |
+| Commits `e83a17d` (Code + Rechtstext) und `8dc2c7b` (Doku) | 2026-08-20 |
+| Merge nach `main` als `7ff2c56`, gepusht | 2026-08-20 |
+| Production-Deploy `dpl_UcsPgdTPtPBPjxUVuqfTem6ZPwvt`, READY auf `7ff2c56` | 2026-08-20 |
+| Branch `feat/image-rights-legitimate-interest` gelöscht (war nur lokal) | 2026-08-20 |
+
+Verifiziert: `astro check` 0 Fehler / 0 Warnungen, Build grün, Datenschutz Punkt 10 und
+AGB §7 in DE/IT/EN live abgerufen, `participants` = 26 Spalten. Damit ist das Thema
+inhaltlich, im Code, im Schema und im Deployment abgeschlossen — **mit der einen unten
+genannten Ausnahme.**
+
 Foto-/Videoaufnahmen laufen nicht mehr über eine erzwungene Einwilligung bei der Anmeldung,
 sondern über Art. 6 Abs. 1 lit. f DSGVO mit Widerspruchsrecht. Betroffen: Datenschutz-
 erklärung Punkt 10 und §8, AGB §7, FAQ (je DE/IT/EN), `RegistrationFlow.astro`
