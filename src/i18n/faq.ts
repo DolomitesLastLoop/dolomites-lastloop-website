@@ -34,6 +34,10 @@ export const faq: Record<Lang, FaqContent> = {
         q: "Welche Pflichtausrüstung brauche ich?",
         a: "Laufschuhe, dem Wetter angepasste Bekleidung, Mobiltelefon mit hinterlegter Notfallnummer und ab 20:00 Uhr eine funktionstüchtige Stirnlampe. Laufstöcke sind nicht erlaubt.",
       },
+      {
+        q: "Werden Fotos von mir veröffentlicht?",
+        a: "Ja. Beim Rennen sind Fotografen im Einsatz, und die Bilder erscheinen auf dieser Website, auf unseren Social-Media-Kanälen und in der Presse. Das läuft nicht über eine Einwilligung bei der Anmeldung, sondern über unser berechtigtes Interesse an der Dokumentation eines öffentlichen Sportevents (Art. 6 Abs. 1 lit. f DSGVO). Du kannst der Veröffentlichung jederzeit widersprechen – ohne Begründung und ohne Nachteil für deine Teilnahme: eine formlose E-Mail an info@worldcup-dobbiaco.it genügt, am besten mit Startnummer und, falls du ihn hast, dem Link zum Bild. Wir nehmen die Aufnahme dann von unseren eigenen Kanälen oder machen dich unkenntlich, in der Regel innerhalb von 14 Tagen. Bei Bildern, die schon bei Presse oder Sponsoren liegen, fordern wir die Entfernung an, können sie dort aber nicht garantieren. Für Werbung mit dir als erkennbarem Gesicht einer Kampagne würden wir dich vorher separat fragen.",
+      },
     ],
     crew: [
       {
@@ -80,6 +84,10 @@ export const faq: Record<Lang, FaqContent> = {
         q: "Qual è il materiale obbligatorio?",
         a: "Scarpe da corsa, abbigliamento adeguato al meteo, cellulare con numero di emergenza memorizzato e dalle 20:00 una frontale funzionante. I bastoncini non sono ammessi.",
       },
+      {
+        q: "Verranno pubblicate foto che mi ritraggono?",
+        a: "Sì. Durante la gara sono presenti fotografi e le immagini vengono pubblicate su questo sito, sui nostri canali social e sulla stampa. Ciò non avviene sulla base di un consenso raccolto al momento dell’iscrizione, ma sul nostro legittimo interesse a documentare una manifestazione sportiva pubblica (art. 6, par. 1, lett. f, GDPR). Puoi opporti alla pubblicazione in qualsiasi momento, senza motivazione e senza conseguenze sulla tua partecipazione: basta una e-mail informale a info@worldcup-dobbiaco.it, preferibilmente con il numero di pettorale e, se lo hai, il link all’immagine. Rimuoveremo la foto dai nostri canali o renderemo irriconoscibile la tua persona, di norma entro 14 giorni. Per le immagini già in mano alla stampa o agli sponsor ne richiediamo la rimozione, senza però poterla garantire. Per un uso pubblicitario in cui saresti il volto riconoscibile di una campagna ti chiederemmo prima un consenso specifico.",
+      },
     ],
     crew: [
       {
@@ -125,6 +133,10 @@ export const faq: Record<Lang, FaqContent> = {
       {
         q: "What mandatory gear do I need?",
         a: "Running shoes, weather-appropriate clothing, a phone with the emergency number stored, and from 20:00 a working headlamp. Trekking poles are not allowed.",
+      },
+      {
+        q: "Will photos of me be published?",
+        a: "Yes. Photographers work the race, and the images appear on this website, on our social media channels and in the press. This is not based on a consent you give at registration but on our legitimate interest in documenting a public sporting event (Art. 6(1)(f) GDPR). You can object to publication at any time – without giving reasons and without any disadvantage to your participation: an informal email to info@worldcup-dobbiaco.it is enough, ideally with your bib number and, if you have it, the link to the image. We will then take the image off our own channels or make you unrecognisable, as a rule within 14 days. For images already held by press or sponsors we request removal but cannot guarantee it. For advertising in which you would be the recognisable face of a campaign, we would ask you separately beforehand.",
       },
     ],
     crew: [

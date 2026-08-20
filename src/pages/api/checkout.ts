@@ -106,7 +106,6 @@ export const POST: APIRoute = async ({ request, url }) => {
 
   const consent_privacy = truthy(body.consent_privacy);
   const consent_liability_waiver = truthy(body.consent_liability_waiver);
-  const consent_image_rights = truthy(body.consent_image_rights);
 
   // Pflichtfelder
   if (
@@ -152,9 +151,11 @@ export const POST: APIRoute = async ({ request, url }) => {
     }
   }
 
-  // Alle drei Einwilligungen sind Pflicht.
-  if (!consent_privacy || !consent_liability_waiver || !consent_image_rights) {
-    return bad("Bitte allen drei Einwilligungen zustimmen.");
+  // Datenschutz und Haftungsfreistellung sind Pflicht. Foto-/Videoaufnahmen laufen
+  // NICHT über eine Einwilligung, sondern über Art. 6 Abs. 1 lit. f DSGVO mit
+  // Widerspruchsrecht (Datenschutzerklärung Punkt 10) — daher hier kein Gate.
+  if (!consent_privacy || !consent_liability_waiver) {
+    return bad("Bitte beiden Einwilligungen zustimmen.");
   }
 
   // Referenzpunkt ist der RENNTAG, nicht der Anmeldetag — so steht es auch im
@@ -187,7 +188,6 @@ export const POST: APIRoute = async ({ request, url }) => {
     price_type: tier,
     consent_privacy,
     consent_liability_waiver,
-    consent_image_rights,
     // Anmeldesprache persistieren (Mail-Sprache unabhängig von Stripe-Metadata
     // reproduzierbar, z.B. für spätere Mails/Admin-Resend).
     lang,

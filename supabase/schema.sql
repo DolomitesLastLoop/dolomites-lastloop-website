@@ -244,13 +244,19 @@ alter table public.participants
     check (price_type in ('early_bird', 'standard', 'late')),
   add column if not exists consent_privacy boolean,
   add column if not exists consent_liability_waiver boolean,
-  add column if not exists consent_image_rights boolean,
   add column if not exists confirmation_email_sent boolean not null default false;
 
 -- ticket_status um 'failed' erweitern (Stripe-Session expired / fehlgeschlagen).
 alter table public.participants drop constraint if exists participants_ticket_status_check;
 alter table public.participants add constraint participants_ticket_status_check
   check (ticket_status in ('pending', 'confirmed', 'waitlist', 'cancelled', 'failed'));
+
+-- Bildrechte-Einwilligung entfernt (2026-08-20): Foto-/Videoaufnahmen laufen nicht
+-- mehr über eine Einwilligung, sondern über Art. 6 Abs. 1 lit. f DSGVO mit
+-- Widerspruchsrecht (Datenschutzerklärung Punkt 10). Die Spalte wurde nie gelesen
+-- und war zum Zeitpunkt des Drops leer (0 Zeilen in participants).
+-- Nötig für bestehende Datenbanken: das Weglassen oben ist dort ein No-Op.
+alter table public.participants drop column if exists consent_image_rights;
 
 -- price_type um 'late' erweitern (dritte Startgeld-Stufe „Spätanmeldung", AGB §1).
 -- Nötig für bestehende Datenbanken: der Inline-Check oben greift dort nicht mehr,

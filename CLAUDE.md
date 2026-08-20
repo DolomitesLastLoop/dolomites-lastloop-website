@@ -398,6 +398,88 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 
 ## Nächste Schritte
 
+### Widerspruchs-Register für Bildrechte (offen, 2026-08-20) — BLOCKIERT das Versprechen im Rechtstext
+
+**Ohne diesen Mechanismus ist das in der Datenschutzerklärung zugesagte Widerspruchsrecht
+nicht wirklich funktionsfähig.** Seit der Umstellung auf Art. 6 Abs. 1 lit. f DSGVO
+(Branch `feat/image-rights-legitimate-interest`) sagen Datenschutzerklärung Punkt 10, AGB §7
+und die FAQ zu, dass ein Widerspruch dazu führt, dass die betreffende Person auf unseren
+eigenen Kanälen entfernt oder unkenntlich gemacht wird — **und dass auch künftige
+Veröffentlichungen sie nicht mehr zeigen** („wir vermerken deinen Widerspruch intern").
+
+Für diesen zweiten Teil existiert im Projekt bisher **nichts**: kein Feld, kein Register,
+keine Admin-Ansicht, kein Prozess. Ein Widerspruch wäre heute eine E-Mail, die jemand
+einmalig abarbeitet — beim nächsten Instagram-Post aus dem Fotoarchiv taucht dieselbe
+Person wieder auf, weil niemand nachschlagen kann, wer widersprochen hat.
+
+**Offen — bewusst NICHT Teil der Umstellung:**
+- [ ] Persistenz für eingegangene Widersprüche (z. B. Spalte `photo_objection_at` auf
+      `participants` plus separate Tabelle für Widersprüche von Nicht-Teilnehmenden —
+      Crew und Zuschauer können ebenfalls widersprechen und stehen in keiner Teilnehmerliste)
+- [ ] Sichtbarkeit im Admin-Panel und im CSV-Export, damit Social-Media-Redaktion und
+      Fotograf vor jeder Veröffentlichung nachschlagen können
+- [ ] Arbeitsanweisung fürs OK Toblach: wer liest `info@worldcup-dobbiaco.it`, wer trägt
+      ein, wer prüft vor dem Posten — die im Text zugesagte Regelfrist ist **14 Tage**,
+      die gesetzliche Höchstfrist **1 Monat** (Art. 12 Abs. 3 DSGVO)
+- [ ] Gegenprüfen, dass `info@worldcup-dobbiaco.it` tatsächlich aktiv überwacht wird —
+      an dieser Adresse hängt seit der Umstellung eine Frist
+
+**Zusatzpunkte aus der Umstellung, ebenfalls offen:**
+- [ ] Rolle des Fotografen (Gregor Sieder) klären: Auftragsverarbeiter oder eigener
+      Verantwortlicher? Bei Letzterem gehört er in Datenschutzerklärung §6 (Dienstleister).
+- [ ] Rechtsgrundlage der **2026**-Galeriefotos klären. Die Website existiert erst seit
+      2026-07-11, die 2026-Teilnehmer haben sich nie über dieses Formular angemeldet —
+      was damals vereinbart wurde, liegt außerhalb dieses Repos.
+- [ ] Dokumentierte LIA (Legitimate Interests Assessment) im Backoffice. Die Website
+      zeigt nur die Zusammenfassung der Abwägung.
+
+---
+
+### Bildrechte auf berechtigtes Interesse umgestellt — ERLEDIGT, live seit 2026-08-20
+
+**Die Rechtsberatung hat den Datenschutztext am 2026-08-20 unverändert freigegeben
+(keine Änderungswünsche).** Damit war die frühere Merge-Sperre aufgehoben. Die Umstellung
+ist committet, auf `main` gemerged und deployed.
+
+Foto-/Videoaufnahmen laufen nicht mehr über eine erzwungene Einwilligung bei der Anmeldung,
+sondern über Art. 6 Abs. 1 lit. f DSGVO mit Widerspruchsrecht. Betroffen: Datenschutz-
+erklärung Punkt 10 und §8, AGB §7, FAQ (je DE/IT/EN), `RegistrationFlow.astro`
+(Pflicht-Checkbox → Kenntnisnahme ohne Häkchen), `checkout.ts` (Pflicht-Gate entfernt),
+`ui.ts` (`signup.consent.image` → `signup.notice.image`).
+
+**Anlass:** Die alte Konstruktion war in sich widersprüchlich — die Datenschutzerklärung
+sagte „Die Einwilligung ist freiwillig", während die Checkbox `required` war und
+`checkout.ts` serverseitig hart blockte. Eine erzwungene Einwilligung ist keine
+(Koppelungsverbot, Art. 7 Abs. 4 DSGVO).
+
+**Schema:** Die Spalte `consent_image_rights` wurde am 2026-08-20 in der Live-Datenbank
+gedroppt (Migration `drop_consent_image_rights`). Sie war leer (`participants` = 0 Zeilen),
+hatte keine abhängigen Views, Constraints, Policies oder Funktionen und wurde nirgends
+gelesen. Zwischen Drop und Merge lief der Code auf `main` gegen ein Schema ohne diese
+Spalte — folgenlos geblieben, weil die Anmeldung in dieser Zeit über
+`PUBLIC_REGISTRATION_ENABLED` geschlossen war und nie ein Insert lief. Seit dem Merge
+sind Code und Schema wieder in Deckung: `participants` hat 26 Spalten, ein `select
+consent_image_rights` liefert erwartungsgemäß `42703`.
+
+**Zur Klarstellung, weil es später zu Verwirrung führte:** Es gab zu keinem Zeitpunkt einen
+Hotfix, der `consent_image_rights` nach dem Drop temporär wieder angelegt hätte. Der Drop
+vom 2026-08-20 war einmalig und endgültig; die Migrationsliste endet mit ihm.
+
+**Der Rechtsberatung vorgelegte Punkte.** Die Freigabe erfolgte auf den Text als Ganzes —
+ob die folgenden Einzelfragen dabei ausdrücklich erörtert wurden, ist hier nicht
+dokumentiert und lässt sich aus der Freigabe nicht ableiten:
+- Italienisches Bildnisrecht (Art. 96/97 L. 633/1941) neben der DSGVO — im Text bewusst
+  nicht erwähnt
+- Trägt die formulierte Interessenabwägung?
+- Ist die selbstgesetzte 14-Tage-Frist haltbar?
+- Ist die Grenze „Dokumentation/Berichterstattung vs. herausgehobene werbliche Nutzung"
+  praktikabel? (Beispiel: Sponsorenlogo neben Streckenfoto in einem Instagram-Post)
+
+**Weiterhin offen:** Der Widerspruchs-Mechanismus selbst (siehe Abschnitt oben) — der
+Rechtstext sagt ein dauerhaftes Vorhalten eingegangener Widersprüche zu, für das im
+Projekt bisher nichts existiert. Die Freigabe des Textes ändert daran nichts.
+
+
 ### Webhook-Verifikation (Stand 2026-08-14) — Zustellung belegt, Kette noch nicht
 
 **Der Live-Webhook ist korrekt verdrahtet und die Zustellung ist durch einen echten

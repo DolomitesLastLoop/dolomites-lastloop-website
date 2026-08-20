@@ -217,7 +217,7 @@ export const legal: Record<Lang, LegalContent> = {
                 "Recht auf Berichtigung (Art. 16 DSGVO)",
                 "Recht auf Löschung (Art. 17 DSGVO)",
                 "Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)",
-                "Recht auf Widerspruch (Art. 21 DSGVO)",
+                "Recht auf Widerspruch (Art. 21 DSGVO) – insbesondere gegen die Veröffentlichung von Foto- und Videoaufnahmen, siehe Punkt 10",
                 "Recht auf Datenübertragbarkeit (Art. 20 DSGVO)",
                 "Recht auf Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO)",
               ],
@@ -243,11 +243,15 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Während der Veranstaltung werden Foto- und Videoaufnahmen erstellt. Mit deiner Einwilligung bei der Anmeldung dürfen diese Aufnahmen vom Veranstalter (Sport OK Toblach) für die Berichterstattung über das Event sowie für Marketing- und Werbezwecke (Website, Social Media, Print) verwendet werden.",
+              text: "Während der Veranstaltung erstellen wir und von uns beauftragte Fotografen Foto- und Videoaufnahmen des Rennens. Wir veröffentlichen diese Aufnahmen zur Dokumentation der Veranstaltung und zur Berichterstattung darüber: auf dieser Website (unter anderem in der Galerie und bei den Ergebnissen), auf unseren Social-Media-Kanälen und in der Pressearbeit. Erfasst sind Aufnahmen vom Start, von der Strecke, aus dem Basislager und von der Siegerehrung.",
             },
             {
               type: "p",
-              text: "Die Einwilligung ist freiwillig und kann jederzeit mit Wirkung für die Zukunft widerrufen werden (info@worldcup-dobbiaco.it). Der Widerruf berührt die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung nicht; bereits veröffentlichte Aufnahmen müssen ggf. nicht zurückgezogen werden, soweit dies unmöglich oder mit unverhältnismäßigem Aufwand verbunden ist.",
+              text: "Rechtsgrundlage ist unser berechtigtes Interesse (Art. 6 Abs. 1 lit. f DSGVO). Unser Interesse besteht darin, ein öffentlich zugängliches Sportereignis zu dokumentieren, darüber zu berichten und die Veranstaltung bekannt zu machen; eine Einzeleinwilligung aller Teilnehmenden, Crew-Mitglieder und Zuschauer ist bei einem Rennen dieser Größe nicht praktikabel. Dem stehen deine Interessen an der Kontrolle über dein eigenes Bild gegenüber. Wir haben beides gegeneinander abgewogen: Die Aufnahmen entstehen bei einem öffentlichen Wettkampf, an dem du bewusst teilnimmst, sie zeigen dich in diesem sportlichen Zusammenhang und nicht in einer privaten oder herabsetzenden Situation, und sie werden nicht mit deinen Gesundheitsdaten, Kontaktdaten oder anderen sensiblen Angaben verknüpft. Auf dieser Grundlage überwiegt unser Dokumentationsinteresse. Für eine herausgehobene werbliche Nutzung einzelner erkennbarer Personen – etwa als Gesicht einer Werbekampagne oder eines Sponsorenauftritts – reicht das ausdrücklich nicht aus; dafür fragen wir dich vorher gesondert um deine Einwilligung.",
+            },
+            {
+              type: "note",
+              text: "Widerspruchsrecht (Art. 21 DSGVO): Du kannst der Veröffentlichung von Aufnahmen, auf denen du erkennbar bist, jederzeit widersprechen – ohne Begründung und ohne Nachteile für deine Teilnahme. Schreib dazu an info@worldcup-dobbiaco.it. Hilfreich sind deine Startnummer und, falls vorhanden, der Link zum jeweiligen Bild; du kannst aber auch pauschal widersprechen. Nach deinem Widerspruch entfernen wir die betreffenden Aufnahmen von unseren eigenen Kanälen (Website, Social Media) oder machen dich darauf unkenntlich, und wir vermerken deinen Widerspruch intern, damit dich auch künftige Veröffentlichungen nicht mehr zeigen. Wir bearbeiten deinen Widerspruch unverzüglich, spätestens innerhalb eines Monats nach Eingang (Art. 12 Abs. 3 DSGVO); in der Regel setzen wir ihn innerhalb von 14 Tagen um. Bei Aufnahmen, die bereits an Dritte weitergegeben wurden (Presse, Sponsoren) oder die Dritte geteilt haben, fordern wir die Entfernung an, können sie dort aber nicht garantieren.",
             },
           ],
         },
@@ -336,7 +340,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Im Rahmen der Veranstaltung entstehen Foto- und Videoaufnahmen, die für die Öffentlichkeitsarbeit (Website, Social Media, Presse) verwendet werden können. Du kannst dieser Nutzung jederzeit widersprechen.",
+              text: "Im Rahmen der Veranstaltung entstehen Foto- und Videoaufnahmen, die der Veranstalter zur Dokumentation und Berichterstattung über das Event verwendet (Website, Social Media, Presse). Grundlage ist das berechtigte Interesse des Veranstalters; eine Einwilligung wird dafür nicht eingeholt. Du kannst dieser Nutzung jederzeit widersprechen – formlos an info@worldcup-dobbiaco.it. Einzelheiten zu Ablauf und Fristen stehen in Punkt 10 der Datenschutzerklärung.",
             },
           ],
         },
@@ -698,7 +702,7 @@ export const legal: Record<Lang, LegalContent> = {
                 "Diritto di rettifica (art. 16 GDPR)",
                 "Diritto alla cancellazione (art. 17 GDPR)",
                 "Diritto di limitazione del trattamento (art. 18 GDPR)",
-                "Diritto di opposizione (art. 21 GDPR)",
+                "Diritto di opposizione (art. 21 GDPR) – in particolare alla pubblicazione di fotografie e riprese video, vedi punto 10",
                 "Diritto alla portabilità dei dati (art. 20 GDPR)",
                 "Diritto di revocare il consenso prestato con effetto per il futuro (art. 7, par. 3 GDPR)",
               ],
@@ -724,11 +728,15 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Durante l’evento vengono realizzate riprese foto e video. Con il tuo consenso al momento dell’iscrizione, queste immagini possono essere utilizzate dall’organizzatore (Sport OK Dobbiaco) per la documentazione dell’evento e per scopi di marketing e pubblicità (sito web, social media, stampa).",
+              text: "Durante l’evento noi e i fotografi da noi incaricati realizziamo fotografie e riprese video della gara. Pubblichiamo queste immagini per documentare la manifestazione e per raccontarla: su questo sito (tra l’altro nella galleria e nei risultati), sui nostri canali social e nell’attività con la stampa. Rientrano le riprese della partenza, del percorso, del campo base e della premiazione.",
             },
             {
               type: "p",
-              text: "Il consenso è facoltativo e può essere revocato in qualsiasi momento con effetto per il futuro (info@worldcup-dobbiaco.it). La revoca non pregiudica la liceità del trattamento effettuato fino a quel momento; le immagini già pubblicate potrebbero non dover essere ritirate, qualora ciò risulti impossibile o comporti uno sforzo sproporzionato.",
+              text: "La base giuridica è il nostro legittimo interesse (art. 6, par. 1, lett. f, GDPR). Il nostro interesse consiste nel documentare una manifestazione sportiva aperta al pubblico, nel raccontarla e nel farla conoscere; raccogliere il consenso individuale di tutti i partecipanti, dei membri della crew e degli spettatori non è praticabile in una gara di queste dimensioni. A ciò si contrappone il tuo interesse al controllo sulla tua immagine. Abbiamo effettuato il bilanciamento tra i due: le immagini nascono in una competizione pubblica alla quale prendi parte consapevolmente, ti mostrano in questo contesto sportivo e non in situazioni private o lesive della dignità, e non vengono collegate ai tuoi dati sanitari, ai dati di contatto o ad altre informazioni sensibili. Su questa base il nostro interesse alla documentazione prevale. Per un utilizzo pubblicitario mirato di singole persone riconoscibili – ad esempio come volto di una campagna o della presenza di uno sponsor – ciò espressamente non basta: in quel caso ti chiediamo prima un consenso specifico.",
+            },
+            {
+              type: "note",
+              text: "Diritto di opposizione (art. 21 GDPR): puoi opporti in qualsiasi momento alla pubblicazione di immagini in cui sei riconoscibile, senza dover motivare la richiesta e senza conseguenze sulla tua partecipazione. Scrivi a info@worldcup-dobbiaco.it. È utile indicare il tuo pettorale e, se disponibile, il link all’immagine; puoi però opporti anche in via generale. A seguito della tua opposizione rimuoviamo le immagini interessate dai nostri canali (sito web, social media) oppure rendiamo irriconoscibile la tua persona, e registriamo internamente la tua opposizione affinché nemmeno le pubblicazioni future ti mostrino. Trattiamo la tua opposizione senza ingiustificato ritardo e comunque entro un mese dal ricevimento (art. 12, par. 3, GDPR); di norma la eseguiamo entro 14 giorni. Per le immagini già trasmesse a terzi (stampa, sponsor) o condivise da terzi ne richiediamo la rimozione, senza però poterla garantire.",
             },
           ],
         },
@@ -817,7 +825,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Durante l’evento vengono realizzate fotografie e riprese video che possono essere utilizzate per attività di comunicazione (sito web, social media, stampa). Puoi opporti a tale utilizzo in qualsiasi momento.",
+              text: "Durante l’evento vengono realizzate fotografie e riprese video che l’organizzatore utilizza per documentare la manifestazione e per raccontarla (sito web, social media, stampa). La base è il legittimo interesse dell’organizzatore; per tale utilizzo non viene raccolto un consenso. Puoi opporti a tale utilizzo in qualsiasi momento, senza formalità, scrivendo a info@worldcup-dobbiaco.it. I dettagli su modalità e tempi sono indicati al punto 10 dell’informativa sulla privacy.",
             },
           ],
         },
@@ -1179,7 +1187,7 @@ export const legal: Record<Lang, LegalContent> = {
                 "Right to rectification (Art. 16 GDPR)",
                 "Right to erasure (Art. 17 GDPR)",
                 "Right to restriction of processing (Art. 18 GDPR)",
-                "Right to object (Art. 21 GDPR)",
+                "Right to object (Art. 21 GDPR) – in particular to the publication of photos and videos, see section 10",
                 "Right to data portability (Art. 20 GDPR)",
                 "Right to withdraw a given consent with effect for the future (Art. 7(3) GDPR)",
               ],
@@ -1205,11 +1213,15 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Photos and videos are taken during the event. With your consent at registration, these images may be used by the organiser (Sport OK Toblach) for event coverage as well as for marketing and advertising purposes (website, social media, print).",
+              text: "During the event, we and the photographers we commission take photos and videos of the race. We publish these images to document the event and to report on it: on this website (including the gallery and the results), on our social media channels and in our press work. This covers images from the start, the course, the base camp and the award ceremony.",
             },
             {
               type: "p",
-              text: "Consent is voluntary and can be withdrawn at any time with effect for the future (info@worldcup-dobbiaco.it). Withdrawal does not affect the lawfulness of processing carried out beforehand; images already published may not need to be withdrawn where this is impossible or involves disproportionate effort.",
+              text: "The legal basis is our legitimate interest (Art. 6(1)(f) GDPR). Our interest is to document a publicly accessible sporting event, to report on it and to make it known; obtaining individual consent from every participant, crew member and spectator is not practicable at a race of this size. Set against this is your interest in controlling your own image. We have weighed the two against each other: the images are taken at a public competition in which you take part deliberately, they show you in that sporting context and not in a private or demeaning situation, and they are not linked to your health data, contact details or other sensitive information. On that basis our documentation interest prevails. It expressly does not suffice for prominent promotional use of individual identifiable people – for example as the face of an advertising campaign or a sponsor appearance; for that we ask you for separate consent beforehand.",
+            },
+            {
+              type: "note",
+              text: "Right to object (Art. 21 GDPR): You can object at any time to the publication of images in which you are identifiable – without giving reasons and without any disadvantage to your participation. Write to info@worldcup-dobbiaco.it. It helps to include your bib number and, if you have it, the link to the image; you can also object in general terms. Following your objection, we remove the images concerned from our own channels (website, social media) or make you unrecognisable in them, and we record your objection internally so that future publications no longer show you either. We handle your objection without undue delay and at the latest within one month of receipt (Art. 12(3) GDPR); as a rule we implement it within 14 days. For images already passed on to third parties (press, sponsors) or shared by third parties, we request removal but cannot guarantee it.",
             },
           ],
         },
@@ -1298,7 +1310,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Photos and videos taken during the event may be used for public-relations purposes (website, social media, press). You may object to this use at any time.",
+              text: "Photos and videos taken during the event are used by the organiser to document the event and to report on it (website, social media, press). The basis for this is the organiser’s legitimate interest; no consent is collected for it. You may object to this use at any time – informally, to info@worldcup-dobbiaco.it. Details on the procedure and time frames are set out in section 10 of the privacy policy.",
             },
           ],
         },
