@@ -154,6 +154,8 @@ export const ui = {
       "Wir appellieren an die Vernunft der Teilnehmer: Verzichte auf Schmerzmittel und andere leistungsbeeinflussende Substanzen – sie bergen bei einem Backyard Ultra ein erhöhtes Risiko für deine eigene Gesundheit.",
     "race.rules.12":
       "Auf der Strecke sind weder Crew-Mitglieder noch andere Personen erlaubt. Es ist strengstens untersagt, mit den Athleten mitzulaufen.",
+    "race.rules.note":
+      "Das vollständige Reglement wird spätestens zwei Monate vor dem Renntag veröffentlicht – für den 15. Mai 2027 also bis spätestens 15. März 2027.",
 
     "signup.eyebrow": "2027",
     "signup.hero_title": "Anmeldung 2027",
@@ -531,6 +533,8 @@ export const ui = {
       "Facciamo appello al buon senso dei partecipanti: rinuncia agli antidolorifici e ad altre sostanze che influenzano la prestazione – in una Backyard Ultra comportano un rischio maggiore per la tua salute.",
     "race.rules.12":
       "Sul percorso non sono ammessi né i membri dell’equipaggio né altre persone. È severamente vietato correre insieme agli atleti.",
+    "race.rules.note":
+      "Il regolamento completo viene pubblicato al più tardi due mesi prima del giorno di gara – per il 15 maggio 2027 quindi entro il 15 marzo 2027.",
 
     "signup.eyebrow": "2027",
     "signup.hero_title": "Iscrizione 2027",
@@ -902,6 +906,8 @@ export const ui = {
       "We appeal to every runner’s common sense: avoid painkillers and other performance-altering substances – in a Backyard Ultra they carry an increased risk to your own health.",
     "race.rules.12":
       "No crew members or other persons are allowed on the course. Running alongside athletes is strictly prohibited.",
+    "race.rules.note":
+      "The full rulebook is published no later than two months before race day – for May 15, 2027 that means by March 15, 2027.",
 
     "signup.eyebrow": "2027",
     "signup.hero_title": "Sign up 2027",
