@@ -171,6 +171,8 @@ const profilePath =
           ))
         }
       </ol>
+
+      <p class="rules-note reveal">{t("race.rules.note")}</p>
     </div>
   </section>
 </BaseLayout>
@@ -358,6 +360,14 @@ const profilePath =
   }
   .rule.critical .rule-num {
     color: #ffd9b8;
+  }
+  .rules-note {
+    margin: var(--space-6) auto 0;
+    max-width: 68ch;
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.72);
   }
   .rule.critical::before {
     content: "!";
