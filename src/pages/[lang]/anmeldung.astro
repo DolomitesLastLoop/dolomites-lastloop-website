@@ -140,11 +140,15 @@ if (params.get("status") === "success" && !isMagicLink) {
         />
         <section class="section">
           <div class="container-narrow text-center soon">
-            <h2>{windowState === "after" ? t("signup.closed.title") : t("signup.soon.title")}</h2>
+            <h2>
+              {windowState === "after"
+                ? t("signup.closed.title")
+                : t("signup.soon.title", { date: opensAt })}
+            </h2>
             <p>
               {windowState === "after"
                 ? t("signup.closed.text", { date: closesAt })
-                : t("signup.soon.text", { date: opensAt })}
+                : t("signup.soon.text")}
             </p>
           </div>
         </section>

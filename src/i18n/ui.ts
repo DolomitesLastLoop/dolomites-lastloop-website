@@ -378,9 +378,9 @@ export const ui = {
       "Die Startplätze sind aktuell vergeben. Trag dich unverbindlich auf die Warteliste ein – es wird kein Startgeld fällig. Wird ein Platz frei, melden wir uns.",
     "signup.waitlist.success":
       "Du stehst auf der Warteliste. Wir melden uns, sobald ein Platz frei wird.",
-    "signup.soon.title": "Die Anmeldung für 2027 öffnet in Kürze",
+    "signup.soon.title": "Die Anmeldung öffnet am {date}",
     "signup.soon.text":
-      "Start ist am {date}. Trag dich in den Newsletter ein, dann verpasst du den Anmeldestart nicht.",
+      "Trag dich in den Newsletter ein, um nichts zu verpassen.",
     "signup.closed.title": "Die Anmeldung für 2027 ist geschlossen",
     "signup.closed.text":
       "Der Anmeldeschluss war der {date}. Bereits angemeldete Teilnehmer können ihr ärztliches Attest weiterhin über den Link aus der Bestätigungs-Email hochladen.",
@@ -752,9 +752,9 @@ export const ui = {
       "I posti sono al momento esauriti. Iscriviti senza impegno alla lista d’attesa – nessuna quota dovuta. Se si libera un posto, ti contatteremo.",
     "signup.waitlist.success":
       "Sei in lista d’attesa. Ti contatteremo appena si libera un posto.",
-    "signup.soon.title": "Le iscrizioni per il 2027 apriranno a breve",
+    "signup.soon.title": "Le iscrizioni aprono il {date}",
     "signup.soon.text":
-      "Si parte il {date}. Iscriviti alla newsletter per non perderti l’apertura delle iscrizioni.",
+      "Iscriviti alla newsletter per non perderti nulla.",
     "signup.closed.title": "Le iscrizioni per il 2027 sono chiuse",
     "signup.closed.text":
       "Il termine per l’iscrizione era il {date}. Chi è già iscritto può continuare a caricare il certificato medico tramite il link ricevuto nell’email di conferma.",
@@ -1124,9 +1124,9 @@ export const ui = {
       "All start slots are currently taken. Join the waiting list with no obligation – no entry fee is due. If a spot opens up, we’ll get in touch.",
     "signup.waitlist.success":
       "You’re on the waiting list. We’ll be in touch as soon as a spot opens up.",
-    "signup.soon.title": "Registration for 2027 opens soon",
+    "signup.soon.title": "Registration opens on {date}",
     "signup.soon.text":
-      "Entries open on {date}. Sign up for the newsletter so you don’t miss the start.",
+      "Sign up for the newsletter so you don’t miss anything.",
     "signup.closed.title": "Registration for 2027 is closed",
     "signup.closed.text":
       "The registration deadline was {date}. Participants who have already registered can still upload their medical certificate via the link in their confirmation email.",
