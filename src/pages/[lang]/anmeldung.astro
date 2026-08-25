@@ -4,7 +4,7 @@ import PageHero from "@components/PageHero.astro";
 import RegistrationFlow from "@components/RegistrationFlow.astro";
 import { photo, pos } from "@lib/photos";
 import { isRegistrationEnabled } from "@lib/registration";
-import { registrationWindowState } from "@lib/stripe";
+import { registrationWindowState, TIER_WINDOWS } from "@lib/stripe";
 import { getAdminClient } from "@lib/supabase";
 import { useTranslations, type Lang } from "@i18n/utils";
 
@@ -21,6 +21,22 @@ const t = useTranslations(lang);
 // "Anmeldeschluss vorbei" (after) — dieselbe Grenze gatet serverseitig /api/checkout.
 const windowState = registrationWindowState();
 const registrationEnabled = isRegistrationEnabled() && windowState === "open";
+
+// Öffnungs- und Schlussdatum NICHT hart in die i18n-Texte schreiben, sondern aus
+// denselben Anmeldefenstern ableiten, die auch die Preisstufe und /api/checkout
+// steuern — verschiebt sich ein Fenster, wandert der angezeigte Text mit.
+// Locale-Zuordnung wie in @components/ResultsTable.astro.
+const dateFmt = new Intl.DateTimeFormat(
+  lang === "en" ? "en-GB" : lang === "it" ? "it-IT" : "de-DE",
+  { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Rome" },
+);
+const opensAt = dateFmt.format(new Date(TIER_WINDOWS[0].from));
+// `until` ist exklusiv (siehe currentTier()), der Anmeldeschluss ist also der Tag
+// davor. 1 ms abziehen statt 24 h: das trifft den letzten gültigen Moment und
+// bleibt auch dann richtig, wenn die Grenze je auf eine Zeitumstellung fällt.
+const closesAt = dateFmt.format(
+  new Date(Date.parse(TIER_WINDOWS[TIER_WINDOWS.length - 1].until) - 1),
+);
 
 // Auch bei deaktiviertem Flag muss ein bereits bezahlter Teilnehmer Schritt 3
 // (Attest) erreichen: nach Stripe-Erfolg (?status=success) oder über den
@@ -125,7 +141,11 @@ if (params.get("status") === "success" && !isMagicLink) {
         <section class="section">
           <div class="container-narrow text-center soon">
             <h2>{windowState === "after" ? t("signup.closed.title") : t("signup.soon.title")}</h2>
-            <p>{windowState === "after" ? t("signup.closed.text") : t("signup.soon.text")}</p>
+            <p>
+              {windowState === "after"
+                ? t("signup.closed.text", { date: closesAt })
+                : t("signup.soon.text", { date: opensAt })}
+            </p>
           </div>
         </section>
       </>

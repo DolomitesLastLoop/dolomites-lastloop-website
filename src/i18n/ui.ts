@@ -380,10 +380,10 @@ export const ui = {
       "Du stehst auf der Warteliste. Wir melden uns, sobald ein Platz frei wird.",
     "signup.soon.title": "Die Anmeldung für 2027 öffnet in Kürze",
     "signup.soon.text":
-      "Trag dich in den Newsletter ein, dann verpasst du den Anmeldestart nicht.",
+      "Start ist am {date}. Trag dich in den Newsletter ein, dann verpasst du den Anmeldestart nicht.",
     "signup.closed.title": "Die Anmeldung für 2027 ist geschlossen",
     "signup.closed.text":
-      "Der Anmeldeschluss war der 30. April 2027. Bereits angemeldete Teilnehmer können ihr ärztliches Attest weiterhin über den Link aus der Bestätigungs-Email hochladen.",
+      "Der Anmeldeschluss war der {date}. Bereits angemeldete Teilnehmer können ihr ärztliches Attest weiterhin über den Link aus der Bestätigungs-Email hochladen.",
     "footer.liability": "Haftungsausschluss",
   },
 
@@ -754,10 +754,10 @@ export const ui = {
       "Sei in lista d’attesa. Ti contatteremo appena si libera un posto.",
     "signup.soon.title": "Le iscrizioni per il 2027 apriranno a breve",
     "signup.soon.text":
-      "Iscriviti alla newsletter per non perderti l’apertura delle iscrizioni.",
+      "Si parte il {date}. Iscriviti alla newsletter per non perderti l’apertura delle iscrizioni.",
     "signup.closed.title": "Le iscrizioni per il 2027 sono chiuse",
     "signup.closed.text":
-      "Il termine per l’iscrizione era il 30 aprile 2027. Chi è già iscritto può continuare a caricare il certificato medico tramite il link ricevuto nell’email di conferma.",
+      "Il termine per l’iscrizione era il {date}. Chi è già iscritto può continuare a caricare il certificato medico tramite il link ricevuto nell’email di conferma.",
     "footer.liability": "Esclusione di responsabilità",
   },
 
@@ -1126,10 +1126,10 @@ export const ui = {
       "You’re on the waiting list. We’ll be in touch as soon as a spot opens up.",
     "signup.soon.title": "Registration for 2027 opens soon",
     "signup.soon.text":
-      "Sign up for the newsletter so you don’t miss the registration opening.",
+      "Entries open on {date}. Sign up for the newsletter so you don’t miss the start.",
     "signup.closed.title": "Registration for 2027 is closed",
     "signup.closed.text":
-      "The registration deadline was 30 April 2027. Participants who have already registered can still upload their medical certificate via the link in their confirmation email.",
+      "The registration deadline was {date}. Participants who have already registered can still upload their medical certificate via the link in their confirmation email.",
     "footer.liability": "Disclaimer",
   },
 } as const;
