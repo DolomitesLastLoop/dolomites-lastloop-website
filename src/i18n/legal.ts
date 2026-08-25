@@ -120,17 +120,17 @@ export const legal: Record<Lang, LegalContent> = {
                 "Geburtsort und Geburtsdatum",
                 "Telefonnummer",
                 "Notfallkontakt (Name und Telefonnummer)",
-                "Ärztliches bzw. sportärztliches Attest (Gesundheitsdaten – siehe Punkt 3)",
+                "Sportärztliches Attest (Gesundheitsdaten – siehe Punkt 3)",
               ],
             },
           ],
         },
         {
-          heading: "3. Gesundheitsdaten – ärztliches Attest",
+          heading: "3. Gesundheitsdaten – sportärztliches Attest",
           blocks: [
             {
               type: "p",
-              text: "Das von dir hochgeladene ärztliche bzw. sportärztliche Attest enthält Gesundheitsdaten und damit eine besondere Kategorie personenbezogener Daten.",
+              text: "Das von dir hochgeladene sportärztliche Attest enthält Gesundheitsdaten und damit eine besondere Kategorie personenbezogener Daten.",
             },
             {
               type: "note",
@@ -199,7 +199,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Wir speichern personenbezogene Daten nur so lange, wie es für die genannten Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen. Teilnehmerdaten werden bis drei Monate nach dem Rennen aufbewahrt (Frist ab dem 15.05.2027) und anschließend gelöscht oder anonymisiert. Gesundheitsdaten (ärztliche Atteste) werden bis drei Monate nach dem Rennen (Frist ab dem 15.05.2027) aufbewahrt und anschließend gelöscht. Zahlungs- und buchhaltungsrelevante Daten bewahren wir gemäß Art. 2220 Codice Civile zehn Jahre auf.",
+              text: "Wir speichern personenbezogene Daten nur so lange, wie es für die genannten Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen. Teilnehmerdaten werden bis drei Monate nach dem Rennen aufbewahrt (Frist ab dem 15.05.2027) und anschließend gelöscht oder anonymisiert. Gesundheitsdaten (sportärztliche Atteste) werden bis drei Monate nach dem Rennen (Frist ab dem 15.05.2027) aufbewahrt und anschließend gelöscht. Zahlungs- und buchhaltungsrelevante Daten bewahren wir gemäß Art. 2220 Codice Civile zehn Jahre auf.",
             },
           ],
         },
@@ -299,7 +299,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Für die Teilnahme ist ein gültiges ärztliches bzw. sportärztliches Attest erforderlich. Es kann bereits bei der Anmeldung hochgeladen oder nachgereicht werden, muss dem Veranstalter aber spätestens eine Woche vor dem Rennstart vorliegen – für die Ausgabe 2027 also bis zum 8. Mai 2027. Das Attest muss am Renntag noch gültig sein. Geht kein fristgerechtes und am Renntag gültiges Attest ein, ist eine Teilnahme ausgeschlossen; es gelten die Stornobedingungen nach Ziffer 2, eine Rückerstattung des Startgelds erfolgt nicht.",
+              text: "Für die Teilnahme ist ein gültiges sportärztliches Attest erforderlich. Sportärztlich bedeutet: ausgestellt von einer Ärztin oder einem Arzt mit sportmedizinischer Qualifikation (in Italien: certificato medico agonistico). Ein allgemeines hausärztliches Attest über die Gesundheit oder Sporttauglichkeit genügt nicht. Das Attest kann bereits bei der Anmeldung hochgeladen oder nachgereicht werden, muss dem Veranstalter aber spätestens eine Woche vor dem Rennstart vorliegen – für die Ausgabe 2027 also bis zum 8. Mai 2027. Es muss am Renntag noch gültig sein. Geht kein fristgerechtes und am Renntag gültiges sportärztliches Attest ein, ist eine Teilnahme ausgeschlossen; es gelten die Stornobedingungen nach Ziffer 2, eine Rückerstattung des Startgelds erfolgt nicht.",
             },
           ],
         },
@@ -469,11 +469,11 @@ export const legal: Record<Lang, LegalContent> = {
           ],
         },
         {
-          heading: "2. Gesundheitliche Eignung und ärztliches Attest",
+          heading: "2. Gesundheitliche Eignung und sportärztliches Attest",
           blocks: [
             {
               type: "p",
-              text: "Die Teilnahme setzt die volle gesundheitliche Eignung für sportliche Höchstbelastungen voraus. Ein gültiges ärztliches Attest (certificato medico agonistico) ist verpflichtend vorzulegen – spätestens eine Woche vor dem Rennstart, für die Ausgabe 2027 also bis zum 8. Mai 2027 – und muss am Renntag noch gültig sein. Ohne fristgerecht eingereichtes und am Renntag gültiges Attest ist die Anmeldung nicht endgültig gültig und eine Teilnahme ausgeschlossen; das Startgeld wird in diesem Fall nicht erstattet.",
+              text: "Die Teilnahme setzt die volle gesundheitliche Eignung für sportliche Höchstbelastungen voraus. Ein gültiges sportärztliches Attest (certificato medico agonistico) ist verpflichtend vorzulegen. Sportärztlich bedeutet: ausgestellt von einer Ärztin oder einem Arzt mit sportmedizinischer Qualifikation; ein hausärztliches Attest genügt nicht. Das Attest ist spätestens eine Woche vor dem Rennstart vorzulegen, für die Ausgabe 2027 also bis zum 8. Mai 2027, und muss am Renntag noch gültig sein. Ohne fristgerecht eingereichtes und am Renntag gültiges sportärztliches Attest ist die Anmeldung nicht endgültig gültig und eine Teilnahme ausgeschlossen; das Startgeld wird in diesem Fall nicht erstattet.",
             },
           ],
         },
@@ -605,17 +605,17 @@ export const legal: Record<Lang, LegalContent> = {
                 "Luogo e data di nascita",
                 "Numero di telefono",
                 "Contatto di emergenza (nome e numero di telefono)",
-                "Certificato medico-sportivo (dati sanitari – vedi punto 3)",
+                "Certificato medico agonistico (dati sanitari – vedi punto 3)",
               ],
             },
           ],
         },
         {
-          heading: "3. Dati sanitari – certificato medico",
+          heading: "3. Dati sanitari – certificato medico agonistico",
           blocks: [
             {
               type: "p",
-              text: "Il certificato medico-sportivo che carichi contiene dati relativi alla salute e costituisce quindi una categoria particolare di dati personali.",
+              text: "Il certificato medico agonistico che carichi contiene dati relativi alla salute e costituisce quindi una categoria particolare di dati personali.",
             },
             {
               type: "note",
@@ -684,7 +684,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Conserviamo i dati personali solo per il tempo necessario alle finalità indicate o per gli obblighi di legge. I dati dei partecipanti sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati o anonimizzati. I dati sanitari (certificati medici) sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati. I dati rilevanti ai fini contabili e di pagamento sono conservati per dieci anni ai sensi dell’art. 2220 del Codice Civile.",
+              text: "Conserviamo i dati personali solo per il tempo necessario alle finalità indicate o per gli obblighi di legge. I dati dei partecipanti sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati o anonimizzati. I dati sanitari (certificati medici agonistici) sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati. I dati rilevanti ai fini contabili e di pagamento sono conservati per dieci anni ai sensi dell’art. 2220 del Codice Civile.",
             },
           ],
         },
@@ -784,7 +784,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Per la partecipazione è necessario un certificato medico-sportivo valido. Può essere caricato già al momento dell’iscrizione oppure trasmesso successivamente, ma deve pervenire all’organizzatore al più tardi una settimana prima della partenza della gara – per l’edizione 2027 quindi entro l’8 maggio 2027. Il certificato deve essere ancora valido il giorno della gara. In assenza di un certificato trasmesso entro i termini e valido il giorno della gara, la partecipazione è esclusa; si applicano le condizioni di annullamento di cui al punto 2 e non è previsto alcun rimborso della quota di iscrizione.",
+              text: "Per la partecipazione è necessario un certificato medico agonistico valido, rilasciato da un medico in possesso di qualifica in medicina dello sport. Un certificato generico rilasciato dal medico di base non è sufficiente. Il certificato può essere caricato già al momento dell’iscrizione oppure trasmesso successivamente, ma deve pervenire all’organizzatore al più tardi una settimana prima della partenza della gara – per l’edizione 2027 quindi entro l’8 maggio 2027. Deve essere ancora valido il giorno della gara. In assenza di un certificato medico agonistico trasmesso entro i termini e valido il giorno della gara, la partecipazione è esclusa; si applicano le condizioni di annullamento di cui al punto 2 e non è previsto alcun rimborso della quota di iscrizione.",
             },
           ],
         },
@@ -954,11 +954,11 @@ export const legal: Record<Lang, LegalContent> = {
           ],
         },
         {
-          heading: "2. Idoneità fisica e certificato medico",
+          heading: "2. Idoneità fisica e certificato medico agonistico",
           blocks: [
             {
               type: "p",
-              text: "La partecipazione presuppone la piena idoneità a sforzi sportivi massimali. È obbligatorio presentare un valido certificato medico agonistico al più tardi una settimana prima della partenza della gara, per l’edizione 2027 quindi entro l’8 maggio 2027; il certificato deve essere ancora valido il giorno della gara. Senza un certificato presentato entro i termini e valido il giorno della gara, l’iscrizione non è definitivamente valida e la partecipazione è esclusa; in tal caso la quota di iscrizione non viene rimborsata.",
+              text: "La partecipazione presuppone la piena idoneità a sforzi sportivi massimali. È obbligatorio presentare un valido certificato medico agonistico, rilasciato da un medico in possesso di qualifica in medicina dello sport; un certificato generico del medico di base non è sufficiente. Il certificato va presentato al più tardi una settimana prima della partenza della gara, per l’edizione 2027 quindi entro l’8 maggio 2027, e deve essere ancora valido il giorno della gara. Senza un certificato presentato entro i termini e valido il giorno della gara, l’iscrizione non è definitivamente valida e la partecipazione è esclusa; in tal caso la quota di iscrizione non viene rimborsata.",
             },
           ],
         },
@@ -1090,17 +1090,17 @@ export const legal: Record<Lang, LegalContent> = {
                 "Place and date of birth",
                 "Phone number",
                 "Emergency contact (name and phone number)",
-                "Medical / sports-medical certificate (health data – see section 3)",
+                "Sports-medical certificate (health data – see section 3)",
               ],
             },
           ],
         },
         {
-          heading: "3. Health data – medical certificate",
+          heading: "3. Health data – sports-medical certificate",
           blocks: [
             {
               type: "p",
-              text: "The medical / sports-medical certificate you upload contains health data and therefore a special category of personal data.",
+              text: "The sports-medical certificate you upload contains health data and therefore a special category of personal data.",
             },
             {
               type: "note",
@@ -1169,7 +1169,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "We store personal data only for as long as necessary for the stated purposes or as required by statutory retention obligations. Participant data are kept until three months after the race (period running from 15 May 2027) and then deleted or anonymised. Health data (medical certificates) are kept until three months after the race (period running from 15 May 2027) and then deleted. Payment and accounting-related data are retained for ten years in accordance with Art. 2220 of the Italian Civil Code.",
+              text: "We store personal data only for as long as necessary for the stated purposes or as required by statutory retention obligations. Participant data are kept until three months after the race (period running from 15 May 2027) and then deleted or anonymised. Health data (sports-medical certificates) are kept until three months after the race (period running from 15 May 2027) and then deleted. Payment and accounting-related data are retained for ten years in accordance with Art. 2220 of the Italian Civil Code.",
             },
           ],
         },
@@ -1269,7 +1269,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "A valid medical / sports-medical certificate is required to participate. It can be uploaded during registration or submitted later, but must reach the organiser no later than one week before the race start — for the 2027 edition, by 8 May 2027. The certificate must still be valid on race day. If no certificate is submitted on time and valid on race day, participation is excluded; the cancellation terms under section 2 apply and the entry fee is not refunded.",
+              text: "A valid sports-medical certificate is required to participate. Sports-medical means: issued by a doctor holding a sports-medicine qualification (in Italy: certificato medico agonistico). A general certificate from a family doctor or GP is not sufficient. The certificate can be uploaded during registration or submitted later, but must reach the organiser no later than one week before the race start — for the 2027 edition, by 8 May 2027. It must still be valid on race day. If no sports-medical certificate is submitted on time and valid on race day, participation is excluded; the cancellation terms under section 2 apply and the entry fee is not refunded.",
             },
           ],
         },
@@ -1439,11 +1439,11 @@ export const legal: Record<Lang, LegalContent> = {
           ],
         },
         {
-          heading: "2. Medical fitness and certificate",
+          heading: "2. Medical fitness and sports-medical certificate",
           blocks: [
             {
               type: "p",
-              text: "Participation requires full medical fitness for maximum athletic exertion. A valid medical certificate (certificato medico agonistico) must be provided no later than one week before the race start — for the 2027 edition, by 8 May 2027 — and must still be valid on race day. Without a certificate submitted on time and valid on race day, the registration is not finally valid and participation is excluded; the entry fee is not refunded in this case.",
+              text: "Participation requires full medical fitness for maximum athletic exertion. A valid sports-medical certificate (certificato medico agonistico) must be provided. Sports-medical means: issued by a doctor holding a sports-medicine qualification; a certificate from a family doctor or GP is not sufficient. The certificate must be provided no later than one week before the race start — for the 2027 edition, by 8 May 2027 — and must still be valid on race day. Without a sports-medical certificate submitted on time and valid on race day, the registration is not finally valid and participation is excluded; the entry fee is not refunded in this case.",
             },
           ],
         },

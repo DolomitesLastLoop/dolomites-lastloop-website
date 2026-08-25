@@ -82,10 +82,10 @@ const confirmCopy: Record<
     ticketNote:
       "<strong>Dein Ticket</strong> findest du als PDF im Anhang – ausgedruckt oder am Handy gezeigt genügt.",
     attest:
-      "<strong>Noch ein wichtiger Schritt:</strong> Bitte lade dein ärztliches Attest hoch – spätestens bis zum 8. Mai 2027. Es muss am Renntag noch gültig sein:",
+      "<strong>Noch ein wichtiger Schritt:</strong> Bitte lade dein sportärztliches Attest hoch – spätestens bis zum 8. Mai 2027. Es muss am Renntag noch gültig sein:",
     uploadCta: "Attest jetzt hochladen →",
     notValidYet:
-      "Wichtig: Deine Anmeldung wird erst mit dem vollständig hochgeladenen ärztlichen Attest endgültig gültig.",
+      "Wichtig: Deine Anmeldung wird erst mit dem vollständig hochgeladenen sportärztlichen Attest endgültig gültig.",
     raceInfoLine: (r, k) =>
       `Alle Details zu Strecke und Regeln: <a href="${r}" style="color:#2d4a6b;">Race-Info</a> · Lage &amp; Karte: <a href="${k}" style="color:#2d4a6b;">Kontakt</a>`,
     fallback: "Falls der Link nicht funktioniert, kopiere diese URL in deinen Browser:",
@@ -110,10 +110,10 @@ const confirmCopy: Record<
     ticketNote:
       "<strong>Il tuo biglietto</strong> è in allegato come PDF – basta stamparlo o mostrarlo sul telefono.",
     attest:
-      "<strong>Un passo importante:</strong> carica il tuo certificato medico – al più tardi entro l’8 maggio 2027. Deve essere ancora valido il giorno della gara:",
+      "<strong>Un passo importante:</strong> carica il tuo certificato medico agonistico – al più tardi entro l’8 maggio 2027. Deve essere ancora valido il giorno della gara:",
     uploadCta: "Carica ora il certificato →",
     notValidYet:
-      "Importante: la tua iscrizione diventa definitiva solo con il certificato medico caricato per intero.",
+      "Importante: la tua iscrizione diventa definitiva solo con il certificato medico agonistico caricato per intero.",
     raceInfoLine: (r, k) =>
       `Tutti i dettagli su percorso e regole: <a href="${r}" style="color:#2d4a6b;">Race-Info</a> · Posizione e mappa: <a href="${k}" style="color:#2d4a6b;">Contatti</a>`,
     fallback: "Se il link non funziona, copia questo URL nel tuo browser:",
@@ -138,10 +138,10 @@ const confirmCopy: Record<
     ticketNote:
       "<strong>Your ticket</strong> is attached as a PDF – print it or show it on your phone.",
     attest:
-      "<strong>One important step left:</strong> please upload your medical certificate — by 8 May 2027 at the latest. It must still be valid on race day:",
+      "<strong>One important step left:</strong> please upload your sports-medical certificate — by 8 May 2027 at the latest. It must still be valid on race day:",
     uploadCta: "Upload certificate now →",
     notValidYet:
-      "Important: your registration only becomes final once your medical certificate is fully uploaded.",
+      "Important: your registration only becomes final once your sports-medical certificate is fully uploaded.",
     raceInfoLine: (r, k) =>
       `Course details and rules: <a href="${r}" style="color:#2d4a6b;">Race Info</a> · Location &amp; map: <a href="${k}" style="color:#2d4a6b;">Contact</a>`,
     fallback: "If the link doesn’t work, copy this URL into your browser:",

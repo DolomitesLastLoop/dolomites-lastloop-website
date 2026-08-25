@@ -435,6 +435,35 @@ Person wieder auf, weil niemand nachschlagen kann, wer widersprochen hat.
 
 ---
 
+### Sportärztliches Attest — drei offene Fragen (offen, 2026-08-25)
+
+Mit der Präzisierung „ärztliches Attest" → „sportärztliches Attest" (Branch
+`fix/sports-medical-certificate`) ist definiert: das Attest muss von einer Ärztin oder einem
+Arzt mit **sportmedizinischer Qualifikation** ausgestellt sein; ein hausärztliches Attest
+genügt nicht. IT-Terminologie durchgängig **certificato medico agonistico**, EN
+**sports-medical certificate**.
+
+**Bewusst NICHT beantwortet.** Die folgenden drei Fragen sind ungeklärt und wurden
+absichtlich nicht in die neue Definition hineingeschrieben — weder im Rechtstext noch in
+FAQ, Anmeldeflow oder Bestätigungs-Mail steht heute etwas dazu. Nicht raten, nicht
+nachträglich „logisch ableiten": jede Antwort ist eine Rechtsentscheidung und braucht eine
+Quelle (Sport OK Dobbiaco / FIDAL / Rechtsberatung).
+
+- [ ] **EKG/Belastungs-EKG Pflichtbestandteil?** Ungeklärt, ob das Attest ein Ruhe- bzw.
+      Belastungs-EKG enthalten muss, damit es anerkannt wird.
+- [ ] **Ausländische Teilnehmer:** Ungeklärt, ob ein gleichwertiges nicht-italienisches
+      sportärztliches Attest ausreicht — und woran „gleichwertig" gemessen wird. Hängt
+      direkt an der Terminologie-Entscheidung „certificato medico agonistico" (italienische
+      Rechtsfigur, DM 18.02.1982) im IT-Text.
+- [ ] **Maximale Gültigkeitsdauer:** Ungeklärt. In AGB §3 und Haftungsausschluss §2 steht
+      nur „muss am Renntag noch gültig sein" — ohne eigene Höchstdauer.
+
+Bis zur Klärung: beim manuellen Attest-Check im Admin-Panel im Zweifel Rücksprache mit dem
+Veranstalter, nicht selbst entscheiden. Der Check ist zwingend menschlich — `upload-attest.ts`
+validiert nur MIME-Typ und Dateigröße, `api/admin/attest.ts` nur den Status-Wert.
+
+---
+
 ### Bildrechte auf berechtigtes Interesse umgestellt — ERLEDIGT, live seit 2026-08-20
 
 **Die Rechtsberatung hat den Datenschutztext am 2026-08-20 unverändert freigegeben
