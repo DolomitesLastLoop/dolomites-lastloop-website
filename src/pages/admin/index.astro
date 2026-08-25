@@ -131,6 +131,13 @@ const attestApproved = participants.filter((p) => p.attest_status === "approved"
           <button class="btn btn-primary" type="submit">Hinzufügen</button>
         </form>
 
+        <p class="attest-check-note">
+          ⚠️ <strong>Vor dem ✓:</strong> PDF öffnen und prüfen, ob es ein
+          <strong>sportärztliches</strong> Attest ist – ausgestellt von einem Arzt mit
+          sportmedizinischer Qualifikation (certificato medico agonistico) – und ob es am
+          Renntag noch gültig ist. Ein hausärztliches Attest ist abzulehnen. Das System prüft
+          den PDF-Inhalt nicht: „vorhanden“ ist nicht „gültig“.
+        </p>
         <div class="table-wrap">
           <table class="table">
             <thead>
@@ -273,6 +280,18 @@ const attestApproved = participants.filter((p) => p.attest_status === "approved"
   .tab.active {
     color: var(--color-accent);
     border-bottom-color: var(--color-accent);
+  }
+
+  .attest-check-note {
+    max-width: 68ch;
+    margin: 0 0 0.9rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 6px;
+    background: var(--color-bg-alt);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
 
   .table-wrap {

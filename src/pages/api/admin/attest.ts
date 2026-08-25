@@ -23,6 +23,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       status: 400,
     });
   }
+  // approve = bewusste, inhaltliche Freigabe durch einen Menschen.
+  // Diese Route prüft NUR den Status-Wert, NICHT den PDF-Inhalt. Ob es ein
+  // sportärztliches Attest ist (Arzt mit sportmedizinischer Qualifikation /
+  // certificato medico agonistico) und ob es am Renntag noch gültig ist, kann nur
+  // manuell im Admin-Panel geprüft werden. Ein hausärztliches Attest ist abzulehnen.
+  // Falls hier je eine Automatik ergänzt wird: sie ersetzt diesen Check NICHT.
   const newStatus = body.action === "approve" ? "approved" : "rejected";
   try {
     const supabase = getAdminClient();

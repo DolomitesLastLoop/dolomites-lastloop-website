@@ -24,7 +24,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Welche Teilnahmebedingungen gelten?",
-        a: "Mindestalter 18 Jahre, vollständige Anmeldung inkl. Zahlung und ein ärztliches Attest. Das Attest kannst du nachreichen, es muss aber spätestens eine Woche vor dem Rennen bei uns sein (für 2027: bis 8. Mai 2027) und am Renntag noch gültig sein. Mit der Anmeldung wird das Reglement vollständig akzeptiert.",
+        a: "Mindestalter 18 Jahre, vollständige Anmeldung inkl. Zahlung und ein sportärztliches Attest. Sportärztlich heißt: ausgestellt von einer Ärztin oder einem Arzt mit sportmedizinischer Qualifikation (in Italien: certificato medico agonistico) – ein normales Attest vom Hausarzt reicht nicht. Das Attest kannst du nachreichen, es muss aber spätestens eine Woche vor dem Rennen bei uns sein (für 2027: bis 8. Mai 2027) und am Renntag noch gültig sein. Mit der Anmeldung wird das Reglement vollständig akzeptiert.",
       },
       {
         q: "Kann ich stornieren oder meinen Startplatz übertragen?",
@@ -102,7 +102,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Quali sono le condizioni di partecipazione?",
-        a: "Età minima 18 anni, iscrizione e pagamento completati e un certificato medico. Il certificato può essere trasmesso successivamente, ma deve pervenirci al più tardi una settimana prima della gara (per il 2027: entro l’8 maggio 2027) ed essere ancora valido il giorno della gara. L’iscrizione implica l’accettazione integrale del regolamento.",
+        a: "Età minima 18 anni, iscrizione e pagamento completati e un certificato medico agonistico, rilasciato da un medico con qualifica in medicina dello sport – un certificato generico del medico di base non è sufficiente. Il certificato può essere trasmesso successivamente, ma deve pervenirci al più tardi una settimana prima della gara (per il 2027: entro l’8 maggio 2027) ed essere ancora valido il giorno della gara. L’iscrizione implica l’accettazione integrale del regolamento.",
       },
       {
         q: "Posso annullare l’iscrizione o trasferire il mio posto di partenza?",
@@ -180,7 +180,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "What are the participation requirements?",
-        a: "Minimum age 18, completed registration and payment, and a medical certificate. You can submit the certificate later, but it must reach us no later than one week before the race (for 2027: by 8 May 2027) and must still be valid on race day. Signing up implies full acceptance of the rules.",
+        a: "Minimum age 18, completed registration and payment, and a sports-medical certificate issued by a doctor with a sports-medicine qualification (in Italy: certificato medico agonistico) — a standard certificate from a family doctor is not enough. You can submit the certificate later, but it must reach us no later than one week before the race (for 2027: by 8 May 2027) and must still be valid on race day. Signing up implies full acceptance of the rules.",
       },
       {
         q: "Can I cancel my entry or transfer my start spot?",

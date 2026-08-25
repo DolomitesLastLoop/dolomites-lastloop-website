@@ -165,7 +165,7 @@ export const ui = {
     "signup.badge.slots": "Limitierte Plätze",
     "signup.side.fact1": "Eine Runde · 6,71 km · jede volle Stunde",
     "signup.side.fact2": "Start & Ziel an der Nordic Arena",
-    "signup.side.fact3": "Mindestalter 18 Jahre, ärztliches Attest Pflicht",
+    "signup.side.fact3": "Mindestalter 18 Jahre, sportärztliches Attest Pflicht",
     "signup.side.slots_left": "Begrenzte Startplätze verfügbar",
     "signup.title": "Anmeldung",
     "signup.intro":
@@ -173,7 +173,7 @@ export const ui = {
     "signup.step": "Schritt",
     "signup.step1.title": "Persönliche Daten",
     "signup.step2.title": "Ticket & Zahlung",
-    "signup.step3.title": "Ärztliches Attest",
+    "signup.step3.title": "Sportärztliches Attest",
     "signup.field.firstname": "Vorname",
     "signup.field.lastname": "Nachname",
     "signup.field.email": "Email",
@@ -193,9 +193,9 @@ export const ui = {
     "signup.ticket.included":
       "Inkludiert: Startplatz, Startnummer, Teamzone, Verpflegung, Finisher-Geschenk.",
     "signup.ticket.checkout": "Zur Zahlung",
-    "signup.attest.title": "Ärztliches Attest hochladen",
+    "signup.attest.title": "Sportärztliches Attest hochladen",
     "signup.attest.hint":
-      "PDF, max. 5 MB. Du kannst das Attest jetzt hochladen oder später nachreichen – spätestens bis 8. Mai 2027 (eine Woche vor dem Rennen). Es muss am Renntag noch gültig sein.",
+      "PDF, max. 5 MB. Das Attest muss sportärztlich sein, also von einem Arzt mit sportmedizinischer Qualifikation ausgestellt – ein hausärztliches Attest wird nicht akzeptiert. Du kannst es jetzt hochladen oder später nachreichen – spätestens bis 8. Mai 2027 (eine Woche vor dem Rennen). Es muss am Renntag noch gültig sein.",
     "signup.attest.upload": "Datei auswählen",
     "signup.attest.skip": "Später nachreichen",
     "signup.attest.success": "Attest erfolgreich hochgeladen.",
@@ -365,14 +365,14 @@ export const ui = {
     "signup.error.attest_too_large": "Datei ist zu groß (max 5 MB).",
     "signup.error.attest_failed": "Upload fehlgeschlagen.",
     "signup.consent.privacy":
-      "Ich akzeptiere die <a href=\"{href}\">Datenschutzerklärung</a> (es werden auch Gesundheitsdaten aus dem ärztlichen Attest verarbeitet).",
+      "Ich akzeptiere die <a href=\"{href}\">Datenschutzerklärung</a> (es werden auch Gesundheitsdaten aus dem sportärztlichen Attest verarbeitet).",
     "signup.consent.liability":
       "Ich akzeptiere die <a href=\"{href}\">Haftungsfreistellung / den Haftungsausschluss</a>.",
     "signup.notice.image":
       "<strong>Hinweis (keine Einwilligung):</strong> Während des Events entstehen Foto- und Videoaufnahmen, die wir zur Dokumentation und Berichterstattung veröffentlichen – auf dieser Website, auf Social Media und in der Presse. Du musst dem nicht zustimmen; du kannst der Veröffentlichung aber jederzeit widersprechen. Wie das geht, steht unter <a href=\"{href}\">Bildrechte in der Datenschutzerklärung</a>.",
     "signup.price.note":
       "Preisstufen: 75 € bis 31.12.2026, 80 € bis 31.03.2027, 100 € bis 30.04.2027 (Anmeldeschluss).",
-    "signup.paid.notice": "Zahlung erfolgreich. Bitte lade jetzt dein ärztliches Attest hoch.",
+    "signup.paid.notice": "Zahlung erfolgreich. Bitte lade jetzt dein sportärztliches Attest hoch.",
     "signup.cancelled.notice": "Zahlung abgebrochen. Du kannst es jederzeit erneut versuchen.",
     "signup.waitlist.text":
       "Die Startplätze sind aktuell vergeben. Trag dich unverbindlich auf die Warteliste ein – es wird kein Startgeld fällig. Wird ein Platz frei, melden wir uns.",
@@ -383,7 +383,7 @@ export const ui = {
       "Trag dich in den Newsletter ein, um nichts zu verpassen.",
     "signup.closed.title": "Die Anmeldung für 2027 ist geschlossen",
     "signup.closed.text":
-      "Der Anmeldeschluss war der {date}. Bereits angemeldete Teilnehmer können ihr ärztliches Attest weiterhin über den Link aus der Bestätigungs-Email hochladen.",
+      "Der Anmeldeschluss war der {date}. Bereits angemeldete Teilnehmer können ihr sportärztliches Attest weiterhin über den Link aus der Bestätigungs-Email hochladen.",
     "footer.liability": "Haftungsausschluss",
   },
 
@@ -544,7 +544,7 @@ export const ui = {
     "signup.badge.slots": "Posti limitati",
     "signup.side.fact1": "Un loop · 6,71 km · ogni ora esatta",
     "signup.side.fact2": "Partenza e arrivo alla Nordic Arena",
-    "signup.side.fact3": "Età minima 18 anni, certificato medico obbligatorio",
+    "signup.side.fact3": "Età minima 18 anni, certificato medico agonistico obbligatorio",
     "signup.side.slots_left": "Posti limitati disponibili",
     "signup.title": "Iscrizione",
     "signup.intro":
@@ -552,7 +552,7 @@ export const ui = {
     "signup.step": "Step",
     "signup.step1.title": "Dati personali",
     "signup.step2.title": "Biglietto & pagamento",
-    "signup.step3.title": "Certificato medico",
+    "signup.step3.title": "Certificato medico agonistico",
     "signup.field.firstname": "Nome",
     "signup.field.lastname": "Cognome",
     "signup.field.email": "Email",
@@ -573,9 +573,9 @@ export const ui = {
     "signup.ticket.included":
       "Incluso: posto di partenza, pettorale, area team, ristoro, gadget finisher.",
     "signup.ticket.checkout": "Vai al pagamento",
-    "signup.attest.title": "Carica il certificato medico",
+    "signup.attest.title": "Carica il certificato medico agonistico",
     "signup.attest.hint":
-      "PDF, max 5 MB. Puoi caricare il certificato ora oppure più tardi – al più tardi entro l’8 maggio 2027 (una settimana prima della gara). Deve essere ancora valido il giorno della gara.",
+      "PDF, max 5 MB. Deve trattarsi di un certificato medico agonistico, rilasciato da un medico con qualifica in medicina dello sport – un certificato del medico di base non viene accettato. Puoi caricarlo ora oppure più tardi – al più tardi entro l’8 maggio 2027 (una settimana prima della gara). Deve essere ancora valido il giorno della gara.",
     "signup.attest.upload": "Scegli file",
     "signup.attest.skip": "Carico più tardi",
     "signup.attest.success": "Certificato caricato con successo.",
@@ -739,14 +739,14 @@ export const ui = {
     "signup.error.attest_too_large": "Il file è troppo grande (max 5 MB).",
     "signup.error.attest_failed": "Caricamento non riuscito.",
     "signup.consent.privacy":
-      "Accetto l’<a href=\"{href}\">informativa sulla privacy</a> (vengono trattati anche dati sanitari del certificato medico).",
+      "Accetto l’<a href=\"{href}\">informativa sulla privacy</a> (vengono trattati anche dati sanitari del certificato medico agonistico).",
     "signup.consent.liability":
       "Accetto la <a href=\"{href}\">manleva / esclusione di responsabilità</a>.",
     "signup.notice.image":
       "<strong>Nota (non è un consenso):</strong> durante l’evento vengono realizzate foto e riprese video che pubblichiamo per documentare e raccontare la gara – su questo sito, sui social media e sulla stampa. Non devi prestare alcun consenso; puoi però opporti alla pubblicazione in qualsiasi momento. Le modalità sono indicate alla voce <a href=\"{href}\">diritti di immagine nell’informativa sulla privacy</a>.",
     "signup.price.note":
       "Tariffe: 75 € fino al 31/12/2026, 80 € fino al 31/03/2027, 100 € fino al 30/04/2027 (chiusura iscrizioni).",
-    "signup.paid.notice": "Pagamento riuscito. Carica ora il tuo certificato medico.",
+    "signup.paid.notice": "Pagamento riuscito. Carica ora il tuo certificato medico agonistico.",
     "signup.cancelled.notice": "Pagamento annullato. Puoi riprovare in qualsiasi momento.",
     "signup.waitlist.text":
       "I posti sono al momento esauriti. Iscriviti senza impegno alla lista d’attesa – nessuna quota dovuta. Se si libera un posto, ti contatteremo.",
@@ -757,7 +757,7 @@ export const ui = {
       "Iscriviti alla newsletter per non perderti nulla.",
     "signup.closed.title": "Le iscrizioni per il 2027 sono chiuse",
     "signup.closed.text":
-      "Il termine per l’iscrizione era il {date}. Chi è già iscritto può continuare a caricare il certificato medico tramite il link ricevuto nell’email di conferma.",
+      "Il termine per l’iscrizione era il {date}. Chi è già iscritto può continuare a caricare il certificato medico agonistico tramite il link ricevuto nell’email di conferma.",
     "footer.liability": "Esclusione di responsabilità",
   },
 
@@ -917,7 +917,7 @@ export const ui = {
     "signup.badge.slots": "Limited spots",
     "signup.side.fact1": "One loop · 6.71 km · every hour on the hour",
     "signup.side.fact2": "Start and finish at the Nordic Arena",
-    "signup.side.fact3": "Minimum age 18, medical certificate required",
+    "signup.side.fact3": "Minimum age 18, sports-medical certificate required",
     "signup.side.slots_left": "Limited spots available",
     "signup.title": "Sign up",
     "signup.intro":
@@ -925,7 +925,7 @@ export const ui = {
     "signup.step": "Step",
     "signup.step1.title": "Personal data",
     "signup.step2.title": "Ticket & payment",
-    "signup.step3.title": "Medical certificate",
+    "signup.step3.title": "Sports-medical certificate",
     "signup.field.firstname": "First name",
     "signup.field.lastname": "Last name",
     "signup.field.email": "Email",
@@ -945,9 +945,9 @@ export const ui = {
     "signup.ticket.included":
       "Included: starting spot, bib, team zone, aid, finisher gift.",
     "signup.ticket.checkout": "Go to checkout",
-    "signup.attest.title": "Upload medical certificate",
+    "signup.attest.title": "Upload sports-medical certificate",
     "signup.attest.hint":
-      "PDF, max 5 MB. You can upload the certificate now or later — by 8 May 2027 at the latest (one week before the race). It must still be valid on race day.",
+      "PDF, max 5 MB. It must be a sports-medical certificate issued by a doctor with a sports-medicine qualification — a certificate from a family doctor will not be accepted. You can upload it now or later — by 8 May 2027 at the latest (one week before the race). It must still be valid on race day.",
     "signup.attest.upload": "Choose file",
     "signup.attest.skip": "Upload later",
     "signup.attest.success": "Certificate uploaded successfully.",
@@ -1111,14 +1111,14 @@ export const ui = {
     "signup.error.attest_too_large": "File is too large (max 5 MB).",
     "signup.error.attest_failed": "Upload failed.",
     "signup.consent.privacy":
-      "I accept the <a href=\"{href}\">privacy policy</a> (health data from the medical certificate is also processed).",
+      "I accept the <a href=\"{href}\">privacy policy</a> (health data from the sports-medical certificate is also processed).",
     "signup.consent.liability":
       "I accept the <a href=\"{href}\">liability waiver / disclaimer</a>.",
     "signup.notice.image":
       "<strong>Note (not a consent):</strong> photos and videos are taken during the event and published to document and report on the race – on this website, on social media and in the press. You do not need to agree to this; you can, however, object to publication at any time. The <a href=\"{href}\">image rights section of the privacy policy</a> explains how.",
     "signup.price.note":
       "Price tiers: €75 until 31 Dec 2026, €80 until 31 Mar 2027, €100 until 30 Apr 2027 (registration deadline).",
-    "signup.paid.notice": "Payment successful. Please upload your medical certificate now.",
+    "signup.paid.notice": "Payment successful. Please upload your sports-medical certificate now.",
     "signup.cancelled.notice": "Payment cancelled. You can try again any time.",
     "signup.waitlist.text":
       "All start slots are currently taken. Join the waiting list with no obligation – no entry fee is due. If a spot opens up, we’ll get in touch.",
@@ -1129,7 +1129,7 @@ export const ui = {
       "Sign up for the newsletter so you don’t miss anything.",
     "signup.closed.title": "Registration for 2027 is closed",
     "signup.closed.text":
-      "The registration deadline was {date}. Participants who have already registered can still upload their medical certificate via the link in their confirmation email.",
+      "The registration deadline was {date}. Participants who have already registered can still upload their sports-medical certificate via the link in their confirmation email.",
     "footer.liability": "Disclaimer",
   },
 } as const;
