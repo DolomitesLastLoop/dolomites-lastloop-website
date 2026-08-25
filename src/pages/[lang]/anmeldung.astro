@@ -30,12 +30,18 @@ const dateFmt = new Intl.DateTimeFormat(
   lang === "en" ? "en-GB" : lang === "it" ? "it-IT" : "de-DE",
   { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Rome" },
 );
-const opensAt = dateFmt.format(new Date(TIER_WINDOWS[0].from));
+// Geschützte Leerzeichen (U+00A0) statt normaler: sonst reißt der Zeilenumbruch
+// das Datum auseinander („… am 1." / „September 2026"). Als eine Einheit gesetzt,
+// wandert das ganze Datum in die nächste Zeile, egal wie schmal der Container ist.
+const nbsp = (d: string) => d.replace(/ /g, "\u00A0");
+const opensAt = nbsp(dateFmt.format(new Date(TIER_WINDOWS[0].from)));
 // `until` ist exklusiv (siehe currentTier()), der Anmeldeschluss ist also der Tag
 // davor. 1 ms abziehen statt 24 h: das trifft den letzten gültigen Moment und
 // bleibt auch dann richtig, wenn die Grenze je auf eine Zeitumstellung fällt.
-const closesAt = dateFmt.format(
-  new Date(Date.parse(TIER_WINDOWS[TIER_WINDOWS.length - 1].until) - 1),
+const closesAt = nbsp(
+  dateFmt.format(
+    new Date(Date.parse(TIER_WINDOWS[TIER_WINDOWS.length - 1].until) - 1),
+  ),
 );
 
 // Auch bei deaktiviertem Flag muss ein bereits bezahlter Teilnehmer Schritt 3
