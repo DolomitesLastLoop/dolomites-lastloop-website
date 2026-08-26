@@ -26,7 +26,7 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     return new Response("Unauthorized", { status: 401 });
   }
   const type = new URL(request.url).searchParams.get("type") ?? "participants";
-  const allowed = new Set(["participants", "waitlist", "newsletter"]);
+  const allowed = new Set(["participants", "newsletter"]);
   if (!allowed.has(type)) {
     return new Response("Invalid type", { status: 400 });
   }

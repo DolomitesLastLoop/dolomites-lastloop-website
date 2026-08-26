@@ -72,13 +72,6 @@ export interface Participant {
   created_at: string;
 }
 
-export interface WaitlistEntry {
-  id: string;
-  email: string;
-  name: string | null;
-  created_at: string;
-}
-
 export interface NewsletterEntry {
   id: string;
   email: string;
