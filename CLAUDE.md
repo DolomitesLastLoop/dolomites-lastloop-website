@@ -71,7 +71,7 @@ kompletten Teilnehmer-Lebenszyklus ab:
 - Öffentliche Info-Seiten (Race-Info, FAQ, Galerie, Ergebnis-Archiv, Kontakt)
 - **3-stufige Anmeldung** mit **Stripe Checkout** (Early-Bird / Standard) und
   Upload eines ärztlichen **Attests** (privater Supabase-Storage-Bucket)
-- Live-**Startliste** aus Supabase, **Warteliste** und **Newsletter**
+- Live-**Startliste** aus Supabase (inkl. Warteliste via `ticket_status`) und **Newsletter**
 - Geschützter **Admin-Bereich** (Passwort-Login + HMAC-Session) mit
   Teilnehmer-Verwaltung, Attest-Prüfung und CSV-Exports
 - Bestätigungs-Emails via **Resend**
@@ -115,7 +115,7 @@ dolomites-lastloop-website/
     │   │                          #   ergebnisse, galerie, faq, kontakt, [legal]
     │   ├── admin/                 # login.astro + index.astro (geschützt)
     │   ├── api/                   # checkout, stripe-webhook, contact, newsletter,
-    │   │                          #   waitlist, upload-attest, admin/* (export,
+    │   │                          #   upload-attest, admin/* (export,
     │   │                          #   participants, attest, logout)
     │   └── sitemap.xml.ts
     └── styles/global.css
@@ -127,7 +127,6 @@ dolomites-lastloop-website/
   `ticket_status` (`pending|confirmed|waitlist|cancelled`), `attest_url` +
   `attest_status` (`missing|pending|approved|rejected`), `startnummer`,
   `stripe_session_id`. Datums-/Zeitfelder als `date` bzw. `timestamptz`.
-- **waitlist** – Email (unique) + Name
 - **newsletter** – Email (unique)
 - **results** – Archiv: `year`, `place`, `name`, `nationalitaet`, `runden`
   (unique `(year, place)`)
@@ -165,8 +164,8 @@ Weitere Scripts: `npm run build` · `npm run preview` · `npm run astro`.
 Öffentlich: `/{de|it|en}/` · `/race-info` · `/anmeldung` · `/startliste` ·
 `/ergebnisse` · `/galerie` · `/faq` · `/kontakt` · `/[legal]` (Impressum/Datenschutz).
 Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
-`stripe-webhook`, `upload-attest`, `contact`, `newsletter`, `waitlist`,
-`admin/export` (`?type=participants|waitlist|newsletter`), `admin/participants`,
+`stripe-webhook`, `upload-attest`, `contact`, `newsletter`,
+`admin/export` (`?type=participants|newsletter`), `admin/participants`,
 `admin/attest`, `admin/logout`. Dazu `/sitemap.xml`.
 
 ## Konventionen & Sicherheit
@@ -333,8 +332,8 @@ Nach simuliertem Pen-Test (6/8 bestanden) vier Fixes umgesetzt:
 
 **Fix 1 — Rate-Limiting öffentliche Endpoints**
 - Neu `src/lib/ratelimit.ts` (Upstash Redis, Sliding-Window pro IP via `x-forwarded-for`).
-  Limits: contact 5/60s, newsletter/waitlist/upload-attest je 3/60s. 429 + `Retry-After`.
-- In `contact.ts`, `newsletter.ts`, `waitlist.ts`, `upload-attest.ts` integriert.
+  Limits: contact 5/60s, newsletter/upload-attest je 3/60s. 429 + `Retry-After`.
+- In `contact.ts`, `newsletter.ts`, `upload-attest.ts` integriert.
 - **Fail-open**: ohne `UPSTASH_REDIS_REST_URL`/`_TOKEN` oder bei Upstash-Ausfall werden
   Requests durchgelassen (Verfügbarkeit > Limit). Keys müssen im Vercel-Dashboard gesetzt
   werden, sonst ist das Limit inaktiv.

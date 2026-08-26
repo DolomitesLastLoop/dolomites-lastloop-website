@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isAuthenticated } from "@lib/auth";
-import { getAdminClient, MAX_PARTICIPANTS, type Participant, type WaitlistEntry, type NewsletterEntry } from "@lib/supabase";
+import { getAdminClient, MAX_PARTICIPANTS, type Participant, type NewsletterEntry } from "@lib/supabase";
 
 export const prerender = false;
 
@@ -10,19 +10,14 @@ if (!isAuthenticated(Astro.cookies)) {
 }
 
 let participants: Participant[] = [];
-let waitlist: WaitlistEntry[] = [];
 let newsletter: NewsletterEntry[] = [];
 let dbError: string | null = null;
 
 try {
   const supabase = getAdminClient();
-  const [pRes, wRes, nRes] = await Promise.all([
+  const [pRes, nRes] = await Promise.all([
     supabase
       .from("participants")
-      .select("*")
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("waitlist")
       .select("*")
       .order("created_at", { ascending: false }),
     supabase
@@ -31,7 +26,6 @@ try {
       .order("created_at", { ascending: false }),
   ]);
   participants = (pRes.data as Participant[]) ?? [];
-  waitlist = (wRes.data as WaitlistEntry[]) ?? [];
   newsletter = (nRes.data as NewsletterEntry[]) ?? [];
 } catch (err) {
   dbError = err instanceof Error ? err.message : "Datenbankfehler";
@@ -39,6 +33,7 @@ try {
 
 const confirmed = participants.filter((p) => p.ticket_status === "confirmed").length;
 const pending = participants.filter((p) => p.ticket_status === "pending").length;
+const waitlist = participants.filter((p) => p.ticket_status === "waitlist").length;
 const attestApproved = participants.filter((p) => p.attest_status === "approved").length;
 ---
 
@@ -75,7 +70,7 @@ const attestApproved = participants.filter((p) => p.attest_status === "approved"
           <span class="stat-label">Ausstehend</span>
         </div>
         <div class="stat">
-          <span class="stat-num">{waitlist.length}</span>
+          <span class="stat-num">{waitlist}</span>
           <span class="stat-label">Warteliste</span>
         </div>
         <div class="stat">
@@ -86,7 +81,6 @@ const attestApproved = participants.filter((p) => p.attest_status === "approved"
 
       <div class="admin-tabs" role="tablist">
         <button class="tab active" data-tab="participants" type="button">Teilnehmer</button>
-        <button class="tab" data-tab="waitlist" type="button">Warteliste</button>
         <button class="tab" data-tab="newsletter" type="button">Newsletter</button>
       </div>
 
@@ -178,27 +172,6 @@ const attestApproved = participants.filter((p) => p.attest_status === "approved"
                     )}
                     <button class="btn-mini danger" data-delete-id={p.id}>Entfernen</button>
                   </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="panel" data-panel="waitlist" hidden>
-        <div class="flex-between mb-4">
-          <h2>Warteliste ({waitlist.length})</h2>
-          <a class="btn btn-ghost" href="/api/admin/export?type=waitlist">Export CSV</a>
-        </div>
-        <div class="table-wrap">
-          <table class="table">
-            <thead><tr><th>Name</th><th>Email</th><th>Datum</th></tr></thead>
-            <tbody>
-              {waitlist.map((w) => (
-                <tr>
-                  <td>{w.name ?? "—"}</td>
-                  <td>{w.email}</td>
-                  <td>{new Date(w.created_at).toLocaleDateString("de-DE")}</td>
                 </tr>
               ))}
             </tbody>

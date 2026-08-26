@@ -35,7 +35,6 @@ function getRedis(): Redis | null {
 export type RateLimitName =
   | "contact"
   | "newsletter"
-  | "waitlist"
   | "upload-attest"
   | "attest-status";
 
@@ -44,7 +43,6 @@ const LIMITS: Record<RateLimitName, { tokens: number; window: `${number} s` }> =
   {
     contact: { tokens: 5, window: "60 s" },
     newsletter: { tokens: 3, window: "60 s" },
-    waitlist: { tokens: 3, window: "60 s" },
     "upload-attest": { tokens: 3, window: "60 s" },
     // Poll-Endpoint: pollt ~alle 2 s bis der Webhook den Token gesetzt hat →
     // großzügiges Limit (≈1/s) plus Reload-Puffer, nur ein Read pro Request.

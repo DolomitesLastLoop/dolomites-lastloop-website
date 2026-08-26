@@ -29,16 +29,6 @@ create index if not exists participants_status_idx on public.participants (ticke
 create index if not exists participants_email_idx on public.participants (email);
 
 -- ────────────────────────────────────────────────────────────
--- waitlist
--- ────────────────────────────────────────────────────────────
-create table if not exists public.waitlist (
-  id uuid primary key default gen_random_uuid(),
-  email text not null unique,
-  name text,
-  created_at timestamptz not null default now()
-);
-
--- ────────────────────────────────────────────────────────────
 -- newsletter
 -- ────────────────────────────────────────────────────────────
 create table if not exists public.newsletter (
@@ -69,7 +59,6 @@ create index if not exists results_year_idx on public.results (year);
 -- The anon key only gets read access for public-facing views.
 -- ────────────────────────────────────────────────────────────
 alter table public.participants enable row level security;
-alter table public.waitlist enable row level security;
 alter table public.newsletter enable row level security;
 alter table public.results enable row level security;
 
@@ -337,3 +326,15 @@ alter function public.confirm_participant(uuid, integer) set search_path = publi
 -- ─────────────────────────────────────────────────────────────
 alter table public.participants
   add column if not exists lang text check (lang in ('de', 'it', 'en'));
+
+-- ────────────────────────────────────────────────────────────
+-- Separate waitlist-Tabelle entfernt (2026-08-26).
+-- Sie stammte aus dem alten Anmelde-Flow: war das Rennen ausgebucht, zeigte
+-- /anmeldung ein eigenes Mini-Formular (nur Name + Email) → POST /api/waitlist
+-- → public.waitlist. Seit 8c90fe8 (2026-07-02, Stripe-Checkout-Flow) läuft der
+-- Ausgebucht-Fall über /api/checkout und legt eine vollwertige Zeile in
+-- participants mit ticket_status = 'waitlist' an. Die Tabelle hatte seitdem
+-- keinen Schreibpfad mehr und war zum Zeitpunkt des Drops leer (0 Zeilen,
+-- keine RLS-Policies, keine abhängigen Views/Fremdschlüssel).
+-- Nötig für bestehende Datenbanken: das Weglassen oben ist dort ein No-Op.
+drop table if exists public.waitlist;

@@ -64,7 +64,7 @@ automatisch auf `/de`.
 - URL: `/admin/login`
 - Passwort: aus `ADMIN_PASSWORD` (in `.env` setzen).
 - Session-HMAC-Schlüssel: `ADMIN_SESSION_SECRET` (min. 32 Zeichen).
-- CSV-Exports unter `/api/admin/export?type=participants|waitlist|newsletter`.
+- CSV-Exports unter `/api/admin/export?type=participants|newsletter`.
 
 ## Deployment auf Vercel
 
