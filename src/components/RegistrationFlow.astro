@@ -447,6 +447,16 @@ const nationalities: { value: string; label: string }[] = [
           </div>
         </fieldset>
       </form>
+
+      {/* Fußhinweis unter dem Formular — bewusst AUSSERHALB der Step-Panels, damit er
+          in Schritt 1, 2 und 3 sichtbar ist (und ebenso im attestOnly-Modus). Ein
+          nicht in Italien wohnhafter Teilnehmer muss das lesen können, BEVOR er zahlt,
+          nicht erst im Attest-Schritt danach. Die Attestpflicht selbst gilt unverändert
+          für alle — hier steht nur der Kontaktweg, keine Ausnahme. */}
+      <p class="attest-foreign">
+        {t("signup.attest.foreign")}{" "}
+        <a href="mailto:dolomiteslastloop@gmail.com">dolomiteslastloop@gmail.com</a>
+      </p>
     </div>
 
     <aside class="signup-side">
@@ -575,6 +585,21 @@ const nationalities: { value: string; label: string }[] = [
     background: var(--color-accent-dim); border-radius: var(--radius);
     color: var(--color-text);
   }
+
+  /* Fußhinweis für nicht in Italien wohnhafte Teilnehmer. Bewusst zurückgenommen
+     (muted, kleiner, nur per border-top abgesetzt): er ist eine Randinformation und
+     soll dem Formular und seinen CTAs keine Aufmerksamkeit wegnehmen. */
+  .attest-foreign {
+    margin: var(--space-6) 0 0;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  /* global a ist text-decoration:none — ohne diese Regel wäre die Adresse nicht als
+     Link erkennbar. Gleiche Behandlung wie die Inline-Links in .consent/.consent-notice. */
+  .attest-foreign a { color: var(--color-primary); text-decoration: underline; }
 
   /* ID-Feld im Prefill/Magic-Link-Fall wirklich verstecken. global .field setzt
      display:flex (0,1,0) und überschriebe sonst das hidden-Attribut; diese gescopte

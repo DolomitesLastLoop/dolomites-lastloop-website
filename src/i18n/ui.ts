@@ -204,6 +204,14 @@ export const ui = {
       "Bitte nutze den Link aus deiner Bestätigungs-Email, um dein Attest hochzuladen.",
     "signup.attest.uploadedTitle": "Attest erfolgreich hochgeladen",
     "signup.attest.replace": "Datei ersetzen",
+    // Schritt-unabhängiger Fußhinweis unter dem Anmeldeformular. Die Attestpflicht
+    // gilt bewusst für ALLE Teilnehmer — auch für nicht in Italien wohnhafte, für die
+    // sie nach FIDAL formal nicht griffe. Statt einer Ausnahmeregelung im Rechtstext
+    // gibt es diesen Kontaktweg. Die Adresse steht NICHT im String, sondern als
+    // mailto-Link im Markup (wie Footer.astro / kontakt.astro) — der Satz endet daher
+    // bewusst ohne Punkt vor der Adresse.
+    "signup.attest.foreign":
+      "Du wohnst nicht in Italien oder hast keine italienische Staatsbürgerschaft und hast Fragen zum sportärztlichen Attest? Melde dich bei uns unter",
     "signup.full.title": "Startplätze ausgebucht",
     "signup.full.text":
       "Aktuell sind alle Startplätze vergeben. Trage dich auf die Warteliste ein.",
@@ -584,6 +592,8 @@ export const ui = {
       "Usa il link nella tua email di conferma per caricare il certificato.",
     "signup.attest.uploadedTitle": "Certificato caricato con successo",
     "signup.attest.replace": "Sostituisci file",
+    "signup.attest.foreign":
+      "Non risiedi in Italia o non hai la cittadinanza italiana e hai domande sul certificato medico agonistico? Scrivici a",
     "signup.full.title": "Posti esauriti",
     "signup.full.text":
       "Tutti i posti sono stati assegnati. Iscriviti alla lista d’attesa.",
@@ -956,6 +966,8 @@ export const ui = {
       "Please use the link in your confirmation email to upload your certificate.",
     "signup.attest.uploadedTitle": "Certificate uploaded successfully",
     "signup.attest.replace": "Replace file",
+    "signup.attest.foreign":
+      "Not resident in Italy or not an Italian citizen, and you have questions about the sports-medical certificate? Get in touch at",
     "signup.full.title": "Race is full",
     "signup.full.text":
       "All spots are taken. Join the waiting list to be notified.",

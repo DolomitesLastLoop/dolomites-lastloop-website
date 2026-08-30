@@ -434,7 +434,7 @@ Person wieder auf, weil niemand nachschlagen kann, wer widersprochen hat.
 
 ---
 
-### Sportärztliches Attest — drei offene Fragen (offen, 2026-08-25)
+### Sportärztliches Attest — die drei offenen Fragen sind beantwortet (erledigt, 2026-08-30)
 
 Mit der Präzisierung „ärztliches Attest" → „sportärztliches Attest" (Branch
 `fix/sports-medical-certificate`) ist definiert: das Attest muss von einer Ärztin oder einem
@@ -442,22 +442,41 @@ Arzt mit **sportmedizinischer Qualifikation** ausgestellt sein; ein hausärztlic
 genügt nicht. IT-Terminologie durchgängig **certificato medico agonistico**, EN
 **sports-medical certificate**.
 
-**Bewusst NICHT beantwortet.** Die folgenden drei Fragen sind ungeklärt und wurden
-absichtlich nicht in die neue Definition hineingeschrieben — weder im Rechtstext noch in
-FAQ, Anmeldeflow oder Bestätigungs-Mail steht heute etwas dazu. Nicht raten, nicht
-nachträglich „logisch ableiten": jede Antwort ist eine Rechtsentscheidung und braucht eine
-Quelle (Sport OK Dobbiaco / FIDAL / Rechtsberatung).
+Die drei am 2026-08-25 bewusst offen gelassenen Fragen sind am **2026-08-30 vom Veranstalter
+entschieden** worden. Quelle der Antworten ist Simon (Rücksprache Sport OK Toblach / FIDAL);
+sie sind hier festgehalten, damit sie beim nächsten Attest-Check nicht erneut „abgeleitet"
+werden müssen.
 
-- [ ] **EKG/Belastungs-EKG Pflichtbestandteil?** Ungeklärt, ob das Attest ein Ruhe- bzw.
-      Belastungs-EKG enthalten muss, damit es anerkannt wird.
-- [ ] **Ausländische Teilnehmer:** Ungeklärt, ob ein gleichwertiges nicht-italienisches
-      sportärztliches Attest ausreicht — und woran „gleichwertig" gemessen wird. Hängt
-      direkt an der Terminologie-Entscheidung „certificato medico agonistico" (italienische
-      Rechtsfigur, DM 18.02.1982) im IT-Text.
-- [ ] **Maximale Gültigkeitsdauer:** Ungeklärt. In AGB §3 und Haftungsausschluss §2 steht
-      nur „muss am Renntag noch gültig sein" — ohne eigene Höchstdauer.
+- [x] **EKG/Belastungs-EKG Pflichtbestandteil? — NEIN, nicht erforderlich.** Ein Attest ohne
+      Ruhe- bzw. Belastungs-EKG ist anzuerkennen. Es steht bewusst **nichts** dazu im
+      Rechtstext, in der FAQ oder im Anmeldeflow — die Anforderung wurde nicht verschärft,
+      also gibt es auch nichts zu formulieren. Kein Code, kein Text geändert.
+- [x] **Maximale Gültigkeitsdauer? — Es gilt allein „am Renntag gültig", keine eigene
+      Höchstdauer.** Das ist bereits umgesetzt: AGB §3, Haftungsausschluss §2 und
+      `signup.attest.hint` (alle drei Sprachen) sagen genau das und nichts darüber hinaus.
+      Der Rechtstext war also schon vorher korrekt — es war nur ungeklärt, ob er
+      vollständig ist. Ist er. Keine Textänderung nötig.
+- [x] **Ausländische Teilnehmer — bewusste Entscheidung: KEINE Ausnahme, die Attestpflicht
+      gilt für alle.** Der FIDAL-Befund lautet, dass nicht in Italien wohnhafte Teilnehmer
+      formal **kein** italienisches `certificato medico agonistico` beibringen müssten. Der
+      Veranstalter hält die Pflicht trotzdem für **alle** Teilnehmer aufrecht. Es wurde
+      deshalb **bewusst keine Ausnahmeregelung** in AGB, Datenschutz oder Haftungsausschluss
+      geschrieben — der Rechtstext bleibt unverändert und unterscheidet nicht nach Wohnsitz
+      oder Staatsangehörigkeit.
+      **Stattdessen** steht seit `docs/foreign-attest-contact-note` unter dem Anmeldeformular
+      ein Kontakt-Hinweis (`signup.attest.foreign` in DE/IT/EN, gerendert in
+      `RegistrationFlow.astro` am Ende von `.signup-main`): wer nicht in Italien wohnt oder
+      keine italienische Staatsbürgerschaft hat und Fragen zum Attest hat, soll sich unter
+      `dolomiteslastloop@gmail.com` melden. Der Hinweis sitzt bewusst **außerhalb** der
+      Step-Panels, damit er in Schritt 1, 2 und 3 sowie im `attestOnly`-Modus sichtbar ist —
+      ein ausländischer Teilnehmer muss ihn **vor** der Zahlung lesen können.
+      ⚠️ **Der Hinweis ist ein Kontaktweg, keine Zusage.** Ob im Einzelfall ein
+      nicht-italienisches Attest akzeptiert wird, entscheidet weiterhin der Veranstalter in
+      der Rücksprache — die Frage „woran wird ‚gleichwertig' gemessen?" ist damit nicht
+      beantwortet, sondern bewusst aus dem Text heraus- und in den persönlichen Kontakt
+      hineinverlegt.
 
-Bis zur Klärung: beim manuellen Attest-Check im Admin-Panel im Zweifel Rücksprache mit dem
+Unverändert gilt: beim manuellen Attest-Check im Admin-Panel im Zweifel Rücksprache mit dem
 Veranstalter, nicht selbst entscheiden. Der Check ist zwingend menschlich — `upload-attest.ts`
 validiert nur MIME-Typ und Dateigröße, `api/admin/attest.ts` nur den Status-Wert.
 
