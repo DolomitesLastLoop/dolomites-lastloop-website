@@ -844,7 +844,94 @@ Early-Bird-Fensters) müssen weg:
   den Dateinamen. Entweder verdrahten (echte Alt-Texte) oder löschen; aktuell sind sie
   irreführend, weil sie den Eindruck gepflegter Alt-Texte erwecken.
 
+### Finaler Pre-Launch-Live-Test (2026-08-30) — ✅ bestanden
+
+Kompletter echter Checkout über die Production-Domain, mit kurzzeitig geöffnetem
+Anmeldefenster und 1-€-Testpreis. **Alle vier Stufen der Kette bestätigt**, jeweils am
+Objekt geprüft, nicht angenommen:
+
+| Stufe | Beleg |
+|---|---|
+| Checkout | Session `cs_live_b1kmRxxi…`, `status: complete`, `payment_status: paid`, `amount_total: 100` (1 €) |
+| Webhook | Vercel-Log `POST /api/stripe-webhook → 200` (17:51:00 UTC); Stripe-Event `evt_1UACsiFk…`, `pending_webhooks: 0` |
+| Supabase | Zeile angelegt: `ticket_status: confirmed`, `startnummer: 1`, `nationalitaet: IT`, `tax_code` korrekt, `price_type: early_bird`, `confirmation_email_sent: true`, `lang: de` |
+| Brevo | Liste 4 „DLL Teilnehmer 2027" von **0 → 1**, Kontakt-ID 24 mit `VORNAME`/`NACHNAME` |
+
+Zusätzlich von Simon im Durchlauf selbst geprüft: sportärztliches Attest im Formular
+(Upload lief, `POST /api/upload-attest → 200`, `attest_status: pending`), Kontakt-Hinweis
+für ausländische Teilnehmer, Anmeldeschluss-Anzeige, Preis-Label in der Bestätigungsmail
+und das Ticket-PDF.
+
+**Vollständig zurückgebaut und gegengeprüft:** `participants` wieder 0 Zeilen, `atteste`-
+Bucket 0 Objekte (die hochgeladene PDF gehört mit gelöscht — sie hängt nicht an der
+DB-Zeile und bleibt sonst als Restmüll liegen), Brevo-Liste 4 wieder 0 Kontakte,
+Stripe-Testprodukt `prod_V4Uz4lQmdwaVBB` wieder archiviert, `DLLATHLET2027` unverändert
+bei **1/20**. Live-Gegenprobe nach dem Schließen: `POST /api/checkout → 403` (auch mit
+vollständig gültigem Body), `/de/anmeldung` ohne `<form>`.
+Geschlossen wurde per **frischem `vercel --prod`**, nicht per Rollback;
+`targets.production.id` = `dpl_8F8Y3zisFJ7VKMHeGgDYV2SBSRxk`, `aliasError: null`,
+per roher v9-API **und** `vercel inspect` unabhängig bestätigt.
+
+- ⚠️ **Fallstrick beim Öffnen/Schließen über die CLI — `.env` steht NICHT in `.vercelignore`.**
+  `.gitignore` deckt sie ab, aber die Vercel-CLI wertet `.gitignore` nicht aus (siehe Kopf
+  von `.vercelignore`). Ein `vercel --prod` lädt die lokale `.env` also **mit in den Build**.
+  Die enthält `PUBLIC_REGISTRATION_ENABLED=true`; Production hat die Variable im
+  Normalzustand **gar nicht** gesetzt. Vite inlined `PUBLIC_*` zur Build-Zeit, und
+  `isRegistrationEnabled()` fällt bei fehlendem `process.env` genau auf diesen inlined Wert
+  zurück (`src/lib/registration.ts:17-19`) — der Schließ-Deploy hätte die Anmeldung damit
+  wieder **offen** ausgeliefert. Beim Test am 30.08. wurde `.env` deshalb für die Dauer
+  beider Deploys temporär in `.vercelignore` aufgenommen — und unmittelbar danach
+  **dauerhaft** nachgezogen (siehe erledigten Punkt unten).
+- ⚠️ **`STRIPE_PRICE_EARLY_BIRD` ist in Vercel `type: sensitive` — der Wert lässt sich NICHT
+  zurücklesen**, auch nicht über `vercel env pull` oder die rohe API mit `decrypt=true`
+  (beide liefern leer). Wer ihn zum Umstellen überschreibt, kann den alten Wert hinterher
+  nicht mehr aus Vercel rekonstruieren. Vor dem Überschreiben also aus einer unabhängigen
+  Quelle festhalten. Richtiger Wert: `price_1U3I74FkID7E6ePcN5Ek6aZw` (Produkt
+  `prod_V3OuWKVWi6R90h` „Startgeld Early Bird", 7500 EUR — der einzige aktive 75-€-Preis
+  im Konto).
+- ⚠️ **`vercel env rm <KEY> production` entfernt den Key aus ALLEN Targets**, nicht nur aus
+  Production. `STRIPE_PRICE_EARLY_BIRD` war vorher `['production','preview']` und war danach
+  auch aus Preview weg. `vercel env add <KEY> production preview` gibt es nicht (Fehler
+  `invalid_arguments`); den Mehrfach-Scope stattdessen per
+  `PATCH /v9/projects/<prj>/env/<envId>` mit `{"target":["production","preview"]}` setzen.
+
 ### Übrige offene Punkte
+
+- [x] **Layout-Versatz in der Formularzeile Geburtsdatum / Steuernummer** — ✅ **gefixt am
+  2026-08-30** auf Branch `fix/attest-field-alignment` (reines CSS, niedriges Risiko).
+  Befund: Ab der 2-Spalten-Breite (`.field-row`, ≥ 601 px) stehen beide Felder
+  nebeneinander. Der Status-Marker am Codice Fiscale (`.field-flag`, `RegistrationFlow.astro:249-254`)
+  ist ein **inline**-Span im Label — er erzeugt also keine eigene Zeile, sondern **bricht um**,
+  weil Labeltext + Marker breiter sind als die halbe Spalte. Das Label wird zweizeilig, und
+  da `.field` ein `flex-direction: column` ist (`global.css:456`), rutscht das Eingabefeld
+  nach unten: gemessen **20,6 px** Versatz gegenüber dem Geburtsdatum-Feld daneben.
+  - Gemessen bei 1440 px Viewport: Spalte 302,3 px, Label „STEUERNUMMER (CODICE FISCALE)"
+    allein 286,3 px (passt knapp), mit Marker 388 px (`(optional)`) bzw. 400 px
+    (`Pflichtfeld`) → Umbruch. Der Effekt kommt vor allem aus
+    `text-transform: uppercase` + `letter-spacing: 0.18em` am Label (`global.css:463-469`).
+  - ⚠️ **Betrifft alle drei Sprachen und BEIDE Marker-Zustände** — nicht nur „Pflichtfeld".
+    DE und EN sind schon im Normalfall `(optional)` versetzt; IT passt nur im
+    Optional-Zustand in eine Zeile und bricht bei „Campo obbligatorio" ebenfalls um.
+    Eine reine Breiten-Abschätzung führt hier in die Irre: dabei wurden versehentlich die
+    deutschen Marker-Strings auch für IT/EN gerechnet und IT fälschlich als unauffällig
+    eingestuft. Im Browser messen, nicht rechnen.
+  - **Umgesetzter Fix** in `RegistrationFlow.astro` (Versatz danach 0,1 px = Subpixel,
+    in allen drei Sprachen und beiden Zuständen gegen den Dev-Server verifiziert):
+    ```css
+    @media (min-width: 601px) {
+      .field-row:has(.field-flag) > .field > label { min-height: 2lh; }
+    }
+    ```
+    Reserviert in der betroffenen Zeile für **beide** Labels zwei Zeilen Höhe, dadurch sitzen
+    die Inputs unabhängig von Sprache und Marker-Zustand gleich hoch — und es gibt auch
+    keinen Sprung mehr beim Umschalten `(optional)` ↔ `Pflichtfeld`. `lh` und `:has()` sind
+    in allen Zielbrowsern verfügbar; wer konservativer sein will, nimmt statt `2lh` einen
+    `calc()`-Wert aus der Label-Zeilenhöhe.
+- [x] **`.env` dauerhaft in `.vercelignore` aufgenommen** — ✅ **erledigt am 2026-08-30**
+  auf Branch `fix/attest-field-alignment`. Beim Live-Test selbst war der Eintrag nur
+  temporär gesetzt (damit `git diff` leer blieb) und danach zurückgebaut; jetzt steht er
+  fest drin, samt Begründung im Kommentar. Ohne ihn lädt jeder CLI-Deploy die lokale
+  `.env` in den Build — Fail-open-Pfad siehe oben im Test-Vermerk.
 
 > Die folgenden zwei Punkte standen bis 2026-08-14 nur in
 > `DLL-Kontext zur Chatübergabe.md` (Übergabe vom 12.08., Punkte 3 und 4) und waren nie

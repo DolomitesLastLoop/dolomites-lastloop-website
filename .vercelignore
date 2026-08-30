@@ -29,6 +29,19 @@ Ergebnisliste Dolomites Last Loop 2026.pdf
 !public/videos/*.mp4
 !public/videos/*.webm
 
+# --- Lokale Env: darf NIE in den Build ---
+# Die Vercel-CLI wertet .gitignore NICHT aus (siehe Kopf dieser Datei), .env
+# wuerde also von `vercel --prod` mit hochgeladen. Astro/Vite liest .env beim
+# Build und inlined PUBLIC_*-Werte ins Bundle; isRegistrationEnabled() faellt
+# bei fehlendem process.env genau auf diesen inlined Wert zurueck
+# (src/lib/registration.ts). Da die lokale .env PUBLIC_REGISTRATION_ENABLED=true
+# enthaelt, Production die Variable im Normalzustand aber gar nicht setzt,
+# haette ein CLI-Deploy die Anmeldung ungewollt GEOEFFNET ausgeliefert.
+# Belegt beim Pre-Launch-Live-Test am 2026-08-30.
+.env
+.env.*
+!.env.example
+
 # --- Repo-/Build-State, gehoert nie ins Deployment ---
 .git/
 node_modules/
