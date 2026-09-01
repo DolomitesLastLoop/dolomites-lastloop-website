@@ -46,3 +46,18 @@ export const ALLOWED_COUNTRIES = new Set([
   "Schweiz",
   "Andere",
 ]);
+
+// ────────────────────────────────────────────────────────────
+// Öffentliche Kommunikation
+// ────────────────────────────────────────────────────────────
+
+// Die nach außen kommunizierte Startplatzzahl — bewusst NICHT MAX_PARTICIPANTS.
+// MAX_PARTICIPANTS ist die technische Grenze: sie steuert die Kaufsperre in
+// /api/checkout, isFull in RegistrationFlow.astro und das Kapazitäts-Gate in
+// confirm_participant(p_max). Sie liegt höher als 200, damit Wartelisten-
+// Nachrücker Absagen auffangen können.
+//
+// Dieser Wert hier steuert keinen Kontrollfluss, sondern nur den Zählertext der
+// Startliste. Er ändert sich ausschließlich dann, wenn sich die öffentliche
+// Kommunikation ändert — nicht bei technischen Kapazitätsanpassungen.
+export const PUBLIC_DISPLAYED_CAP = 200;

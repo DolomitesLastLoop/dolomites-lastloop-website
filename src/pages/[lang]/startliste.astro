@@ -2,6 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { useTranslations, type Lang } from "@i18n/utils";
 import { getPublicClient, type Participant } from "@lib/supabase";
+import { PUBLIC_DISPLAYED_CAP } from "@lib/constants";
 
 export const prerender = false;
 const lang = (Astro.params.lang ?? "de") as Lang;
@@ -30,6 +31,12 @@ try {
   participants = [];
 }
 
+// Nach außen steigt die Zahl nie über PUBLIC_DISPLAYED_CAP, auch wenn intern
+// mehr bestätigt sind: MAX_PARTICIPANTS liegt höher, damit Wartelisten-
+// Nachrücker Absagen auffangen können. Die Tabelle unten zeigt bewusst
+// weiterhin ALLE bestätigten Teilnehmer — gedeckelt wird nur der Zähler.
+const displayedCount = Math.min(confirmedCount, PUBLIC_DISPLAYED_CAP);
+
 const statusLabel = (s: string) => {
   if (s === "confirmed") return t("startlist.status.confirmed");
   if (s === "waitlist") return t("startlist.status.waitlist");
@@ -56,7 +63,7 @@ const statusClass = (s: string) => {
       <p class="eyebrow">Live</p>
       <h1>{t("startlist.title")}</h1>
       <p class="section-lead">
-        {t("startlist.counter", { filled: confirmedCount })}
+        {t("startlist.counter", { filled: displayedCount, total: PUBLIC_DISPLAYED_CAP })}
       </p>
     </div>
   </section>

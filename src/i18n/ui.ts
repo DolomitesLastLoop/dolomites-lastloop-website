@@ -216,7 +216,7 @@ export const ui = {
     "signup.full.cta": "Auf Warteliste setzen",
 
     "startlist.title": "Startliste",
-    "startlist.counter": "{filled} Anmeldungen bestätigt",
+    "startlist.counter": "{filled} von {total} Plätzen vergeben",
     "startlist.search": "Name suchen…",
     "startlist.col.number": "Nr.",
     "startlist.col.name": "Name",
@@ -599,7 +599,7 @@ export const ui = {
     "signup.full.cta": "Vai in lista d’attesa",
 
     "startlist.title": "Lista partenti",
-    "startlist.counter": "{filled} iscrizioni confermate",
+    "startlist.counter": "{filled} di {total} posti assegnati",
     "startlist.search": "Cerca nome…",
     "startlist.col.number": "N°",
     "startlist.col.name": "Nome",
@@ -974,7 +974,7 @@ export const ui = {
     "signup.full.cta": "Join the waitlist",
 
     "startlist.title": "Start list",
-    "startlist.counter": "{filled} confirmed entries",
+    "startlist.counter": "{filled} of {total} places filled",
     "startlist.search": "Search name…",
     "startlist.col.number": "No.",
     "startlist.col.name": "Name",
