@@ -16,7 +16,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Was kostet die Teilnahme und was ist inkludiert?",
-        a: "Das Startgeld ist gestaffelt: 75 € Frühanmeldung (01.09.–31.12.2026), 80 € Normaltarif (01.01.–31.03.2027), 100 € Spätanmeldung (01.04.–30.04.2027). Danach ist die Anmeldung geschlossen. Maßgeblich ist der Zeitpunkt deiner Bezahlung. Inkludiert sind Startplatz, Startnummer, eigene Teamzone, Verpflegung und ein Finisher-Geschenk. Die Teilnehmerzahl ist begrenzt; ist sie erreicht, führen wir eine Warteliste.",
+        a: "Das Startgeld ist gestaffelt: 75 € Frühanmeldung (01.09.–31.12.2026), 80 € Normaltarif (01.01.–31.03.2027), 100 € Spätanmeldung (01.04.–30.04.2027). Danach ist die Anmeldung geschlossen. Maßgeblich ist der Zeitpunkt deiner Bezahlung. Inkludiert sind Startplatz, Startnummer, eigene Teamzone, Verpflegung und ein Finisher-Geschenk. Das Teilnehmerfeld ist auf 200 Startplätze begrenzt; ist die Zahl erreicht, führen wir eine Warteliste.",
       },
       {
         q: "Gibt es Strom, Wasser und Verpflegung?",
@@ -94,7 +94,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "Quanto costa l’iscrizione e cosa comprende?",
-        a: "La quota è scaglionata: 75 € iscrizione anticipata (01/09–31/12/2026), 80 € tariffa normale (01/01–31/03/2027), 100 € iscrizione tardiva (01/04–30/04/2027). Successivamente le iscrizioni sono chiuse. Fa fede il momento del pagamento. Sono inclusi il posto di partenza, il pettorale, la propria team zone, il ristoro e un regalo finisher. Il numero di partecipanti è limitato; al raggiungimento del massimo viene istituita una lista d’attesa.",
+        a: "La quota è scaglionata: 75 € iscrizione anticipata (01/09–31/12/2026), 80 € tariffa normale (01/01–31/03/2027), 100 € iscrizione tardiva (01/04–30/04/2027). Successivamente le iscrizioni sono chiuse. Fa fede il momento del pagamento. Sono inclusi il posto di partenza, il pettorale, la propria team zone, il ristoro e un regalo finisher. Il numero di partecipanti è limitato a 200; al raggiungimento del massimo viene istituita una lista d’attesa.",
       },
       {
         q: "Ci sono corrente, acqua e ristoro?",
@@ -172,7 +172,7 @@ export const faq: Record<Lang, FaqContent> = {
       },
       {
         q: "What does entry cost and what’s included?",
-        a: "The entry fee is tiered: €75 early bird (1 Sep – 31 Dec 2026), €80 standard (1 Jan – 31 Mar 2027), €100 late registration (1 Apr – 30 Apr 2027). After that, registration closes. The time of your payment is what counts. Included are your start spot, bib number, your own team zone, aid station food, and a finisher gift. Places are limited; once we’re full we keep a waiting list.",
+        a: "The entry fee is tiered: €75 early bird (1 Sep – 31 Dec 2026), €80 standard (1 Jan – 31 Mar 2027), €100 late registration (1 Apr – 30 Apr 2027). After that, registration closes. The time of your payment is what counts. Included are your start spot, bib number, your own team zone, aid station food, and a finisher gift. The field is capped at 200 places; once we’re full we keep a waiting list.",
       },
       {
         q: "Is there power, water, and food?",
