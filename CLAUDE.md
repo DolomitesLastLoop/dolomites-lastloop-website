@@ -1319,3 +1319,124 @@ möglich bleiben.
   `default-src 'self'`. Selbst gehostet unter `/videos/` funktioniert. Ein externer Host
   (Vercel Blob, Mux, Cloudinary) würde geblockt — dieselbe Klasse Fehler wie beim
   Google-Maps-Iframe am 2026-08-09. Wer auf einen CDN wechselt, muss `media-src` ergänzen.
+
+---
+
+## Pre-Launch-Checklist abgeschlossen — 2026-08-31, 20:42 CEST
+
+Vollständiger Check vor der Öffnung am **01.09.2026 00:00 CEST**. Risikostufe HOCH.
+Alle Belege gegen Live-Systeme (Vercel API, Stripe Live-Modus, Supabase, Brevo), nicht gegen Annahmen.
+
+| # | Punkt | Status | Beleg |
+|---|-------|--------|-------|
+| 1 | `PUBLIC_REGISTRATION_ENABLED` Production | ✅ **GESETZT** (dauerhaft) | War **nur** `Preview (feat/attest-autofill)` + `Preview (fix/runtime-env-secrets)` — **nicht in Production**. Jetzt `Production` + `Preview` (alle Branches) = `true`, `--no-sensitive` → Rückgelesen: `PUBLIC_REGISTRATION_ENABLED="true"` |
+| 2 | `STRIPE_PRICE_EARLY_BIRD` = 75 € | ✅ **KORRIGIERT** | War **nicht verifizierbar** (sensitive). Letzte Live-Session 30.08. 19:50 CEST lief über `price_1U4LzCFkID7E6ePcXoTvPETt` = **1 €**. Deterministisch auf `price_1U3I74FkID7E6ePcN5Ek6aZw` gesetzt; Rücklesen + Stripe-Gegencheck: `active:true, livemode:true, unit_amount:7500, eur, one_time` |
+| 3 | `TIER_WINDOWS` in main | ✅ | `git diff src/lib/stripe.ts` = leer (byte-identisch). `early_bird.from = 2026-09-01T00:00:00+02:00` |
+| 4 | Stripe-Testprodukt | ✅ | `prod_V4Uz4lQmdwaVBB` → `active: false` (archiviert), livemode true |
+| 5 | Live-Webhook | ✅ | `we_1U4L52FkID7E6ePcjGNz3CNJ`, `status: enabled`, `livemode: true`, URL `https://www.dolomiteslastloop.com/api/stripe-webhook` (mit www), Events `checkout.session.completed` + `checkout.session.expired` |
+| 6 | Supabase `participants` | ✅ | `select count(*)` → **0**. Startnummer via RPC `confirm_participant`: `coalesce(max(startnummer),0)+1` → erster Teilnehmer bekommt **1**. Keine Sequence, kein Reset nötig |
+| 7 | Brevo | ✅ | Liste 4 „DLL Teilnehmer 2027": `get_contacts_from_list` → `count: 0` (echter Beleg, nicht das deprecated `totalSubscribers`). Authorised-IPs: `GET /v3/account` mit API-Key von beliebiger IP → **HTTP 200** ⇒ keine IP-Beschränkung |
+| 8 | `DLLATHLET2027` | ✅ | `active: true`, `times_redeemed: 1`, `max_redemptions: 20` → **19 frei**, `expires_at` = 2026-12-31 23:59:59 CET. ⚠️ Die 1 Einlösung stammt vom **15.08.2026 16:35**, nicht vom Test am 30.08. |
+| 9 | Deployment | ✅ | `dpl_A3A1LxJuA9WHCtnKQBihzea8vsYh`, Commit `af5d24c384f8a8b…` (= main-HEAD `af5d24c`), target production. `project.latestDeployment` == Production-Alias ⇒ **kein Rollback-Pin** |
+| 10 | Smoke-Test nach Redeploy | ✅ | `/de/ /it/ /en/anmeldung` → 200, alle im „öffnet am"-Zustand (DE „öffnet am 1. September 2026", IT „Le iscrizioni aprono il 1 settembre 2026", EN „opens on 1 September 2026"), **kein Formular** (`<form`/`api/checkout` = 0 Treffer). `POST /api/checkout` → **403 `{"error":"Registration closed"}`** |
+
+### Warum der 403 jetzt der *richtige* 403 ist
+`/api/checkout` hat zwei Gates. Gate 1 (`isRegistrationEnabled()`) ist seit diesem Deploy **offen**
+(bewiesen durch Rücklesen). Der 403 kommt also aus Gate 2 (`currentTier()` → `null` vor dem
+01.09.). Vorher blockte Gate 1 — der gleiche Statuscode, aber aus dem falschen Grund.
+
+### Warum um Mitternacht nichts manuell nötig ist
+- `anmeldung.astro` hat `prerender = false` (SSR), `output: "server"` — Auswertung zur **Laufzeit**.
+- Response-Header live geprüft: `cache-control: public, max-age=0, must-revalidate`, `x-vercel-cache: MISS`, `age: 0` → **kein CDN-Cache**, der Umschaltmoment greift sofort.
+- Nur `anmeldung.astro` + `api/checkout.ts` werten den Status aus (`RegistrationFlow.astro` ist deren Kind). Keine prerenderte Seite hängt daran.
+- Die Fenstergrenze `2026-09-01T00:00:00+02:00` ist offset-behaftet ⇒ `Date.parse` ist absolut, die Lambda-Zeitzone (iad1/UTC) ist irrelevant.
+
+### Lektion: „sensitive" macht Env-Vars unprüfbar
+`vercel env add` setzt Production/Preview **standardmäßig auf sensitive** — der Wert ist danach
+weder per CLI noch im Dashboard rücklesbar. Genau dadurch war Punkt 2 wochenlang unverifizierbar
+und der 1-€-Testpreis konnte unbemerkt stehen bleiben. **Regel: nicht-geheime Werte
+(Price-IDs, `PUBLIC_*`, Flags) immer mit `--no-sensitive` setzen**, sonst ist kein Pre-Launch-Check
+möglich. Echte Secrets (`STRIPE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, …) bleiben sensitive.
+
+CLI-Gotcha: `vercel env add NAME preview --value X --yes` fragt trotz `--yes` endlos nach dem
+Branch. Workaround: leeres Branch-Argument mitgeben —
+`vercel env add NAME preview "" --value X --yes --no-sensitive`.
+
+### Offen / bewusst nicht angefasst
+- `STRIPE_PRICE_STANDARD` und `STRIPE_PRICE_LATE` sind weiter **sensitive und nicht rücklesbar**.
+  Erst ab 01.01.2027 bzw. 01.04.2027 relevant — vor dem jeweiligen Stichtag mit `--no-sensitive`
+  neu setzen und gegen Stripe gegenprüfen.
+- `price_1U4LzCFkID7E6ePcXoTvPETt` (1 €) steht noch auf `active: true`; unbenutzbar nur deshalb,
+  weil sein Produkt archiviert ist. Sauberer wäre, auch den Preis zu deaktivieren.
+- Die zwei alten branchspezifischen `PUBLIC_REGISTRATION_ENABLED`-Einträge (50d) stehen noch
+  neben dem neuen Preview-Eintrag für alle Branches. Kein Produktionsbezug.
+- `MAX_PARTICIPANTS` ist sensitive; Code-Fallback ist `150` (`src/lib/supabase.ts:90`).
+
+---
+
+## Kapazität auf 200 gesenkt — 2026-09-01, 14:57 CEST
+
+Bewusste Entscheidung von Simon am Eröffnungstag der Anmeldung. Risikostufe HOCH
+(laufende Anmeldung, Live-Zahlungen). **Erwartete Folge ausdrücklich in Kauf genommen:
+die Anmeldung schließt dadurch voraussichtlich noch am selben Abend.**
+
+### Was geändert wurde
+
+| # | Punkt | Status | Beleg |
+|---|-------|--------|-------|
+| 1 | `MAX_PARTICIPANTS` Production = 200 | ✅ | Von Simon im Dashboard mit `--no-sensitive` gesetzt. Rückgelesen via `vercel env pull`: `MAX_PARTICIPANTS="200"` — **erstmals verifizierbar** (war vorher sensitive) |
+| 2 | Texte mit konkreter Zahl statt „limitiert" | ✅ | Commit `592c659`, Merge `689be5b` (`--no-ff`). Nur `src/i18n/ui.ts` + `src/i18n/faq.ts`, 21+/27− |
+| 3 | Redeploy (Env-Änderung braucht expliziten Redeploy) | ✅ | `vercel redeploy dpl_5Jrp4LLVVLSSxHBJJo96CVXT3Fup` → neues `dpl_B7YV8KytNsEY4ybVvKrN2gsobtWY`, Ready in 47 s |
+| 4 | Production-Target | ✅ | `v9/projects/…` → `targets.production.id = dpl_B7YV8KytNsEY4ybVvKrN2gsobtWY`, `readyState: READY`, `githubCommitSha 689be5b9b73f…` (= Merge-Commit), `ref: main`. Gegengeprüft mit `vercel inspect www.dolomiteslastloop.com` — dieselbe Deployment-ID |
+| 5 | Live-Smoke-Test | ✅ | `/de/ /it/ /en/anmeldung` → 200, `signup-form` vorhanden, **kein** „ausgebucht". Der Warteliste-Treffer im HTML ist ein `hidden`-Statuselement, kein aktiver Zustand |
+| 6 | Texte live in allen 3 Sprachen | ✅ | Hero, Badge, Slots-Karte, Startseiten-Kachel, `meta.signup`, FAQ-Startgeld — je DE/IT/EN gegen `www.dolomiteslastloop.com` geprüft. **Null Resttreffer** auf „limitierte Plätze / posti limitati / limited spots" |
+
+Stand bei Umstellung: **167 confirmed · 14 pending · 4 failed · 0 waitlist**, höchste Startnummer 167.
+
+### ⚠️ Der vorherige Wert war nie verifiziert
+
+Die Änderung ist als „250 → 200" beauftragt worden. **Die 250 sind nicht belegt** —
+`MAX_PARTICIPANTS` war sensitive und damit nicht rücklesbar (`vercel env pull` lieferte
+einen leeren String). Nachweisbar ist nur: die Variable existierte, und sie steht jetzt
+auf 200. Dies erledigt zugleich den offenen Punkt „`MAX_PARTICIPANTS` ist sensitive"
+aus der Pre-Launch-Checklist vom 31.08.
+
+### ⚠️ Zwei Gates zählen unterschiedlich
+
+Bei 250 folgenlos, ab 200 relevant:
+
+- **App-Gate** (`RegistrationFlow.astro:41-45`, `api/checkout.ts:199-203`) zählt
+  `ticket_status in ('confirmed','pending')` — also inklusive unbezahlter, offener Checkouts.
+- **DB-Gate** (RPC `confirm_participant`) zählt `max(startnummer) + 1 > p_max` — also nur
+  tatsächlich bestätigte Teilnehmer.
+
+Bei 167 confirmed / 14 pending heißt das: UI-Gate sieht 181 (19 Slots frei), DB-Gate sieht
+167 (33 Slots frei). Die Seite schaltet also **früher** auf Warteliste, als die DB müsste.
+Fail-safe in die sichere Richtung — es werden eher zu wenige als zu viele Plätze vergeben,
+kein Overbooking-Risiko. Wer nach Erreichen von 200 zahlt, wird von der RPC auf Warteliste
+gesetzt **und automatisch erstattet** (`stripe.refunds.create`).
+
+### Bereinigung alter Pending-Einträge (vorgelagert)
+
+18 `pending` standen im Weg, 13 davon älter als 2 h. Einzelprüfung gegen die Stripe-Live-API
+ergab: **alle 13 waren `open`/`unpaid`, keine einzige expired** — Stripe-Sessions laufen erst
+24 h nach Erstellung ab. Die Vermutung „Karteileichen" war also falsch.
+
+Nach Freigabe wurden **nur die 4 ältesten** (>13 h, 00:03–01:07) via
+`stripe.checkout.sessions.expire()` beendet. Den DB-Status hat der vorhandene
+`checkout.session.expired`-Webhook selbst auf `failed` gesetzt (`stripe-webhook.ts:173-189`) —
+**kein manuelles UPDATE**. Die übrigen 9 blieben unangetastet.
+
+**Regel daraus: Pending-Einträge nie nach Alter beurteilen, immer den Stripe-Session-Status
+einzeln abfragen.** Ein 14 h alter Eintrag kann ein lebender Checkout-Tab sein.
+
+### Bewusst nicht geändert
+- `legal.ts` (Teilnahmebedingungen) nennt weiterhin nur eine „begrenzte" Teilnehmerzahl ohne
+  Zahl — damit das Limit ohne AGB-Änderung nachjustierbar bleibt.
+- Die Slots-Karte zeigt **keine Restplatz-Zahl**; `slotsTaken` wird in
+  `RegistrationFlow.astro` berechnet, aber nie gerendert. Der Text wurde deshalb auf die
+  Gesamtzahl umformuliert („200 Startplätze insgesamt") statt „verfügbar", was eine
+  Live-Anzeige suggeriert hätte.
+- Der ungenutzte i18n-Key `signup.intro` wurde entfernt (war in keiner Seite referenziert).
+- Teilnehmer `bambanwp@gmail.dom` hat einen Tippfehler in der Domain (`.dom`) und erhält
+  **keine Mails**. Bei Zahlung manuell kontaktieren.
