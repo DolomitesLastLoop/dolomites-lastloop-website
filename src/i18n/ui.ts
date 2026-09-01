@@ -390,6 +390,9 @@ export const ui = {
     "signup.closed.title": "Die Anmeldung für 2027 ist geschlossen",
     "signup.closed.text":
       "Der Anmeldeschluss war der {date}. Bereits angemeldete Teilnehmer können ihr sportärztliches Attest weiterhin über den Link aus der Bestätigungs-Email hochladen.",
+    "signup.soldout.title": "Startplätze ausgebucht",
+    "signup.soldout.text":
+      "Alle Startplätze sind vergeben und die Warteliste ist geschlossen. Bereits angemeldete Teilnehmer können ihr sportärztliches Attest weiterhin über den Link aus der Bestätigungs-Email hochladen.",
     "footer.liability": "Haftungsausschluss",
   },
 
@@ -764,6 +767,9 @@ export const ui = {
     "signup.closed.title": "Le iscrizioni per il 2027 sono chiuse",
     "signup.closed.text":
       "Il termine per l’iscrizione era il {date}. Chi è già iscritto può continuare a caricare il certificato medico agonistico tramite il link ricevuto nell’email di conferma.",
+    "signup.soldout.title": "Posti esauriti",
+    "signup.soldout.text":
+      "Tutti i posti sono stati assegnati e la lista d’attesa è chiusa. Chi è già iscritto può continuare a caricare il certificato medico agonistico tramite il link ricevuto nell’email di conferma.",
     "footer.liability": "Esclusione di responsabilità",
   },
 
@@ -1136,6 +1142,9 @@ export const ui = {
     "signup.closed.title": "Registration for 2027 is closed",
     "signup.closed.text":
       "The registration deadline was {date}. Participants who have already registered can still upload their sports-medical certificate via the link in their confirmation email.",
+    "signup.soldout.title": "Race is full",
+    "signup.soldout.text":
+      "All start slots are taken and the waiting list is closed. Participants who have already registered can still upload their sports-medical certificate via the link in their confirmation email.",
     "footer.liability": "Disclaimer",
   },
 } as const;
