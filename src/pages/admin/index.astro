@@ -150,7 +150,8 @@ const attestApproved = participants.filter((p) => p.attest_status === "approved"
                   <td>
                     <span class={`badge ${
                       p.ticket_status === "confirmed" ? "badge-confirmed" :
-                      p.ticket_status === "waitlist" ? "badge-waitlist" : "badge-pending"
+                      p.ticket_status === "waitlist" ? "badge-waitlist" :
+                      p.ticket_status === "cancelled" ? "badge-cancelled" : "badge-pending"
                     }`}>{p.ticket_status}</span>
                   </td>
                   <td>

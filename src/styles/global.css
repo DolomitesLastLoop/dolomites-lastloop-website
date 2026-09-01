@@ -587,6 +587,14 @@ li {
   color: var(--color-primary);
 }
 
+/* Abgesagt/storniert: neutral-grau, bewusst ohne Signalfarbe - die Zeile
+   bleibt fuer die Historie stehen, ist aber kein aktiver Status mehr. */
+.badge-cancelled {
+  background: rgba(122, 136, 150, 0.12);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-muted);
+}
+
 /* Alerts */
 .alert {
   border-radius: var(--radius);
