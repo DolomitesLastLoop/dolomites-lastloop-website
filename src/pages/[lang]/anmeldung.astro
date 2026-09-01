@@ -44,6 +44,29 @@ const closesAt = nbsp(
   ),
 );
 
+// Drei Gründe, warum unten KEIN Formular steht — sie brauchen verschiedene Texte:
+//   "before" → das Anmeldefenster hat noch nicht begonnen ("öffnet am …").
+//   "after"  → der Anmeldeschluss ist vorbei.
+//   "open"   → das Fenster läuft, aber das Flag ist aus. Das passiert genau dann,
+//              wenn wir manuell zugemacht haben, weil die Startplätze weg sind.
+//              Dann ist auch die Warteliste zu, denn dasselbe Flag gatet
+//              /api/checkout, das über Zahlung vs. Warteliste entscheidet.
+// Der Fall "open" ist hier äquivalent zu „Flag aus": bei offenem Fenster UND
+// aktivem Flag ist registrationEnabled true und der Formular-Zweig greift,
+// dieser Block wird dann gar nicht gerendert.
+const noFormHeading =
+  windowState === "before"
+    ? t("signup.soon.title", { date: opensAt })
+    : windowState === "after"
+      ? t("signup.closed.title")
+      : t("signup.soldout.title");
+const noFormText =
+  windowState === "before"
+    ? t("signup.soon.text")
+    : windowState === "after"
+      ? t("signup.closed.text", { date: closesAt })
+      : t("signup.soldout.text");
+
 // Auch bei deaktiviertem Flag muss ein bereits bezahlter Teilnehmer Schritt 3
 // (Attest) erreichen: nach Stripe-Erfolg (?status=success) oder über den
 // Magic-Link aus der Bestätigungs-Email (?id=…&token=…). Dann wird NUR der
@@ -146,16 +169,8 @@ if (params.get("status") === "success" && !isMagicLink) {
         />
         <section class="section">
           <div class="container-narrow text-center soon">
-            <h2>
-              {windowState === "after"
-                ? t("signup.closed.title")
-                : t("signup.soon.title", { date: opensAt })}
-            </h2>
-            <p>
-              {windowState === "after"
-                ? t("signup.closed.text", { date: closesAt })
-                : t("signup.soon.text")}
-            </p>
+            <h2>{noFormHeading}</h2>
+            <p>{noFormText}</p>
           </div>
         </section>
       </>
