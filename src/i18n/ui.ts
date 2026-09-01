@@ -18,7 +18,7 @@ export const ui = {
     "meta.race_info":
       "Backyard Ultra in Toblach: 6,71 km Loop jede volle Stunde nach dem Last-One-Standing-Prinzip. Strecke, Regeln und Cut-off der Dolomites Last Loop 2027.",
     "meta.signup":
-      "Jetzt für die Dolomites Last Loop 2027 in Toblach anmelden: Early-Bird-Gebühr, Anmeldeschluss und limitierte Startplätze. Sichere dir deinen Platz.",
+      "Jetzt für die Dolomites Last Loop 2027 in Toblach anmelden: Early-Bird-Gebühr, Anmeldeschluss und nur 200 Startplätze. Sichere dir deinen Platz.",
     "meta.startlist":
       "Startliste der Dolomites Last Loop 2027 und Ergebnisse 2026: alle bestätigten Teilnehmer des Backyard Ultra in Toblach auf einen Blick.",
     "alt.logo": "Dolomites Last Loop",
@@ -91,9 +91,9 @@ export const ui = {
     "home.features.community.title": "Ehrliche Community",
     "home.features.community.text":
       "Kein Hype, kein Pomp. Zentrale Teamzone, gemeinsamer Start, gemeinsames Leiden.",
-    "home.features.limit.title": "Limitiert",
+    "home.features.limit.title": "200 Startplätze",
     "home.features.limit.text":
-      "Streng limitierte Startplätze. Persönliche, familiäre Atmosphäre statt Massenstart.",
+      "Maximal 200 Startplätze. Persönliche, familiäre Atmosphäre statt Massenstart.",
 
     "home.newsletter.title": "Bleib auf dem Laufenden",
     "home.newsletter.text":
@@ -159,17 +159,15 @@ export const ui = {
 
     "signup.eyebrow": "2027",
     "signup.hero_title": "Anmeldung 2027",
-    "signup.hero_subtitle": "Limitierte Startplätze · 15. Mai 2027",
+    "signup.hero_subtitle": "Nur 200 Startplätze · 15. Mai 2027",
     "signup.badge.location": "Toblach, Südtirol",
     "signup.badge.date": "15. Mai 2027",
-    "signup.badge.slots": "Limitierte Plätze",
+    "signup.badge.slots": "200 Plätze",
     "signup.side.fact1": "Eine Runde · 6,71 km · jede volle Stunde",
     "signup.side.fact2": "Start & Ziel an der Nordic Arena",
     "signup.side.fact3": "Mindestalter 18 Jahre, sportärztliches Attest Pflicht",
-    "signup.side.slots_left": "Begrenzte Startplätze verfügbar",
+    "signup.side.slots_left": "200 Startplätze insgesamt",
     "signup.title": "Anmeldung",
-    "signup.intro":
-      "Sichere dir einen der limitierten Startplätze für die Ausgabe am 15. Mai 2027.",
     "signup.step": "Schritt",
     "signup.step1.title": "Persönliche Daten",
     "signup.step2.title": "Ticket & Zahlung",
@@ -405,7 +403,7 @@ export const ui = {
     "meta.race_info":
       "Backyard Ultra a Dobbiaco: loop di 6,71 km ogni ora secondo il principio Last One Standing. Percorso, regole e cut-off della Dolomites Last Loop 2027.",
     "meta.signup":
-      "Iscriviti ora alla Dolomites Last Loop 2027 a Dobbiaco: quota early-bird, scadenze e posti limitati. Assicurati il tuo posto di partenza.",
+      "Iscriviti ora alla Dolomites Last Loop 2027 a Dobbiaco: quota early-bird, scadenze e soli 200 posti. Assicurati il tuo posto di partenza.",
     "meta.startlist":
       "Lista partenti della Dolomites Last Loop 2027 e risultati 2026: tutti i partecipanti confermati della Backyard Ultra a Dobbiaco.",
     "alt.logo": "Dolomites Last Loop",
@@ -478,9 +476,9 @@ export const ui = {
     "home.features.community.title": "Community vera",
     "home.features.community.text":
       "Niente hype, niente eccessi. Zona team centrale, partenza comune, fatica condivisa.",
-    "home.features.limit.title": "Posti limitati",
+    "home.features.limit.title": "200 posti",
     "home.features.limit.text":
-      "Posti di partenza limitati. Atmosfera personale e familiare, non una corsa di massa.",
+      "Massimo 200 posti di partenza. Atmosfera personale e familiare, non una corsa di massa.",
 
     "home.newsletter.title": "Resta aggiornato",
     "home.newsletter.text":
@@ -546,17 +544,15 @@ export const ui = {
 
     "signup.eyebrow": "2027",
     "signup.hero_title": "Iscrizione 2027",
-    "signup.hero_subtitle": "Posti limitati · 15 maggio 2027",
+    "signup.hero_subtitle": "Solo 200 posti · 15 maggio 2027",
     "signup.badge.location": "Dobbiaco, Alto Adige",
     "signup.badge.date": "15 maggio 2027",
-    "signup.badge.slots": "Posti limitati",
+    "signup.badge.slots": "200 posti",
     "signup.side.fact1": "Un loop · 6,71 km · ogni ora esatta",
     "signup.side.fact2": "Partenza e arrivo alla Nordic Arena",
     "signup.side.fact3": "Età minima 18 anni, certificato medico agonistico obbligatorio",
-    "signup.side.slots_left": "Posti limitati disponibili",
+    "signup.side.slots_left": "200 posti di partenza in totale",
     "signup.title": "Iscrizione",
-    "signup.intro":
-      "Assicurati uno dei posti limitati per l’edizione del 15 maggio 2027.",
     "signup.step": "Step",
     "signup.step1.title": "Dati personali",
     "signup.step2.title": "Biglietto & pagamento",
@@ -781,7 +777,7 @@ export const ui = {
     "meta.race_info":
       "Backyard Ultra in Toblach: a 6.71 km loop every hour on the Last One Standing format. Course, rules and cut-off for the Dolomites Last Loop 2027.",
     "meta.signup":
-      "Sign up now for the Dolomites Last Loop 2027 in Toblach: early-bird fee, registration deadline and limited start spots. Secure your place.",
+      "Sign up now for the Dolomites Last Loop 2027 in Toblach: early-bird fee, registration deadline and only 200 start spots. Secure your place.",
     "meta.startlist":
       "Start list for the Dolomites Last Loop 2027 and 2026 results: all confirmed runners of the Backyard Ultra in Toblach at a glance.",
     "alt.logo": "Dolomites Last Loop",
@@ -854,9 +850,9 @@ export const ui = {
     "home.features.community.title": "Honest community",
     "home.features.community.text":
       "No hype, no glitter. Central team zone, shared start line, shared suffering.",
-    "home.features.limit.title": "Limited field",
+    "home.features.limit.title": "200 spots",
     "home.features.limit.text":
-      "Strictly limited starting spots. Personal, family-style vibe instead of a mass start.",
+      "A maximum of 200 starting spots. Personal, family-style vibe instead of a mass start.",
 
     "home.newsletter.title": "Stay in the loop",
     "home.newsletter.text":
@@ -921,17 +917,15 @@ export const ui = {
 
     "signup.eyebrow": "2027",
     "signup.hero_title": "Sign up 2027",
-    "signup.hero_subtitle": "Limited spots · May 15, 2027",
+    "signup.hero_subtitle": "Only 200 spots · May 15, 2027",
     "signup.badge.location": "Toblach, South Tyrol",
     "signup.badge.date": "May 15, 2027",
-    "signup.badge.slots": "Limited spots",
+    "signup.badge.slots": "200 spots",
     "signup.side.fact1": "One loop · 6.71 km · every hour on the hour",
     "signup.side.fact2": "Start and finish at the Nordic Arena",
     "signup.side.fact3": "Minimum age 18, sports-medical certificate required",
-    "signup.side.slots_left": "Limited spots available",
+    "signup.side.slots_left": "200 starting spots in total",
     "signup.title": "Sign up",
-    "signup.intro":
-      "Secure one of the limited starting spots for the May 15, 2027 edition.",
     "signup.step": "Step",
     "signup.step1.title": "Personal data",
     "signup.step2.title": "Ticket & payment",
