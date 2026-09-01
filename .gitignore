@@ -50,6 +50,15 @@ Ergebnisliste Dolomites Last Loop 2026.pdf
 !public/videos/*.mp4
 !public/videos/*.webm
 
+# Operative Exportlisten (Teilnehmerdaten, Zahlungslinks). Entstehen z. B. beim
+# Wartelisten-Versand am 01.09.2026: eine TSV mit 23 Zeilen aus E-Mail, Name und
+# funktionierendem Stripe-Checkout-Link. Das Repo ist OEFFENTLICH — ein
+# unbedachtes "git add ." wuerde solche Links weltweit lesbar machen.
+# Geprueft vor dem Setzen der Wildcard: es ist keine .tsv getrackt
+# (git ls-files | grep '\.tsv$' = leer), die Regel verdeckt also nichts
+# Bestehendes — vgl. die .env.example-Lektion in Commit 489f46e.
+*.tsv
+
 
 # Agentic OS Template - Downstream Ignore Defaults
 
