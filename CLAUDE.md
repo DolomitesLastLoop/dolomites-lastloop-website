@@ -289,6 +289,24 @@ keine Verlinkung im Quellcode.
 
 > Hier neu auftretende Fehler + Ursache + Lösung notieren (Regel 4).
 
+### 2026-09-01 — Standalone-Skripte: `.env`-Werte in Quotes brechen den Resend-Versand
+
+- **Symptom:** Ein Wegwerf-Skript (`npx tsx scripts/...mts`), das
+  `sendRegistrationConfirmation()` aus `src/lib/email.ts` aufruft, bekam von Resend
+  `422 validation_error: "Invalid \`from\` field"`. Es wurde **keine** Mail versendet
+  (`data: null`) — der Fehler war stumm, wenn man nur auf einen Exception-Throw achtet.
+- **Ursache:** In `.env` steht `EMAIL_FROM="Dolomites Last Loop <noreply@…>"` **mit**
+  Anführungszeichen. Astro/Vite strippt umschließende Quotes beim `.env`-Laden; ein
+  selbstgebauter `split("=")`-Parser im Standalone-Skript tut das **nicht** → der
+  `from`-String ging inkl. literaler `"` an Resend.
+- **Lösung:** Im Skript-Parser umschließende Quotes strippen:
+  `/^(".*"|'.*')$/s.test(raw) ? raw.slice(1, -1) : raw`. Produktion (Vercel-Env-Vars,
+  `astro dev`) war nie betroffen.
+- **Merke:** Resend gibt Fehler als `{ data: null, error: {...} }` **zurück** statt zu
+  werfen. Bei Skripten immer `res.error` prüfen, sonst gilt ein Fehlversand als Erfolg —
+  genau das kann auch im Webhook passieren (dort fängt das `try/catch` nur Exceptions,
+  `confirmation_email_sent` würde trotzdem auf `true` gesetzt).
+
 ### 2026-08-09 — Google-Maps-Iframe geblockt: ZWEI Blocker, der zweite (COEP) schweigt
 
 - **Symptom:** Auf `/{lang}/kontakt` statt der Karte Chromes Platzhalter „This content is
