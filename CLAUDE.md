@@ -265,23 +265,37 @@ leerer Env-Var; Tier-Fenster-Gate am VIP-Endpoint (403); `/de/anmeldung` und
 `/de/anmeldung-test` unverändert; Sitemap ohne VIP-Eintrag; `noindex,nofollow` gesetzt;
 keine Verlinkung im Quellcode.
 
-> ⚠️ **NOCH UNGEPRÜFT — Tests 12, 13 (Rest), 14, 16.** Die lokale `.env` enthält den
-> **Live**-Stripe-Key und zeigt auf die Produktions-Supabase; ein lokaler Testlauf hätte
-> echte Stripe-Sessions und echte DB-Zeilen erzeugt. Deshalb ist nicht verifiziert:
-> - **12** VIP-Checkout liefert bei Flag=false tatsächlich eine Stripe-URL, legt eine
->   Zeile mit `ticket_status='pending'` und korrektem `price_type` an
-> - **13** (Rest) Verhalten *nach* bestandener Validierung — die Validierungskette selbst
->   ist am VIP-Endpoint geprüft
-> - **14** Kapazitäts-Gate: bei erreichtem `MAX_PARTICIPANTS` kommt `{waitlist:true}`
->   statt einer Stripe-URL
-> - **16** Die Session nutzt die Price-ID des aktuellen Fensters
->
-> **Auflage vor der ersten Weitergabe des Slugs (Simon, 02.09.2026):** Diese vier Punkte
-> werden durch **einen einzigen echten End-to-End-Test gegen Production** abgedeckt —
-> vollständige Anmeldung über die VIP-URL inklusive Zahlung, mit anschließendem Storno
-> bzw. der Kenntnis, dass es ein Test war. Bis dieser Test gelaufen ist, bleibt
-> `VIP_REGISTRATION_SLUG` in Production **leer/nicht gesetzt**, damit die Route für
-> niemanden erreichbar ist. Danach hier das Datum und das Ergebnis eintragen.
+#### End-to-End gegen Production bestätigt (02.09.2026)
+
+Echter Durchlauf über die VIP-URL bei `PUBLIC_REGISTRATION_ENABLED=false`, mit auf 1 €
+umgestelltem `STRIPE_PRICE_EARLY_BIRD` und anschließendem vollständigem Rückbau.
+
+- **12 ✅** VIP-Checkout lieferte bei Flag=false eine echte Stripe-URL und legte die Zeile
+  an; nach Zahlung `ticket_status='confirmed'`, `price_type='early_bird'`,
+  Startnummer **200**, `confirmation_email_sent=true`. `/api/stripe-webhook` → **200**.
+  Bestätigungsmail samt Ticket-PDF kam an, Preis-Label **€ 1** — das Label rechnet aus
+  `amount_total` (`paidAmountLabel()`), nicht aus `TIER_PRICE_LABEL`.
+- **13 ✅** Der Ablauf nach bestandener Validierung lief komplett durch: Stripe-Session,
+  DB-Insert, Webhook, Startnummernvergabe, Mail, Brevo-Sync (Liste 4).
+- **16 ✅** Zweifach belegt: der Testkauf nutzte `price_1U4LzC…` (100 Cent, Testpreis),
+  der spätere Preis-Check nach dem Rückbau `price_1U3I74…` (7500 Cent, „Startgeld Early
+  Bird"). Die Session zieht also die Price-ID aus der jeweils aktiven Env-Var.
+
+Testdatensatz danach restlos entfernt (Supabase-Zeile, Brevo-Kontakt; kein Attest
+hochgeladen). Die 1 €-Zahlung wurde bewusst **nicht** erstattet. Zahlen nach dem Rückbau
+gegengeprüft: confirmed 199, waitlist 8, höchste Startnummer 199, Brevo Liste 4: 199.
+
+> ⚠️ **WEITERHIN UNGEPRÜFT — Test 14.** Kapazitäts-Gate: bei erreichtem
+> `MAX_PARTICIPANTS` muss `{waitlist:true}` statt einer Stripe-URL kommen. Zum
+> Testzeitpunkt waren **199 von 224** Plätzen belegt, der Warteliste-Pfad wurde also nie
+> betreten. Ein ehrlicher Test dafür bräuchte entweder ein volles Feld oder ein temporär
+> abgesenktes `MAX_PARTICIPANTS` — beides gegen die Produktions-DB. Bis dahin gilt der
+> Pfad als *nur lokal/logisch* abgedeckt (gemeinsamer Code mit `/api/checkout` in
+> `runCheckout()`), nicht als live verifiziert.
+
+**Slug-Handhabung:** Die frühere Auflage („Slug bleibt leer, bis der End-to-End-Test
+gelaufen ist") ist damit erfüllt. Der beim Test verwendete Slug wurde danach **rotiert**,
+weil er durch Logs und Transkripte gelaufen war; die alte URL antwortet seither mit 404.
 
 ---
 
