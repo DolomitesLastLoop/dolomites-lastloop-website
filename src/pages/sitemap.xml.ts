@@ -3,6 +3,14 @@ import { env } from "@lib/env";
 
 export const prerender = false;
 
+// EXPLIZITE ALLOWLIST — nur was hier steht, kommt in die Sitemap. Es gibt bewusst
+// keine Auto-Discovery über src/pages/: eine neue Seite landet hier NIE von selbst,
+// sie muss absichtlich ergänzt werden.
+//
+// ⛔ NIEMALS aufnehmen: /anmeldung-vip/* (versteckter VIP-Anmeldeweg, siehe CLAUDE.md
+//    → "VIP-Anmeldeweg (dauerhaft)"). Der Schutz dieser Route besteht ausschließlich
+//    darin, dass ihre URL nirgends öffentlich auftaucht — weder hier, noch in
+//    public/robots.txt, noch in der Navigation.
 const ROUTES = [
   "/",
   "/race-info",
