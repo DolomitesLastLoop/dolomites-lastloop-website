@@ -1,0 +1,113 @@
+---
+// VIP-Anmeldeweg — DAUERHAFTE EINRICHTUNG, kein Einmal-Hack.
+// Vollständige Begründung: src/pages/api/checkout-vip.ts und CLAUDE.md →
+// "VIP-Anmeldeweg (dauerhaft)".
+//
+// Zeigt das volle Anmeldeformular, solange ein Tier-Fenster offen ist — unabhängig
+// von PUBLIC_REGISTRATION_ENABLED. Ist gerade KEIN Fenster offen, gibt es auch keinen
+// gültigen Preis; dann zeigt diese Route nur den Hinweistext, exakt wie
+// /[lang]/anmeldung. Das Kapazitäts-Gate greift unverändert (Warteliste ab
+// MAX_PARTICIPANTS) — darüber entscheidet serverseitig /api/checkout-vip.
+//
+// UNAUFFINDBARKEIT — dauerhaft, nicht nur einmalig zu prüfen:
+//   • noindex,nofollow über die BaseLayout-Prop (siehe unten)
+//   • NICHT in src/pages/sitemap.xml.ts — dort steht eine handgepflegte Allowlist,
+//     die nichts automatisch aufsammelt (dort steht auch ein Warnhinweis)
+//   • KEIN Eintrag in public/robots.txt — ein "Disallow" wäre öffentlich lesbar und
+//     würde die Existenz der Route ausgerechnet denen verraten, vor denen sie
+//     versteckt sein soll. Das noindex-Meta leistet dasselbe, ohne zu petzen.
+//   • von keiner Seite, keinem Menü, keinem i18n-Text und keiner Mail verlinkt
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import RegistrationFlow from "@components/RegistrationFlow.astro";
+import { photo, pos } from "@lib/photos";
+import { isValidVipSlug } from "@lib/vip";
+import { registrationWindowState, TIER_WINDOWS } from "@lib/stripe";
+import { useTranslations, type Lang } from "@i18n/utils";
+
+export const prerender = false;
+
+// Falscher, fehlender oder gar nicht konfigurierter Slug → die Seite existiert nicht.
+// Diese Prüfung steht bewusst VOR allem anderen: ohne gültigen Slug wird weder eine
+// Sprache aufgelöst noch die Datenbank angefasst.
+const slug = Astro.params.slug ?? "";
+if (!isValidVipSlug(slug)) return new Response(null, { status: 404 });
+
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+const t = useTranslations(lang);
+
+// Dieselbe Fensterlogik wie /[lang]/anmeldung — nur ohne das Feature-Flag.
+const windowState = registrationWindowState();
+
+// Datumsformatierung deckungsgleich mit anmeldung.astro (gleiche TIER_WINDOWS-Quelle),
+// inkl. geschützter Leerzeichen, damit das Datum nicht umbricht.
+const dateFmt = new Intl.DateTimeFormat(
+  lang === "en" ? "en-GB" : lang === "it" ? "it-IT" : "de-DE",
+  { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Rome" },
+);
+const nbsp = (d: string) => d.replace(/ /g, "\u00A0");
+const opensAt = nbsp(dateFmt.format(new Date(TIER_WINDOWS[0].from)));
+// `until` ist exklusiv (siehe currentTier()) — 1 ms abziehen trifft den letzten
+// gültigen Moment, auch wenn die Grenze je auf eine Zeitumstellung fällt.
+const closesAt = nbsp(
+  dateFmt.format(
+    new Date(Date.parse(TIER_WINDOWS[TIER_WINDOWS.length - 1].until) - 1),
+  ),
+);
+---
+
+<BaseLayout lang={lang} title={t("signup.title")} noindex={true}>
+  {
+    windowState === "open" ? (
+      // basePath bleibt "anmeldung": Nach der Zahlung schickt Stripe auf
+      // /<lang>/anmeldung?status=success&session_id=… — diese Seite behandelt den
+      // Post-Payment-Return samt Attest-Schritt bereits korrekt, AUCH bei
+      // deaktiviertem Flag (isPostPaymentReturn → attestOnly). Dadurch braucht der
+      // VIP-Weg keine zweite Kopie der session_id-Auflösung.
+      <RegistrationFlow
+        lang={lang}
+        basePath="anmeldung"
+        checkoutEndpoint="/api/checkout-vip"
+        vipSlug={slug}
+      />
+    ) : (
+      <>
+        <PageHero
+          bg={photo.emotion_smile}
+          position={pos.faceTight}
+          eyebrow={t("signup.eyebrow")}
+          title={t("signup.hero_title")}
+          subtitle={t("signup.hero_subtitle")}
+        />
+        <section class="section">
+          <div class="container-narrow text-center soon">
+            <h2>
+              {windowState === "before"
+                ? t("signup.soon.title", { date: opensAt })
+                : t("signup.closed.title")}
+            </h2>
+            <p>
+              {windowState === "before"
+                ? t("signup.soon.text")
+                : t("signup.closed.text", { date: closesAt })}
+            </p>
+          </div>
+        </section>
+      </>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .soon {
+    padding: var(--space-8) 0;
+  }
+  .soon h2 {
+    margin-bottom: var(--space-4);
+  }
+  .soon p {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+  }
+</style>

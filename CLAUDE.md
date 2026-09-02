@@ -167,6 +167,8 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
 `stripe-webhook`, `upload-attest`, `contact`, `newsletter`,
 `admin/export` (`?type=participants|newsletter`), `admin/participants`,
 `admin/attest`, `admin/logout`. Dazu `/sitemap.xml`.
+Versteckt (nicht verlinkt, nicht in der Sitemap): `/{lang}/anmeldung-vip/<slug>` +
+`api/checkout-vip` — siehe Abschnitt „VIP-Anmeldeweg (dauerhaft)".
 
 ## Konventionen & Sicherheit
 
@@ -198,11 +200,112 @@ Admin: `/admin/login`, `/admin`. API (`src/pages/api/`): `checkout`,
   Namen in der Liste, der Request meldet trotzdem Erfolg. Vor dem Ergänzen neuer
   Attribute die Liste per Brevo-API (`/v3/contacts/attributes`) prüfen.
 
+## VIP-Anmeldeweg (dauerhaft)
+
+Versteckter Anmeldeweg für Familie und enge Bekannte. **Wiederkehrende Einrichtung für
+jede Ausgabe des Rennens** — kein Einmal-Hack. Nicht entfernen, auch wenn die Route
+gerade ungenutzt ist: der Normalzustand ist „Env-Var leer".
+
+| | |
+|---|---|
+| **Route** | `/<lang>/anmeldung-vip/<slug>` → `src/pages/[lang]/anmeldung-vip/[slug].astro` |
+| **Endpoint** | `/api/checkout-vip` → `src/pages/api/checkout-vip.ts` |
+| **Gemeinsame Logik** | `src/lib/checkout-core.ts` (`runCheckout()`) |
+| **Slug-Prüfung** | `src/lib/vip.ts` (`isValidVipSlug()`) |
+| **Env-Var** | `VIP_REGISTRATION_SLUG` (min. 8 Zeichen; leer/zu kurz ⇒ Route 404) |
+
+### Wozu
+Anmeldung für einen kleinen Kreis öffnen, während die öffentliche Anmeldung zu ist
+(`PUBLIC_REGISTRATION_ENABLED=false`) — vor dem offiziellen Start oder nachdem wir
+öffentlich manuell zugemacht haben.
+
+### Nutzung pro Ausgabe
+1. Slug erzeugen: `openssl rand -hex 12`
+2. `vercel env add VIP_REGISTRATION_SLUG production` + **Redeploy** — eine reine
+   Dashboard-Änderung greift nicht (siehe Fehlerprotokoll 2026-07-10)
+3. URL `https://www.dolomiteslastloop.com/de/anmeldung-vip/<slug>` privat weitergeben
+   (nicht in Gruppenchats, nicht in Mail-Verteilern)
+4. Nach der Ausgabe: Env-Var leeren oder Slug wechseln → alte URL ist sofort tot
+
+### Was diese Route NICHT umgeht
+Übersprungen wird **genau eine** Prüfung: `isRegistrationEnabled()`. Alles andere läuft
+durch dieselbe Funktion `runCheckout()` in `src/lib/checkout-core.ts` wie der reguläre
+Checkout — Tier-Fenster und damit der gültige Preis, Kapazitäts-Gate gegen
+`MAX_PARTICIPANTS` inkl. Warteliste, alle Pflichtfelder, Codice-Fiscale-Pflicht für IT,
+Mindestalter am Renntag, Doppelanmeldungs-Sperre, Stripe-Session, DB-Insert,
+Attest-Upload und die Bestätigungsmail (über `stripe-webhook.ts`, route-unabhängig).
+
+**Folge fürs nächste Jahr:** Ein `TIER_WINDOWS`-Update in `src/lib/stripe.ts` (neue
+Daten, neue Preise) zieht hier automatisch mit. Am VIP-Weg ist dafür **nichts** zu
+ändern — es gibt bewusst keine zweite Preis- oder Datumslogik.
+
+### Bewusst akzeptiertes Risiko
+Es gibt **keinen technischen Zugriffsschutz** außer der Geheimhaltung der URL — kein
+Token pro Person, kein Login, keine IP-Beschränkung. Wer den Slug kennt oder errät, kann
+buchen, solange Kapazität frei ist — zum regulär gültigen Preis, mit allen Pflichtfeldern.
+Bewusste Entscheidung (Simon, 02.09.2026), kein Versehen. Der Slug landet zudem in den
+Vercel-Request-Logs, weil er Teil des Pfades ist. Gegenmaßnahme bei Leak-Verdacht: Slug
+wechseln + Redeploy.
+
+### Regeln für künftige Änderungen
+- ⛔ Die Route **niemals** in `src/pages/sitemap.xml.ts` (`ROUTES`) aufnehmen
+- ⛔ **Keinen** `Disallow`-Eintrag in `public/robots.txt` — der wäre öffentlich lesbar und
+  würde die Existenz der Route ausgerechnet verraten. Der Schutz ist das `noindex`-Meta
+  (`BaseLayout`-Prop `noindex={true}`)
+- ⛔ **Nicht** aus Navigation, Footer, i18n-Texten oder Mails verlinken
+- ⛔ Logik **nicht** aus `checkout-core.ts` herauskopieren — sonst laufen regulärer und
+  VIP-Checkout still auseinander
+
+### Verifikationsstand (02.09.2026)
+
+Lokal geprüft und bestanden: `astro check` (0 Errors) + `npm run build`; Regression von
+`/api/checkout` (403 bei Flag=false, unveränderte Gate-Reihenfolge, komplette
+Validierungskette); Slug-Gate (404 bei falschem/fehlendem/zu kurzem Slug); Fail-safe bei
+leerer Env-Var; Tier-Fenster-Gate am VIP-Endpoint (403); `/de/anmeldung` und
+`/de/anmeldung-test` unverändert; Sitemap ohne VIP-Eintrag; `noindex,nofollow` gesetzt;
+keine Verlinkung im Quellcode.
+
+> ⚠️ **NOCH UNGEPRÜFT — Tests 12, 13 (Rest), 14, 16.** Die lokale `.env` enthält den
+> **Live**-Stripe-Key und zeigt auf die Produktions-Supabase; ein lokaler Testlauf hätte
+> echte Stripe-Sessions und echte DB-Zeilen erzeugt. Deshalb ist nicht verifiziert:
+> - **12** VIP-Checkout liefert bei Flag=false tatsächlich eine Stripe-URL, legt eine
+>   Zeile mit `ticket_status='pending'` und korrektem `price_type` an
+> - **13** (Rest) Verhalten *nach* bestandener Validierung — die Validierungskette selbst
+>   ist am VIP-Endpoint geprüft
+> - **14** Kapazitäts-Gate: bei erreichtem `MAX_PARTICIPANTS` kommt `{waitlist:true}`
+>   statt einer Stripe-URL
+> - **16** Die Session nutzt die Price-ID des aktuellen Fensters
+>
+> **Auflage vor der ersten Weitergabe des Slugs (Simon, 02.09.2026):** Diese vier Punkte
+> werden durch **einen einzigen echten End-to-End-Test gegen Production** abgedeckt —
+> vollständige Anmeldung über die VIP-URL inklusive Zahlung, mit anschließendem Storno
+> bzw. der Kenntnis, dass es ein Test war. Bis dieser Test gelaufen ist, bleibt
+> `VIP_REGISTRATION_SLUG` in Production **leer/nicht gesetzt**, damit die Route für
+> niemanden erreichbar ist. Danach hier das Datum und das Ergebnis eintragen.
+
 ---
 
 ## Fehlerprotokoll
 
 > Hier neu auftretende Fehler + Ursache + Lösung notieren (Regel 4).
+
+### 2026-09-01 — Standalone-Skripte: `.env`-Werte in Quotes brechen den Resend-Versand
+
+- **Symptom:** Ein Wegwerf-Skript (`npx tsx scripts/...mts`), das
+  `sendRegistrationConfirmation()` aus `src/lib/email.ts` aufruft, bekam von Resend
+  `422 validation_error: "Invalid \`from\` field"`. Es wurde **keine** Mail versendet
+  (`data: null`) — der Fehler war stumm, wenn man nur auf einen Exception-Throw achtet.
+- **Ursache:** In `.env` steht `EMAIL_FROM="Dolomites Last Loop <noreply@…>"` **mit**
+  Anführungszeichen. Astro/Vite strippt umschließende Quotes beim `.env`-Laden; ein
+  selbstgebauter `split("=")`-Parser im Standalone-Skript tut das **nicht** → der
+  `from`-String ging inkl. literaler `"` an Resend.
+- **Lösung:** Im Skript-Parser umschließende Quotes strippen:
+  `/^(".*"|'.*')$/s.test(raw) ? raw.slice(1, -1) : raw`. Produktion (Vercel-Env-Vars,
+  `astro dev`) war nie betroffen.
+- **Merke:** Resend gibt Fehler als `{ data: null, error: {...} }` **zurück** statt zu
+  werfen. Bei Skripten immer `res.error` prüfen, sonst gilt ein Fehlversand als Erfolg —
+  genau das kann auch im Webhook passieren (dort fängt das `try/catch` nur Exceptions,
+  `confirmation_email_sent` würde trotzdem auf `true` gesetzt).
 
 ### 2026-08-09 — Google-Maps-Iframe geblockt: ZWEI Blocker, der zweite (COEP) schweigt
 

@@ -9,6 +9,17 @@ import { RACE_DATE, MIN_AGE, MAX_AGE } from "@lib/constants";
 interface Props {
   lang: Lang;
   basePath?: "anmeldung" | "anmeldung-test";
+  /**
+   * Ziel-Endpoint für Schritt 2 (Zahlung/Warteliste). Default /api/checkout.
+   * Der VIP-Weg (src/pages/[lang]/anmeldung-vip/[slug].astro) setzt hier
+   * /api/checkout-vip — siehe CLAUDE.md → "VIP-Anmeldeweg (dauerhaft)".
+   */
+  checkoutEndpoint?: string;
+  /**
+   * Geheimer VIP-Slug. NUR auf der VIP-Route gesetzt; geht als X-VIP-Slug-Header
+   * an den Endpoint. Auf allen anderen Routen undefined → Header entfällt.
+   */
+  vipSlug?: string;
   attestOnly?: boolean;
   /** Serverseitig via stripe_session_id aufgelöste Teilnehmer-ID (Post-Payment-Return). */
   prefillId?: string;
@@ -22,6 +33,8 @@ interface Props {
 const {
   lang,
   basePath = "anmeldung",
+  checkoutEndpoint = "/api/checkout",
+  vipSlug,
   attestOnly = false,
   prefillId,
   prefillToken,
@@ -200,6 +213,8 @@ const nationalities: { value: string; label: string }[] = [
         data-msg-attest-incomplete={t("signup.error.attest_incomplete")}
         data-msg-attest-too-large={t("signup.error.attest_too_large")}
         data-msg-attest-failed={t("signup.error.attest_failed")}
+        data-checkout-endpoint={checkoutEndpoint}
+        data-vip-slug={vipSlug}
         novalidate
       >
         <input type="hidden" name="lang" value={lang} />
@@ -770,9 +785,15 @@ const nationalities: { value: string; label: string }[] = [
       const f = form();
       if (!f) throw new Error("no form");
       const payload = Object.fromEntries(new FormData(f).entries());
-      const res = await fetch("/api/checkout", {
+      // Ziel-Endpoint und ggf. VIP-Slug kommen aus dem Markup (Props oben), damit
+      // der VIP-Weg dieselbe Komponente ohne Sonderfall im Script nutzen kann.
+      const vipSlug = f.dataset.vipSlug;
+      const res = await fetch(f.dataset.checkoutEndpoint || "/api/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(vipSlug ? { "X-VIP-Slug": vipSlug } : {}),
+        },
         body: JSON.stringify(payload),
       });
       const json = await res.json();
