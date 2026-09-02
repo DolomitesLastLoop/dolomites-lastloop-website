@@ -778,8 +778,19 @@ Projekt bisher nichts existiert. Die Freigabe des Textes ändert daran nichts.
   `percent_off: 100`, `duration: once`) mit Promotion Code `promo_1U4h2HFkID7E6ePcF93jT7RH`
   — 20 Einlösungen, Ablauf 31.12.2026 23:59:59 MEZ (Unix `1798757999`, exakt **1 Sekunde**
   vor `TIER_WINDOWS.early_bird.until` aus `src/lib/stripe.ts`).
-- ⚠️ **Der Code-String steht bewusst NIRGENDS im Repo** — nicht hier, nicht in Kommentaren,
-  nicht in Tests. Das Repo liegt auf GitHub; ein Klartext-Code wäre faktisch öffentlich.
+- 🚨 **DIESE ZUSAGE WURDE GEBROCHEN — der Code-String stand im Klartext im Repo.**
+  Entdeckt am 2026-09-02. Er stand an **zwei** Stellen in dieser Datei (im Abschnitt zum
+  Schließen des Testfensters und in Zeile 8 der Pre-Launch-Checklist), eingebracht mit
+  Commit `2aa721a` am **2026-08-30 20:12 CEST** und nach `origin/main` gepusht. Das
+  Repository `DolomitesLastLoop/dolomites-lastloop-website` ist **public**. Der
+  100-%-Code war damit ab dem 30.08. für jeden auf GitHub lesbar — **rund 28 Stunden
+  vor der Anmeldeöffnung** am 01.09. Beide Stellen sind inzwischen redigiert —
+  **eine Redaktion in der Arbeitskopie räumt aber weder die Git-History noch GitHub auf.**
+  ✅ **Simon hat am 2026-09-02 entschieden, den Code trotzdem unverändert aktiv zu
+  lassen** (keine Deaktivierung, kein Austausch). Begründung und Restrisiko stehen unter
+  *Nächste Schritte* → „Athletencode kompromittiert".
+- ⚠️ **Der Code-String gehört NIRGENDS ins Repo** — nicht hier, nicht in Kommentaren,
+  nicht in Tests. Das Repo ist public; ein Klartext-Code ist dort faktisch veröffentlicht.
   Nachschauen: **[siehe Stripe Dashboard]** → Coupons → „Athleten-Freiplatz 2027".
 - ⚠️ Ein Promotion Code ist **unwiderruflich**: er lässt sich nur auf `active: false` setzen,
   nie löschen und nie umbenennen. Der String ist im Konto dauerhaft belegt.
@@ -899,10 +910,25 @@ rechnerisch funktioniert, Punkt 6 den Weg, den echte Athleten tatsächlich gehen
 15.08. sind **beide** belegt — der Zeitversatz von 50 Sekunden zwischen Session-Erstellung
 und Discount-Anwendung ist der harte Nachweis, dass der Code über die UI kam.
 
-**Verbrauch: `times_redeemed` = 1 von 20** (am 2026-08-15 nach dem erfolgreichen Testlauf
-abgefragt; vor dem Test verifiziert bei 0). Der eine verbrauchte Platz ist der Testlauf
-selbst — Startnummer 1 auf `entensimon@gmail.com`. Es stehen noch 19 Freiplätze zur
-Verfügung.
+**Verbrauch: `times_redeemed` = 13 von 20 — es stehen noch 7 Freiplätze zur Verfügung.**
+*(Live aus der Stripe-API abgefragt am 2026-09-02. Vorheriger Dokumentationsstand war
+1/20 vom 2026-08-15.)*
+
+- Der **erste** verbrauchte Platz ist der Testlauf vom 2026-08-15 selbst — Startnummer 1
+  auf `entensimon@gmail.com`, siehe Punkt 6 der Statustabelle oben.
+- Die **zwölf weiteren** Einlösungen liegen alle hinter der Anmeldeöffnung am
+  01.09.2026 (Stripe: 12 abgeschlossene Sessions mit `amount_subtotal 7500` →
+  `amount_total 0`, erste am 01.09. 00:01, letzte am 02.09. 08:05).
+- 🚨 **UNGEKLÄRT, ob das reguläre Einlösungen waren — siehe die Leak-Warnung unten.**
+  Der Code-String stand zum Zeitpunkt der Anmeldeöffnung **öffentlich auf GitHub**.
+  Damit ist die naheliegende Erklärung („12 eingeladene Athleten haben eingelöst")
+  **nicht mehr die einzige**. Auffällig: **vier** der zwölf Einlösungen fallen in die
+  ersten **fünf Minuten** (00:01, 00:01, 00:03, 00:05). Das passt sowohl zu vorab
+  informierten Athleten als auch zu jemandem, der auf die Öffnung gewartet hat.
+- ⚠️ **Entscheiden kann das nur der Abgleich mit der Einladungsliste** — Stripe und
+  Supabase enthalten diese Information nicht. Zu prüfen: Stehen alle 12 Mailadressen
+  auf der Einladungsliste? Wenn ja, ist der Vorfall folgenlos. Wenn nein, wurden
+  Freiplätze von Unbefugten belegt.
 
 #### ⚠️ Offen: Testdaten vor dem Echtstart entfernen
 
@@ -918,11 +944,71 @@ Early-Bird-Fensters) müssen weg:
   16:49). Das Löschen in Supabase räumt Brevo **nicht** mit auf — es sind zwei getrennte
   Systeme ohne Kopplung. Muss separat über die Brevo-Oberfläche bzw. `contacts`-API
   entfernt werden.
-- [ ] **`times_redeemed` = 1**: nicht rücksetzbar. Ein Promotion Code lässt sich weder
-  löschen noch zurückzählen. Faktisch stehen 19 Athletenplätze zur Verfügung — entweder
-  so kommunizieren oder einen zweiten Code mit dem fehlenden Platz anlegen.
+- [ ] **Der eine Testlauf-Platz ist nicht rücksetzbar** (Stand 2026-09-02:
+  `times_redeemed` = 13, davon 1 aus dem Test vom 15.08.). Ein Promotion Code lässt sich
+  weder löschen noch zurückzählen. Faktisch stehen damit 19 statt 20 echte Athletenplätze
+  zur Verfügung, aktuell noch **7 frei** — entweder so kommunizieren oder einen zweiten
+  Code mit dem fehlenden Platz anlegen.
 - [ ] Der Test-Charge über 0 € braucht **keine** Erstattung (es floss kein Geld,
   `payment_intent: null`).
+
+### 25-%-Rabattcode (Stand 2026-09-02 — ✅ angelegt und verifiziert)
+
+25-%-Rabattcode für 4 Einlösungen, einlösbar im Early-Bird-Fenster. Reine
+Stripe-Konfiguration — **am Code wurde nichts geändert**, das Eingabefeld im Checkout
+existiert bereits über `allow_promotion_codes: true` aus `src/lib/checkout-core.ts`.
+
+**Verwendung: ausschließlich gezielte Weitergabe — der Code wird NICHT öffentlich
+beworben.** Nicht auf der Website, nicht im Newsletter, nicht auf Social Media. Er geht
+einzeln an ausgewählte Empfänger. Das ist der eigentliche Schutzmechanismus: das
+Eingabefeld im Checkout ist für alle sichtbar, der Code selbst darf es nicht sein.
+
+- **Stripe (live, `acct_1To4lEFkID7E6ePc`):** Coupon `AuezfN3N` („Rabatt 25 Prozent 2027",
+  `percent_off: 25`, `duration: once`, keine Produkt-Einschränkung — `applies_to` leer,
+  wie beim Athleten-Coupon) mit Promotion Code `promo_1UBL5YFkID7E6ePcsdDMeYS0` —
+  **4 Einlösungen**, Ablauf 31.12.2026 23:59:59 MEZ (Unix `1798757999`, exakt **1 Sekunde**
+  vor `TIER_WINDOWS.early_bird.until` aus `src/lib/stripe.ts`; identisch mit dem
+  Athletencode).
+- ⚠️ **Der Code-String steht bewusst NIRGENDS im Repo** — nicht hier, nicht in Kommentaren,
+  nicht in Tests. Das Repo liegt auf GitHub; ein Klartext-Code wäre faktisch öffentlich.
+  Nachschauen: **[siehe Stripe Dashboard]** → Coupons → „Rabatt 25 Prozent 2027".
+- ⚠️ Ein Promotion Code ist **unwiderruflich**: er lässt sich nur auf `active: false` setzen,
+  nie löschen und nie umbenennen. Der String ist im Konto dauerhaft belegt. Vor der Anlage
+  wurde gegen `GET /v1/promotion_codes?code=…` geprüft, dass er noch frei war (leere Liste).
+- **`max_redemptions` ist nachträglich erhöhbar.** Anders als der Code-String ist das Limit
+  ein änderbares Feld: Stripe Dashboard → Promotion Code → Limit, oder
+  `POST /v1/promotion_codes/promo_1UBL5YFkID7E6ePcsdDMeYS0 -d max_redemptions=N`. Die 4 sind
+  bewusst als Startwert gesetzt und kein Endzustand — bei Bedarf einfach hochsetzen.
+- **Verifiziert (2026-09-02), Read-Back frisch aus der API, nicht aus der Create-Response:**
+  Coupon `percent_off 25.0`, `duration once`, `valid true`, `livemode true`, `applies_to` leer;
+  Promotion Code `active true`, `max_redemptions 4`, `expires_at 1798757999`
+  (= 31.12.2026 23:59:59 +01:00), `times_redeemed 0`, `livemode true`. 13 von 13 Prüfpunkten
+  grün.
+- **Probe-Checkout gegen den echten Early-Bird-Preis** (`price_1U3I74FkID7E6ePcN5Ek6aZw`,
+  Produkt `prod_V3OuWKVWi6R90h` „Startgeld Early Bird" — **beide Ebenen als `active`
+  gegengeprüft**, siehe Merkregel zum archivierten Produkt weiter oben):
+  Session `cs_live_a1Qeamp…` → `amount_subtotal 7500` → **`amount_total 5625`**,
+  `total_details.amount_discount 1875`, `payment_method_collection: "if_required"`.
+  Bewusst **ohne `participant_id` im Metadata** angelegt: `stripe-webhook.ts:55` gatet genau
+  darauf, eine Probe ohne dieses Feld kann also keine Startnummer und keine Mail auslösen.
+  Session danach auf `expired` gesetzt; `times_redeemed` steht danach gegengeprüft auf
+  **0/4** — kein Platz verbraucht.
+- ⚠️ **Was NICHT bewiesen ist: die Einlösung über das Rabattcode-Eingabefeld im echten
+  Checkout-UI.** Dieser Weg wurde **bewusst nicht getestet**, weil ein echter Durchlauf
+  einen der 4 Plätze verbraucht hätte — `times_redeemed` ist bei Stripe nicht
+  rücksetzbar, der Platz wäre unwiederbringlich weg gewesen.
+  **Bestätigt ist ausschließlich der rechnerische Rabatt, serverseitig gemessen:**
+  75 € → 56,25 € (`amount_subtotal 7500` → `amount_total 5625`). Die Probe hat den Rabatt
+  über `discounts: [{promotion_code}]` gesetzt, nicht über die UI (`discounts` und
+  `allow_promotion_codes` schließen sich in einer Session gegenseitig aus).
+  Das entspricht Punkt 4 der Athleten-Statustabelle, **nicht** Punkt 6.
+  Dass der UI-Weg funktioniert, ist eine **Ableitung**: er wurde für den Athletencode am
+  2026-08-15 end-to-end nachgewiesen, und hier greift dieselbe Session-Konfiguration.
+  Plausibel, aber keine Messung an diesem Code.
+- ⚠️ Das Code-Feld ist für **alle** Besucher sichtbar (`allow_promotion_codes: true`). Der
+  Schutz liegt allein in der Geheimhaltung des Strings und im Limit von 4. Jede Einlösung
+  verbraucht über `confirm_participant` eine echte Startnummer — die 4 Plätze gehen also
+  vom Teilnehmerkontingent ab, nicht obendrauf.
 
 ### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
 
@@ -982,8 +1068,8 @@ und das Ticket-PDF.
 **Vollständig zurückgebaut und gegengeprüft:** `participants` wieder 0 Zeilen, `atteste`-
 Bucket 0 Objekte (die hochgeladene PDF gehört mit gelöscht — sie hängt nicht an der
 DB-Zeile und bleibt sonst als Restmüll liegen), Brevo-Liste 4 wieder 0 Kontakte,
-Stripe-Testprodukt `prod_V4Uz4lQmdwaVBB` wieder archiviert, `DLLATHLET2027` unverändert
-bei **1/20**. Live-Gegenprobe nach dem Schließen: `POST /api/checkout → 403` (auch mit
+Stripe-Testprodukt `prod_V4Uz4lQmdwaVBB` wieder archiviert, Athletencode
+**[siehe Stripe Dashboard]** unverändert bei **1/20**. Live-Gegenprobe nach dem Schließen: `POST /api/checkout → 403` (auch mit
 vollständig gültigem Body), `/de/anmeldung` ohne `<form>`.
 Geschlossen wurde per **frischem `vercel --prod`**, nicht per Rollback;
 `targets.production.id` = `dpl_8F8Y3zisFJ7VKMHeGgDYV2SBSRxk`, `aliasError: null`,
@@ -1013,6 +1099,55 @@ per roher v9-API **und** `vercel inspect` unabhängig bestätigt.
   `PATCH /v9/projects/<prj>/env/<envId>` mit `{"target":["production","preview"]}` setzen.
 
 ### Übrige offene Punkte
+
+- [x] 🚨 **Athletencode kompromittiert — Entscheidung getroffen: Code bleibt aktiv**
+  *(entdeckt 2026-09-02, entschieden von Simon am 2026-09-02)*.
+  Der 100-%-Code stand von Commit `2aa721a` (2026-08-30 20:12 CEST) bis 2026-09-02 im
+  Klartext in dieser Datei, gepusht auf `origin/main`. Das Repo
+  `DolomitesLastLoop/dolomites-lastloop-website` ist **public** — der Code war rund
+  28 Stunden vor der Anmeldeöffnung für jeden lesbar. Seither: `times_redeemed` 1 → 13,
+  **noch 7 Freiplätze offen**, jeder davon 75 € und ein Startplatz aus dem
+  200er-Kontingent.
+  - ✅ **Entscheidung: Der Code bleibt unverändert aktiv.** Keine Deaktivierung, kein
+    Austausch, keine Neuanlage. Bewusst getroffen in Kenntnis der öffentlichen
+    Exposition. **Diese Frage ist damit erledigt und nicht erneut aufzuwerfen** — wer
+    das ändern will, klärt es vorher mit Simon.
+  - ⚠️ **Damit bewusst in Kauf genommen:** die 7 verbleibenden Freiplätze sind für jeden
+    einlösbar, der den Commit-Verlauf auf GitHub liest. Restrisiko 7 × 75 € plus 7
+    Startplätze aus dem 200er-Kontingent.
+  - **Die Redaktion in dieser Datei behebt den Leak NICHT** — sie ist reine Hygiene für
+    die Zukunft. Der String bleibt über `git log -S` und in den GitHub-Ansichten alter
+    Commits abrufbar. Ein History-Rewrite (`git filter-repo` + force-push) wäre nötig,
+    und selbst der räumt Forks, Caches und Klone nicht auf. Auch das ist bewusst
+    unterlassen.
+  - **Offen, aber optional:** ob unter den 12 Einlösungen seit dem 01.09. Unbefugte
+    waren, ist **ungeklärt** und lässt sich nur durch Abgleich der Mailadressen gegen
+    die Einladungsliste beantworten. Stripe und Supabase enthalten diese Information
+    nicht. Rein informativ — auf die Entscheidung oben hat das Ergebnis keinen Einfluss.
+  - **Merkregel für die Zukunft:** dieses Repo ist public. Vor jedem Commit, der Codes,
+    Keys oder IDs anfasst, gilt die Frage „darf das auf GitHub stehen?" — die Zusage
+    „steht bewusst nirgends im Repo" war hier drei Tage lang unzutreffend, ohne dass es
+    jemandem aufgefallen ist.
+
+- [ ] **Stripe Live Secret Key rotieren** *(angelegt 2026-09-02 — nicht akut, aber zeitnah)*.
+  Der Live-Key (`STRIPE_SECRET_KEY`, `sk_live_…`) wurde am 2026-09-02 versehentlich im
+  Klartext in einer Terminal-Ausgabe sichtbar: ein `grep` auf die `.env` sollte den Wert
+  maskieren, das `sed`-Muster griff nicht.
+  **Umfang der Exposition:** nur die Terminal-Ausgabe bzw. die Session-Historie —
+  **in keine Datei geschrieben**, nicht committet, nicht gepusht. Der Key steht
+  unverändert nur in der lokalen `.env` und in Vercel. Ein Missbrauch ist nicht
+  beobachtet worden und auch nicht geprüft worden.
+  **Reihenfolge beim Rotieren — wichtig, weil die Anmeldung seit 01.09. live läuft:**
+  1. Neuen Key im Stripe-Dashboard erzeugen (Developers → API keys → Roll key).
+  2. Neuen Wert in **Vercel Production** setzen (`STRIPE_SECRET_KEY`, bleibt
+     **sensitive** — die `--no-sensitive`-Regel gilt nur für nicht-geheime Variablen)
+     **und** in der lokalen `.env`.
+  3. **Redeploy** — Vercel zieht geänderte Env-Vars nicht in bestehende Deployments
+     nach: `vercel redeploy <dpl_id>` (nicht `vercel --prod`).
+  4. Einen echten Checkout gegenprüfen, dass er noch 200 liefert.
+  5. **Erst dann** den alten Key im Dashboard widerrufen. Wer zuerst widerruft, legt den
+     Checkout für alle laufenden Anmeldungen lahm.
+  `STRIPE_WEBHOOK_SECRET` ist davon **nicht** betroffen und muss nicht mitrotiert werden.
 
 - [x] **Layout-Versatz in der Formularzeile Geburtsdatum / Steuernummer** — ✅ **gefixt am
   2026-08-30** auf Branch `fix/attest-field-alignment` (reines CSS, niedriges Risiko).
@@ -1453,7 +1588,7 @@ Alle Belege gegen Live-Systeme (Vercel API, Stripe Live-Modus, Supabase, Brevo),
 | 5 | Live-Webhook | ✅ | `we_1U4L52FkID7E6ePcjGNz3CNJ`, `status: enabled`, `livemode: true`, URL `https://www.dolomiteslastloop.com/api/stripe-webhook` (mit www), Events `checkout.session.completed` + `checkout.session.expired` |
 | 6 | Supabase `participants` | ✅ | `select count(*)` → **0**. Startnummer via RPC `confirm_participant`: `coalesce(max(startnummer),0)+1` → erster Teilnehmer bekommt **1**. Keine Sequence, kein Reset nötig |
 | 7 | Brevo | ✅ | Liste 4 „DLL Teilnehmer 2027": `get_contacts_from_list` → `count: 0` (echter Beleg, nicht das deprecated `totalSubscribers`). Authorised-IPs: `GET /v3/account` mit API-Key von beliebiger IP → **HTTP 200** ⇒ keine IP-Beschränkung |
-| 8 | `DLLATHLET2027` | ✅ | `active: true`, `times_redeemed: 1`, `max_redemptions: 20` → **19 frei**, `expires_at` = 2026-12-31 23:59:59 CET. ⚠️ Die 1 Einlösung stammt vom **15.08.2026 16:35**, nicht vom Test am 30.08. |
+| 8 | Athletencode **[siehe Stripe Dashboard]** | ⚠️ | **Stand 31.08. (Checklist):** `active: true`, `times_redeemed: 1`, `max_redemptions: 20` → 19 frei, `expires_at` = 2026-12-31 23:59:59 CET. Die 1 Einlösung stammt vom **15.08.2026 16:35**, nicht vom Test am 30.08. — **Stand 02.09.: 13/20, noch 7 frei.** 🚨 An dieser Stelle stand der Code-String im Klartext; das Repo ist public (siehe Leak-Warnung im Athletenabschnitt) |
 | 9 | Deployment | ✅ | `dpl_A3A1LxJuA9WHCtnKQBihzea8vsYh`, Commit `af5d24c384f8a8b…` (= main-HEAD `af5d24c`), target production. `project.latestDeployment` == Production-Alias ⇒ **kein Rollback-Pin** |
 | 10 | Smoke-Test nach Redeploy | ✅ | `/de/ /it/ /en/anmeldung` → 200, alle im „öffnet am"-Zustand (DE „öffnet am 1. September 2026", IT „Le iscrizioni aprono il 1 settembre 2026", EN „opens on 1 September 2026"), **kein Formular** (`<form`/`api/checkout` = 0 Treffer). `POST /api/checkout` → **403 `{"error":"Registration closed"}`** |
 
