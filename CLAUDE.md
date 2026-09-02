@@ -1010,6 +1010,78 @@ Eingabefeld im Checkout ist für alle sichtbar, der Code selbst darf es nicht se
   verbraucht über `confirm_participant` eine echte Startnummer — die 4 Plätze gehen also
   vom Teilnehmerkontingent ab, nicht obendrauf.
 
+#### Vermerk 2026-09-02: Öffentliche Anmeldung zu — Einlösung läuft über den VIP-Weg
+
+Die öffentliche Anmeldung ist seit dem **01.09.2026, 21:21 CEST** zu
+(`PUBLIC_REGISTRATION_ENABLED` steht in Production live auf **`"false"`**, gemessen per
+`vercel env pull`; Zeitstempel der letzten Änderung aus der Vercel-Env-API). `/de|it|en/anmeldung` rendert deshalb den
+Sold-out-Zustand „Startplätze ausgebucht" **ohne Formular** — live gegengeprüft: alle drei
+Sprachen HTTP 200, `<form` und `api/checkout` je 0 Treffer.
+
+⚠️ **Der Sold-out-Text kommt vom Flag, nicht vom Kapazitäts-Gate.** `anmeldung.astro:23`
+rechnet `isRegistrationEnabled() && windowState === "open"`; bei offenem Fenster und
+ausgeschaltetem Flag fällt die Seite auf `signup.soldout.*` — so im Code auch kommentiert
+(Z. 50-53). Die tatsächliche Belegung ist eine **andere** Zahl, siehe unten.
+
+**Der VIP-Anmeldeweg ist die einzige Umgehung — und er ist aktiv.**
+`/api/checkout-vip` überspringt **genau eine** Prüfung, nämlich `isRegistrationEnabled()`
+(siehe *VIP-Anmeldeweg (dauerhaft)* weiter oben); `allow_promotion_codes: true` kommt aus
+demselben `runCheckout` in `@lib/checkout-core` und gilt dort unverändert. Das
+Rabattcode-Feld erscheint dort also genauso wie im regulären Checkout.
+
+- ✅ **`VIP_REGISTRATION_SLUG` ist gesetzt, der Weg ist BESTÄTIGT AKTIV.** Simon hat den
+  Slug am **02.09.2026** rotiert und den vollständigen End-to-End-Test darüber gefahren:
+  echter Durchlauf über die VIP-URL bei `PUBLIC_REGISTRATION_ENABLED=false`, 1-€-Testkauf,
+  Startnummer 200, Webhook 200, Bestätigungsmail mit Ticket-PDF — dokumentiert unter
+  *VIP-Anmeldeweg (dauerhaft)* → *End-to-End gegen Production bestätigt (02.09.2026)*,
+  Tests 12/13/16. Der beim Test benutzte Slug wurde danach rotiert (er war durch Logs und
+  Transkripte gelaufen); die **neue** URL ist aktiv, die alte antwortet mit 404. Passend
+  dazu der Vercel-Zeitstempel: `VIP_REGISTRATION_SLUG` zuletzt geändert am
+  **02.09.2026 22:16 CEST**.
+  - ℹ️ **Randnotiz — warum das hier nicht per Tool nachprüfbar ist, nicht etwa unklar:**
+    Die Variable ist `type: sensitive` und deshalb weder über die Vercel-API noch über
+    `vercel env pull` lesbar (Gegenprobe: **alle** `sensitive`-Variablen kommen im Pull
+    leer zurück, auch `STRIPE_SECRET_KEY` und `PUBLIC_SUPABASE_URL`, die zweifelsfrei
+    gesetzt sind — „leer im Pull" heißt *nicht lesbar*, nicht *leer*). Ein 404 auf
+    `/de/anmeldung-vip/<geratener Slug>` beweist ebenfalls nichts, weil die Route per
+    Design bei fehlendem **und** falschem Slug 404 liefert. Das ist eine Aussage über die
+    Grenzen der Prüfbarkeit von außen — **keine** Aussage über den Status. Der Status ist
+    aus erster Hand bekannt und oben belegt.
+- ✅ **Kapazität ist NICHT der Engpass: 25 Startplätze sind frei.** Live gemessen am
+  2026-09-02 — Supabase `confirmed` **199**, `pending` **0**, `waitlist` 8; Vercel
+  Production `MAX_PARTICIPANTS` = **224** (per `vercel env pull --environment=production`,
+  `type: encrypted` und damit lesbar). Das Gate in `checkout-core.ts:207` prüft
+  `confirmed + pending >= MAX_PARTICIPANTS` → `199 >= 224` = **false**. Erst ab Platz 224
+  liefert `runCheckout` `{waitlist: true}` und erzeugt gar keine Stripe-Session; so weit
+  ist es nicht.
+
+**Folge: Der Code ist jetzt praktisch nutzbar.** Beide Voraussetzungen sind erfüllt —
+VIP-Weg aktiv und 25 freie Plätze. **Alle 4** Einlösungen dieses Codes und **alle 7**
+verbleibenden Athleten-Freiplätze lassen sich über die VIP-URL tatsächlich in Anmeldungen
+umwandeln (11 mögliche Einlösungen gegen 25 freie Plätze, also kein Gedränge). Der Weg
+dorthin ist die private VIP-URL plus der Rabattcode im Checkout-Eingabefeld.
+Über die **öffentliche** Anmeldeseite geht weiterhin nichts, solange
+`PUBLIC_REGISTRATION_ENABLED` auf `"false"` steht — das ist der einzig verbleibende
+Unterschied.
+
+⚠️ **Korrektur einer früheren Angabe in diesem Dokument:** Der Abschnitt *Kapazität auf 200
+gesenkt* (2026-09-01, 14:57) ist **überholt**. `MAX_PARTICIPANTS` wurde am 01.09. um
+**22:24 CEST** auf **224** angehoben, um Wartelisten-Einladungen zu ermöglichen. Wer die
+freien Plätze ausrechnet, nimmt den **Live-Wert**, nicht die 200 aus jenem Abschnitt — und
+auch nicht die lokale `.env`, die abweichend auf 150 steht und für Production ohne Belang
+ist.
+
+⚠️ **Nachtrag zur Env-Typen-Regel oben** (*Konventionen & Sicherheit* → Nachtrag
+2026-08-15): Dort steht „ALLE 22 Env-Variablen sind `type: sensitive`". Das gilt so
+**nicht mehr** — `MAX_PARTICIPANTS`, `PUBLIC_REGISTRATION_ENABLED` und
+`STRIPE_PRICE_EARLY_BIRD` stehen inzwischen auf `type: encrypted` und sind per
+`vercel env pull` **lesbar**; die übrigen 20 bleiben `sensitive` und kommen weiterhin als
+`KEY=""` zurück. Die dort notierte Falle („leer heißt nicht leer") gilt also nur noch für
+die `sensitive`-Teilmenge — dafür kommt eine neue dazu: **wer pauschal annimmt, nichts sei
+lesbar, misst gar nicht erst und schreibt veraltete Zahlen aus der eigenen Doku ab.**
+Genau so entstand am 02.09. die falsche Angabe „nur 1 freier Platz" (200 statt 224).
+Richtige Reihenfolge: erst `vercel env pull` versuchen, dann den Typ pro Variable prüfen.
+
 ### Galerie – Sieder-Fotos (Stand 2026-08-14, Branch `feat/gallery-sieder-photos`)
 
 - [x] **Vercel-Preview-Verifikation für die Galerie-Bilder** *(2026-08-14 erledigt, Commit
@@ -1627,6 +1699,20 @@ Branch. Workaround: leeres Branch-Argument mitgeben —
 ---
 
 ## Kapazität auf 200 gesenkt — 2026-09-01, 14:57 CEST
+
+> ⚠️ **NICHT MEHR DER AKTUELLE STAND.** `MAX_PARTICIPANTS` wurde noch am selben Abend
+> (**01.09.2026, 22:24 CEST**, laut `updatedAt` in `GET /v9/projects/<id>/env`) auf
+> **224** angehoben, um Wartelisten-Einladungen zu ermöglichen. Dieser Abschnitt
+> dokumentiert nur die Senkung von 14:57 und ist als Momentaufnahme zu lesen.
+> Der Live-Wert steht in *25-%-Rabattcode → Vermerk 2026-09-02* (dort gemessen per
+> `vercel env pull`, nicht abgeschrieben); auch der VIP-Verifikationsabschnitt
+> *End-to-End gegen Production bestätigt (02.09.2026)* rechnet bereits mit
+> „**199 von 224**". **Wer freie Plätze ausrechnet, misst den Live-Wert** — die 200 hier
+> hat am 02.09. schon einmal zu einer falschen Angabe geführt.
+>
+> ℹ️ Nebenbefund, bewusst nicht geändert: Commit `009305f` deckelt den Zähler der
+> Startliste bei **200** („X von 200 Plätzen"). Die öffentliche Anzeige und die
+> tatsächliche Kapazität (224) laufen damit auseinander.
 
 Bewusste Entscheidung von Simon am Eröffnungstag der Anmeldung. Risikostufe HOCH
 (laufende Anmeldung, Live-Zahlungen). **Erwartete Folge ausdrücklich in Kauf genommen:
