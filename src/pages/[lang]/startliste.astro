@@ -2,7 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { useTranslations, type Lang } from "@i18n/utils";
 import { getPublicClient, type Participant } from "@lib/supabase";
-import { PUBLIC_DISPLAYED_CAP } from "@lib/constants";
+import { WILDCARD_PARTICIPANTS } from "@lib/wildcard";
 
 export const prerender = false;
 const lang = (Astro.params.lang ?? "de") as Lang;
@@ -10,7 +10,6 @@ if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 const t = useTranslations(lang);
 
 let participants: Participant[] = [];
-let confirmedCount = 0;
 
 try {
   // Least Privilege: öffentliche Seite liest mit dem Anon-Key aus der View
@@ -26,16 +25,19 @@ try {
     .order("startnummer", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });
   participants = (data as Participant[]) ?? [];
-  confirmedCount = participants.filter((p) => p.ticket_status === "confirmed").length;
 } catch {
   participants = [];
 }
 
-// Nach außen steigt die Zahl nie über PUBLIC_DISPLAYED_CAP, auch wenn intern
-// mehr bestätigt sind: MAX_PARTICIPANTS liegt höher, damit Wartelisten-
-// Nachrücker Absagen auffangen können. Die Tabelle unten zeigt bewusst
-// weiterhin ALLE bestätigten Teilnehmer — gedeckelt wird nur der Zähler.
-const displayedCount = Math.min(confirmedCount, PUBLIC_DISPLAYED_CAP);
+// Wildcards laufen als eigene Sektion unterhalb der regulären Liste (kuratiert,
+// siehe @lib/wildcard) — aus der regulären Liste entfernt, um Doppel-Einträge
+// zu vermeiden.
+const wildcardIds = new Set(WILDCARD_PARTICIPANTS.map((w) => w.id));
+const wildcardOverrides = new Map(
+  WILDCARD_PARTICIPANTS.filter((w) => w.nameOverride).map((w) => [w.id, w.nameOverride!]),
+);
+const wildcardParticipants = participants.filter((p) => wildcardIds.has(p.id));
+participants = participants.filter((p) => !wildcardIds.has(p.id));
 
 const statusLabel = (s: string) => {
   if (s === "confirmed") return t("startlist.status.confirmed");
@@ -62,54 +64,105 @@ const statusClass = (s: string) => {
     <div class="container">
       <p class="eyebrow">Live</p>
       <h1>{t("startlist.title")}</h1>
-      <p class="section-lead">
-        {t("startlist.counter", { filled: displayedCount, total: PUBLIC_DISPLAYED_CAP })}
-      </p>
+      <p class="section-lead">{t("startlist.counter")}</p>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="search-wrap mb-5">
-        <input
-          type="search"
-          id="startlist-search"
-          placeholder={t("startlist.search")}
-          aria-label={t("startlist.search")}
-        />
+      {
+        wildcardParticipants.length > 0 && (
+          <div class="tabs" role="tablist">
+            <button
+              type="button"
+              class="tab is-active"
+              role="tab"
+              aria-selected="true"
+              data-tab="list"
+            >
+              {t("startlist.title")}
+            </button>
+            <button
+              type="button"
+              class="tab"
+              role="tab"
+              aria-selected="false"
+              data-tab="wildcard"
+            >
+              {t("startlist.wildcard.title")}
+            </button>
+          </div>
+        )
+      }
+
+      <div data-panel="list" role="tabpanel">
+        <div class="search-wrap mb-5">
+          <input
+            type="search"
+            id="startlist-search"
+            placeholder={t("startlist.search")}
+            aria-label={t("startlist.search")}
+          />
+        </div>
+
+        {
+          participants.length === 0 ? (
+            <p class="text-dim">{t("startlist.empty")}</p>
+          ) : (
+            <div class="table-wrap">
+              <table class="table" id="startlist-table">
+                <thead>
+                  <tr>
+                    <th>{t("startlist.col.name")}</th>
+                    <th>{t("startlist.col.nation")}</th>
+                    <th>{t("startlist.col.status")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {participants.map((p) => (
+                    <tr data-name={`${p.vorname} ${p.nachname}`.toLowerCase()}>
+                      <td>
+                        {p.vorname} {p.nachname}
+                      </td>
+                      <td>{p.nationalitaet ?? "—"}</td>
+                      <td>
+                        <span class={`badge ${statusClass(p.ticket_status)}`}>
+                          {statusLabel(p.ticket_status)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        }
       </div>
 
       {
-        participants.length === 0 ? (
-          <p class="text-dim">{t("startlist.empty")}</p>
-        ) : (
-          <div class="table-wrap">
-            <table class="table" id="startlist-table">
-              <thead>
-                <tr>
-                  <th>{t("startlist.col.number")}</th>
-                  <th>{t("startlist.col.name")}</th>
-                  <th>{t("startlist.col.nation")}</th>
-                  <th>{t("startlist.col.status")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {participants.map((p, idx) => (
-                  <tr data-name={`${p.vorname} ${p.nachname}`.toLowerCase()}>
-                    <td>{p.startnummer ?? idx + 1}</td>
-                    <td>
-                      {p.vorname} {p.nachname}
-                    </td>
-                    <td>{p.nationalitaet ?? "—"}</td>
-                    <td>
-                      <span class={`badge ${statusClass(p.ticket_status)}`}>
-                        {statusLabel(p.ticket_status)}
-                      </span>
-                    </td>
+        wildcardParticipants.length > 0 && (
+          <div class="wildcard-panel" data-panel="wildcard" role="tabpanel" hidden>
+            <h2>{t("startlist.wildcard.title")}</h2>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>{t("startlist.col.name")}</th>
+                    <th>{t("startlist.col.nation")}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {wildcardParticipants.map((p) => (
+                    <tr>
+                      <td>
+                        {wildcardOverrides.get(p.id) ?? `${p.vorname} ${p.nachname}`}
+                      </td>
+                      <td>{p.nationalitaet ?? "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )
       }
@@ -139,6 +192,44 @@ const statusClass = (s: string) => {
   .table-wrap {
     overflow-x: auto;
   }
+  .tabs {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tab {
+    padding: 0.65rem 1.1rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+  }
+  .tab:hover {
+    color: var(--color-text);
+  }
+  .tab.is-active {
+    color: var(--color-text);
+    border-bottom-color: var(--color-primary);
+  }
+  .tab.is-active[data-tab="wildcard"] {
+    color: var(--color-wildcard);
+    border-bottom-color: var(--color-wildcard);
+  }
+  .wildcard-panel {
+    padding: var(--space-5);
+    border: 1px solid rgba(194, 87, 15, 0.3);
+    border-left: 3px solid var(--color-wildcard);
+    border-radius: var(--radius);
+    background: rgba(194, 87, 15, 0.05);
+  }
+  .wildcard-panel h2 {
+    color: var(--color-wildcard);
+    margin-bottom: var(--space-4);
+  }
 </style>
 
 <script>
@@ -151,5 +242,21 @@ const statusClass = (s: string) => {
         const name = row.dataset.name || "";
         row.style.display = !q || name.includes(q) ? "" : "none";
       });
+  });
+
+  const tabs = document.querySelectorAll<HTMLButtonElement>(".tab");
+  const panels = document.querySelectorAll<HTMLElement>("[data-panel]");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.tab;
+      tabs.forEach((t) => {
+        const active = t === tab;
+        t.classList.toggle("is-active", active);
+        t.setAttribute("aria-selected", String(active));
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.panel !== target;
+      });
+    });
   });
 </script>

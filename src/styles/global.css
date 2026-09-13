@@ -24,6 +24,7 @@
   --color-warn: #a87600;
   --color-error: #b8392f;
   --color-gold: #c9a84c;
+  --color-wildcard: #c2570f;
 
   /* Typography */
   --font-display: "Bebas Neue", Impact, "Arial Narrow Bold", sans-serif;
