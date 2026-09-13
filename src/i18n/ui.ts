@@ -216,7 +216,7 @@ export const ui = {
     "signup.full.cta": "Auf Warteliste setzen",
 
     "startlist.title": "Startliste",
-    "startlist.counter": "{filled} von {total} Plätzen vergeben",
+    "startlist.counter": "SOLD OUT",
     "startlist.search": "Name suchen…",
     "startlist.col.number": "Nr.",
     "startlist.col.name": "Name",
@@ -226,6 +226,7 @@ export const ui = {
     "startlist.status.waitlist": "Warteliste",
     "startlist.status.pending": "Ausstehend",
     "startlist.empty": "Noch keine Teilnehmer registriert.",
+    "startlist.wildcard.title": "Wildcards",
 
     "results.eyebrow": "Archiv",
     "results.subtitle": "2026 · Première · Toblach",
@@ -599,7 +600,7 @@ export const ui = {
     "signup.full.cta": "Vai in lista d’attesa",
 
     "startlist.title": "Lista partenti",
-    "startlist.counter": "{filled} di {total} posti assegnati",
+    "startlist.counter": "SOLD OUT",
     "startlist.search": "Cerca nome…",
     "startlist.col.number": "N°",
     "startlist.col.name": "Nome",
@@ -609,6 +610,7 @@ export const ui = {
     "startlist.status.waitlist": "Lista d’attesa",
     "startlist.status.pending": "In sospeso",
     "startlist.empty": "Nessun partecipante registrato.",
+    "startlist.wildcard.title": "Wildcards",
 
     "results.eyebrow": "Archivio",
     "results.subtitle": "2026 · Première · Dobbiaco",
@@ -974,7 +976,7 @@ export const ui = {
     "signup.full.cta": "Join the waitlist",
 
     "startlist.title": "Start list",
-    "startlist.counter": "{filled} of {total} places filled",
+    "startlist.counter": "SOLD OUT",
     "startlist.search": "Search name…",
     "startlist.col.number": "No.",
     "startlist.col.name": "Name",
@@ -983,6 +985,7 @@ export const ui = {
     "startlist.status.confirmed": "Confirmed",
     "startlist.status.waitlist": "Waitlist",
     "startlist.status.pending": "Pending",
+    "startlist.wildcard.title": "Wildcards",
     "startlist.empty": "No registered runners yet.",
 
     "results.eyebrow": "Archive",
