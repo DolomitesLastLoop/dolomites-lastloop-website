@@ -17,7 +17,7 @@ export const WILDCARD_PARTICIPANTS: {
   { id: "2bd391dc-3a44-4a27-b9f1-c2eee8d28c47" }, // Ted Pullin
   { id: "da0604e9-4a32-45fb-830e-06fe0241f574" }, // Albert Urbanovich
   { id: "529edb0b-a688-4192-9536-c2c7ce8dda26" }, // Monika Rabanser
-  { id: "5e49e4c7-5fea-4b28-b047-b43f581cf097", nameOverride: "Andrea Maria Berger" },
+  { id: "5e49e4c7-5fea-4b28-b047-b43f581cf097", nameOverride: "Andrea Maria Bergner" },
   { id: "2f3c03f3-20fb-4f43-86ba-e91f352f2ea3" }, // Celia Parker
   { id: "5db9de41-3b06-44ec-8e0d-1d59f89c0bc8" }, // Luca Clara
   { id: "fea6df21-c537-4776-afce-b3524fffe535" }, // Alexander Rabensteiner
