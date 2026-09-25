@@ -84,3 +84,12 @@ Ergebnisliste Dolomites Last Loop 2026.pdf
 
 # End Agentic OS Template - Downstream Ignore Defaults
 
+# Wegwerf-Ops-Skripte (Einladungs-/Diagnose-Läufe gegen die Live-DB/Stripe).
+# Jedes Skript trägt seinen Zweck im Kopfkommentar; mehrere markieren sich
+# selbst als "NICHT COMMITTEN", weil sie reine Live-Operationen sind.
+scripts/diagnose-*.mts
+scripts/invite-waitlist.mts
+scripts/notify-waitlist.mts
+scripts/reinvite-waitlist.mts
+scripts/render-test-tickets.mts
+scripts/verify-reinvite.mts
