@@ -338,3 +338,36 @@ alter table public.participants
 -- keine RLS-Policies, keine abhängigen Views/Fremdschlüssel).
 -- Nötig für bestehende Datenbanken: das Weglassen oben ist dort ein No-Op.
 drop table if exists public.waitlist;
+
+-- ────────────────────────────────────────────────────────────
+-- community_run_registrations (2026-09-25)
+-- Anmeldungen zum Community Run — bewusst GETRENNT von participants (kein
+-- Rennstartplatz, keine Zahlung, keine Fremdschlüssel). Die Anmeldung schaltet
+-- per Magic-Link den Shop frei.
+-- access_token_hash: SHA-256 (hex) des Zugangs-Tokens. Der rohe Token steht
+-- NUR im E-Mail-Link, nie in der DB.
+-- pace_group: Werte sind PLATZHALTER (offener Punkt) — Änderung später über
+-- drop/add constraint, wie bei participants_price_type_check.
+-- RLS aktiv, KEINE Policies → anon/authenticated haben keinerlei Zugriff;
+-- gelesen/geschrieben wird ausschließlich serverseitig mit dem Service-Role-Key.
+-- ────────────────────────────────────────────────────────────
+create table if not exists public.community_run_registrations (
+  id uuid primary key default gen_random_uuid(),
+  vorname text not null,
+  nachname text not null,
+  email text not null unique,
+  pace_group text
+    constraint community_run_registrations_pace_group_check
+    check (pace_group in ('relaxed', 'moderate', 'fast')),
+  consent_privacy boolean not null default false,
+  workshop_interest boolean not null default false,
+  access_token_hash text not null unique,
+  access_token_expires_at timestamptz,
+  access_revoked boolean not null default false,
+  lang text not null default 'de'
+    constraint community_run_registrations_lang_check
+    check (lang in ('de', 'it', 'en')),
+  created_at timestamptz not null default now()
+);
+
+alter table public.community_run_registrations enable row level security;

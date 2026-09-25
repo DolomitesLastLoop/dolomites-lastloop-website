@@ -6,6 +6,19 @@ export function isValidEmail(v: string): boolean {
   return EMAIL_RE.test(v.trim());
 }
 
+// Nutzereingaben vor dem Einsetzen in E-Mail-HTML escapen (Namen etc.).
+const HTML_ESCAPES: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+};
+
+export function escapeHtml(v: string): string {
+  return String(v).replace(/[&<>"']/g, (ch) => HTML_ESCAPES[ch]);
+}
+
 // Plausible international phone number: optional leading +, then digits and the
 // usual separators. Intentionally lenient (no library) — we only guard against
 // obvious garbage, not validate carrier-correctness. 6–20 digits.

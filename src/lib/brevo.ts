@@ -4,6 +4,7 @@
 //   BREVO_API_KEY              – v3 API-Key (xkeysib-…)
 //   BREVO_LIST_ID              – Newsletter-Liste (numerisch)
 //   BREVO_PARTICIPANT_LIST_ID  – Liste der bestätigten Teilnehmer (numerisch)
+//   BREVO_COMMUNITY_RUN_LIST_ID – Community-Run-Anmeldungen (numerisch)
 //
 // Gelesen wird runtime-first über @lib/env: statisches `import.meta.env.X` würde
 // von Vite zur BUILD-Zeit als Literal eingebacken (vgl. Fehlerprotokoll 2026-07-11).
@@ -14,12 +15,17 @@
 
 import { env } from "@lib/env";
 
-/** Zielliste. "newsletter" = Einwilligung, "participants" = Vertragserfüllung. */
-export type BrevoList = "newsletter" | "participants";
+/**
+ * Zielliste. "newsletter" = Einwilligung, "participants" = Vertragserfüllung,
+ * "communityRun" = Community-Run-Anmeldung (eigene Liste, eigene Rechtsgrundlage —
+ * getrennt von Newsletter und Rennteilnehmern).
+ */
+export type BrevoList = "newsletter" | "participants" | "communityRun";
 
 const LIST_ENV_VAR: Record<BrevoList, string> = {
   newsletter: "BREVO_LIST_ID",
   participants: "BREVO_PARTICIPANT_LIST_ID",
+  communityRun: "BREVO_COMMUNITY_RUN_LIST_ID",
 };
 
 function parseListId(raw: string | undefined): number | null {

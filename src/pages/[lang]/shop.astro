@@ -1,0 +1,283 @@
+---
+// Shop v2 — nur für Community-Run-Angemeldete.
+//
+// Zugang (serverseitig, bei JEDEM Aufruf):
+//   1. ?token=<roh> aus dem Mail-Link → Hash gegen community_run_registrations,
+//      Widerruf + Ablauf prüfen. Gültig → Session-Cookie setzen und auf die URL
+//      OHNE Token umleiten (Token nicht in Verlauf/Referrer/Screenshots).
+//   2. Sonst Session-Cookie (src/lib/shop-session.ts) → ID erneut gegen die DB
+//      prüfen, damit ein Widerruf sofort greift.
+//   3. Sonst: klare Meldung „Zugang nur über Community-Run-Anmeldung" (403).
+//
+// Nicht auffindbar: noindex, NICHT in sitemap.xml.ts, kein Nav-/Footer-Link.
+// Kein Checkout (Shopify/Printful folgt zum Schluss) — das UI sagt das offen.
+import { Image } from "astro:assets";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { localizePath, type Lang } from "@i18n/utils";
+import { shopCopy, shopProducts, SIZES } from "@i18n/shop";
+import { shopPhoto } from "@lib/shop-images";
+import {
+  checkAccessById,
+  checkAccessByToken,
+  type AccessCheck,
+} from "@lib/community-run";
+import {
+  clearShopSession,
+  isShopSessionConfigured,
+  issueShopSession,
+  readShopSession,
+} from "@lib/shop-session";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+const c = shopCopy[lang];
+
+// Personalisierte Antwort → nie cachen.
+Astro.response.headers.set("Cache-Control", "private, no-store");
+
+let access: AccessCheck = { ok: false, reason: "missing" };
+const token = (Astro.url.searchParams.get("token") ?? "").trim();
+
+// Fail-closed: ohne SHOP_SESSION_SECRET kann keine Session gesetzt werden — der
+// Token bliebe dauerhaft in der URL (Verlauf, Screenshots, Weitergabe). Dann lieber
+// ein klarer Serverfehler, noch VOR jeder DB-Abfrage.
+const misconfigured = Boolean(token) && !isShopSessionConfigured();
+if (misconfigured) {
+  console.error("[shop] SHOP_SESSION_SECRET fehlt/zu kurz — Mail-Link-Zugang abgebrochen (500).");
+}
+
+if (!misconfigured) try {
+  if (token) {
+    access = await checkAccessByToken(token);
+    if (access.ok && issueShopSession(Astro.cookies, access.id, access.expiresAt)) {
+      return Astro.redirect(localizePath("/shop", lang), 303);
+    }
+  } else {
+    const sessionId = readShopSession(Astro.cookies);
+    if (sessionId) {
+      access = await checkAccessById(sessionId);
+      if (!access.ok) clearShopSession(Astro.cookies);
+    }
+  }
+} catch (err) {
+  console.error("[shop] access check failed:", err instanceof Error ? err.message : err);
+  access = { ok: false, reason: "invalid" };
+}
+
+if (misconfigured) Astro.response.status = 500;
+else if (!access.ok) Astro.response.status = 403;
+const showExpired = !access.ok && (access.reason === "expired" || access.reason === "revoked");
+
+const IMG_WIDTHS = [400, 640, 900];
+const IMG_SIZES = "(max-width: 900px) 92vw, 560px";
+---
+
+<BaseLayout lang={lang} title={c.metaTitle} noindex={true}>
+  {
+    misconfigured ? (
+      <section class="section shop-denied">
+        <div class="container-narrow text-center">
+          <span class="eyebrow">Dolomites Last Loop</span>
+          <h1 class="section-title">{c.misconfigured.title}</h1>
+          <p class="section-lead">{c.misconfigured.text}</p>
+        </div>
+      </section>
+    ) : !access.ok ? (
+      <section class="section shop-denied">
+        <div class="container-narrow text-center">
+          <span class="eyebrow">Dolomites Last Loop</span>
+          <h1 class="section-title">{c.denied.title}</h1>
+          <p class="section-lead">{c.denied.text}</p>
+          {showExpired && <div class="alert alert-info mt-5">{c.denied.expired}</div>}
+          <a href={localizePath("/community-run", lang)} class="btn btn-primary btn-arrow mt-6">
+            {c.denied.cta}
+          </a>
+        </div>
+      </section>
+    ) : (
+      <>
+        <section class="section shop-hero">
+          <div class="container text-center">
+            <span class="eyebrow">{c.hero.eyebrow}</span>
+            <h1 class="section-title">{c.hero.title}</h1>
+            <p class="shop-subline">{c.hero.subtitle}</p>
+            <p class="section-lead">{c.hero.text}</p>
+            <div class="alert alert-info shop-notice mt-5">{c.notice}</div>
+          </div>
+        </section>
+
+        {shopProducts.map((p, i) => {
+          const img = shopPhoto[p.id];
+          return (
+            <section class:list={["section", "shop-product", { "section-alt": i % 2 === 1 }]} id={p.id}>
+              <div class:list={["container", "shop-product-grid", { "is-flipped": i % 2 === 1 }]}>
+                <div class="shop-media">
+                  {img ? (
+                    <Image
+                      src={img}
+                      alt={c.photoAlt(p.name)}
+                      widths={IMG_WIDTHS}
+                      sizes={IMG_SIZES}
+                      format="webp"
+                      loading={i === 0 ? "eager" : "lazy"}
+                      class="shop-photo"
+                    />
+                  ) : (
+                    <div class="shop-placeholder" role="img" aria-label={c.placeholderAlt(p.name)}>
+                      <span class="shop-placeholder-name">{p.name}</span>
+                      <span class="shop-placeholder-tag">{c.placeholderImage}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div class="shop-details">
+                  <span class="eyebrow">{String(i + 1).padStart(2, "0")} / {String(shopProducts.length).padStart(2, "0")}</span>
+                  <h2 class="shop-name">{p.name}</h2>
+                  <p class="section-lead">{p.tagline[lang]}</p>
+
+                  <dl class="shop-specs">
+                    <div>
+                      <dt>{c.colorLabel}</dt>
+                      <dd>{c.colorValue}</dd>
+                    </div>
+                    <div>
+                      <dt>{c.sizeLabel}</dt>
+                      <dd>{SIZES.join(" · ")}</dd>
+                    </div>
+                    <div>
+                      <dt>{c.priceLabel}</dt>
+                      <dd>{c.priceValue}</dd>
+                    </div>
+                  </dl>
+
+                  {/* Bewusst KEIN Button: es gibt noch keinen Checkout. */}
+                  <p class="shop-order-status">
+                    <span class="badge badge-pending">{c.orderStatus}</span>
+                  </p>
+                  <p class="text-dim shop-order-hint">{c.orderHint}</p>
+                </div>
+              </div>
+            </section>
+          );
+        })}
+      </>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .shop-hero,
+  .shop-denied {
+    padding-top: calc(var(--nav-height) + var(--space-8));
+  }
+  .shop-denied h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+  }
+  .shop-subline {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+    color: var(--color-primary-light);
+    margin: 0 0 var(--space-4);
+  }
+  .shop-hero .section-lead,
+  .shop-denied .section-lead {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .shop-notice {
+    display: inline-block;
+    text-align: left;
+  }
+  .shop-product-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-8);
+    align-items: center;
+  }
+  .shop-product-grid.is-flipped .shop-media {
+    order: 2;
+  }
+  .shop-media {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    background: #0a0a0a;
+    aspect-ratio: 4 / 5;
+  }
+  .shop-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .shop-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    text-align: center;
+    color: #fff;
+  }
+  .shop-placeholder-name {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    letter-spacing: 0.05em;
+    line-height: 1.05;
+  }
+  .shop-placeholder-tag {
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .shop-name {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin: var(--space-2) 0 var(--space-4);
+  }
+  .shop-specs {
+    display: grid;
+    gap: var(--space-3);
+    margin: var(--space-6) 0;
+  }
+  .shop-specs > div {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-3);
+  }
+  .shop-specs dt {
+    color: var(--color-text-muted);
+  }
+  .shop-specs dd {
+    margin: 0;
+    font-weight: 600;
+  }
+  .shop-order-status {
+    margin: 0 0 var(--space-2);
+  }
+  .shop-order-hint {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  @media (max-width: 900px) {
+    .shop-product-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    .shop-product-grid.is-flipped .shop-media {
+      order: 0;
+    }
+  }
+</style>

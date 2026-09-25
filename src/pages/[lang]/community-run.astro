@@ -1,0 +1,295 @@
+---
+// Community Run — Landingpage mit Anmeldeformular.
+//
+// Nur über geteilten Link erreichbar (analog VIP-Anmeldeweg):
+//   • noindex,nofollow über die BaseLayout-Prop
+//   • NICHT in src/pages/sitemap.xml.ts (handgepflegte Allowlist)
+//   • KEIN Eintrag im Header/Footer
+// Die Anmeldung schreibt in community_run_registrations (nicht participants) und
+// verschickt den persönlichen Shop-Zugangslink — siehe api/community-run-register.ts.
+//
+// TODO(Simon): Alle Texte sind Platzhalter — siehe src/i18n/community-run.ts.
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import { photo } from "@lib/photos";
+import { localizePath, type Lang } from "@i18n/utils";
+import { communityRun } from "@i18n/community-run";
+import { PACE_GROUPS } from "@lib/community-run";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
+const c = communityRun[lang];
+const privacyHref = localizePath("/datenschutz", lang);
+// Hochformat-Foto (1280×1920): Gesichter liegen bei ~36–50 % der Bildhöhe.
+// "center center" schnitt sie auf Desktop ab; 40 % hält sie auf 390–1920 px im Bild.
+const HERO_POSITION = "center 40%";
+---
+
+<BaseLayout lang={lang} title={c.metaTitle} description={c.metaDescription} noindex={true}>
+  <PageHero
+    bg={photo.start_group}
+    position={HERO_POSITION}
+    eyebrow={c.hero.eyebrow}
+    title={c.hero.title}
+    subtitle={c.hero.subtitle}
+  />
+
+  {/* Info-Leiste — TODO(Simon): Datum/Ort/Format */}
+  <section class="section-tight section-alt">
+    <div class="container">
+      <ul class="cr-info grid grid-3">
+        {c.info.map((item) => (
+          <li class="card cr-info-item">
+            <span class="eyebrow">{item.label}</span>
+            <strong>{item.value}</strong>
+            <span class="badge badge-pending">{c.todoTag}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* Erklärtext — TODO(Simon): finale Copy */}
+  <section class="section">
+    <div class="container-narrow">
+      <div class="section-head text-center cr-head reveal">
+        <span class="eyebrow">{c.explainer.eyebrow}</span>
+        <h2 class="section-title">{c.explainer.title}</h2>
+      </div>
+      {c.explainer.paragraphs.map((p) => (
+        <p class="section-lead reveal">{p}</p>
+      ))}
+    </div>
+  </section>
+
+  {/* Ablauf — TODO(Simon): genaue Schritte */}
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head text-center cr-head reveal">
+        <span class="eyebrow">{c.timeline.eyebrow}</span>
+        <h2 class="section-title">{c.timeline.title}</h2>
+      </div>
+      <ol class="cr-timeline grid grid-4">
+        {c.timeline.steps.map((step, i) => (
+          <li class="card reveal" data-delay={String((i + 1) * 100)}>
+            <span class="cr-step-num">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{step.title}</h3>
+            <p class="text-muted">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {/* Anmeldeformular */}
+  <section class="section" id="anmeldung">
+    <div class="container-narrow">
+      <div class="section-head text-center cr-head reveal">
+        <span class="eyebrow">{c.form.eyebrow}</span>
+        <h2 class="section-title">{c.form.title}</h2>
+        <p class="section-lead">{c.form.lead}</p>
+      </div>
+
+      <form
+        id="cr-form"
+        class="card cr-form"
+        novalidate
+        data-lang={lang}
+        data-sending={c.form.sending}
+        data-success={c.form.success}
+        data-errors={JSON.stringify(c.form.errors)}
+      >
+        <div class="field-row">
+          <div class="field">
+            <label for="cr-vorname">{c.form.vorname} *</label>
+            <input id="cr-vorname" name="vorname" type="text" required maxlength="100" autocomplete="given-name" />
+          </div>
+          <div class="field">
+            <label for="cr-nachname">{c.form.nachname} *</label>
+            <input id="cr-nachname" name="nachname" type="text" required maxlength="100" autocomplete="family-name" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="cr-email">{c.form.email} *</label>
+          <input id="cr-email" name="email" type="email" required maxlength="254" autocomplete="email" />
+        </div>
+
+        <div class="field">
+          <label for="cr-pace">{c.form.pace} *</label>
+          <select id="cr-pace" name="pace_group" required>
+            <option value="">{c.form.pacePlaceholder}</option>
+            {PACE_GROUPS.map((g) => <option value={g}>{c.form.paceOptions[g]}</option>)}
+          </select>
+          <span class="hint">{c.form.paceHint}</span>
+        </div>
+
+        {/* Honeypot: für Menschen unsichtbar; ausgefüllt = Bot (wie Newsletter). */}
+        <div class="cr-hp" aria-hidden="true">
+          <label for="cr-website">Website</label>
+          <input id="cr-website" type="text" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <label class="cr-check">
+          <input type="checkbox" name="consent_privacy" required />
+          <span>
+            {c.form.consentBefore}<a href={privacyHref} target="_blank" rel="noopener">{c.form.consentLink}</a>{c.form.consentAfter} *
+          </span>
+        </label>
+
+        <label class="cr-check">
+          <input type="checkbox" name="workshop_interest" />
+          <span>
+            {c.form.workshop}
+            <small class="text-dim">{c.form.workshopHint}</small>
+          </span>
+        </label>
+
+        <div id="cr-status" class="alert" role="status" aria-live="polite" hidden></div>
+
+        <button type="submit" class="btn btn-primary btn-block">{c.form.submit}</button>
+      </form>
+    </div>
+  </section>
+
+  {/* Workshop-Teaser — TODO(Simon): Preis/Zahlungsart offen */}
+  <section class="section section-alt">
+    <div class="container-narrow text-center">
+      <span class="eyebrow">{c.workshop.eyebrow}</span>
+      <h2 class="section-title">{c.workshop.title}</h2>
+      <p class="section-lead">{c.workshop.text}</p>
+      <div class="alert alert-info mt-5">
+        <span class="badge badge-pending">{c.todoTag}</span>
+        {c.workshop.openNote}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById("cr-form") as HTMLFormElement | null;
+  const status = document.getElementById("cr-status") as HTMLDivElement | null;
+
+  function show(kind: "success" | "error", text: string) {
+    if (!status) return;
+    status.hidden = false;
+    status.className = `alert alert-${kind}`;
+    status.textContent = text;
+  }
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const errors = JSON.parse(form.dataset.errors || "{}") as Record<string, string>;
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      show("error", errors.invalid_input);
+      return;
+    }
+    const btn = form.querySelector<HTMLButtonElement>("button[type=submit]");
+    const label = btn?.textContent ?? "";
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = form.dataset.sending ?? label;
+    }
+    const data = new FormData(form);
+    try {
+      const res = await fetch("/api/community-run-register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          vorname: data.get("vorname"),
+          nachname: data.get("nachname"),
+          email: data.get("email"),
+          pace_group: data.get("pace_group"),
+          consent_privacy: data.get("consent_privacy") === "on",
+          workshop_interest: data.get("workshop_interest") === "on",
+          website: data.get("website"),
+          lang: form.dataset.lang,
+        }),
+      });
+      if (res.ok) {
+        form.reset();
+        show("success", form.dataset.success ?? "");
+        return;
+      }
+      if (res.status === 429) {
+        show("error", errors.rate_limited);
+        return;
+      }
+      const body = (await res.json().catch(() => ({}))) as { error?: string };
+      show("error", errors[body.error ?? ""] ?? errors.server_error);
+    } catch {
+      show("error", errors.server_error);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = label;
+      }
+    }
+  });
+</script>
+
+<style>
+  /* .section-head ist eine Flex-Column → Eyebrow per align-items zentrieren */
+  .cr-head {
+    align-items: center;
+  }
+  .cr-head .section-lead,
+  .container-narrow > .section-lead {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cr-info {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .cr-info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .cr-timeline {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-6) 0 0;
+  }
+  .cr-step-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--color-primary-light);
+    line-height: 1;
+  }
+  .cr-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .cr-check {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .cr-check input {
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+  }
+  .cr-check small {
+    display: block;
+  }
+  .cr-check a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  .cr-hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>
