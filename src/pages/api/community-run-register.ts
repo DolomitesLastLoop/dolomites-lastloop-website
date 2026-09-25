@@ -8,7 +8,6 @@ import {
   ACCESS_TOKEN_TTL_MS,
   generateAccessToken,
   hashAccessToken,
-  isPaceGroup,
 } from "@lib/community-run";
 
 export const prerender = false;
@@ -42,7 +41,6 @@ export const POST: APIRoute = async ({ request }) => {
   const vorname = String(payload.vorname || "").trim().slice(0, 100);
   const nachname = String(payload.nachname || "").trim().slice(0, 100);
   const email = String(payload.email || "").trim().toLowerCase().slice(0, 254);
-  const paceGroup = String(payload.pace_group || "").trim();
   const consentPrivacy = payload.consent_privacy === true;
   const workshopInterest = payload.workshop_interest === true;
   const rawLang = String(payload.lang || "");
@@ -52,7 +50,6 @@ export const POST: APIRoute = async ({ request }) => {
     !vorname ||
     !nachname ||
     !isValidEmail(email) ||
-    !isPaceGroup(paceGroup) ||
     !consentPrivacy
   ) {
     return json({ error: "invalid_input" }, 400);
@@ -67,7 +64,6 @@ export const POST: APIRoute = async ({ request }) => {
       vorname,
       nachname,
       email,
-      pace_group: paceGroup,
       consent_privacy: consentPrivacy,
       workshop_interest: workshopInterest,
       access_token_hash: hashAccessToken(accessToken),
@@ -78,15 +74,16 @@ export const POST: APIRoute = async ({ request }) => {
     .single();
 
   if (insertErr) {
-    // 23505 = unique_violation. access_token_hash kollidiert bei 256 Bit praktisch
-    // nie; ein Konflikt ist in der Praxis die E-Mail.
+    // 23505 = unique_violation. email ist seit 2026-09-25 nicht mehr unique
+    // (Familien/Gruppen teilen sich teils eine Adresse); der einzige verbleibende
+    // unique-Kandidat ist access_token_hash, der bei 256 Bit praktisch nie kollidiert.
     if (insertErr.code === "23505") return json({ error: "duplicate" }, 409);
     console.error("[community-run-register] insert failed:", insertErr.message);
     return json({ error: "server_error" }, 500);
   }
 
-  // Ohne Mail kein Zugangslink → Zeile wieder entfernen, damit die Person es
-  // erneut versuchen kann (sonst blockiert die UNIQUE-E-Mail jeden neuen Versuch).
+  // Ohne Mail kein Zugangslink → Zeile wieder entfernen statt eine Karteileiche mit
+  // totem Token liegen zu lassen; die Person kann es dann erneut versuchen.
   try {
     await sendCommunityRunConfirmation(email, vorname, accessToken, lang);
   } catch (err) {

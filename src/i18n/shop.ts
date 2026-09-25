@@ -3,8 +3,8 @@ import type { Lang } from "./ui";
 // Shop v2 — nur für Community-Run-Angemeldete (/[lang]/shop, Zugang per Mail-Link).
 // Eigene Datei mit Record<Lang, …>: TypeScript erzwingt vollständige DE/IT/EN-Texte.
 //
-// TODO(Simon): Preise, Größen, Produkttexte und echtes Artwork für 3 von 4 Motiven
-// fehlen noch; Checkout (Shopify/Printful) kommt erst ganz zum Schluss.
+// Preis einheitlich 40 € je Motiv. Offen: Größenlauf final, Checkout
+// (Shopify/Printful) kommt erst ganz zum Schluss.
 
 export type ShopProductId =
   | "taking-souls"
@@ -18,7 +18,7 @@ export type ShopProduct = {
   tagline: Record<Lang, string>;
 };
 
-/** Reihenfolge = Reihenfolge auf der Seite. Alle Motive in Schwarz. */
+/** Reihenfolge = Reihenfolge auf der Seite. Alle Motive dunkelblau mit Topo-Muster. */
 export const shopProducts: ShopProduct[] = [
   {
     id: "taking-souls",
@@ -72,9 +72,10 @@ export type ShopCopy = {
   priceValue: string;
   orderStatus: string;
   orderHint: string;
-  placeholderImage: string;
-  placeholderAlt: (name: string) => string;
-  photoAlt: (name: string) => string;
+  front: string;
+  back: string;
+  viewLabel: string;
+  photoAlt: (name: string, side: string) => string;
   misconfigured: { title: string; text: string };
   denied: {
     title: string;
@@ -90,21 +91,22 @@ export const shopCopy: Record<Lang, ShopCopy> = {
     hero: {
       eyebrow: "Nur für Community-Run-Teilnehmer:innen",
       title: "Shop",
-      subtitle: "Die Black Collection",
-      text: "Vier Motive, alle in Schwarz – gemacht für die, die wissen, was die Glocke bedeutet.",
+      subtitle: "Die Topo Collection",
+      text: "Vier Motive, alle in Dunkelblau mit Topografie-Muster – gemacht für die, die wissen, was die Glocke bedeutet.",
     },
     notice:
       "Vorschau: Bestellen ist noch nicht möglich. Wir melden uns, sobald der Shop öffnet.",
     colorLabel: "Farbe",
-    colorValue: "Schwarz",
+    colorValue: "Dunkelblau · Topo-Muster Rostorange",
     sizeLabel: "Größen",
     priceLabel: "Preis",
-    priceValue: "Folgt",
+    priceValue: "40 €",
     orderStatus: "Bestellung folgt in Kürze",
     orderHint: "Noch keine Bestellung möglich – du musst jetzt nichts tun.",
-    placeholderImage: "Artwork folgt",
-    placeholderAlt: (n) => `Platzhalter: Artwork für „${n}" folgt`,
-    photoAlt: (n) => `Schwarzes T-Shirt „${n}"`,
+    front: "Vorne",
+    back: "Hinten",
+    viewLabel: "Ansicht",
+    photoAlt: (n, side) => `T-Shirt „${n}" – ${side}`,
     misconfigured: {
       title: "Shop vorübergehend nicht verfügbar",
       text: "Der Zugang kann gerade nicht eingerichtet werden. Bitte versuche es später erneut – dein Link bleibt gültig.",
@@ -122,21 +124,22 @@ export const shopCopy: Record<Lang, ShopCopy> = {
     hero: {
       eyebrow: "Solo per chi partecipa al Community Run",
       title: "Shop",
-      subtitle: "La Black Collection",
-      text: "Quattro motivi, tutti in nero – per chi sa cosa significa la campana.",
+      subtitle: "La Topo Collection",
+      text: "Quattro motivi, tutti in blu scuro con motivo topografico – per chi sa cosa significa la campana.",
     },
     notice:
       "Anteprima: non è ancora possibile ordinare. Ti avviseremo quando lo shop aprirà.",
     colorLabel: "Colore",
-    colorValue: "Nero",
+    colorValue: "Blu scuro · motivo topografico ruggine",
     sizeLabel: "Taglie",
     priceLabel: "Prezzo",
-    priceValue: "Da definire",
+    priceValue: "40 €",
     orderStatus: "Ordini disponibili a breve",
     orderHint: "Non è ancora possibile ordinare – per ora non devi fare nulla.",
-    placeholderImage: "Artwork in arrivo",
-    placeholderAlt: (n) => `Segnaposto: artwork per «${n}» in arrivo`,
-    photoAlt: (n) => `T-shirt nera «${n}»`,
+    front: "Fronte",
+    back: "Retro",
+    viewLabel: "Vista",
+    photoAlt: (n, side) => `T-shirt «${n}» – ${side}`,
     misconfigured: {
       title: "Shop temporaneamente non disponibile",
       text: "Al momento non è possibile attivare l'accesso. Riprova più tardi – il tuo link resta valido.",
@@ -154,21 +157,22 @@ export const shopCopy: Record<Lang, ShopCopy> = {
     hero: {
       eyebrow: "Community Run participants only",
       title: "Shop",
-      subtitle: "The Black Collection",
-      text: "Four designs, all in black – made for those who know what the bell means.",
+      subtitle: "The Topo Collection",
+      text: "Four designs, all in navy with a topographic pattern – made for those who know what the bell means.",
     },
     notice:
       "Preview: ordering isn't possible yet. We'll let you know as soon as the shop opens.",
     colorLabel: "Colour",
-    colorValue: "Black",
+    colorValue: "Navy · rust-orange topo pattern",
     sizeLabel: "Sizes",
     priceLabel: "Price",
-    priceValue: "TBA",
+    priceValue: "€40",
     orderStatus: "Ordering opens soon",
     orderHint: "You can't order yet – there's nothing you need to do right now.",
-    placeholderImage: "Artwork coming soon",
-    placeholderAlt: (n) => `Placeholder: artwork for "${n}" coming soon`,
-    photoAlt: (n) => `Black T-shirt "${n}"`,
+    front: "Front",
+    back: "Back",
+    viewLabel: "View",
+    photoAlt: (n, side) => `T-shirt "${n}" – ${side}`,
     misconfigured: {
       title: "Shop temporarily unavailable",
       text: "Access can't be set up right now. Please try again later – your link remains valid.",

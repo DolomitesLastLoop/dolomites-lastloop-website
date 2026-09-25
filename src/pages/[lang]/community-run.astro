@@ -8,13 +8,11 @@
 // Die Anmeldung schreibt in community_run_registrations (nicht participants) und
 // verschickt den persönlichen Shop-Zugangslink — siehe api/community-run-register.ts.
 //
-// TODO(Simon): Alle Texte sind Platzhalter — siehe src/i18n/community-run.ts.
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
 import { photo } from "@lib/photos";
 import { localizePath, type Lang } from "@i18n/utils";
 import { communityRun } from "@i18n/community-run";
-import { PACE_GROUPS } from "@lib/community-run";
 
 export const prerender = false;
 const lang = (Astro.params.lang ?? "de") as Lang;
@@ -35,7 +33,7 @@ const HERO_POSITION = "center 40%";
     subtitle={c.hero.subtitle}
   />
 
-  {/* Info-Leiste — TODO(Simon): Datum/Ort/Format */}
+  {/* Info-Leiste: Datum / Uhrzeit / Treffpunkt */}
   <section class="section-tight section-alt">
     <div class="container">
       <ul class="cr-info grid grid-3">
@@ -43,14 +41,13 @@ const HERO_POSITION = "center 40%";
           <li class="card cr-info-item">
             <span class="eyebrow">{item.label}</span>
             <strong>{item.value}</strong>
-            <span class="badge badge-pending">{c.todoTag}</span>
           </li>
         ))}
       </ul>
     </div>
   </section>
 
-  {/* Erklärtext — TODO(Simon): finale Copy */}
+  {/* Erklärtext */}
   <section class="section">
     <div class="container-narrow">
       <div class="section-head text-center cr-head reveal">
@@ -63,7 +60,7 @@ const HERO_POSITION = "center 40%";
     </div>
   </section>
 
-  {/* Ablauf — TODO(Simon): genaue Schritte */}
+  {/* Ablauf */}
   <section class="section section-alt">
     <div class="container">
       <div class="section-head text-center cr-head reveal">
@@ -116,15 +113,6 @@ const HERO_POSITION = "center 40%";
           <input id="cr-email" name="email" type="email" required maxlength="254" autocomplete="email" />
         </div>
 
-        <div class="field">
-          <label for="cr-pace">{c.form.pace} *</label>
-          <select id="cr-pace" name="pace_group" required>
-            <option value="">{c.form.pacePlaceholder}</option>
-            {PACE_GROUPS.map((g) => <option value={g}>{c.form.paceOptions[g]}</option>)}
-          </select>
-          <span class="hint">{c.form.paceHint}</span>
-        </div>
-
         {/* Honeypot: für Menschen unsichtbar; ausgefüllt = Bot (wie Newsletter). */}
         <div class="cr-hp" aria-hidden="true">
           <label for="cr-website">Website</label>
@@ -153,16 +141,13 @@ const HERO_POSITION = "center 40%";
     </div>
   </section>
 
-  {/* Workshop-Teaser — TODO(Simon): Preis/Zahlungsart offen */}
+  {/* Workshop-Teaser — Preis nur als Info, Zahlungsart offen (keine Zahlungslogik) */}
   <section class="section section-alt">
     <div class="container-narrow text-center">
       <span class="eyebrow">{c.workshop.eyebrow}</span>
       <h2 class="section-title">{c.workshop.title}</h2>
       <p class="section-lead">{c.workshop.text}</p>
-      <div class="alert alert-info mt-5">
-        <span class="badge badge-pending">{c.todoTag}</span>
-        {c.workshop.openNote}
-      </div>
+      <div class="alert alert-info mt-5">{c.workshop.openNote}</div>
     </div>
   </section>
 </BaseLayout>
@@ -201,7 +186,6 @@ const HERO_POSITION = "center 40%";
           vorname: data.get("vorname"),
           nachname: data.get("nachname"),
           email: data.get("email"),
-          pace_group: data.get("pace_group"),
           consent_privacy: data.get("consent_privacy") === "on",
           workshop_interest: data.get("workshop_interest") === "on",
           website: data.get("website"),

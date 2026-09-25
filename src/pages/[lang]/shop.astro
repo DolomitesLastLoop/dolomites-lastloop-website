@@ -69,7 +69,8 @@ if (misconfigured) Astro.response.status = 500;
 else if (!access.ok) Astro.response.status = 403;
 const showExpired = !access.ok && (access.reason === "expired" || access.reason === "revoked");
 
-const IMG_WIDTHS = [400, 640, 900];
+// Quellbilder sind 800 px breit — größere Breiten würden nur hochskaliert.
+const IMG_WIDTHS = [400, 640, 800];
 const IMG_SIZES = "(max-width: 900px) 92vw, 560px";
 ---
 
@@ -108,27 +109,42 @@ const IMG_SIZES = "(max-width: 900px) 92vw, 560px";
         </section>
 
         {shopProducts.map((p, i) => {
-          const img = shopPhoto[p.id];
+          const photos = shopPhoto[p.id];
+          const sides = [
+            { key: "front", label: c.front, img: photos.front },
+            { key: "back", label: c.back, img: photos.back },
+          ] as const;
           return (
             <section class:list={["section", "shop-product", { "section-alt": i % 2 === 1 }]} id={p.id}>
               <div class:list={["container", "shop-product-grid", { "is-flipped": i % 2 === 1 }]}>
-                <div class="shop-media">
-                  {img ? (
-                    <Image
-                      src={img}
-                      alt={c.photoAlt(p.name)}
-                      widths={IMG_WIDTHS}
-                      sizes={IMG_SIZES}
-                      format="webp"
-                      loading={i === 0 ? "eager" : "lazy"}
-                      class="shop-photo"
-                    />
-                  ) : (
-                    <div class="shop-placeholder" role="img" aria-label={c.placeholderAlt(p.name)}>
-                      <span class="shop-placeholder-name">{p.name}</span>
-                      <span class="shop-placeholder-tag">{c.placeholderImage}</span>
-                    </div>
-                  )}
+                <div class="shop-flip" data-flip>
+                  <div class="shop-media">
+                    {sides.map((side) => (
+                      <div class="shop-photo-slot" data-photo={side.key} hidden={side.key === "back"}>
+                        <Image
+                          src={side.img}
+                          alt={c.photoAlt(p.name, side.label)}
+                          widths={IMG_WIDTHS}
+                          sizes={IMG_SIZES}
+                          format="webp"
+                          loading={i === 0 && side.key === "front" ? "eager" : "lazy"}
+                          class="shop-photo"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div class="shop-toggle" role="group" aria-label={c.viewLabel}>
+                    {sides.map((side) => (
+                      <button
+                        type="button"
+                        class:list={{ "is-active": side.key === "front" }}
+                        data-photo-toggle={side.key}
+                        aria-pressed={side.key === "front" ? "true" : "false"}
+                      >
+                        {side.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div class="shop-details">
@@ -166,6 +182,27 @@ const IMG_SIZES = "(max-width: 900px) 92vw, 560px";
   }
 </BaseLayout>
 
+<script>
+  // Vorne/Hinten-Umschalter je Produkt (Muster aus dem Shop-Mockup).
+  document.querySelectorAll<HTMLElement>("[data-flip]").forEach((flip) => {
+    const slots = flip.querySelectorAll<HTMLElement>("[data-photo]");
+    const buttons = flip.querySelectorAll<HTMLButtonElement>("[data-photo-toggle]");
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.photoToggle;
+        slots.forEach((slot) => {
+          slot.hidden = slot.dataset.photo !== target;
+        });
+        buttons.forEach((b) => {
+          const active = b === btn;
+          b.classList.toggle("is-active", active);
+          b.setAttribute("aria-pressed", String(active));
+        });
+      });
+    });
+  });
+</script>
+
 <style>
   .shop-hero,
   .shop-denied {
@@ -196,15 +233,23 @@ const IMG_SIZES = "(max-width: 900px) 92vw, 560px";
     gap: var(--space-8);
     align-items: center;
   }
-  .shop-product-grid.is-flipped .shop-media {
+  .shop-product-grid.is-flipped .shop-flip {
     order: 2;
   }
   .shop-media {
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-card);
-    background: #0a0a0a;
-    aspect-ratio: 4 / 5;
+    background: #142337;
+    /* Seitenverhältnis der Quellfotos (800×1071) → kein Beschnitt */
+    aspect-ratio: 800 / 1071;
+  }
+  .shop-photo-slot {
+    width: 100%;
+    height: 100%;
+  }
+  .shop-photo-slot[hidden] {
+    display: none;
   }
   .shop-photo {
     width: 100%;
@@ -212,32 +257,29 @@ const IMG_SIZES = "(max-width: 900px) 92vw, 560px";
     object-fit: cover;
     display: block;
   }
-  .shop-placeholder {
-    width: 100%;
-    height: 100%;
+  .shop-toggle {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    gap: var(--space-2);
     justify-content: center;
-    gap: var(--space-4);
-    padding: var(--space-6);
-    text-align: center;
-    color: #fff;
+    margin-top: var(--space-4);
   }
-  .shop-placeholder-name {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    letter-spacing: 0.05em;
-    line-height: 1.05;
-  }
-  .shop-placeholder-tag {
-    font-size: 0.8rem;
-    letter-spacing: 0.18em;
+  .shop-toggle button {
+    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    border: 1px dashed rgba(255, 255, 255, 0.5);
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-sm);
-    color: rgba(255, 255, 255, 0.75);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+  }
+  .shop-toggle button.is-active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #ffffff;
   }
   .shop-name {
     font-family: var(--font-display);
@@ -276,7 +318,7 @@ const IMG_SIZES = "(max-width: 900px) 92vw, 560px";
       grid-template-columns: 1fr;
       gap: var(--space-6);
     }
-    .shop-product-grid.is-flipped .shop-media {
+    .shop-product-grid.is-flipped .shop-flip {
       order: 0;
     }
   }

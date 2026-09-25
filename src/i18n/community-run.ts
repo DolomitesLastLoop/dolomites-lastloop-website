@@ -1,19 +1,17 @@
 import type { Lang } from "./ui";
-import type { PaceGroup } from "@lib/community-run";
 
 // Texte der Community-Run-Landingpage (/[lang]/community-run).
 // Eigene Datei statt ui.ts: Record<Lang, …> erzwingt per TypeScript, dass DE/IT/EN
 // vollständig sind (ui.ts fällt bei fehlenden Keys still auf DE zurück).
 //
-// TODO(Simon): Alle mit [PLATZHALTER] kommentierten Texte sind vorläufig —
-// finale Copy, Datum, Ort, Format, Ablauf, Tempogruppen und Workshop-Details folgen.
+// Stand 2026-09-25: Datum, Treffpunkt, Ablauf und Workshop final. Keine Tempogruppen
+// (ein gemeinsames Tempo, 2 Loops). Offen nur noch: Zahlungsart des Workshops.
 
 export type CommunityRunCopy = {
   metaTitle: string;
   metaDescription: string;
   hero: { eyebrow: string; title: string; subtitle: string; cta: string };
   info: { label: string; value: string }[];
-  todoTag: string;
   explainer: { eyebrow: string; title: string; paragraphs: string[] };
   timeline: { eyebrow: string; title: string; steps: { title: string; text: string }[] };
   form: {
@@ -23,10 +21,6 @@ export type CommunityRunCopy = {
     vorname: string;
     nachname: string;
     email: string;
-    pace: string;
-    pacePlaceholder: string;
-    paceOptions: Record<PaceGroup, string>;
-    paceHint: string;
     consentBefore: string;
     consentLink: string;
     consentAfter: string;
@@ -57,31 +51,26 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       subtitle: "Kein Rennen. Ein Vorgeschmack.",
       cta: "Jetzt anmelden",
     },
-    // [PLATZHALTER] Datum/Ort/Format stehen noch nicht fest.
     info: [
-      { label: "Datum", value: "Folgt" },
-      { label: "Ort", value: "Folgt" },
-      { label: "Format", value: "Folgt" },
+      { label: "Datum", value: "24.10.2026" },
+      { label: "Uhrzeit", value: "14:00 Uhr" },
+      { label: "Treffpunkt", value: "Parkplatz Nordic Arena Toblach" },
     ],
-    todoTag: "Platzhalter",
-    // [PLATZHALTER] Finale Copy liefert Simon.
     explainer: {
       eyebrow: "Worum es geht",
       title: "Kein Rennen. Ein Vorgeschmack.",
       paragraphs: [
-        "Platzhaltertext: Beim Community Run geht es nicht um Zeiten oder Platzierungen. Wir laufen gemeinsam, im Rhythmus des Backyard Ultra – Loop für Loop.",
-        "Platzhaltertext: Ideal für alle, die das Format kennenlernen wollen, bevor sie sich an die Startlinie der Dolomites Last Loop stellen.",
+        "Wir laufen gemeinsam zwei Loops der Originalstrecke, in einem entspannten, gemeinsamen Tempo. Keine Zeitmessung, keine Tempogruppen — nur die Chance, das Gelände, die Schlüsselstellen und das Gefühl der Strecke kennenzulernen, bevor es im Mai ernst wird.",
       ],
     },
-    // [PLATZHALTER] Genaue Schritte folgen.
     timeline: {
       eyebrow: "Ablauf",
       title: "So läuft der Tag",
       steps: [
-        { title: "Treffpunkt", text: "Platzhalter: Ankommen, Startnummer-freies Check-in, kurzes Briefing." },
-        { title: "Gemeinsamer Start", text: "Platzhalter: Start zur vollen Stunde, ganz im Backyard-Stil." },
-        { title: "Loops in Tempogruppen", text: "Platzhalter: Laufen in der eigenen Tempogruppe, niemand bleibt allein." },
-        { title: "Ausklang", text: "Platzhalter: Gemeinsamer Abschluss und Austausch." },
+        { title: "Treffpunkt", text: "14:00 Uhr, Parkplatz Nordic Arena Toblach" },
+        { title: "Gemeinsam los", text: "Ein Tempo für alle, keine Gruppen" },
+        { title: "Strecke kennenlernen", text: "2 Loops der Originalstrecke, Schlüsselstellen und Wegpunkte im Blick" },
+        { title: "Ziel & Workshop", text: "Gemeinsamer Ausklang, im Anschluss optional der Workshop" },
       ],
     },
     form: {
@@ -91,15 +80,6 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       vorname: "Vorname",
       nachname: "Nachname",
       email: "E-Mail",
-      pace: "Tempogruppe",
-      pacePlaceholder: "Bitte wählen",
-      // [PLATZHALTER] Gruppen und Pace-Angaben folgen.
-      paceOptions: {
-        relaxed: "Entspannt",
-        moderate: "Mittel",
-        fast: "Zügig",
-      },
-      paceHint: "Die Einteilung ist unverbindlich – vor Ort kannst du wechseln.",
       consentBefore: "Ich habe die ",
       consentLink: "Datenschutzerklärung",
       consentAfter:
@@ -120,12 +100,11 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
         server_error: "Da ist etwas schiefgelaufen. Bitte versuche es später erneut.",
       },
     },
-    // [PLATZHALTER] Preis und Zahlungsart sind noch offen.
     workshop: {
       eyebrow: "Workshop",
-      title: "Mehr als ein Lauf",
-      text: "Platzhaltertext: Rund um den Community Run planen wir einen Workshop – Inhalte und Termin folgen.",
-      openNote: "Preis und Zahlungsart stehen noch nicht fest. Die Anmeldung oben erfasst nur dein Interesse.",
+      title: "Der mentale Faktor.",
+      text: "Ultra-Distanzen sind nicht nur eine Frage der Beine. Im Workshop im Anschluss an den Community Run geht es um die mentale Seite von Backyard-Ultras — wie du mit Zweifeln, Müdigkeit und der immer wiederkehrenden Stunde umgehst. Teilnahme: 5€.",
+      openNote: "Die Zahlungsart geben wir noch bekannt. Das Häkchen im Anmeldeformular oben erfasst nur dein Interesse.",
     },
   },
   it: {
@@ -139,27 +118,25 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       cta: "Iscriviti ora",
     },
     info: [
-      { label: "Data", value: "Da definire" },
-      { label: "Luogo", value: "Da definire" },
-      { label: "Formato", value: "Da definire" },
+      { label: "Data", value: "24.10.2026" },
+      { label: "Orario", value: "Ore 14:00" },
+      { label: "Ritrovo", value: "Parcheggio Nordic Arena Dobbiaco" },
     ],
-    todoTag: "Segnaposto",
     explainer: {
       eyebrow: "Di cosa si tratta",
       title: "Nessuna gara. Un assaggio.",
       paragraphs: [
-        "Testo segnaposto: al Community Run non contano tempi o classifiche. Corriamo insieme, al ritmo del Backyard Ultra – un loop dopo l'altro.",
-        "Testo segnaposto: ideale per chi vuole conoscere il formato prima di presentarsi alla partenza della Dolomites Last Loop.",
+        "Corriamo insieme due loop del percorso originale, a un ritmo tranquillo e comune. Nessun cronometraggio, nessun gruppo di passo — solo l'occasione di conoscere il terreno, i punti chiave e le sensazioni del percorso, prima che a maggio si faccia sul serio.",
       ],
     },
     timeline: {
       eyebrow: "Programma",
       title: "Come si svolge la giornata",
       steps: [
-        { title: "Ritrovo", text: "Segnaposto: arrivo, check-in senza pettorale, breve briefing." },
-        { title: "Partenza insieme", text: "Segnaposto: partenza allo scoccare dell'ora, in pieno stile backyard." },
-        { title: "Loop per gruppi di passo", text: "Segnaposto: si corre nel proprio gruppo di passo, nessuno resta solo." },
-        { title: "Conclusione", text: "Segnaposto: chiusura insieme e scambio di esperienze." },
+        { title: "Ritrovo", text: "Ore 14:00, parcheggio Nordic Arena Dobbiaco" },
+        { title: "Si parte insieme", text: "Un unico ritmo per tutti, nessun gruppo" },
+        { title: "Conoscere il percorso", text: "2 loop del percorso originale, con i punti chiave e i riferimenti sotto controllo" },
+        { title: "Arrivo & workshop", text: "Chiusura insieme, a seguire il workshop facoltativo" },
       ],
     },
     form: {
@@ -169,14 +146,6 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       vorname: "Nome",
       nachname: "Cognome",
       email: "E-mail",
-      pace: "Gruppo di passo",
-      pacePlaceholder: "Seleziona",
-      paceOptions: {
-        relaxed: "Tranquillo",
-        moderate: "Medio",
-        fast: "Sostenuto",
-      },
-      paceHint: "La scelta non è vincolante – puoi cambiare gruppo sul posto.",
       consentBefore: "Ho letto l'",
       consentLink: "informativa sulla privacy",
       consentAfter:
@@ -199,9 +168,9 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
     },
     workshop: {
       eyebrow: "Workshop",
-      title: "Più di una corsa",
-      text: "Testo segnaposto: intorno al Community Run stiamo pianificando un workshop – contenuti e data seguiranno.",
-      openNote: "Prezzo e modalità di pagamento non sono ancora definiti. L'iscrizione qui sopra registra solo il tuo interesse.",
+      title: "Il fattore mentale.",
+      text: "Le ultra distanze non sono solo una questione di gambe. Nel workshop che segue il Community Run parleremo del lato mentale dei backyard ultra — come gestire dubbi, stanchezza e l'ora che ritorna sempre. Partecipazione: 5€.",
+      openNote: "Comunicheremo più avanti la modalità di pagamento. La casella nel modulo d'iscrizione qui sopra registra solo il tuo interesse.",
     },
   },
   en: {
@@ -215,27 +184,25 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       cta: "Sign up now",
     },
     info: [
-      { label: "Date", value: "TBA" },
-      { label: "Venue", value: "TBA" },
-      { label: "Format", value: "TBA" },
+      { label: "Date", value: "24 October 2026" },
+      { label: "Time", value: "2:00 pm" },
+      { label: "Meeting point", value: "Nordic Arena car park, Toblach/Dobbiaco" },
     ],
-    todoTag: "Placeholder",
     explainer: {
       eyebrow: "What it's about",
       title: "Not a race. A taste of it.",
       paragraphs: [
-        "Placeholder text: the Community Run isn't about times or rankings. We run together, to the rhythm of the Backyard Ultra – loop after loop.",
-        "Placeholder text: perfect for anyone who wants to get to know the format before stepping up to the Dolomites Last Loop start line.",
+        "Together we run two loops of the original course at a relaxed, shared pace. No timing, no pace groups — just the chance to get to know the terrain, the key sections and the feel of the course before things get serious in May.",
       ],
     },
     timeline: {
       eyebrow: "Schedule",
       title: "How the day works",
       steps: [
-        { title: "Meet-up", text: "Placeholder: arrival, check-in without bib, short briefing." },
-        { title: "Start together", text: "Placeholder: start on the hour, backyard style." },
-        { title: "Loops in pace groups", text: "Placeholder: run in your own pace group, nobody is left alone." },
-        { title: "Wrap-up", text: "Placeholder: finishing together and swapping stories." },
+        { title: "Meet-up", text: "2:00 pm, Nordic Arena car park, Toblach/Dobbiaco" },
+        { title: "Off together", text: "One pace for everyone, no groups" },
+        { title: "Get to know the course", text: "2 loops of the original course, with the key sections and waypoints in view" },
+        { title: "Finish & workshop", text: "Wrapping up together, followed by the optional workshop" },
       ],
     },
     form: {
@@ -245,14 +212,6 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       vorname: "First name",
       nachname: "Last name",
       email: "Email",
-      pace: "Pace group",
-      pacePlaceholder: "Please choose",
-      paceOptions: {
-        relaxed: "Relaxed",
-        moderate: "Moderate",
-        fast: "Fast",
-      },
-      paceHint: "Not binding – you can switch groups on the day.",
       consentBefore: "I have read the ",
       consentLink: "privacy policy",
       consentAfter:
@@ -275,9 +234,9 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
     },
     workshop: {
       eyebrow: "Workshop",
-      title: "More than a run",
-      text: "Placeholder text: we're planning a workshop around the Community Run – content and date to follow.",
-      openNote: "Price and payment method are not decided yet. The sign-up above only records your interest.",
+      title: "The mental factor.",
+      text: "Ultra distances aren't just a matter of legs. In the workshop following the Community Run we'll focus on the mental side of backyard ultras — how to deal with doubt, fatigue and the hour that keeps coming back. Participation: €5.",
+      openNote: "We'll announce the payment method later. The checkbox in the sign-up form above only records your interest.",
     },
   },
 };

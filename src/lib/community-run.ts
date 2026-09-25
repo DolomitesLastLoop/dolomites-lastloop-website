@@ -19,14 +19,6 @@ import { getAdminClient } from "@lib/supabase";
  */
 export const ACCESS_TOKEN_TTL_MS = 1000 * 60 * 60 * 24 * 365;
 
-/** Platzhalter-Werte (offener Punkt) — müssen zum check-Constraint in schema.sql passen. */
-export const PACE_GROUPS = ["relaxed", "moderate", "fast"] as const;
-export type PaceGroup = (typeof PACE_GROUPS)[number];
-
-export function isPaceGroup(v: string): v is PaceGroup {
-  return (PACE_GROUPS as readonly string[]).includes(v);
-}
-
 export function generateAccessToken(): string {
   return crypto.randomBytes(32).toString("hex");
 }
