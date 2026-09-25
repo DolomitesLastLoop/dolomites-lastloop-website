@@ -93,3 +93,6 @@ scripts/notify-waitlist.mts
 scripts/reinvite-waitlist.mts
 scripts/render-test-tickets.mts
 scripts/verify-reinvite.mts
+
+# Persönliches Chat-Übergabe-Dokument (lokal, nicht fürs öffentliche Repo)
+DLL-Kontext zur Chatübergabe.md
