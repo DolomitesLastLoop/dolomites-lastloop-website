@@ -18,7 +18,15 @@ function client() {
   return _client;
 }
 
+// Auf Vercel-Previews zeigen Mail-Links auf den Branch-Alias des tatsächlich
+// getesteten Branches (VERCEL_BRANCH_URL, von Vercel zur Laufzeit gesetzt) statt auf
+// einen manuell gepflegten PUBLIC_SITE_URL-Wert, der auf einen fremden Branch zeigen
+// kann. Production und lokal: unverändert PUBLIC_SITE_URL bzw. die feste Domain.
 function siteUrl(): string {
+  if (env("VERCEL_ENV") === "preview") {
+    const branchHost = env("VERCEL_BRANCH_URL");
+    if (branchHost) return `https://${branchHost}`;
+  }
   return env("PUBLIC_SITE_URL") ?? "https://www.dolomiteslastloop.com";
 }
 

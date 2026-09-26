@@ -51,7 +51,11 @@ if (!misconfigured) try {
   if (token) {
     access = await checkAccessByToken(token);
     if (access.ok && issueShopSession(Astro.cookies, access.id, access.expiresAt)) {
-      return Astro.redirect(localizePath("/shop", lang), 303);
+      // Astro.redirect() baut eine neue Response — der oben gesetzte Cache-Control
+      // geht dabei verloren. Die Weiterleitung trägt das Session-Cookie → nie cachen.
+      const redirect = Astro.redirect(localizePath("/shop", lang), 303);
+      redirect.headers.set("Cache-Control", "private, no-store");
+      return redirect;
     }
   } else {
     const sessionId = readShopSession(Astro.cookies);
