@@ -31,6 +31,7 @@ const HERO_POSITION = "center 40%";
     eyebrow={c.hero.eyebrow}
     title={c.hero.title}
     subtitle={c.hero.subtitle}
+    cta={{ label: c.hero.cta, href: "#anmeldung" }}
   />
 
   {/* Info-Leiste: Datum / Uhrzeit / Treffpunkt */}
@@ -88,6 +89,22 @@ const HERO_POSITION = "center 40%";
         <p class="section-lead">{c.form.lead}</p>
       </div>
 
+      {/* Vorteile — Shop-Zugang VOR der Anmeldung sichtbar machen, nicht erst in der Bestätigung */}
+      <div class="card cr-benefits reveal">
+        <span class="eyebrow">{c.form.benefitsTitle}</span>
+        <ul>
+          {c.form.benefits.map((b) => (
+            <li>
+              <span class="cr-benefit-mark" aria-hidden="true">✓</span>
+              <span>
+                <strong>{b.title}</strong>
+                <span class="text-muted">{b.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <form
         id="cr-form"
         class="card cr-form"
@@ -119,6 +136,22 @@ const HERO_POSITION = "center 40%";
           <input id="cr-website" type="text" name="website" tabindex="-1" autocomplete="off" />
         </div>
 
+        {/* Workshop-Karte: Beschreibung + Häkchen an einer Stelle. Preis nur als Info,
+            Zahlungsart offen (keine Zahlungslogik). Feldname workshop_interest unverändert. */}
+        <div class="cr-workshop">
+          <span class="eyebrow">{c.workshop.eyebrow}</span>
+          <h3 class="cr-workshop-title">{c.workshop.title}</h3>
+          <p class="text-muted">{c.workshop.text}</p>
+          <label class="cr-check">
+            <input type="checkbox" name="workshop_interest" />
+            <span>
+              {c.form.workshop}
+              <small class="text-dim">{c.form.workshopHint}</small>
+            </span>
+          </label>
+          <p class="cr-workshop-note text-dim">{c.workshop.openNote}</p>
+        </div>
+
         <label class="cr-check">
           <input type="checkbox" name="consent_privacy" required />
           <span>
@@ -126,28 +159,10 @@ const HERO_POSITION = "center 40%";
           </span>
         </label>
 
-        <label class="cr-check">
-          <input type="checkbox" name="workshop_interest" />
-          <span>
-            {c.form.workshop}
-            <small class="text-dim">{c.form.workshopHint}</small>
-          </span>
-        </label>
-
         <div id="cr-status" class="alert" role="status" aria-live="polite" hidden></div>
 
         <button type="submit" class="btn btn-primary btn-block">{c.form.submit}</button>
       </form>
-    </div>
-  </section>
-
-  {/* Workshop-Teaser — Preis nur als Info, Zahlungsart offen (keine Zahlungslogik) */}
-  <section class="section section-alt">
-    <div class="container-narrow text-center">
-      <span class="eyebrow">{c.workshop.eyebrow}</span>
-      <h2 class="section-title">{c.workshop.title}</h2>
-      <p class="section-lead">{c.workshop.text}</p>
-      <div class="alert alert-info mt-5">{c.workshop.openNote}</div>
     </div>
   </section>
 </BaseLayout>
@@ -268,6 +283,55 @@ const HERO_POSITION = "center 40%";
   .cr-check a {
     color: var(--color-primary);
     text-decoration: underline;
+  }
+  .cr-benefits {
+    margin-bottom: var(--space-5);
+  }
+  .cr-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-3) 0 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .cr-benefits li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+  .cr-benefits li strong,
+  .cr-benefits li .text-muted {
+    display: block;
+  }
+  .cr-benefit-mark {
+    color: var(--color-primary);
+    font-weight: 700;
+    line-height: 1.5;
+    flex-shrink: 0;
+  }
+  .cr-workshop {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  }
+  .cr-workshop-title {
+    margin: 0;
+  }
+  .cr-workshop p {
+    margin: 0;
+  }
+  .cr-workshop-note {
+    font-size: 0.85rem;
+  }
+  /* Karte sitzt in der Formular-Karte → auf schmalen Screens Padding halbieren */
+  @media (max-width: 600px) {
+    .cr-workshop {
+      padding: var(--space-4) var(--space-3);
+    }
   }
   .cr-hp {
     position: absolute;

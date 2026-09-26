@@ -4,8 +4,9 @@ import type { Lang } from "./ui";
 // Eigene Datei statt ui.ts: Record<Lang, …> erzwingt per TypeScript, dass DE/IT/EN
 // vollständig sind (ui.ts fällt bei fehlenden Keys still auf DE zurück).
 //
-// Stand 2026-09-25: Datum, Treffpunkt, Ablauf und Workshop final. Keine Tempogruppen
-// (ein gemeinsames Tempo, 2 Loops). Offen nur noch: Zahlungsart des Workshops.
+// Stand 2026-09-26: Datum, Treffpunkt, Ablauf und Workshop final. Keine Tempogruppen
+// (ein gemeinsames Tempo, 2 Loops). Workshop sitzt als Karte im Anmeldeformular.
+// Offen nur noch: Zahlungsart des Workshops.
 
 export type CommunityRunCopy = {
   metaTitle: string;
@@ -18,6 +19,8 @@ export type CommunityRunCopy = {
     eyebrow: string;
     title: string;
     lead: string;
+    benefitsTitle: string;
+    benefits: { title: string; text: string }[];
     vorname: string;
     nachname: string;
     email: string;
@@ -44,11 +47,11 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
   de: {
     metaTitle: "Community Run",
     metaDescription:
-      "Community Run der Dolomites Last Loop – kein Rennen, ein Vorgeschmack.",
+      "Community Run der Dolomites Last Loop – zwei Loops, ein Tempo, alle zusammen.",
     hero: {
       eyebrow: "Dolomites Last Loop",
       title: "Community Run",
-      subtitle: "Kein Rennen. Ein Vorgeschmack.",
+      subtitle: "Zwei Loops. Ein Tempo. Alle zusammen.",
       cta: "Jetzt anmelden",
     },
     info: [
@@ -58,9 +61,9 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
     ],
     explainer: {
       eyebrow: "Worum es geht",
-      title: "Kein Rennen. Ein Vorgeschmack.",
+      title: "Zwei Loops. Ein Tempo. Alle zusammen.",
       paragraphs: [
-        "Wir laufen gemeinsam zwei Loops der Originalstrecke, in einem entspannten, gemeinsamen Tempo. Keine Zeitmessung, keine Tempogruppen — nur die Chance, das Gelände, die Schlüsselstellen und das Gefühl der Strecke kennenzulernen, bevor es im Mai ernst wird.",
+        "Wir laufen gemeinsam zwei Loops der Originalstrecke in einem entspannten Tempo — die Chance, das Gelände, die Schlüsselstellen und das Gefühl der Strecke kennenzulernen, bevor es im Mai ernst wird.",
       ],
     },
     timeline: {
@@ -68,7 +71,7 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       title: "So läuft der Tag",
       steps: [
         { title: "Treffpunkt", text: "14:00 Uhr, Parkplatz Nordic Arena Toblach" },
-        { title: "Gemeinsam los", text: "Ein Tempo für alle, keine Gruppen" },
+        { title: "Gemeinsam los", text: "Ein Tempo für alle" },
         { title: "Strecke kennenlernen", text: "2 Loops der Originalstrecke, Schlüsselstellen und Wegpunkte im Blick" },
         { title: "Ziel & Workshop", text: "Gemeinsamer Ausklang, im Anschluss optional der Workshop" },
       ],
@@ -76,7 +79,16 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
     form: {
       eyebrow: "Anmeldung",
       title: "Sei dabei",
-      lead: "Die Anmeldung ist kostenlos. Nach dem Absenden bekommst du eine Bestätigung per E-Mail.",
+      lead: "Die Anmeldung ist kostenlos und schaltet dir den exklusiven Shop frei. Nach dem Absenden bekommst du eine Bestätigung per E-Mail.",
+      benefitsTitle: "Das bekommst du",
+      benefits: [
+        { title: "Community Run – kostenlos", text: "Zwei Loops der Originalstrecke, gemeinsam in einem Tempo." },
+        {
+          title: "Exklusiver Shop-Zugang",
+          text: "Mit deiner Anmeldung bekommst du per E-Mail deinen persönlichen Link zur Last Loop Collection – nur für Teilnehmer:innen.",
+        },
+        { title: "Optional: Workshop", text: "„Der mentale Faktor“ im Anschluss – direkt im Formular auswählbar." },
+      ],
       vorname: "Vorname",
       nachname: "Nachname",
       email: "E-Mail",
@@ -104,17 +116,17 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       eyebrow: "Workshop",
       title: "Der mentale Faktor.",
       text: "Ultra-Distanzen sind nicht nur eine Frage der Beine. Im Workshop im Anschluss an den Community Run geht es um die mentale Seite von Backyard-Ultras — wie du mit Zweifeln, Müdigkeit und der immer wiederkehrenden Stunde umgehst. Teilnahme: 5€.",
-      openNote: "Die Zahlungsart geben wir noch bekannt. Das Häkchen im Anmeldeformular oben erfasst nur dein Interesse.",
+      openNote: "Die Zahlungsart geben wir noch bekannt. Dieses Häkchen erfasst nur dein Interesse.",
     },
   },
   it: {
     metaTitle: "Community Run",
     metaDescription:
-      "Community Run della Dolomites Last Loop – nessuna gara, un assaggio.",
+      "Community Run della Dolomites Last Loop – due loop, un ritmo, tutti insieme.",
     hero: {
       eyebrow: "Dolomites Last Loop",
       title: "Community Run",
-      subtitle: "Nessuna gara. Un assaggio.",
+      subtitle: "Due loop. Un ritmo. Tutti insieme.",
       cta: "Iscriviti ora",
     },
     info: [
@@ -124,9 +136,9 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
     ],
     explainer: {
       eyebrow: "Di cosa si tratta",
-      title: "Nessuna gara. Un assaggio.",
+      title: "Due loop. Un ritmo. Tutti insieme.",
       paragraphs: [
-        "Corriamo insieme due loop del percorso originale, a un ritmo tranquillo e comune. Nessun cronometraggio, nessun gruppo di passo — solo l'occasione di conoscere il terreno, i punti chiave e le sensazioni del percorso, prima che a maggio si faccia sul serio.",
+        "Corriamo insieme due loop del percorso originale a un ritmo tranquillo — l'occasione di conoscere il terreno, i punti chiave e le sensazioni del percorso, prima che a maggio si faccia sul serio.",
       ],
     },
     timeline: {
@@ -134,7 +146,7 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       title: "Come si svolge la giornata",
       steps: [
         { title: "Ritrovo", text: "Ore 14:00, parcheggio Nordic Arena Dobbiaco" },
-        { title: "Si parte insieme", text: "Un unico ritmo per tutti, nessun gruppo" },
+        { title: "Si parte insieme", text: "Un unico ritmo per tutti" },
         { title: "Conoscere il percorso", text: "2 loop del percorso originale, con i punti chiave e i riferimenti sotto controllo" },
         { title: "Arrivo & workshop", text: "Chiusura insieme, a seguire il workshop facoltativo" },
       ],
@@ -142,7 +154,16 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
     form: {
       eyebrow: "Iscrizione",
       title: "Partecipa",
-      lead: "L'iscrizione è gratuita. Dopo l'invio riceverai una conferma via e-mail.",
+      lead: "L'iscrizione è gratuita e ti dà accesso allo shop esclusivo. Dopo l'invio riceverai una conferma via e-mail.",
+      benefitsTitle: "Cosa ricevi",
+      benefits: [
+        { title: "Community Run – gratuito", text: "Due loop del percorso originale, insieme a un unico ritmo." },
+        {
+          title: "Accesso esclusivo allo shop",
+          text: "Con l'iscrizione ricevi via e-mail il tuo link personale alla Last Loop Collection – solo per chi partecipa.",
+        },
+        { title: "Facoltativo: workshop", text: "«Il fattore mentale» a seguire – selezionabile direttamente nel modulo." },
+      ],
       vorname: "Nome",
       nachname: "Cognome",
       email: "E-mail",
@@ -170,17 +191,17 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       eyebrow: "Workshop",
       title: "Il fattore mentale.",
       text: "Le ultra distanze non sono solo una questione di gambe. Nel workshop che segue il Community Run parleremo del lato mentale dei backyard ultra — come gestire dubbi, stanchezza e l'ora che ritorna sempre. Partecipazione: 5€.",
-      openNote: "Comunicheremo più avanti la modalità di pagamento. La casella nel modulo d'iscrizione qui sopra registra solo il tuo interesse.",
+      openNote: "Comunicheremo più avanti la modalità di pagamento. Questa casella registra solo il tuo interesse.",
     },
   },
   en: {
     metaTitle: "Community Run",
     metaDescription:
-      "Dolomites Last Loop Community Run – not a race, a taste of it.",
+      "Dolomites Last Loop Community Run – two loops, one pace, all together.",
     hero: {
       eyebrow: "Dolomites Last Loop",
       title: "Community Run",
-      subtitle: "Not a race. A taste of it.",
+      subtitle: "Two loops. One pace. All together.",
       cta: "Sign up now",
     },
     info: [
@@ -190,9 +211,9 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
     ],
     explainer: {
       eyebrow: "What it's about",
-      title: "Not a race. A taste of it.",
+      title: "Two loops. One pace. All together.",
       paragraphs: [
-        "Together we run two loops of the original course at a relaxed, shared pace. No timing, no pace groups — just the chance to get to know the terrain, the key sections and the feel of the course before things get serious in May.",
+        "Together we run two loops of the original course at a relaxed pace — the chance to get to know the terrain, the key sections and the feel of the course before things get serious in May.",
       ],
     },
     timeline: {
@@ -200,7 +221,7 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       title: "How the day works",
       steps: [
         { title: "Meet-up", text: "2:00 pm, Nordic Arena car park, Toblach/Dobbiaco" },
-        { title: "Off together", text: "One pace for everyone, no groups" },
+        { title: "Off together", text: "One pace for everyone" },
         { title: "Get to know the course", text: "2 loops of the original course, with the key sections and waypoints in view" },
         { title: "Finish & workshop", text: "Wrapping up together, followed by the optional workshop" },
       ],
@@ -208,7 +229,16 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
     form: {
       eyebrow: "Sign up",
       title: "Join us",
-      lead: "Signing up is free. After submitting you'll receive a confirmation by email.",
+      lead: "Signing up is free and unlocks the exclusive shop. After submitting you'll receive a confirmation by email.",
+      benefitsTitle: "What you get",
+      benefits: [
+        { title: "Community Run – free", text: "Two loops of the original course, together at one pace." },
+        {
+          title: "Exclusive shop access",
+          text: "When you sign up, you'll receive your personal link to the Last Loop Collection by email – for participants only.",
+        },
+        { title: "Optional: workshop", text: "\"The mental factor\" afterwards – select it right in the form." },
+      ],
       vorname: "First name",
       nachname: "Last name",
       email: "Email",
@@ -236,7 +266,7 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       eyebrow: "Workshop",
       title: "The mental factor.",
       text: "Ultra distances aren't just a matter of legs. In the workshop following the Community Run we'll focus on the mental side of backyard ultras — how to deal with doubt, fatigue and the hour that keeps coming back. Participation: €5.",
-      openNote: "We'll announce the payment method later. The checkbox in the sign-up form above only records your interest.",
+      openNote: "We'll announce the payment method later. This checkbox only records your interest.",
     },
   },
 };

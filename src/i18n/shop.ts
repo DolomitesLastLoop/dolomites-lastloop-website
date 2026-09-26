@@ -18,7 +18,7 @@ export type ShopProduct = {
   tagline: Record<Lang, string>;
 };
 
-/** Reihenfolge = Reihenfolge auf der Seite. Alle Motive dunkelblau mit Topo-Muster. */
+/** Reihenfolge = Reihenfolge auf der Seite. Alle Motive schwarz mit Höhenlinien-Muster. */
 export const shopProducts: ShopProduct[] = [
   {
     id: "taking-souls",
@@ -74,6 +74,8 @@ export type ShopCopy = {
   orderHint: string;
   front: string;
   back: string;
+  worn: string;
+  detail: string;
   viewLabel: string;
   photoAlt: (name: string, side: string) => string;
   misconfigured: { title: string; text: string };
@@ -91,13 +93,13 @@ export const shopCopy: Record<Lang, ShopCopy> = {
     hero: {
       eyebrow: "Nur für Community-Run-Teilnehmer:innen",
       title: "Shop",
-      subtitle: "Die Topo Collection",
-      text: "Vier Motive, alle in Dunkelblau mit Topografie-Muster – gemacht für die, die wissen, was die Glocke bedeutet.",
+      subtitle: "Last Loop Collection",
+      text: "Vier Motive, alle in Schwarz mit Höhenlinien-Muster – gemacht für die, die wissen, was die Glocke bedeutet.",
     },
     notice:
       "Vorschau: Bestellen ist noch nicht möglich. Wir melden uns, sobald der Shop öffnet.",
     colorLabel: "Farbe",
-    colorValue: "Dunkelblau · Topo-Muster Rostorange",
+    colorValue: "Schwarz · Höhenlinien-Muster Rostorange",
     sizeLabel: "Größen",
     priceLabel: "Preis",
     priceValue: "40 €",
@@ -105,6 +107,8 @@ export const shopCopy: Record<Lang, ShopCopy> = {
     orderHint: "Noch keine Bestellung möglich – du musst jetzt nichts tun.",
     front: "Vorne",
     back: "Hinten",
+    worn: "Getragen",
+    detail: "Detail",
     viewLabel: "Ansicht",
     photoAlt: (n, side) => `T-Shirt „${n}" – ${side}`,
     misconfigured: {
@@ -124,13 +128,13 @@ export const shopCopy: Record<Lang, ShopCopy> = {
     hero: {
       eyebrow: "Solo per chi partecipa al Community Run",
       title: "Shop",
-      subtitle: "La Topo Collection",
-      text: "Quattro motivi, tutti in blu scuro con motivo topografico – per chi sa cosa significa la campana.",
+      subtitle: "Last Loop Collection",
+      text: "Quattro motivi, tutti in nero con motivo a curve di livello – per chi sa cosa significa la campana.",
     },
     notice:
       "Anteprima: non è ancora possibile ordinare. Ti avviseremo quando lo shop aprirà.",
     colorLabel: "Colore",
-    colorValue: "Blu scuro · motivo topografico ruggine",
+    colorValue: "Nero · motivo a curve di livello ruggine",
     sizeLabel: "Taglie",
     priceLabel: "Prezzo",
     priceValue: "40 €",
@@ -138,6 +142,8 @@ export const shopCopy: Record<Lang, ShopCopy> = {
     orderHint: "Non è ancora possibile ordinare – per ora non devi fare nulla.",
     front: "Fronte",
     back: "Retro",
+    worn: "Indossata",
+    detail: "Dettaglio",
     viewLabel: "Vista",
     photoAlt: (n, side) => `T-shirt «${n}» – ${side}`,
     misconfigured: {
@@ -157,13 +163,13 @@ export const shopCopy: Record<Lang, ShopCopy> = {
     hero: {
       eyebrow: "Community Run participants only",
       title: "Shop",
-      subtitle: "The Topo Collection",
-      text: "Four designs, all in navy with a topographic pattern – made for those who know what the bell means.",
+      subtitle: "Last Loop Collection",
+      text: "Four designs, all in black with a contour-line pattern – made for those who know what the bell means.",
     },
     notice:
       "Preview: ordering isn't possible yet. We'll let you know as soon as the shop opens.",
     colorLabel: "Colour",
-    colorValue: "Navy · rust-orange topo pattern",
+    colorValue: "Black · rust-orange contour-line pattern",
     sizeLabel: "Sizes",
     priceLabel: "Price",
     priceValue: "€40",
@@ -171,6 +177,8 @@ export const shopCopy: Record<Lang, ShopCopy> = {
     orderHint: "You can't order yet – there's nothing you need to do right now.",
     front: "Front",
     back: "Back",
+    worn: "Worn",
+    detail: "Detail",
     viewLabel: "View",
     photoAlt: (n, side) => `T-shirt "${n}" – ${side}`,
     misconfigured: {

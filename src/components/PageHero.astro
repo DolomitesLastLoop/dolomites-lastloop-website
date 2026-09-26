@@ -7,6 +7,10 @@ interface Props {
   subtitle?: string;
   align?: "left" | "center";
   height?: string;
+  /** Fotocredit unten rechts; Standard = Wisthaler (alle bisherigen Heroes). */
+  credit?: string;
+  /** Optionaler Button unter dem Untertitel, z. B. Sprung zum Formular. */
+  cta?: { label: string; href: string };
 }
 const {
   bg,
@@ -16,6 +20,8 @@ const {
   subtitle,
   align = "center",
   height = "56vh",
+  credit = "© Harald Wisthaler",
+  cta,
 } = Astro.props;
 ---
 
@@ -38,9 +44,14 @@ const {
     {eyebrow && <span class="eyebrow on-dark reveal">{eyebrow}</span>}
     <h1 class="ph-title reveal" data-delay="100">{title}</h1>
     {subtitle && <p class="ph-subtitle reveal" data-delay="200">{subtitle}</p>}
+    {cta && (
+      <a href={cta.href} class="btn btn-primary btn-arrow ph-cta reveal" data-delay="300">
+        {cta.label}
+      </a>
+    )}
   </div>
 
-  <span class="ph-credit">© Harald Wisthaler</span>
+  {credit && <span class="ph-credit">{credit}</span>}
 </section>
 
 <style>
@@ -111,6 +122,10 @@ const {
     color: rgba(255, 255, 255, 0.88);
     margin: 0;
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .ph-cta {
+    margin-top: var(--space-6);
   }
 
   .ph-credit {
