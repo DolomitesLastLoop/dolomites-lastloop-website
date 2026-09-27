@@ -1,5 +1,6 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { env } from "@lib/env";
 
 // Sliding-Window-Rate-Limiting pro IP über Upstash Redis.
 //
@@ -8,8 +9,8 @@ import { Redis } from "@upstash/redis";
 // ist Upstash kurzzeitig nicht erreichbar, werden Requests durchgelassen.
 // Verfügbarkeit der öffentlichen Formulare hat hier Vorrang vor dem Limit.
 
-const url = import.meta.env.UPSTASH_REDIS_REST_URL as string | undefined;
-const token = import.meta.env.UPSTASH_REDIS_REST_TOKEN as string | undefined;
+const url = env("UPSTASH_REDIS_REST_URL");
+const token = env("UPSTASH_REDIS_REST_TOKEN");
 
 // Einmalige Warnung pro Prozess (Cold-Start), damit fehlende Config sichtbar
 // wird, ohne bei jedem Request die Logs zu fluten.
