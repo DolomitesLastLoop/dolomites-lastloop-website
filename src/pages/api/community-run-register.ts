@@ -4,6 +4,7 @@ import { checkRateLimit, tooManyRequests } from "@lib/ratelimit";
 import { isValidEmail } from "@lib/validation";
 import { sendCommunityRunConfirmation } from "@lib/email";
 import { addBrevoContact } from "@lib/brevo";
+import { findExistingRegistration } from "@lib/community-run-dedupe";
 import {
   ACCESS_TOKEN_TTL_MS,
   generateAccessToken,
@@ -61,6 +62,32 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const supabase = getAdminClient();
+
+  // Dublettenprüfung (gleiche E-Mail + gleicher Vor-/Nachname): keine neue Zeile,
+  // keine Mail, kein Brevo — Antwort identisch zum Erfolgsfall, damit nicht erkennbar
+  // ist, ob die Person schon angemeldet ist. Fail-open: schlägt die Abfrage fehl,
+  // wird wie bisher angelegt. Logs ohne personenbezogene Daten.
+  const existing = await findExistingRegistration(supabase, {
+    email,
+    vorname,
+    nachname,
+    workshopInterest,
+  });
+  if (existing.kind === "error") {
+    console.error("[community-run-register] duplicate lookup failed:", existing.message);
+  } else if (existing.kind === "duplicate") {
+    return json({ ok: true }, 200);
+  } else if (existing.kind === "upgrade_workshop") {
+    const { error: updErr } = await supabase
+      .from("community_run_registrations")
+      .update({ workshop_interest: true })
+      .eq("id", existing.id);
+    if (updErr) {
+      console.error("[community-run-register] workshop update failed:", updErr.message);
+    }
+    return json({ ok: true }, 200);
+  }
+
   const accessToken = generateAccessToken();
 
   const { data: row, error: insertErr } = await supabase

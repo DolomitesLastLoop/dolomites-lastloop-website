@@ -221,8 +221,12 @@ const HERO_POSITION = "center 40%";
     status.textContent = text;
   }
 
+  // Sperre gegen Doppel-Submit (Doppelklick, Enter): nur EIN Request gleichzeitig.
+  let inFlight = false;
+
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (inFlight) return;
     const errors = JSON.parse(form.dataset.errors || "{}") as Record<string, string>;
     if (!form.checkValidity()) {
       form.reportValidity();
@@ -231,8 +235,11 @@ const HERO_POSITION = "center 40%";
     }
     const btn = form.querySelector<HTMLButtonElement>("button[type=submit]");
     const label = btn?.textContent ?? "";
+    inFlight = true;
+    form.setAttribute("aria-busy", "true");
     if (btn) {
       btn.disabled = true;
+      btn.setAttribute("aria-busy", "true");
       btn.textContent = form.dataset.sending ?? label;
     }
     const data = new FormData(form);
@@ -264,8 +271,11 @@ const HERO_POSITION = "center 40%";
     } catch {
       show("error", errors.server_error);
     } finally {
+      inFlight = false;
+      form.removeAttribute("aria-busy");
       if (btn) {
         btn.disabled = false;
+        btn.removeAttribute("aria-busy");
         btn.textContent = label;
       }
     }
