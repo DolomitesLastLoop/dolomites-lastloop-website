@@ -1,10 +1,11 @@
 ---
 // Community Run — Landingpage mit Anmeldeformular.
 //
-// Nur über geteilten Link erreichbar (analog VIP-Anmeldeweg):
-//   • noindex,nofollow über die BaseLayout-Prop
-//   • NICHT in src/pages/sitemap.xml.ts (handgepflegte Allowlist)
-//   • KEIN Eintrag im Header/Footer
+// Indexierung an das Öffnungs-Gate gekoppelt (gleiche Quelle wie das Formular):
+//   • geschlossen → noindex,nofollow; offen → index,follow (BaseLayout-Props)
+//   • dauerhaft in src/pages/sitemap.xml.ts — vor der Öffnung sendet die Seite
+//     noindex, das ist unkritisch
+//   • Menü-Eintrag im Header erst ab Öffnung (Header.astro), kein Footer-Link
 // Die Anmeldung schreibt in community_run_registrations (nicht participants) und
 // verschickt eine reine Bestätigungsmail (kein Shop-Link mehr) — siehe
 // api/community-run-register.ts.
@@ -33,7 +34,7 @@ const privacyHref = localizePath("/datenschutz", lang);
 const HERO_POSITION = "center 40%";
 ---
 
-<BaseLayout lang={lang} title={c.metaTitle} description={c.metaDescription} noindex={true}>
+<BaseLayout lang={lang} title={c.metaTitle} description={c.metaDescription} noindex={!isOpen} indexFollow={isOpen}>
   <PageHero
     bg={photo.start_group}
     position={HERO_POSITION}

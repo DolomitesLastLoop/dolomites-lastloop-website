@@ -20,6 +20,8 @@ const ROUTES = [
   "/galerie",
   "/faq",
   "/kontakt",
+  // Dauerhaft gelistet; vor der Öffnung sendet die Seite selbst noindex.
+  "/community-run",
 ];
 const LANGS = ["de", "it", "en"] as const;
 
