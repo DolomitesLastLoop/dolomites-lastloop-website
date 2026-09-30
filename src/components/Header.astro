@@ -1,6 +1,7 @@
 ---
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
+import { isCommunityRunOpen, opensAtMs } from "@lib/community-run-gate";
 
 interface Props {
   lang: Lang;
@@ -8,10 +9,19 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-const links = [
+// Community Run erscheint erst ab Öffnung der Anmeldung (Hybrid):
+//   • Server: `hidden` nur, solange isCommunityRunOpen() false ist (Seiten sind SSR).
+//   • Client: Inline-Script nach dem Header blendet ein, sobald Date.now() >= opensAt
+//     (Tabs, die vor 00:00 geladen wurden). Rein kosmetisch — das echte Gate sitzt
+//     serverseitig in /[lang]/community-run und /api/community-run-register.
+const crHidden = !isCommunityRunOpen();
+const crOpensAt = String(opensAtMs());
+
+const links: { href: string; label: string; gated?: boolean }[] = [
   { href: localizePath("/", lang), label: t("nav.home") },
   { href: localizePath("/race-info", lang), label: t("nav.race_info") },
   { href: localizePath("/anmeldung", lang), label: t("nav.signup") },
+  { href: localizePath("/community-run", lang), label: t("nav.community_run"), gated: true },
   { href: localizePath("/startliste", lang), label: t("nav.startlist") },
   { href: localizePath("/galerie", lang), label: t("nav.gallery") },
   { href: localizePath("/ergebnisse", lang), label: t("nav.results") },
@@ -46,7 +56,11 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
               normalized === current ||
               (normalized !== `/${lang}` && current.startsWith(normalized));
             return (
-              <li>
+              <li
+                hidden={link.gated && crHidden}
+                data-cr-nav={link.gated ? "" : undefined}
+                data-opens-at={link.gated ? crOpensAt : undefined}
+              >
                 <a
                   href={link.href}
                   class:list={{ active: isActive }}
@@ -88,7 +102,11 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
       <ul>
         {
           links.map((link) => (
-            <li>
+            <li
+              hidden={link.gated && crHidden}
+              data-cr-nav={link.gated ? "" : undefined}
+              data-opens-at={link.gated ? crOpensAt : undefined}
+            >
               <a href={link.href}>{link.label}</a>
             </li>
           ))
@@ -100,6 +118,18 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     </nav>
   </div>
 </header>
+
+<!-- Direkt nach dem Nav-Markup, synchron vor dem ersten Paint: Community-Run-Eintrag
+     einblenden, sobald der Öffnungszeitpunkt erreicht ist (siehe Kommentar oben). -->
+<script is:inline>
+  (function () {
+    var items = document.querySelectorAll("[data-cr-nav][hidden]");
+    for (var i = 0; i < items.length; i++) {
+      var at = Number(items[i].getAttribute("data-opens-at"));
+      if (at > 0 && Date.now() >= at) items[i].hidden = false;
+    }
+  })();
+</script>
 
 <style>
   .site-header {
@@ -216,6 +246,11 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     }
   }
 
+  /* hidden-Attribut hart durchsetzen (falls ein li-Display-Stil es je überschreibt) */
+  [data-cr-nav][hidden] {
+    display: none !important;
+  }
+
   .primary-nav ul {
     list-style: none;
     margin: 0;
@@ -224,12 +259,15 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     gap: 0.25rem;
   }
 
+  /* Kompakt (seit Community-Run-Eintrag, 9 Links): Padding/Laufweite reduziert,
+     nowrap → kein Label bricht um. Grenzen per Playwright gemessen (DE = breiteste). */
   .primary-nav a {
     display: inline-block;
-    padding: 0.6rem 0.85rem;
+    padding: 0.6rem 0.5rem;
     font-size: 0.82rem;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
     text-transform: uppercase;
     color: var(--color-text-muted);
     border-radius: var(--radius-sm);
@@ -240,8 +278,8 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
   .primary-nav a::after {
     content: "";
     position: absolute;
-    left: 0.85rem;
-    right: 0.85rem;
+    left: 0.5rem;
+    right: 0.5rem;
     bottom: 4px;
     height: 2px;
     background: var(--color-primary);
@@ -325,7 +363,14 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
     margin-top: var(--space-6);
   }
 
-  @media (max-width: 1024px) {
+  /* Zwischenbereich: Schriftzug ausblenden (nur Logo), damit die Desktop-Nav passt */
+  @media (min-width: 1112px) and (max-width: 1345px) {
+    .brand-name {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1111px) {
     .primary-nav,
     .header-actions > .lang {
       display: none;
