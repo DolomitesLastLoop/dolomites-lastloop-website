@@ -82,10 +82,11 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: "server_error" }, 500);
   }
 
-  // Ohne Mail kein Zugangslink → Zeile wieder entfernen statt eine Karteileiche mit
-  // totem Token liegen zu lassen; die Person kann es dann erneut versuchen.
+  // Token + Hash werden weiter erzeugt (access_token_hash ist NOT NULL), der rohe
+  // Token geht aber seit 2026-09-30 NICHT mehr in die Mail (Shop versteckt).
+  // Ohne Bestätigungsmail → Zeile wieder entfernen, die Person kann es erneut versuchen.
   try {
-    await sendCommunityRunConfirmation(email, vorname, accessToken, lang);
+    await sendCommunityRunConfirmation(email, vorname, lang);
   } catch (err) {
     console.error(
       "[community-run-register] confirmation mail failed:",

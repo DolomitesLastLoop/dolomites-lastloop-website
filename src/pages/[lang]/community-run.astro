@@ -6,7 +6,8 @@
 //   • NICHT in src/pages/sitemap.xml.ts (handgepflegte Allowlist)
 //   • KEIN Eintrag im Header/Footer
 // Die Anmeldung schreibt in community_run_registrations (nicht participants) und
-// verschickt den persönlichen Shop-Zugangslink — siehe api/community-run-register.ts.
+// verschickt eine reine Bestätigungsmail (kein Shop-Link mehr) — siehe
+// api/community-run-register.ts.
 //
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
@@ -89,7 +90,7 @@ const HERO_POSITION = "center 40%";
         <p class="section-lead">{c.form.lead}</p>
       </div>
 
-      {/* Vorteile — Shop-Zugang VOR der Anmeldung sichtbar machen, nicht erst in der Bestätigung */}
+      {/* Vorteile — vor dem Formular sichtbar machen, nicht erst in der Bestätigung */}
       <div class="card cr-benefits reveal">
         <span class="eyebrow">{c.form.benefitsTitle}</span>
         <ul>
@@ -136,8 +137,8 @@ const HERO_POSITION = "center 40%";
           <input id="cr-website" type="text" name="website" tabindex="-1" autocomplete="off" />
         </div>
 
-        {/* Workshop-Karte: Beschreibung + Häkchen an einer Stelle. Preis nur als Info,
-            Zahlungsart offen (keine Zahlungslogik). Feldname workshop_interest unverändert. */}
+        {/* Workshop-Karte: Beschreibung + Häkchen an einer Stelle. Workshop kostenlos,
+            Häkchen = unverbindliche Interessensbekundung. Feldname workshop_interest unverändert. */}
         <div class="cr-workshop">
           <span class="eyebrow">{c.workshop.eyebrow}</span>
           <h3 class="cr-workshop-title">{c.workshop.title}</h3>
@@ -149,7 +150,6 @@ const HERO_POSITION = "center 40%";
               <small class="text-dim">{c.form.workshopHint}</small>
             </span>
           </label>
-          <p class="cr-workshop-note text-dim">{c.workshop.openNote}</p>
         </div>
 
         <label class="cr-check">
@@ -323,9 +323,6 @@ const HERO_POSITION = "center 40%";
   }
   .cr-workshop p {
     margin: 0;
-  }
-  .cr-workshop-note {
-    font-size: 0.85rem;
   }
   /* Karte sitzt in der Formular-Karte → auf schmalen Screens Padding halbieren */
   @media (max-width: 600px) {

@@ -282,7 +282,7 @@ export async function sendContactNotification(
   });
 }
 
-// ── Community Run: Anmeldebestätigung + Shop-Zugangslink ─────────────────────
+// ── Community Run: Anmeldebestätigung (seit 2026-09-30 OHNE Shop-Link) ───────
 // TODO(Simon): Datum/Ort des Community Runs stehen noch nicht fest — Überschrift
 // und Texte sind Platzhalter.
 const COMMUNITY_RUN_HEADING = "Dolomites Last Loop · Community Run";
@@ -293,10 +293,6 @@ const communityRunCopy: Record<
     subject: string;
     hi: (n: string) => string;
     body: string;
-    shopIntro: string;
-    shopCta: string;
-    validity: string;
-    fallback: string;
     bye: string;
   }
 > = {
@@ -305,12 +301,6 @@ const communityRunCopy: Record<
     hi: (n) => `Ciao ${n},`,
     body:
       "danke für deine Anmeldung zum Community Run! Alle Details zu Datum, Treffpunkt und Ablauf schicken wir dir rechtzeitig vorab.",
-    shopIntro:
-      "Als Community-Run-Teilnehmer:in bekommst du exklusiven Zugang zum Dolomites-Last-Loop-Shop:",
-    shopCta: "Zum Shop →",
-    validity:
-      "Der Link ist persönlich – bitte nicht weitergeben.",
-    fallback: "Falls der Link nicht funktioniert, kopiere diese URL in deinen Browser:",
     bye: "Sportliche Grüße",
   },
   it: {
@@ -318,12 +308,6 @@ const communityRunCopy: Record<
     hi: (n) => `Ciao ${n},`,
     body:
       "grazie per la tua iscrizione al Community Run! Ti invieremo per tempo tutti i dettagli su data, punto di ritrovo e programma.",
-    shopIntro:
-      "Come partecipante al Community Run hai accesso esclusivo allo shop della Dolomites Last Loop:",
-    shopCta: "Vai allo shop →",
-    validity:
-      "Il link è personale – per favore non condividerlo.",
-    fallback: "Se il link non funziona, copia questo URL nel tuo browser:",
     bye: "Sportivi saluti",
   },
   en: {
@@ -331,12 +315,6 @@ const communityRunCopy: Record<
     hi: (n) => `Hi ${n},`,
     body:
       "thanks for signing up for the Community Run! We’ll send you all details on date, meeting point and schedule well in advance.",
-    shopIntro:
-      "As a Community Run participant you get exclusive access to the Dolomites Last Loop shop:",
-    shopCta: "Go to the shop →",
-    validity:
-      "The link is personal – please don’t share it.",
-    fallback: "If the link doesn’t work, copy this URL into your browser:",
     bye: "Best regards",
   },
 };
@@ -344,19 +322,14 @@ const communityRunCopy: Record<
 export async function sendCommunityRunConfirmation(
   to: string,
   firstName: string,
-  accessToken: string,
   lang: string = "de",
 ) {
   const L = normLang(lang);
   const c = communityRunCopy[L];
-  const shopLink = `${siteUrl()}/${L}/shop?token=${encodeURIComponent(accessToken)}`;
   const html = shell(
     `
     <p>${c.hi(escapeHtml(firstName))}</p>
     <p>${c.body}</p>
-    <p>${c.shopIntro}<br/><a href="${shopLink}" style="color:#2d4a6b;">${c.shopCta}</a></p>
-    <p style="font-size:0.85em;color:#666;">${c.validity}</p>
-    <p style="font-size:0.85em;color:#666;">${c.fallback}<br/>${shopLink}</p>
     <p>${c.bye}</p>
   `,
     COMMUNITY_RUN_HEADING,
