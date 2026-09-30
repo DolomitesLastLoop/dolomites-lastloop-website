@@ -174,7 +174,7 @@ export const communityRun: Record<Lang, CommunityRunCopy> = {
       lead: "L'iscrizione è gratuita. Dopo l'invio riceverai una conferma via e-mail.",
       benefitsTitle: "Cosa ricevi",
       benefits: [
-        { title: "Community Run – gratuito", text: "Due loop del percorso originale, insieme a un unico ritmo." },
+        { title: "Community Run – gratuito", text: "Due loop del percorso originale, insieme, allo stesso ritmo." },
         {
           title: "Info via e-mail",
           text: "Ti invieremo in anticipo via e-mail i dettagli su programma e punto di ritrovo.",
