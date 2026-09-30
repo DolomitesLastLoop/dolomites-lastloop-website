@@ -314,6 +314,20 @@ weil er durch Logs und Transkripte gelaufen war; die alte URL antwortet seither 
 - **Vor einem Shop-Launch neu denken:** Die 403-Zugangsseite des Shops verspricht einen
   Link aus der Bestätigungsmail, den es nicht mehr gibt, und die Mail-Logik verschickt keinen
   Token mehr. Zugang und Checkout gemäß Team-Entscheidung neu bauen, bevor `SHOP_ENABLED=true`.
+- **Gate-Datei:** Konstante, `opensAtMs()` und `isCommunityRunOpen()` liegen in
+  `src/lib/community-run-gate.ts` (nur `@lib/env`, kein Supabase) und werden von
+  `src/lib/community-run.ts` re-exportiert.
+- **Menü-Eintrag „Community Run“** (Header, Desktop + Burger, direkt nach „Anmeldung“),
+  Hybrid-Reveal: Server rendert `<li hidden>` nur solange `!isCommunityRunOpen()`
+  (alle Seiten sind SSR); zusätzlich blendet ein `is:inline`-Script direkt nach dem Header
+  den Eintrag ein, sobald `Date.now() >= data-opens-at` (Tabs, die vor 00:00 geladen
+  wurden). Rein kosmetisch — das echte Gate bleibt serverseitig (Seite + API). Ohne JS:
+  vor Öffnung versteckt, danach sichtbar (Server). CSP erlaubt das Inline-Script über
+  `script-src 'unsafe-inline'` in `vercel.json`.
+- **Header-Breakpoints** (9 Nav-Links, gemessen per Playwright, DE = breiteste Sprache):
+  Burger ≤ 1111 px; 1112–1345 px Desktop-Nav nur mit Logo (Schriftzug ausgeblendet);
+  ab 1346 px mit Schriftzug. Nav-Links kompakt (Padding 0.5rem, Laufweite 0.06em,
+  `nowrap`). Neuer Nav-Eintrag → Grenzen neu messen.
 
 ---
 
@@ -1802,3 +1816,10 @@ einzeln abfragen.** Ein 14 h alter Eintrag kann ein lebender Checkout-Tab sein.
   „Merge nach main pushen, aber nicht deployen" ist damit nicht möglich — Push löste
   sofort einen Production-Build aus. Vorher klären, ob Production live gehen darf
   (sonst: nicht pushen oder Auto-Deploy für main im Vercel-Dashboard pausieren).
+
+### 2026-09-30 — Secret beim „Schwärzen“ im Klartext ausgegeben
+- `grep -n "RESEND" .env | sed 's/=.\+/=<gesetzt>/'` hat NICHT geschwärzt: `\+` ist in
+  BSD-sed (macOS) ohne `-E` kein Quantor → der Resend-API-Key landete im Chat-Transkript.
+- Regel: Secret-Werte nie ausgeben. Nur Präsenz prüfen (`[ -n "$VAR" ] && echo gesetzt`,
+  `grep -q '^VAR=.' .env && echo gesetzt`) oder Namen listen (`cut -d= -f1 .env`).
+  Nach einem Leak den Key rotieren.
