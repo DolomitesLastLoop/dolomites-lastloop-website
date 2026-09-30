@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { env } from "@lib/env";
 import { escapeHtml } from "@lib/validation";
+import { communityRun } from "@i18n/community-run";
 
 type Lang = "de" | "it" | "en";
 
@@ -283,8 +284,8 @@ export async function sendContactNotification(
 }
 
 // ── Community Run: Anmeldebestätigung (seit 2026-09-30 OHNE Shop-Link) ───────
-// TODO(Simon): Datum/Ort des Community Runs stehen noch nicht fest — Überschrift
-// und Texte sind Platzhalter.
+// Eventdetails (Datum/Uhrzeit/Treffpunkt + Format-Zeile) kommen aus derselben Quelle
+// wie die Landingpage (src/i18n/community-run.ts) — nicht hier doppelt pflegen.
 const COMMUNITY_RUN_HEADING = "Dolomites Last Loop · Community Run";
 
 const communityRunCopy: Record<
@@ -300,21 +301,21 @@ const communityRunCopy: Record<
     subject: "Community Run · Anmeldung bestätigt · Dolomites Last Loop",
     hi: (n) => `Ciao ${n},`,
     body:
-      "danke für deine Anmeldung zum Community Run! Alle Details zu Datum, Treffpunkt und Ablauf schicken wir dir rechtzeitig vorab.",
+      "danke für deine Anmeldung zum Community Run! Hier sind die wichtigsten Infos auf einen Blick. Falls sich etwas ändert oder es weitere Infos gibt, melden wir uns rechtzeitig bei dir.",
     bye: "Sportliche Grüße",
   },
   it: {
     subject: "Community Run · Iscrizione confermata · Dolomites Last Loop",
     hi: (n) => `Ciao ${n},`,
     body:
-      "grazie per la tua iscrizione al Community Run! Ti invieremo per tempo tutti i dettagli su data, punto di ritrovo e programma.",
+      "grazie per la tua iscrizione al Community Run! Ecco le informazioni principali in breve. Se cambia qualcosa o ci sono altre novità, ti contatteremo per tempo.",
     bye: "Sportivi saluti",
   },
   en: {
     subject: "Community Run · Registration confirmed · Dolomites Last Loop",
     hi: (n) => `Hi ${n},`,
     body:
-      "thanks for signing up for the Community Run! We’ll send you all details on date, meeting point and schedule well in advance.",
+      "thanks for signing up for the Community Run! Here are the key details at a glance. If anything changes or there’s more to share, we’ll be in touch in good time.",
     bye: "Best regards",
   },
 };
@@ -326,10 +327,27 @@ export async function sendCommunityRunConfirmation(
 ) {
   const L = normLang(lang);
   const c = communityRunCopy[L];
+  const event = communityRun[L];
+  // Gleiches Tabellen-Layout wie die Übersicht in sendConfirmation. Die Format-Zeile
+  // ist benefits[0] („Zwei Loops der Originalstrecke, gemeinsam in einem Tempo.") —
+  // bei Umsortierung der Benefits hier mitziehen.
+  const details = `
+    <table style="border-collapse:collapse;background:#faf6f0;border:1px solid #ddd8cf;border-radius:6px;width:100%;">
+      ${event.info
+        .map(
+          ({ label, value }) => `<tr>
+        <td style="padding:0.4rem 1rem 0.4rem 1rem;color:#4a5a6a;white-space:nowrap;">${escapeHtml(label)}</td>
+        <td style="padding:0.4rem 1rem 0.4rem 0;"><strong>${escapeHtml(value)}</strong></td>
+      </tr>`,
+        )
+        .join("")}
+    </table>
+    <p>${escapeHtml(event.form.benefits[0].text)}</p>`;
   const html = shell(
     `
     <p>${c.hi(escapeHtml(firstName))}</p>
     <p>${c.body}</p>
+    ${details}
     <p>${c.bye}</p>
   `,
     COMMUNITY_RUN_HEADING,
