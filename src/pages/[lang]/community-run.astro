@@ -18,7 +18,7 @@ import PageHero from "@components/PageHero.astro";
 import { photo } from "@lib/photos";
 import { localizePath, type Lang } from "@i18n/utils";
 import { communityRun } from "@i18n/community-run";
-import { isCommunityRunOpen } from "@lib/community-run";
+import { isCommunityRunOpen, opensAtMs } from "@lib/community-run";
 
 export const prerender = false;
 const lang = (Astro.params.lang ?? "de") as Lang;
@@ -92,13 +92,39 @@ const HERO_POSITION = "center 40%";
   {/* Anmeldeformular — erst ab Öffnung; davor nur der Hinweis (gleicher Anker) */}
   <section class="section" id="anmeldung">
     <div class="container-narrow">
-      {!isOpen ? (
-      <div class="section-head text-center cr-head reveal">
+      {!isOpen ? (<>
+      <div
+        class="section-head text-center cr-head reveal"
+        data-cr-opens-at={String(opensAtMs())}
+      >
         <span class="eyebrow">{c.closed.eyebrow}</span>
         <h2 class="section-title">{c.closed.title}</h2>
         <p class="section-lead">{c.closed.text}</p>
       </div>
-      ) : (<>
+      {/* Offener Tab zur Öffnung: bei Öffnungszeitpunkt + 1 s genau EINMAL neu laden,
+          damit der Server das Formular ausliefert. Nur ≤ 24 h vorher. Schleifenschutz
+          (Client-Uhr geht vor, Server noch zu): Flag in sessionStorage; ohne Storage
+          kein Reload statt Schleife. Nur im geschlossenen Zustand gerendert. */}
+      <script is:inline>
+        (function () {
+          var el = document.querySelector("[data-cr-opens-at]");
+          var at = Number(el && el.getAttribute("data-cr-opens-at"));
+          if (!(at > 0)) return;
+          var wait = at + 1000 - Date.now();
+          if (wait > 864e5) return;
+          var key = "cr-open-reload:" + at;
+          setTimeout(function () {
+            try {
+              if (sessionStorage.getItem(key)) return;
+              sessionStorage.setItem(key, "1");
+            } catch (e) {
+              return;
+            }
+            location.reload();
+          }, Math.max(wait, 0));
+        })();
+      </script>
+      </>) : (<>
       <div class="section-head text-center cr-head reveal">
         <span class="eyebrow">{c.form.eyebrow}</span>
         <h2 class="section-title">{c.form.title}</h2>

@@ -11,9 +11,11 @@ const t = useTranslations(lang);
 
 // Community Run erscheint erst ab Öffnung der Anmeldung (Hybrid):
 //   • Server: `hidden` nur, solange isCommunityRunOpen() false ist (Seiten sind SSR).
-//   • Client: Inline-Script nach dem Header blendet ein, sobald Date.now() >= opensAt
-//     (Tabs, die vor 00:00 geladen wurden). Rein kosmetisch — das echte Gate sitzt
-//     serverseitig in /[lang]/community-run und /api/community-run-register.
+//   • Client: Inline-Script nach dem Header prüft beim Laden (Date.now() >= opensAt,
+//     z. B. bei veraltetem HTML aus bfcache), stellt für offene Tabs einen Timer auf den
+//     Öffnungszeitpunkt (nur ≤ 24 h) und prüft erneut bei visibilitychange (verschlafener
+//     Timer nach Standby). Rein kosmetisch — das echte Gate sitzt serverseitig in
+//     /[lang]/community-run und /api/community-run-register.
 const crHidden = !isCommunityRunOpen();
 const crOpensAt = String(opensAtMs());
 
@@ -120,14 +122,31 @@ const current = Astro.url.pathname.replace(/\/+$/, "") || `/${lang}`;
 </header>
 
 <!-- Direkt nach dem Nav-Markup, synchron vor dem ersten Paint: Community-Run-Eintrag
-     einblenden, sobald der Öffnungszeitpunkt erreicht ist (siehe Kommentar oben). -->
+     einblenden, sobald der Öffnungszeitpunkt erreicht ist — beim Laden, per Timer in
+     offenen Tabs und bei visibilitychange (siehe Kommentar oben). -->
 <script is:inline>
   (function () {
     var items = document.querySelectorAll("[data-cr-nav][hidden]");
-    for (var i = 0; i < items.length; i++) {
-      var at = Number(items[i].getAttribute("data-opens-at"));
-      if (at > 0 && Date.now() >= at) items[i].hidden = false;
+    if (!items.length) return;
+    var at = Number(items[0].getAttribute("data-opens-at"));
+    if (!(at > 0)) return;
+    function reveal() {
+      if (Date.now() < at) return false;
+      for (var i = 0; i < items.length; i++) items[i].hidden = false;
+      document.removeEventListener("visibilitychange", onVisible);
+      return true;
     }
+    function onVisible() {
+      if (document.visibilityState === "visible") reveal();
+    }
+    function tick() {
+      // Timer können minimal zu früh feuern → dann kurz nachfassen.
+      if (!reveal()) setTimeout(tick, Math.max(at - Date.now(), 50));
+    }
+    if (reveal()) return;
+    var wait = at - Date.now();
+    if (wait <= 864e5) setTimeout(tick, wait);
+    document.addEventListener("visibilitychange", onVisible);
   })();
 </script>
 
