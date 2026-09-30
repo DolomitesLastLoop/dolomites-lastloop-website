@@ -299,6 +299,24 @@ weil er durch Logs und Transkripte gelaufen war; die alte URL antwortet seither 
 
 ---
 
+## Community Run: Öffnungs-Gate & Shop-Flag (seit 2026-09-30)
+
+- **Gate:** `COMMUNITY_RUN_OPENS_AT = "2026-10-02T00:00:00+02:00"` in `src/lib/community-run.ts`,
+  `isCommunityRunOpen()` (Serverzeit). Vorher: `/[lang]/community-run` zeigt statt Formular
+  einen Hinweis (SSR, `Cache-Control: no-store`), `/api/community-run-register` antwortet als
+  allererstes `403 {"error":"not_open"}` (kein Rate-Limit-Hit, keine DB, keine Mail).
+- **Test-Override:** Env `COMMUNITY_RUN_OPENS_AT` (ISO-String). Leer/ungültig → Default gilt
+  (fail-safe geschlossen). Nur lokal/Preview setzen, nie in Production.
+- **Bestätigungsmail** enthält keinen Shop-Link mehr. Token + `access_token_hash` werden
+  weiter erzeugt (Spalte NOT NULL), der rohe Token geht nirgendwohin.
+- **`SHOP_ENABLED`** (Standard: aus): nur exakt `"true"` schaltet `/[lang]/shop` ein, sonst
+  sofort 404 + noindex, ohne Token-Check/DB/Cookie. Shop-Code bleibt im Repo.
+- **Vor einem Shop-Launch neu denken:** Die 403-Zugangsseite des Shops verspricht einen
+  Link aus der Bestätigungsmail, den es nicht mehr gibt, und die Mail-Logik verschickt keinen
+  Token mehr. Zugang und Checkout gemäß Team-Entscheidung neu bauen, bevor `SHOP_ENABLED=true`.
+
+---
+
 ## Fehlerprotokoll
 
 > Hier neu auftretende Fehler + Ursache + Lösung notieren (Regel 4).
