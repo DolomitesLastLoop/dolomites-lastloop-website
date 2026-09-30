@@ -1778,3 +1778,9 @@ einzeln abfragen.** Ein 14 h alter Eintrag kann ein lebender Checkout-Tab sein.
 - Der ungenutzte i18n-Key `signup.intro` wurde entfernt (war in keiner Seite referenziert).
 - Teilnehmer `bambanwp@gmail.dom` hat einen Tippfehler in der Domain (`.dom`) und erhält
   **keine Mails**. Bei Zahlung manuell kontaktieren.
+
+### 2026-09-27 — `git push origin main` = Production-Deploy
+- Vercel-Git-Integration baut bei jedem Push auf `main` automatisch **Production**. Ein
+  „Merge nach main pushen, aber nicht deployen" ist damit nicht möglich — Push löste
+  sofort einen Production-Build aus. Vorher klären, ob Production live gehen darf
+  (sonst: nicht pushen oder Auto-Deploy für main im Vercel-Dashboard pausieren).
