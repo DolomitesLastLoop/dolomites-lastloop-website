@@ -350,8 +350,10 @@ drop table if exists public.waitlist;
 -- alle). Spalte bleibt nullable stehen, die API schreibt sie nicht mehr; der
 -- CHECK lässt NULL zu (NULL-Vergleich → unknown → Constraint erfüllt).
 -- email: bewusst NICHT unique — Familien/Gruppen melden sich teils über eine
--- gemeinsame Adresse an; eine Dublettenprüfung ließe sich später über die API
--- nachrüsten, ohne das Constraint erneut zu lockern.
+-- gemeinsame Adresse an (unterschiedliche Vornamen). Die Dublettenprüfung läuft
+-- seit 2026-09-30 im Endpoint (/api/community-run-register): gleiche E-Mail +
+-- gleicher Vor-/Nachname (normalisiert) → keine neue Zeile. Kein Unique-Index;
+-- zwei fast gleichzeitige identische Requests können daher zwei Zeilen erzeugen.
 -- RLS aktiv, KEINE Policies → anon/authenticated haben keinerlei Zugriff;
 -- gelesen/geschrieben wird ausschließlich serverseitig mit dem Service-Role-Key.
 -- ────────────────────────────────────────────────────────────

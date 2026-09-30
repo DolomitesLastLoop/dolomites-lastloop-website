@@ -329,6 +329,26 @@ weil er durch Logs und Transkripte gelaufen war; die alte URL antwortet seither 
   der Öffnungszeitpunkt (`data-cr-opens-at`, vom Server) ≤ 24 h entfernt, lädt die Seite
   bei Öffnung + 1 s genau EINMAL neu → Formular erscheint. Schleifenschutz über
   sessionStorage-Flag `cr-open-reload:<ms>`; ohne Storage kein Reload.
+- **Duplikatprüfung** (seit 2026-09-30, `src/lib/community-run-dedupe.ts`, aufgerufen im
+  Endpoint nach der Validierung, vor Insert/Mail/Brevo):
+  - Regel: gleiche E-Mail (exakt per `.eq()`, gespeichert wird `trim().toLowerCase()`) UND
+    gleicher Vor- und Nachname (nur für den Vergleich normalisiert: NFC, trim, Leerzeichen
+    zusammengefasst, Kleinschreibung) → keine neue Zeile, keine Mail, kein Brevo, Antwort
+    `{"ok":true}` wie im Erfolgsfall (nichts verraten). Einzige Änderung: bestehendes
+    `workshop_interest` false → true wird nachgezogen (älteste passende Zeile); true → false
+    ändert nichts.
+  - Familien: gleiche E-Mail mit anderem Vornamen wird normal angelegt (inkl. Mail).
+  - Bewusst KEIN `ilike` (E-Mails enthalten oft `_` = Wildcard).
+  - Fail-open: schlägt die Abfrage fehl, wird wie bisher angelegt; geloggt wird nur
+    `error.message`, keine Namen/E-Mails.
+  - Bekannte Race-Condition: kein DB-Unique-Index → zwei fast gleichzeitige identische
+    Requests erzeugen zwei Zeilen und zwei Mails (lokal nachgewiesen). Bewusst nicht
+    geschlossen. Falls nötig: Unique-Index auf den normalisierten Werten + 23505 still als
+    `{"ok":true}` behandeln — vorher bestehende Dubletten bereinigen.
+  - Brevo: ein Kontakt pro E-Mail (`updateEnabled: true`) → bei Familien überschreibt der
+    zuletzt angemeldete Name VORNAME/NACHNAME des Kontakts.
+  - Formular: `inFlight`-Sperre + `disabled` + `aria-busy` gegen Doppel-Submit, im `finally`
+    immer zurückgesetzt (auch nach Erfolg, damit das nächste Familienmitglied direkt senden kann).
 - **Header-Breakpoints** (9 Nav-Links, gemessen per Playwright, DE = breiteste Sprache):
   Burger ≤ 1111 px; 1112–1345 px Desktop-Nav nur mit Logo (Schriftzug ausgeblendet);
   ab 1346 px mit Schriftzug. Nav-Links kompakt (Padding 0.5rem, Laufweite 0.06em,
