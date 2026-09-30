@@ -11,7 +11,28 @@
 // damit ein Widerruf sofort greift.
 
 import crypto from "node:crypto";
+import { env } from "@lib/env";
 import { getAdminClient } from "@lib/supabase";
+
+// ── Öffnungs-Gate der Anmeldung ──────────────────────────────────────────────
+// Seite und API prüfen BEIDE serverseitig gegen diesen Zeitpunkt (nie Client-Zeit).
+// 00:00 italienische Zeit = CEST (+02:00) am 02.10.2026.
+export const COMMUNITY_RUN_OPENS_AT = "2026-10-02T00:00:00+02:00";
+
+/**
+ * Öffnungszeitpunkt in ms. Override über env("COMMUNITY_RUN_OPENS_AT") (ISO-String)
+ * NUR zum Testen. Leerer oder unparsebarer Wert wird ignoriert → Default gilt
+ * (fail-safe: im Zweifel geschlossen).
+ */
+function opensAtMs(): number {
+  const override = (env("COMMUNITY_RUN_OPENS_AT") ?? "").trim();
+  const parsed = override ? Date.parse(override) : NaN;
+  return Number.isFinite(parsed) ? parsed : Date.parse(COMMUNITY_RUN_OPENS_AT);
+}
+
+export function isCommunityRunOpen(now: number = Date.now()): boolean {
+  return now >= opensAtMs();
+}
 
 /**
  * Gültigkeit des Shop-Zugangs ab Registrierung.

@@ -8,6 +8,7 @@ import {
   ACCESS_TOKEN_TTL_MS,
   generateAccessToken,
   hashAccessToken,
+  isCommunityRunOpen,
 } from "@lib/community-run";
 
 export const prerender = false;
@@ -22,6 +23,10 @@ function json(body: unknown, status: number): Response {
 }
 
 export const POST: APIRoute = async ({ request }) => {
+  // Datums-Gate ZUERST: vor Rate-Limit, Body, Honeypot und DB — geschlossen heißt
+  // weder DB-Zugriff noch Mail.
+  if (!isCommunityRunOpen()) return json({ error: "not_open" }, 403);
+
   const rl = await checkRateLimit("community-run-register", request);
   if (!rl.ok) return tooManyRequests(rl.retryAfter);
 

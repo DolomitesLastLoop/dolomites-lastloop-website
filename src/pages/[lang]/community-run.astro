@@ -9,16 +9,24 @@
 // verschickt eine reine Bestätigungsmail (kein Shop-Link mehr) — siehe
 // api/community-run-register.ts.
 //
+// Öffnungs-Gate: vor COMMUNITY_RUN_OPENS_AT (src/lib/community-run.ts) wird statt
+// Formular ein Hinweis gerendert. Die Seite MUSS pro Request rendern (prerender =
+// false) und darf nicht gecacht werden, sonst schaltet sie um 00:00 nicht um.
+//
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
 import { photo } from "@lib/photos";
 import { localizePath, type Lang } from "@i18n/utils";
 import { communityRun } from "@i18n/community-run";
+import { isCommunityRunOpen } from "@lib/community-run";
 
 export const prerender = false;
 const lang = (Astro.params.lang ?? "de") as Lang;
 if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 const c = communityRun[lang];
+// Serverzeit, pro Request ausgewertet.
+const isOpen = isCommunityRunOpen();
+Astro.response.headers.set("Cache-Control", "no-store");
 const privacyHref = localizePath("/datenschutz", lang);
 // Hochformat-Foto (1280×1920): Gesichter liegen bei ~36–50 % der Bildhöhe.
 // "center center" schnitt sie auf Desktop ab; 40 % hält sie auf 390–1920 px im Bild.
@@ -32,7 +40,7 @@ const HERO_POSITION = "center 40%";
     eyebrow={c.hero.eyebrow}
     title={c.hero.title}
     subtitle={c.hero.subtitle}
-    cta={{ label: c.hero.cta, href: "#anmeldung" }}
+    cta={{ label: isOpen ? c.hero.cta : c.hero.ctaClosed, href: "#anmeldung" }}
   />
 
   {/* Info-Leiste: Datum / Uhrzeit / Treffpunkt */}
@@ -81,9 +89,16 @@ const HERO_POSITION = "center 40%";
     </div>
   </section>
 
-  {/* Anmeldeformular */}
+  {/* Anmeldeformular — erst ab Öffnung; davor nur der Hinweis (gleicher Anker) */}
   <section class="section" id="anmeldung">
     <div class="container-narrow">
+      {!isOpen ? (
+      <div class="section-head text-center cr-head reveal">
+        <span class="eyebrow">{c.closed.eyebrow}</span>
+        <h2 class="section-title">{c.closed.title}</h2>
+        <p class="section-lead">{c.closed.text}</p>
+      </div>
+      ) : (<>
       <div class="section-head text-center cr-head reveal">
         <span class="eyebrow">{c.form.eyebrow}</span>
         <h2 class="section-title">{c.form.title}</h2>
@@ -163,6 +178,7 @@ const HERO_POSITION = "center 40%";
 
         <button type="submit" class="btn btn-primary btn-block">{c.form.submit}</button>
       </form>
+      </>)}
     </div>
   </section>
 </BaseLayout>
