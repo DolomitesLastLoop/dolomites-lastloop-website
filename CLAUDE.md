@@ -319,11 +319,16 @@ weil er durch Logs und Transkripte gelaufen war; die alte URL antwortet seither 
   `src/lib/community-run.ts` re-exportiert.
 - **Menü-Eintrag „Community Run“** (Header, Desktop + Burger, direkt nach „Anmeldung“),
   Hybrid-Reveal: Server rendert `<li hidden>` nur solange `!isCommunityRunOpen()`
-  (alle Seiten sind SSR); zusätzlich blendet ein `is:inline`-Script direkt nach dem Header
-  den Eintrag ein, sobald `Date.now() >= data-opens-at` (Tabs, die vor 00:00 geladen
-  wurden). Rein kosmetisch — das echte Gate bleibt serverseitig (Seite + API). Ohne JS:
-  vor Öffnung versteckt, danach sichtbar (Server). CSP erlaubt das Inline-Script über
-  `script-src 'unsafe-inline'` in `vercel.json`.
+  (alle Seiten sind SSR); zusätzlich ein `is:inline`-Script direkt nach dem Header:
+  prüft beim Laden (`Date.now() >= data-opens-at`), stellt in offenen Tabs einen Timer auf
+  den Öffnungszeitpunkt (nur wenn ≤ 24 h entfernt) und prüft erneut bei `visibilitychange`
+  (verschlafener Timer nach Standby). Rein kosmetisch — das echte Gate bleibt serverseitig
+  (Seite + API). Ohne JS: vor Öffnung versteckt, danach sichtbar (Server). CSP erlaubt das
+  Inline-Script über `script-src 'unsafe-inline'` in `vercel.json` (auf Production geprüft).
+- **Auto-Reload der Community-Run-Seite** (nur im Zustand „geschlossen“ gerendert): liegt
+  der Öffnungszeitpunkt (`data-cr-opens-at`, vom Server) ≤ 24 h entfernt, lädt die Seite
+  bei Öffnung + 1 s genau EINMAL neu → Formular erscheint. Schleifenschutz über
+  sessionStorage-Flag `cr-open-reload:<ms>`; ohne Storage kein Reload.
 - **Header-Breakpoints** (9 Nav-Links, gemessen per Playwright, DE = breiteste Sprache):
   Burger ≤ 1111 px; 1112–1345 px Desktop-Nav nur mit Logo (Schriftzug ausgeblendet);
   ab 1346 px mit Schriftzug. Nav-Links kompakt (Padding 0.5rem, Laufweite 0.06em,
@@ -1823,3 +1828,13 @@ einzeln abfragen.** Ein 14 h alter Eintrag kann ein lebender Checkout-Tab sein.
 - Regel: Secret-Werte nie ausgeben. Nur Präsenz prüfen (`[ -n "$VAR" ] && echo gesetzt`,
   `grep -q '^VAR=.' .env && echo gesetzt`) oder Namen listen (`cut -d= -f1 .env`).
   Nach einem Leak den Key rotieren.
+
+### 2026-09-30 — Menü-Reveal nur beim Laden, Doku behauptete mehr
+- Das Inline-Script im Header prüfte die Uhrzeit nur einmal beim Laden; Kommentar,
+  Commit `f6bf998` und CLAUDE.md behaupteten „deckt vor 00:00 geladene Tabs ab“. Offene
+  Tabs zeigten den Eintrag erst nach Reload. Aufgefallen erst beim Production-Test mit
+  `page.clock` (laden 23:59:58, dann vorspulen), weil alle vorherigen Tests die Uhr nur
+  VOR dem Laden gesetzt hatten.
+- Fix: Timer + `visibilitychange` im Header, einmaliger Auto-Reload auf der
+  Community-Run-Seite. Regel: zeitgesteuertes Client-Verhalten immer auch mit
+  Vorspulen NACH dem Laden testen; Kommentare nur behaupten, was getestet ist.
