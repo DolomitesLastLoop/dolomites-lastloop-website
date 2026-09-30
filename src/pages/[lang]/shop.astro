@@ -11,7 +11,13 @@
 //
 // Nicht auffindbar: noindex, NICHT in sitemap.xml.ts, kein Nav-/Footer-Link.
 // Kein Checkout (Shopify/Printful folgt zum Schluss) — das UI sagt das offen.
+//
+// SHOP_ENABLED (seit 2026-09-30): Nur der exakte String "true" schaltet den Shop ein.
+// Sonst (unset/leer/Tippfehler) → sofort 404, VOR Token-Check, DB und Cookies. Die
+// 403-Zugangsseite unten verspricht einen Mail-Link, den es derzeit nicht gibt —
+// vor einem Shop-Launch Zugang + Mail-Logik neu denken (siehe CLAUDE.md).
 import { Image } from "astro:assets";
+import { env } from "@lib/env";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
 import { photo } from "@lib/photos";
@@ -31,6 +37,12 @@ import {
 } from "@lib/shop-session";
 
 export const prerender = false;
+if (env("SHOP_ENABLED") !== "true") {
+  return new Response("Not found", {
+    status: 404,
+    headers: { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "no-store" },
+  });
+}
 const lang = (Astro.params.lang ?? "de") as Lang;
 if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de", 302);
 const c = shopCopy[lang];
