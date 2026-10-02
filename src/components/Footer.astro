@@ -47,6 +47,12 @@ const year = 2027;
         <li><a href={localizePath("/haftungsausschluss", lang)}>{t("footer.liability")}</a></li>
         <li><a href={localizePath("/barrierefreiheit", lang)}>{t("footer.accessibility")}</a></li>
         <li><a href={localizePath("/rueckerstattung", lang)}>{t("footer.refund")}</a></li>
+        <li><a href={localizePath("/cookie-policy", lang)}>{t("footer.cookie_policy")}</a></li>
+        <li>
+          <a href={`${localizePath("/cookie-policy", lang)}#settings`} data-consent-open>
+            {t("footer.cookie_settings")}
+          </a>
+        </li>
       </ul>
     </div>
 

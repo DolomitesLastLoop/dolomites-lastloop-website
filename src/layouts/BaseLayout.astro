@@ -3,6 +3,7 @@ import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import ScrollProgress from "@components/ScrollProgress.astro";
 import SeoJsonLd from "@components/SeoJsonLd.astro";
+import ConsentBanner from "@components/ConsentBanner.astro";
 import { useTranslations, type Lang, defaultLang } from "@i18n/utils";
 import { env } from "@lib/env";
 import "@styles/global.css";
@@ -45,6 +46,9 @@ const metaDesc = description ?? t("site.description");
 const siteUrl = env("PUBLIC_SITE_URL") ?? "https://www.dolomiteslastloop.com";
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImg = ogImage ?? new URL("/og-image.png", siteUrl).toString();
+
+// Kein Consent-Banner im internen Admin-Bereich (nur technisch notwendiges Login-Cookie).
+const showConsent = !Astro.url.pathname.startsWith("/admin");
 
 const stripped = Astro.url.pathname.replace(/^\/(de|it|en)/, "") || "/";
 const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
@@ -98,6 +102,7 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
   </head>
   <body>
     <a href="#main" class="sr-only">Skip to content</a>
+    {showConsent && <ConsentBanner lang={lang} />}
     <Header lang={lang} />
     <main id="main">
       <slot />

@@ -354,11 +354,73 @@ weil er durch Logs und Transkripte gelaufen war; die alte URL antwortet seither 
   ab 1346 px mit Schriftzug. Nav-Links kompakt (Padding 0.5rem, Laufweite 0.06em,
   `nowrap`). Neuer Nav-Eintrag → Grenzen neu messen.
 
+
+## Consent / Cookie-Banner (seit 2026-10-02, Branch `feat/consent-banner`)
+
+- **Dateien:** `src/lib/consent-config.ts` (Cookie-Name, `CONSENT_VERSION`, Laufzeit,
+  `VISIBLE_CATEGORIES`), `src/scripts/consent.ts` (Logik + API),
+  `src/components/ConsentBanner.astro` (Markup, Inline-Vorprüfung, Styles),
+  `src/i18n/cookie-policy.ts` + `src/pages/[lang]/cookie-policy.astro` (Policy),
+  Texte `consent.*` / `footer.cookie_*` / `contact.map.*` in `ui.ts`.
+- **Cookie `dll_consent`:** `{v, ts, c:{media,statistics,marketing}}` als URL-encodetes JSON,
+  `Max-Age` 182 Tage, `Path=/; SameSite=Lax; Secure` (auf http nur für localhost).
+  Vor einer Entscheidung wird **nichts** gesetzt. Ungültig (→ Banner erneut) bei anderem `v`
+  oder `ts` älter als 182 Tage. `CONSENT_VERSION` erhöhen, wenn neue einwilligungspflichtige
+  Dienste dazukommen.
+- **Banner:** in `BaseLayout` direkt nach dem Skip-Link, **nicht auf `/admin`**. Ein
+  `is:inline`-Script blendet ihn vor dem ersten Paint ein (fixed → kein CLS). z-index 45:
+  über Scroll-Top (40), unter Burger-Menü (49) und Header (50). „×“ und Escape = „Nur
+  notwendige“, solange noch keine Entscheidung existiert; bei bestehender Entscheidung nur
+  schließen.
+- **Kategorien:** UI zeigt nur „Notwendig“ + „Externe Medien“ (`media`). `statistics` und
+  `marketing` sind im Code vorbereitet, per `VISIBLE_CATEGORIES` ausgeblendet. „Alle
+  akzeptieren“ setzt nur sichtbare Kategorien auf true.
+- **API:** `window.dllConsent.get()` / `.has(cat)` / `.open()`, Event `dll:consent-changed`
+  auf `window` (detail = Zustand).
+- **Inhalte steuern** (vor der Einwilligung kein Request):
+  ```html
+  <div data-consent-placeholder="media">… Hinweis + Button …</div>
+  <button data-consent-grant="media">Erlauben</button>
+  <template data-consent="media"><iframe src="https://…" credentialless></iframe></template>
+  <script type="text/plain" data-consent="statistics" data-src="/pfad/script.js" defer></script>
+  <a href="/de/cookie-policy#settings" data-consent-open>Cookie-Einstellungen</a>
+  ```
+  `<template>` wird bei Einwilligung eingesetzt und bei Widerruf wieder entfernt. Aktivierte
+  `text/plain`-Scripts lassen sich nicht entladen → bei Widerruf lädt die Seite einmal neu.
+  ⚠️ iframes im Template brauchen weiter `credentialless` (COEP, Fehlerprotokoll 2026-08-09).
+- **Footer-Link „Cookie-Einstellungen“** wird in der Capture-Phase auf `document`
+  abgefangen, weil der Seitenwechsel-Handler in `BaseLayout` (Listener auf `body`)
+  `defaultPrevented` nicht prüft und sonst navigieren würde. Ohne Banner (z. B. `/admin`)
+  navigiert der Link normal zur Policy, `#settings` öffnet dort die Einstellungen.
+- **Vercel Web Analytics läuft bewusst OHNE Einwilligung** (Entscheidung Simon, 2026-10-02:
+  cookielos, kein Browser-Speicher, anonym; Rechtsprüfung extern). In Policy und
+  Datenschutz offen beschrieben. **Umschalten auf „nur nach Einwilligung in statistics“ (nicht
+  getestet, Skizze):**
+  1. `astro.config.mjs`: `webAnalytics: { enabled: false }` (Adapter injiziert dann kein Script).
+  2. In `BaseLayout` einfügen:
+     `<script is:inline>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>`
+     und `<script type="text/plain" data-consent="statistics" data-src="/_vercel/insights/script.js" defer></script>`.
+  3. `VISIBLE_CATEGORIES.statistics = true`, Texte `consent.cat.statistics.*` prüfen,
+     Banner-Text („messen anonym ohne Cookies“), Cookie-Policy und Datenschutz anpassen,
+     `CONSENT_VERSION` erhöhen.
+  ⚠️ Vorher prüfen, welchen Script-Pfad der Adapter in der aktuellen Version injiziert
+  (Production-HTML zeigte am 2026-10-02 `/_vercel/insights/script.js`).
+- **Nicht in der Policy:** `dll_shop` (Shop abgeschaltet, Cookie wird nie gesetzt) — vor einem
+  Shop-Launch in `cookie-policy.ts` ergänzen.
+
 ---
 
 ## Fehlerprotokoll
 
 > Hier neu auftretende Fehler + Ursache + Lösung notieren (Regel 4).
+
+### 2026-10-02 — Versehentliches `git stash` räumte gestagte Arbeit weg
+
+- Ein `git stash -q` als „Vorbereitung“ für einen Merge-Test nahm alle gestagten Änderungen
+  des Consent-Branches mit. Sofort bemerkt, mit `git stash pop --index` vollständig
+  zurückgeholt (Staging erhalten), nichts verloren.
+- Regel: Für Konflikt-Checks `git merge-tree --write-tree <a> <b>` verwenden — das braucht
+  keinen sauberen Working Tree. Nie `stash` als Nebenbei-Schritt, und vorher committen.
 
 ### 2026-09-01 — Standalone-Skripte: `.env`-Werte in Quotes brechen den Resend-Versand
 

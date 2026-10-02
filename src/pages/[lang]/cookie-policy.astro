@@ -1,0 +1,221 @@
+---
+// Cookie-Policy (DE/IT/EN). Texte: src/i18n/cookie-policy.ts.
+// Statische Route → hat Vorrang vor src/pages/[lang]/[legal].astro.
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { localizePath, type Lang } from "@i18n/utils";
+import { cookiePolicy, type CookieRow } from "@i18n/cookie-policy";
+
+export const prerender = false;
+const lang = (Astro.params.lang ?? "de") as Lang;
+if (!["de", "it", "en"].includes(lang)) return Astro.redirect("/de/cookie-policy", 302);
+
+const page = cookiePolicy[lang];
+const columns = Object.keys(page.tableHeaders) as (keyof CookieRow)[];
+---
+
+<BaseLayout lang={lang} title={page.title} description={page.metaDescription}>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Legal</p>
+      <h1>{page.title}</h1>
+      <p class="updated">{page.updated}</p>
+      <p class="ai-notice">{page.aiNotice}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-narrow legal">
+      <p class="intro">{page.intro}</p>
+
+      {
+        page.sections.map((section) => (
+          <div class="legal-section">
+            <h2 id={section.id}>{section.heading}</h2>
+            {section.blocks.map((block) => {
+              if (block.type === "h") return <h3>{block.text}</h3>;
+              if (block.type === "note") return <p class="note">{block.text}</p>;
+              if (block.type === "list")
+                return (
+                  <ul>
+                    {block.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                );
+              return <p>{block.text}</p>;
+            })}
+
+            {section.table && (
+              <table class="cookie-table">
+                <caption class="sr-only">{page.tableCaption}</caption>
+                <thead>
+                  <tr>
+                    {columns.map((col) => (
+                      <th scope="col">{page.tableHeaders[col]}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {page.rows.map((row) => (
+                    <tr>
+                      {columns.map((col) =>
+                        col === "name" ? (
+                          <th scope="row" data-label={page.tableHeaders[col]}>
+                            <code>{row[col]}</code>
+                          </th>
+                        ) : (
+                          <td data-label={page.tableHeaders[col]}>{row[col]}</td>
+                        ),
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            {section.settingsButton && (
+              <p class="settings-cta">
+                <button type="button" class="btn btn-primary" data-consent-open>
+                  {page.settingsButton}
+                </button>
+              </p>
+            )}
+          </div>
+        ))
+      }
+
+      <p>
+        <a class="privacy-link" href={localizePath("/datenschutz", lang)}>{page.privacyLink} →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--space-9) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .updated {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+  .ai-notice {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+  .legal .intro {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-7);
+  }
+  .legal-section {
+    margin-bottom: var(--space-7);
+  }
+  .legal-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: var(--space-4);
+    scroll-margin-top: calc(var(--nav-height) + var(--space-4));
+  }
+  .legal-section h3 {
+    font-size: 1.1rem;
+    margin: var(--space-5) 0 var(--space-3);
+  }
+  .legal-section p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: var(--space-3);
+  }
+  .legal-section ul {
+    margin: 0 0 var(--space-4);
+    padding-left: var(--space-5);
+    color: var(--color-text-muted);
+  }
+  .legal-section li {
+    line-height: 1.6;
+    margin-bottom: var(--space-2);
+    overflow-wrap: anywhere;
+  }
+  .legal-section .note {
+    border-left: 3px solid var(--color-primary);
+    background: var(--color-accent-dim);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    color: var(--color-text);
+  }
+
+  .cookie-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+  .cookie-table th,
+  .cookie-table td {
+    text-align: left;
+    vertical-align: top;
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .cookie-table thead th {
+    color: var(--color-text);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom-width: 2px;
+  }
+  .cookie-table tbody th {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .cookie-table code {
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+
+  /* Schmal: jede Zeile als Karte, Spaltenname per data-label. */
+  @media (max-width: 760px) {
+    .cookie-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+    .cookie-table tr {
+      display: block;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-2) var(--space-3);
+      margin-bottom: var(--space-3);
+      background: var(--color-card);
+    }
+    .cookie-table th,
+    .cookie-table td {
+      display: block;
+      border: none;
+      padding: var(--space-2) 0;
+    }
+    .cookie-table tbody [data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+  }
+
+  .settings-cta {
+    margin-top: var(--space-4);
+  }
+  .privacy-link {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+</style>

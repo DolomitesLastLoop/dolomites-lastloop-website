@@ -192,6 +192,22 @@ export const legal: Record<Lang, LegalContent> = {
                 "Es kommen keine Google Analytics oder vergleichbaren Tracking-Tools zum Einsatz.",
               ],
             },
+            {
+              type: "h",
+              text: "Cookies, Einwilligung und Google Maps",
+            },
+            {
+              type: "p",
+              text: "Technisch notwendige Cookies und Speicher setzen wir nur ein, soweit sie für den Betrieb der Website erforderlich sind – insbesondere das Cookie „dll_consent“, in dem deine Auswahl im Cookie-Hinweis für 6 Monate gespeichert wird (Art. 6 Abs. 1 lit. f DSGVO; Nachweis der Einwilligung gemäß Art. 7 Abs. 1 DSGVO).",
+            },
+            {
+              type: "p",
+              text: "Auf der Kontaktseite kannst du eine Karte von Google Maps laden (Anbieter: Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland). Die Karte wird erst geladen, wenn du einwilligst (Art. 6 Abs. 1 lit. a DSGVO). Dabei werden u. a. deine IP-Adresse und Angaben zu deinem Browser an Google übertragen, möglicherweise auch in die USA; für solche Übermittlungen stützt sich Google auf das EU-U.S. Data Privacy Framework (DPF). Google kann dabei Cookies oder ähnliche Technologien einsetzen. Du kannst deine Einwilligung jederzeit mit Wirkung für die Zukunft über „Cookie-Einstellungen“ im Fußbereich der Website widerrufen. Datenschutzerklärung von Google: https://policies.google.com/privacy",
+            },
+            {
+              type: "p",
+              text: "Alle eingesetzten Cookies und Speichertechnologien mit Zweck und Speicherdauer findest du in unserer Cookie-Policy: https://www.dolomiteslastloop.com/de/cookie-policy",
+            },
           ],
         },
         {
@@ -677,6 +693,22 @@ export const legal: Record<Lang, LegalContent> = {
                 "Non vengono utilizzati Google Analytics o strumenti di tracciamento analoghi.",
               ],
             },
+            {
+              type: "h",
+              text: "Cookie, consenso e Google Maps",
+            },
+            {
+              type: "p",
+              text: "Utilizziamo cookie e tecnologie di memorizzazione tecnici solo nella misura in cui sono necessari al funzionamento del sito – in particolare il cookie «dll_consent», nel quale le scelte effettuate nell’avviso sui cookie vengono conservate per 6 mesi (art. 6, par. 1, lett. f GDPR; dimostrazione del consenso ai sensi dell’art. 7, par. 1 GDPR).",
+            },
+            {
+              type: "p",
+              text: "Nella pagina Contatti puoi caricare una mappa di Google Maps (fornitore: Google Ireland Limited, Gordon House, Barrow Street, Dublino 4, Irlanda). La mappa viene caricata solo previo tuo consenso (art. 6, par. 1, lett. a GDPR). In tal caso a Google vengono trasmessi, tra l’altro, il tuo indirizzo IP e informazioni sul tuo browser, eventualmente anche negli USA; per tali trasferimenti Google si avvale dell’EU-U.S. Data Privacy Framework (DPF). Google può utilizzare cookie o tecnologie analoghe. Puoi revocare il tuo consenso in qualsiasi momento, con effetto per il futuro, tramite «Impostazioni cookie» in fondo al sito. Informativa privacy di Google: https://policies.google.com/privacy",
+            },
+            {
+              type: "p",
+              text: "L’elenco completo dei cookie e delle tecnologie di memorizzazione utilizzati, con finalità e durata, è riportato nella nostra cookie policy: https://www.dolomiteslastloop.com/it/cookie-policy",
+            },
           ],
         },
         {
@@ -1161,6 +1193,22 @@ export const legal: Record<Lang, LegalContent> = {
                 "Rate limiting/abuse protection: Upstash Inc., USA – processing of IP addresses to limit the number of requests. Processing takes place in a data centre in Frankfurt am Main (EU); in addition, Upstash relies on the EU-U.S. Data Privacy Framework (DPF) for any data access.",
                 "No Google Analytics or comparable tracking tools are used.",
               ],
+            },
+            {
+              type: "h",
+              text: "Cookies, consent and Google Maps",
+            },
+            {
+              type: "p",
+              text: "We only use strictly necessary cookies and storage to the extent required to operate the website – in particular the “dll_consent” cookie, which stores your choice in the cookie notice for 6 months (Art. 6(1)(f) GDPR; proof of consent pursuant to Art. 7(1) GDPR).",
+            },
+            {
+              type: "p",
+              text: "On the contact page you can load a map from Google Maps (provider: Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland). The map is only loaded once you consent (Art. 6(1)(a) GDPR). Your IP address and information about your browser, among other data, are then transferred to Google, possibly also to the USA; for such transfers Google relies on the EU-U.S. Data Privacy Framework (DPF). Google may use cookies or similar technologies. You can withdraw your consent at any time with effect for the future via “Cookie settings” at the bottom of the website. Google’s privacy policy: https://policies.google.com/privacy",
+            },
+            {
+              type: "p",
+              text: "All cookies and storage technologies in use, with their purpose and retention period, are listed in our cookie policy: https://www.dolomiteslastloop.com/en/cookie-policy",
             },
           ],
         },

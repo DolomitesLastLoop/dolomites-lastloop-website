@@ -22,6 +22,7 @@ const ROUTES = [
   "/kontakt",
   // Dauerhaft gelistet; vor der Öffnung sendet die Seite selbst noindex.
   "/community-run",
+  "/cookie-policy",
 ];
 const LANGS = ["de", "it", "en"] as const;
 

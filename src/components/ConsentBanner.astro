@@ -1,0 +1,351 @@
+---
+// Cookie-/Consent-Banner (nicht blockierend). Logik: src/scripts/consent.ts,
+// Konfiguration: src/lib/consent-config.ts, Doku: CLAUDE.md → „Consent".
+// Steht im DOM direkt nach dem Skip-Link → Tastaturnutzer erreichen ihn zuerst;
+// optisch unten fixiert (kein Layoutsprung, überdeckt den Header nie).
+import { useTranslations, localizePath, type Lang } from "@i18n/utils";
+import type { UIKey } from "@i18n/ui";
+import {
+  CONSENT_COOKIE,
+  CONSENT_MAX_AGE_S,
+  CONSENT_VERSION,
+  OPTIONAL_CATEGORIES,
+  VISIBLE_CATEGORIES,
+} from "@lib/consent-config";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const categories = OPTIONAL_CATEGORIES.filter((c) => VISIBLE_CATEGORIES[c]);
+const policyHref = localizePath("/cookie-policy", lang);
+---
+
+<section
+  id="dll-consent"
+  class="consent"
+  aria-label={t("consent.region_label")}
+  data-lenis-prevent
+  hidden
+>
+  <div class="consent__inner">
+    <button
+      type="button"
+      class="consent__close"
+      data-consent-action="close"
+      aria-label={t("consent.close")}
+      title={t("consent.close")}
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+
+    <h2 class="consent__title" data-consent-title tabindex="-1">{t("consent.title")}</h2>
+    <p class="consent__text">
+      {t("consent.text")}
+      {" "}<a href={policyHref}>{t("consent.policy_link")}</a>
+    </p>
+
+    <div class="consent__prefs" id="dll-consent-prefs" data-consent-prefs hidden>
+      <fieldset>
+        <legend class="sr-only">{t("consent.prefs_legend")}</legend>
+        <div class="consent__cat">
+          <label class="consent__cat-head">
+            <input type="checkbox" checked disabled aria-describedby="dll-consent-desc-necessary" />
+            <span class="consent__cat-title">{t("consent.cat.necessary.title")}</span>
+            <span class="consent__badge">{t("consent.always_on")}</span>
+          </label>
+          <p class="consent__cat-desc" id="dll-consent-desc-necessary">
+            {t("consent.cat.necessary.desc")}
+          </p>
+        </div>
+        {
+          categories.map((cat) => (
+            <div class="consent__cat">
+              <label class="consent__cat-head">
+                <input
+                  type="checkbox"
+                  data-consent-cat={cat}
+                  aria-describedby={`dll-consent-desc-${cat}`}
+                />
+                <span class="consent__cat-title">{t(`consent.cat.${cat}.title` as UIKey)}</span>
+              </label>
+              <p class="consent__cat-desc" id={`dll-consent-desc-${cat}`}>
+                {t(`consent.cat.${cat}.desc` as UIKey)}
+              </p>
+            </div>
+          ))
+        }
+      </fieldset>
+    </div>
+
+    <div class="consent__actions">
+      <button type="button" class="btn consent__btn" data-consent-action="necessary">
+        {t("consent.necessary_only")}
+      </button>
+      <button type="button" class="btn consent__btn" data-consent-action="all">
+        {t("consent.accept_all")}
+      </button>
+      <button
+        type="button"
+        class="consent__link"
+        data-consent-action="settings"
+        aria-expanded="false"
+        aria-controls="dll-consent-prefs"
+      >
+        {t("consent.settings")}
+      </button>
+      <button type="button" class="btn consent__btn consent__btn--save" data-consent-action="save" hidden>
+        {t("consent.save")}
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Synchron: Banner nur ohne gültige Entscheidung einblenden (nach dem Font-Laden, s. u.). -->
+<script is:inline define:vars={{ cookieName: CONSENT_COOKIE, version: CONSENT_VERSION, maxAge: CONSENT_MAX_AGE_S }}>
+  (function () {
+    var el = document.getElementById("dll-consent");
+    if (!el) return;
+    var valid = false;
+    try {
+      var m = document.cookie.match(new RegExp("(?:^|; )" + cookieName + "=([^;]*)"));
+      if (m) {
+        var s = JSON.parse(decodeURIComponent(m[1]));
+        valid = s && s.v === version && typeof s.ts === "number" && Date.now() - s.ts <= maxAge * 1000;
+      }
+    } catch (e) {}
+    if (valid) return;
+    // Erst nach dem Laden der Webfonts einblenden: ein Schriftwechsel ändert sonst die
+    // Bannerhöhe und verschiebt den (unten verankerten) Banner → Layout Shift.
+    var shown = false;
+    function show() {
+      if (shown) return;
+      shown = true;
+      el.hidden = false;
+    }
+    if (document.fonts && document.fonts.status !== "loaded") {
+      document.fonts.ready.then(show);
+      setTimeout(show, 1500);
+    } else {
+      show();
+    }
+  })();
+</script>
+
+<script>
+  import "../scripts/consent";
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    left: var(--space-5);
+    bottom: var(--space-5);
+    z-index: 45; /* über Scroll-Top (40), unter Header (50) und Burger-Menü (49) */
+    width: min(560px, calc(100vw - 2 * var(--space-5)));
+    max-height: calc(100vh - var(--nav-height) - 2 * var(--space-5));
+    max-height: calc(100dvh - var(--nav-height) - 2 * var(--space-5));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--color-card);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 18px 48px rgba(26, 42, 58, 0.18), 0 2px 8px rgba(26, 42, 58, 0.08);
+    animation: consent-in 320ms var(--ease-emphasis);
+  }
+  .consent[hidden] {
+    display: none;
+  }
+  @keyframes consent-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .consent {
+      animation: none;
+    }
+  }
+
+  .consent__inner {
+    position: relative;
+    padding: var(--space-5) var(--space-5) var(--space-4);
+  }
+
+  .consent__close {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+  }
+  .consent__close:hover {
+    background: var(--color-accent-dim);
+    color: var(--color-text);
+  }
+
+  .consent__title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    margin: 0 var(--space-7) var(--space-3) 0;
+    color: var(--color-text);
+  }
+  .consent__title:focus {
+    outline: none;
+  }
+  .consent__title:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+  }
+
+  .consent__text {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-4);
+  }
+  .consent__text a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .consent__prefs fieldset {
+    border: 0;
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .consent__cat {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-bg);
+  }
+  .consent__cat-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .consent__cat-head input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--color-primary);
+    flex: none;
+  }
+  .consent__cat-head input:disabled {
+    cursor: not-allowed;
+  }
+  .consent__badge {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+  .consent__cat-desc {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: var(--space-2) 0 0 calc(20px + var(--space-3));
+  }
+
+  .consent__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  /* Beide Hauptbuttons bewusst identisch gestaltet (kein Dark Pattern). */
+  .consent__btn {
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    background: var(--color-primary);
+    color: #ffffff;
+  }
+  .consent__btn:hover {
+    background: var(--color-primary-hover);
+    color: #ffffff;
+  }
+  .consent__btn--save {
+    grid-column: 1 / -1;
+  }
+  /* .btn setzt display:inline-flex und würde das hidden-Attribut sonst überstimmen. */
+  .consent__btn[hidden] {
+    display: none;
+  }
+  .consent__link {
+    grid-column: 1 / -1;
+    justify-self: start;
+    background: none;
+    border: none;
+    padding: var(--space-2) 0;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .consent :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .consent {
+      left: var(--space-3);
+      right: var(--space-3);
+      bottom: var(--space-3);
+      width: auto;
+      max-height: calc(100vh - var(--nav-height) - 2 * var(--space-3));
+      max-height: calc(100dvh - var(--nav-height) - 2 * var(--space-3));
+    }
+    .consent__inner {
+      padding: var(--space-4) var(--space-4) var(--space-3);
+    }
+    .consent__title {
+      font-size: 1.4rem;
+    }
+    .consent__text {
+      font-size: 0.82rem;
+      line-height: 1.5;
+      margin-bottom: var(--space-3);
+    }
+    .consent__btn {
+      padding: 0.7rem 0.75rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+    }
+    .consent__actions {
+      gap: var(--space-2) var(--space-3);
+    }
+  }
+</style>
+
+<style is:global>
+  /* Fokusziel nach dem Schließen des Banners (consent.ts setzt tabindex="-1"). */
+  main#main:focus {
+    outline: none;
+  }
+</style>

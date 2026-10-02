@@ -2,7 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PageHero from "@components/PageHero.astro";
 import { photo, pos } from "@lib/photos";
-import { useTranslations, type Lang } from "@i18n/utils";
+import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 
 export const prerender = false;
 const lang = (Astro.params.lang ?? "de") as Lang;
@@ -76,14 +76,39 @@ const t = useTranslations(lang);
   <section class="section-tight">
     <div class="container">
       <div class="map-full reveal">
-        <iframe
-          src="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy&output=embed"
-          title={t("contact.location.value")}
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          credentialless
-          allowfullscreen
-        ></iframe>
+        {/* Google Maps erst nach Einwilligung „media" (src/scripts/consent.ts). Das
+            iframe liegt inert im <template> → vorher kein Request an Google.
+            credentialless bleibt Pflicht (COEP, siehe Fehlerprotokoll 2026-08-09). */}
+        <div class="map-consent" data-consent-placeholder="media">
+          <p class="map-consent__title">{t("contact.map.consent.title")}</p>
+          <p class="map-consent__text">
+            {t("contact.map.consent.text")}{" "}
+            <a href={localizePath("/cookie-policy", lang)}>{t("consent.policy_link")}</a>
+          </p>
+          <div class="map-consent__actions">
+            <button type="button" class="btn btn-primary" data-consent-grant="media">
+              {t("contact.map.consent.button")}
+            </button>
+            <a
+              class="map-consent__external"
+              href="https://www.google.com/maps/search/?api=1&query=Seeweg+16%2C+39034+Toblach+BZ%2C+Italy"
+              target="_blank"
+              rel="noopener"
+            >
+              {t("contact.map.open_external")} ↗
+            </a>
+          </div>
+        </div>
+        <template data-consent="media">
+          <iframe
+            src="https://www.google.com/maps?q=Seeweg+16,+39034+Toblach+BZ,+Italy&output=embed"
+            title={t("contact.location.value")}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            credentialless
+            allowfullscreen
+          ></iframe>
+        </template>
       </div>
     </div>
   </section>
@@ -140,6 +165,50 @@ const t = useTranslations(lang);
     overflow: hidden;
     box-shadow: var(--shadow-card);
     border: 1px solid var(--color-border);
+  }
+  .map-consent {
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-3);
+    padding: var(--space-6) var(--space-5);
+    background: var(--color-bg-alt);
+  }
+  .map-consent[hidden] {
+    display: none;
+  }
+  .map-consent__title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+  .map-consent__text {
+    max-width: 52ch;
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+  .map-consent__text a,
+  .map-consent__external {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .map-consent__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+    margin-top: var(--space-2);
+  }
+  .map-consent__external {
+    font-weight: 600;
+    font-size: 0.9rem;
   }
   .map-full iframe {
     width: 100%;
