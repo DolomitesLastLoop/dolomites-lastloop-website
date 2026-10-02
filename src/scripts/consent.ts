@@ -41,9 +41,10 @@ declare global {
 const noChoices = (): Choices => ({ media: false, statistics: false, marketing: false });
 
 function read(): ConsentState | null {
-  const match = document.cookie.match(new RegExp(`(?:^|; )${CONSENT_COOKIE}=([^;]*)`));
-  if (!match) return null;
   try {
+    // document.cookie kann werfen (z. B. Sandbox/blockierte Cookies) → wie „keine Entscheidung".
+    const match = document.cookie.match(new RegExp(`(?:^|; )${CONSENT_COOKIE}=([^;]*)`));
+    if (!match) return null;
     const raw = JSON.parse(decodeURIComponent(match[1]));
     if (raw?.v !== CONSENT_VERSION || typeof raw.ts !== "number") return null;
     // Ablauf zusätzlich am Zeitstempel prüfen (nicht nur über Max-Age des Browsers).
@@ -61,9 +62,14 @@ function write(c: Choices): ConsentState {
   // Secure: auf https immer; auf http nur für localhost (Browser erlauben es dort).
   const secure =
     location.protocol === "https:" || location.hostname === "localhost" ? "; Secure" : "";
-  document.cookie =
-    `${CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify(state))}` +
-    `; Max-Age=${CONSENT_MAX_AGE_S}; Path=/; SameSite=Lax${secure}`;
+  try {
+    document.cookie =
+      `${CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify(state))}` +
+      `; Max-Age=${CONSENT_MAX_AGE_S}; Path=/; SameSite=Lax${secure}`;
+  } catch {
+    // Cookie nicht schreibbar: Entscheidung gilt dann nur für diese Seitenansicht
+    // (Banner schließt trotzdem, Seite bleibt bedienbar); beim nächsten Laden fragt er erneut.
+  }
   return state;
 }
 

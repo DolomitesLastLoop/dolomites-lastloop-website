@@ -2,7 +2,8 @@
 // Cookie-/Consent-Banner (nicht blockierend). Logik: src/scripts/consent.ts,
 // Konfiguration: src/lib/consent-config.ts, Doku: CLAUDE.md → „Consent".
 // Steht im DOM direkt nach dem Skip-Link → Tastaturnutzer erreichen ihn zuerst;
-// optisch unten fixiert (kein Layoutsprung, überdeckt den Header nie).
+// optisch fixiert (kein Layoutsprung, überdeckt den Header nie): ≥ 1180 px unten links,
+// darunter oben unter der Navigation — so bleiben die Hero-CTAs frei (siehe Styles).
 import { useTranslations, localizePath, type Lang } from "@i18n/utils";
 import type { UIKey } from "@i18n/ui";
 import {
@@ -270,7 +271,8 @@ const policyHref = localizePath("/cookie-policy", lang);
 
   .consent__actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* Zwei gleich breite Spalten; in schmalen Karten untereinander (gleich gestaltet). */
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
     gap: var(--space-3);
     align-items: center;
   }
@@ -312,33 +314,76 @@ const policyHref = localizePath("/cookie-policy", lang);
     outline-offset: 2px;
   }
 
+  /* Platzierung: Die Hero-CTAs (Startseite: zentrierte Gruppe ~442 px breit, unteres
+     Drittel; Seiten-Heros: zentriert) dürfen beim ersten Aufruf nicht verdeckt werden.
+     ≥ 1180 px: Karte unten links, endet links vor der zentrierten CTA-Gruppe.
+     < 1180 px: oben unter der Navigation (verdeckt dort höchstens die Überschrift). */
+  @media (min-width: 1180px) {
+    .consent {
+      width: min(560px, calc(50vw - 260px));
+    }
+  }
+  @media (max-width: 1179px) {
+    .consent {
+      top: calc(var(--nav-height) + var(--space-3));
+      bottom: auto;
+    }
+    @keyframes consent-in {
+      from {
+        opacity: 0;
+        transform: translateY(-12px);
+      }
+    }
+  }
+
   @media (max-width: 600px) {
     .consent {
       left: var(--space-3);
       right: var(--space-3);
-      bottom: var(--space-3);
+      top: calc(var(--nav-height) + var(--space-2));
       width: auto;
       max-height: calc(100vh - var(--nav-height) - 2 * var(--space-3));
       max-height: calc(100dvh - var(--nav-height) - 2 * var(--space-3));
     }
     .consent__inner {
-      padding: var(--space-4) var(--space-4) var(--space-3);
+      padding: var(--space-3) var(--space-4) var(--space-2);
+    }
+    /* Kompakt, damit auch der höher liegende Seiten-Hero-CTA (z. B. Community Run)
+       frei bleibt: Titel nur visuell ausgeblendet (bleibt Überschrift + Fokusziel für
+       Screenreader), „×“ fließt rechts neben die ersten Textzeilen. */
+    .consent__close {
+      position: static;
+      float: right;
+      width: 32px;
+      height: 32px;
+      margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2)) 0 var(--space-2);
     }
     .consent__title {
-      font-size: 1.4rem;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
     }
     .consent__text {
-      font-size: 0.82rem;
-      line-height: 1.5;
+      font-size: 0.78rem;
+      line-height: 1.45;
       margin-bottom: var(--space-3);
     }
     .consent__btn {
-      padding: 0.7rem 0.75rem;
-      font-size: 0.78rem;
+      padding: 0.6rem 0.5rem;
+      font-size: 0.74rem;
       letter-spacing: 0.04em;
     }
     .consent__actions {
-      gap: var(--space-2) var(--space-3);
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2);
+    }
+    .consent__link {
+      padding: var(--space-1, 0.25rem) 0;
+      font-size: 0.82rem;
     }
   }
 </style>
