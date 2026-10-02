@@ -44,9 +44,20 @@ const policyHref = localizePath("/cookie-policy", lang);
     </button>
 
     <h2 class="consent__title" data-consent-title tabindex="-1">{t("consent.title")}</h2>
+    <!-- „Einstellungen“ (Einzelentscheidungen) steht als Link direkt hinter „Cookie-Policy“
+         am Textende statt in einer eigenen Zeile → Banner mobil kompakter. -->
     <p class="consent__text">
       {t("consent.text")}
       {" "}<a href={policyHref}>{t("consent.policy_link")}</a>
+      {" "}<button
+        type="button"
+        class="consent__link"
+        data-consent-action="settings"
+        aria-expanded="false"
+        aria-controls="dll-consent-prefs"
+      >
+        {t("consent.settings")}
+      </button>
     </p>
 
     <div class="consent__prefs" id="dll-consent-prefs" data-consent-prefs hidden>
@@ -88,15 +99,6 @@ const policyHref = localizePath("/cookie-policy", lang);
       </button>
       <button type="button" class="btn consent__btn" data-consent-action="all">
         {t("consent.accept_all")}
-      </button>
-      <button
-        type="button"
-        class="consent__link"
-        data-consent-action="settings"
-        aria-expanded="false"
-        aria-controls="dll-consent-prefs"
-      >
-        {t("consent.settings")}
       </button>
       <button type="button" class="btn consent__btn consent__btn--save" data-consent-action="save" hidden>
         {t("consent.save")}
@@ -303,14 +305,17 @@ const policyHref = localizePath("/cookie-policy", lang);
   .consent__btn[hidden] {
     display: none;
   }
+  /* Inline im Text (hinter „Cookie-Policy“): vertikales Padding vergrößert nur die
+     Klickfläche, nicht die Zeilenhöhe. */
   .consent__link {
-    grid-column: 1 / -1;
-    justify-self: start;
+    display: inline;
     background: none;
     border: none;
-    padding: var(--space-2) 0;
+    padding: 0.25em 0.15em;
+    margin-left: 0.35em;
     font: inherit;
     font-size: 0.9rem;
+    line-height: inherit;
     font-weight: 600;
     color: var(--color-primary);
     text-decoration: underline;
@@ -347,15 +352,15 @@ const policyHref = localizePath("/cookie-policy", lang);
 
   @media (max-width: 600px) {
     .consent {
-      left: var(--space-3);
-      right: var(--space-3);
+      left: var(--space-2);
+      right: var(--space-2);
       top: calc(var(--nav-height) + var(--space-2));
       width: auto;
       max-height: calc(100vh - var(--nav-height) - 2 * var(--space-3));
       max-height: calc(100dvh - var(--nav-height) - 2 * var(--space-3));
     }
     .consent__inner {
-      padding: var(--space-3) var(--space-4) var(--space-2);
+      padding: var(--space-3) var(--space-3) var(--space-2);
     }
     /* Kompakt, damit auch der höher liegende Seiten-Hero-CTA (z. B. Community Run)
        frei bleibt: Titel nur visuell ausgeblendet (bleibt Überschrift + Fokusziel für
@@ -365,7 +370,7 @@ const policyHref = localizePath("/cookie-policy", lang);
       float: right;
       width: 32px;
       height: 32px;
-      margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2)) 0 var(--space-2);
+      margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-1)) 0 var(--space-2);
     }
     .consent__title {
       position: absolute;
@@ -379,7 +384,7 @@ const policyHref = localizePath("/cookie-policy", lang);
     .consent__text {
       font-size: 0.78rem;
       line-height: 1.45;
-      margin-bottom: var(--space-3);
+      margin-bottom: var(--space-2);
     }
     .consent__btn {
       padding: 0.6rem 0.5rem;
@@ -391,7 +396,6 @@ const policyHref = localizePath("/cookie-policy", lang);
       gap: var(--space-2);
     }
     .consent__link {
-      padding: var(--space-1, 0.25rem) 0;
       font-size: 0.82rem;
     }
   }
