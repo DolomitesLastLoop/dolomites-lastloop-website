@@ -79,7 +79,7 @@ kompletten Teilnehmer-Lebenszyklus ab:
 ## Tech Stack
 
 - **Astro 6** im SSR-Modus (`output: "server"`), deployt auf **Vercel**
-  (`@astrojs/vercel`, `maxDuration: 30`, Web Analytics aktiv) — Upgrade 4→6 am
+  (`@astrojs/vercel`, `maxDuration: 30`, Web Analytics nur mit Einwilligung, siehe Consent) — Upgrade 4→6 am
   2026-06-16 (Security, siehe Fehlerprotokoll). Adapter-Import ist `@astrojs/vercel`
   (nicht mehr `/serverless`).
 - **Vanilla CSS** (keine UI-Frameworks) – globale Styles in `src/styles/global.css`
@@ -363,18 +363,20 @@ weil er durch Logs und Transkripte gelaufen war; die alte URL antwortet seither 
   `src/i18n/cookie-policy.ts` + `src/pages/[lang]/cookie-policy.astro` (Policy),
   Texte `consent.*` / `footer.cookie_*` / `contact.map.*` in `ui.ts`.
 - **Cookie `dll_consent`:** `{v, ts, c:{media,statistics,marketing}}` als URL-encodetes JSON,
-  `Max-Age` 182 Tage, `Path=/; SameSite=Lax; Secure` (auf http nur für localhost).
+  `Max-Age` 184 Tage (mind. sechs Kalendermonate), `Path=/; SameSite=Lax; Secure` (auf http nur für localhost).
   Vor einer Entscheidung wird **nichts** gesetzt. Ungültig (→ Banner erneut) bei anderem `v`
-  oder `ts` älter als 182 Tage. `CONSENT_VERSION` erhöhen, wenn neue einwilligungspflichtige
+  oder `ts` älter als 184 Tage. `CONSENT_VERSION` erhöhen, wenn neue einwilligungspflichtige
   Dienste dazukommen.
 - **Banner:** in `BaseLayout` direkt nach dem Skip-Link, **nicht auf `/admin`**. Ein
   `is:inline`-Script blendet ihn vor dem ersten Paint ein (fixed → kein CLS). z-index 45:
   über Scroll-Top (40), unter Burger-Menü (49) und Header (50). „×“ und Escape = „Nur
   notwendige“, solange noch keine Entscheidung existiert; bei bestehender Entscheidung nur
   schließen.
-- **Kategorien:** UI zeigt nur „Notwendig“ + „Externe Medien“ (`media`). `statistics` und
-  `marketing` sind im Code vorbereitet, per `VISIBLE_CATEGORIES` ausgeblendet. „Alle
-  akzeptieren“ setzt nur sichtbare Kategorien auf true.
+- **Kategorien:** UI zeigt „Notwendig“, „Externe Medien“ (`media`) und „Statistik“
+  (`statistics`, steuert Vercel Web Analytics). `marketing` ist im Code vorbereitet, per
+  `VISIBLE_CATEGORIES` ausgeblendet. „Alle akzeptieren“ setzt nur sichtbare Kategorien auf true.
+- **„×“:** Rahmen + Primärfarbe (optisch wie die Aktions-Buttons), Größe unverändert
+  (40 px, mobil 32 px) — die CTA-Abstände sind auf diese Maße gemessen.
 - **API:** `window.dllConsent.get()` / `.has(cat)` / `.open()`, Event `dll:consent-changed`
   auf `window` (detail = Zustand).
 - **Inhalte steuern** (vor der Einwilligung kein Request):
@@ -392,19 +394,16 @@ weil er durch Logs und Transkripte gelaufen war; die alte URL antwortet seither 
   abgefangen, weil der Seitenwechsel-Handler in `BaseLayout` (Listener auf `body`)
   `defaultPrevented` nicht prüft und sonst navigieren würde. Ohne Banner (z. B. `/admin`)
   navigiert der Link normal zur Policy, `#settings` öffnet dort die Einstellungen.
-- **Vercel Web Analytics läuft bewusst OHNE Einwilligung** (Entscheidung Simon, 2026-10-02:
-  cookielos, kein Browser-Speicher, anonym; Rechtsprüfung extern). In Policy und
-  Datenschutz offen beschrieben. **Umschalten auf „nur nach Einwilligung in statistics“ (nicht
-  getestet, Skizze):**
-  1. `astro.config.mjs`: `webAnalytics: { enabled: false }` (Adapter injiziert dann kein Script).
-  2. In `BaseLayout` einfügen:
-     `<script is:inline>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>`
-     und `<script type="text/plain" data-consent="statistics" data-src="/_vercel/insights/script.js" defer></script>`.
-  3. `VISIBLE_CATEGORIES.statistics = true`, Texte `consent.cat.statistics.*` prüfen,
-     Banner-Text („messen anonym ohne Cookies“), Cookie-Policy und Datenschutz anpassen,
-     `CONSENT_VERSION` erhöhen.
-  ⚠️ Vorher prüfen, welchen Script-Pfad der Adapter in der aktuellen Version injiziert
-  (Production-HTML zeigte am 2026-10-02 `/_vercel/insights/script.js`).
+- **Vercel Web Analytics nur nach Einwilligung in `statistics`** (Entscheidung Simon,
+  2026-10-02). `webAnalytics` des Adapters ist aus (`astro.config.mjs`). Der Loader steht in
+  `BaseLayout` als `<script type="text/plain" data-consent="statistics"
+  data-src="/_vercel/insights/script.js" defer>` direkt nach dem unveränderten
+  `beforeSend`-Block, der auch den Queue-Stub `window.va` definiert. Auf `/admin` gibt es
+  keinen Banner und damit kein Analytics. Widerruf → genau ein Reload. Im Headless-Browser
+  bricht `script.js` absichtlich ab (`navigator.webdriver`) — belegbar ist nur der Request,
+  nicht der Event. `CONSENT_VERSION` blieb 1, weil der Banner vor der Statistik-Kategorie nie
+  live war; bei künftigen Kategorie-/Zweckänderungen erhöhen.
+  Prüfen nach Builds: `_vercel/insights` darf in `.vercel/output` nur im text/plain-Tag stehen.
 - **Nicht in der Policy:** `dll_shop` (Shop abgeschaltet, Cookie wird nie gesetzt) — vor einem
   Shop-Launch in `cookie-policy.ts` ergänzen.
 

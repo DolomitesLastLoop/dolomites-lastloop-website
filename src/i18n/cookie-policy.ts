@@ -98,10 +98,10 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
       {
         name: "Vercel Web Analytics",
         type: "Kein Cookie, kein Speicher im Browser",
-        purpose: "Anonyme, zusammengefasste Reichweitenmessung (Seitenaufrufe).",
+        purpose: "Datensparsame, zusammengefasste Reichweitenmessung (Seitenaufrufe).",
         duration: "Kein Speicher auf deinem Gerät; der Hashwert zur Unterscheidung von Besuchen wird nach 24 Stunden verworfen",
         provider: "Vercel Inc.",
-        category: "– (setzt kein Cookie)",
+        category: "Statistik – nur mit Einwilligung",
       },
     ],
     settingsButton: "Cookie-Einstellungen öffnen",
@@ -124,11 +124,12 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
             items: [
               "Notwendig (immer aktiv): für den Betrieb der Website erforderlich, z. B. um deine Cookie-Auswahl zu speichern.",
               "Externe Medien (nur mit Einwilligung): Inhalte externer Anbieter, derzeit ausschließlich die Karte von Google Maps auf der Kontaktseite.",
+              "Statistik (nur mit Einwilligung): datensparsame Reichweitenmessung mit Vercel Web Analytics; sie setzt keine Cookies (siehe Punkt 4).",
             ],
           },
           {
             type: "p",
-            text: "Cookies für Statistik oder Marketing setzen wir nicht ein. Seitenaufrufe messen wir anonym und ohne Cookies (siehe Vercel Web Analytics in Punkt 4).",
+            text: "Statistik setzen wir nur mit deiner Einwilligung ein; Cookies oder andere Technologien für Marketing setzen wir nicht ein.",
           },
         ],
       },
@@ -145,7 +146,7 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
             items: [
               "Google Maps – Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Die Karte auf der Kontaktseite wird erst nach deiner Einwilligung in „Externe Medien“ geladen. Dabei werden u. a. deine IP-Adresse und Angaben zu deinem Browser an Google übertragen, möglicherweise auch in die USA; Google kann dabei Cookies oder ähnliche Technologien einsetzen. Für Übermittlungen in die USA stützt sich Google auf das EU-U.S. Data Privacy Framework (DPF). Ohne Einwilligung kannst du die Adresse über den Link „In Google Maps öffnen“ direkt bei Google aufrufen. Datenschutzerklärung von Google: https://policies.google.com/privacy",
               "Stripe – Stripe Payments Europe, Ltd. Die Zahlung des Startgelds erfolgt auf der Zahlungsseite von Stripe (checkout.stripe.com), nicht auf unserer Website. Für die dort eingesetzten Cookies ist Stripe verantwortlich: https://stripe.com/legal/cookies-policy und https://stripe.com/privacy",
-              "Vercel – Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA. Hosting der Website und anonyme Reichweitenmessung (Vercel Web Analytics). Vercel Web Analytics setzt keine Cookies und speichert nichts in deinem Browser; Besuche werden nur über einen aus der Anfrage gebildeten Hashwert unterschieden, der nach 24 Stunden verworfen wird. Weitere Informationen: https://vercel.com/docs/analytics/privacy-policy",
+              "Vercel – Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA. Hosting der Website und datensparsame Reichweitenmessung (Vercel Web Analytics, nur nach deiner Einwilligung in „Statistik“). Vercel Web Analytics setzt keine Cookies und speichert nichts in deinem Browser; Besuche werden nur über einen aus der Anfrage gebildeten Hashwert unterschieden, der nach 24 Stunden verworfen wird. Weitere Informationen: https://vercel.com/docs/analytics/privacy-policy",
               "Instagram und Facebook – die Links im Fußbereich sind einfache Verweise. Erst wenn du sie anklickst, wird die jeweilige Plattform aufgerufen; auf unserer Website werden keine Inhalte dieser Plattformen geladen.",
             ],
           },
@@ -157,7 +158,7 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
         blocks: [
           {
             type: "p",
-            text: "Beim ersten Besuch fragen wir dich über einen Hinweis, ob du externe Medien zulassen möchtest. Vor deiner Entscheidung wird kein Cookie gesetzt und keine Verbindung zu Google aufgebaut. „Alle akzeptieren“ und „Nur notwendige“ sind gleichwertig; das Schließen des Hinweises über „×“ gilt als „Nur notwendige“. Bloßes Weiterscrollen oder Weiterklicken ist keine Einwilligung.",
+            text: "Beim ersten Besuch fragen wir dich über einen Hinweis, ob du externe Medien und die Reichweitenmessung (Statistik) zulassen möchtest. Vor deiner Entscheidung wird kein Cookie gesetzt, keine Verbindung zu Google aufgebaut und die Reichweitenmessung nicht geladen. „Alle akzeptieren“ und „Nur notwendige“ sind gleichwertig; das Schließen des Hinweises über „×“ gilt als „Nur notwendige“. Bloßes Weiterscrollen oder Weiterklicken ist keine Einwilligung.",
           },
           {
             type: "p",
@@ -234,10 +235,10 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
       {
         name: "Vercel Web Analytics",
         type: "Nessun cookie, nessuna memorizzazione nel browser",
-        purpose: "Misurazione anonima e aggregata delle visite (visualizzazioni delle pagine).",
+        purpose: "Misurazione aggregata delle visite, limitata ai dati essenziali (visualizzazioni delle pagine).",
         duration: "Nessuna memorizzazione sul tuo dispositivo; il valore hash usato per distinguere le visite viene eliminato dopo 24 ore",
         provider: "Vercel Inc.",
-        category: "– (non installa cookie)",
+        category: "Statistiche – solo previo consenso",
       },
     ],
     settingsButton: "Apri le impostazioni dei cookie",
@@ -260,11 +261,12 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
             items: [
               "Necessari (sempre attivi): indispensabili per il funzionamento del sito, ad es. per memorizzare le tue preferenze sui cookie.",
               "Contenuti esterni (solo previo consenso): contenuti di fornitori esterni, attualmente soltanto la mappa di Google Maps nella pagina Contatti.",
+              "Statistiche (solo previo consenso): misurazione delle visite a dati ridotti con Vercel Web Analytics, che non installa cookie (vedi punto 4).",
             ],
           },
           {
             type: "p",
-            text: "Non utilizziamo cookie statistici né di marketing. Le visite alle pagine vengono misurate in forma anonima e senza cookie (vedi Vercel Web Analytics al punto 4).",
+            text: "Le statistiche vengono utilizzate solo con il tuo consenso; non utilizziamo cookie o altre tecnologie per finalità di marketing.",
           },
         ],
       },
@@ -281,7 +283,7 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
             items: [
               "Google Maps – Google Ireland Limited, Gordon House, Barrow Street, Dublino 4, Irlanda. La mappa nella pagina Contatti viene caricata solo dopo il tuo consenso alla categoria «Contenuti esterni». In tal caso a Google vengono trasmessi, tra l’altro, il tuo indirizzo IP e informazioni sul tuo browser, eventualmente anche negli USA; Google può utilizzare cookie o tecnologie analoghe. Per i trasferimenti verso gli USA Google si avvale dell’EU-U.S. Data Privacy Framework (DPF). Senza consenso puoi aprire l’indirizzo direttamente su Google tramite il link «Apri in Google Maps». Informativa privacy di Google: https://policies.google.com/privacy",
               "Stripe – Stripe Payments Europe, Ltd. Il pagamento della quota di iscrizione avviene sulla pagina di pagamento di Stripe (checkout.stripe.com), non sul nostro sito. Dei cookie utilizzati in quella pagina è responsabile Stripe: https://stripe.com/legal/cookies-policy e https://stripe.com/privacy",
-              "Vercel – Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA. Hosting del sito e misurazione anonima delle visite (Vercel Web Analytics). Vercel Web Analytics non installa cookie e non memorizza dati nel tuo browser; le visite vengono distinte unicamente tramite un valore hash generato dalla richiesta, che viene eliminato dopo 24 ore. Ulteriori informazioni: https://vercel.com/docs/analytics/privacy-policy",
+              "Vercel – Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA. Hosting del sito e misurazione delle visite a dati ridotti (Vercel Web Analytics, solo dopo il tuo consenso alla categoria «Statistiche»). Vercel Web Analytics non installa cookie e non memorizza dati nel tuo browser; le visite vengono distinte unicamente tramite un valore hash generato dalla richiesta, che viene eliminato dopo 24 ore. Ulteriori informazioni: https://vercel.com/docs/analytics/privacy-policy",
               "Instagram e Facebook – i link in fondo alla pagina sono semplici collegamenti. La piattaforma viene aperta solo se ci clicchi; sul nostro sito non viene caricato alcun contenuto di queste piattaforme.",
             ],
           },
@@ -293,7 +295,7 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
         blocks: [
           {
             type: "p",
-            text: "Alla prima visita ti chiediamo, tramite un avviso, se desideri consentire i contenuti esterni. Prima della tua scelta non viene installato alcun cookie e non viene stabilito alcun collegamento con Google. «Accetta tutti» e «Solo necessari» hanno la stessa evidenza; la chiusura dell’avviso con la «×» equivale a «Solo necessari». Il semplice scorrimento della pagina o la prosecuzione della navigazione non costituiscono consenso.",
+            text: "Alla prima visita ti chiediamo, tramite un avviso, se desideri consentire i contenuti esterni e la misurazione delle visite (statistiche). Prima della tua scelta non viene installato alcun cookie, non viene stabilito alcun collegamento con Google e la misurazione delle visite non viene caricata. «Accetta tutti» e «Solo necessari» hanno la stessa evidenza; la chiusura dell’avviso con la «×» equivale a «Solo necessari». Il semplice scorrimento della pagina o la prosecuzione della navigazione non costituiscono consenso.",
           },
           {
             type: "p",
@@ -370,10 +372,10 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
       {
         name: "Vercel Web Analytics",
         type: "No cookie, no browser storage",
-        purpose: "Anonymous, aggregated audience measurement (page views).",
+        purpose: "Data-minimising, aggregated audience measurement (page views).",
         duration: "Nothing is stored on your device; the hash used to distinguish visits is discarded after 24 hours",
         provider: "Vercel Inc.",
-        category: "– (sets no cookie)",
+        category: "Statistics – only with consent",
       },
     ],
     settingsButton: "Open cookie settings",
@@ -396,11 +398,12 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
             items: [
               "Necessary (always active): required for the website to work, e.g. to store your cookie choice.",
               "External media (only with consent): content from external providers, currently only the Google Maps map on the contact page.",
+              "Statistics (only with consent): data-minimising audience measurement with Vercel Web Analytics, which sets no cookies (see section 4).",
             ],
           },
           {
             type: "p",
-            text: "We do not use statistics or marketing cookies. Page views are measured anonymously and without cookies (see Vercel Web Analytics in section 4).",
+            text: "Statistics are only used with your consent; we do not use cookies or other technologies for marketing.",
           },
         ],
       },
@@ -417,7 +420,7 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
             items: [
               "Google Maps – Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland. The map on the contact page is only loaded after you consent to “External media”. Your IP address and information about your browser, among other data, are then transferred to Google, possibly also to the USA; Google may use cookies or similar technologies. For transfers to the USA, Google relies on the EU-U.S. Data Privacy Framework (DPF). Without consent, you can open the address directly on Google via the “Open in Google Maps” link. Google’s privacy policy: https://policies.google.com/privacy",
               "Stripe – Stripe Payments Europe, Ltd. The entry fee is paid on Stripe’s payment page (checkout.stripe.com), not on our website. Stripe is responsible for the cookies used there: https://stripe.com/legal/cookies-policy and https://stripe.com/privacy",
-              "Vercel – Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA. Hosting of the website and anonymous audience measurement (Vercel Web Analytics). Vercel Web Analytics sets no cookies and stores nothing in your browser; visits are distinguished only by a hash generated from the request, which is discarded after 24 hours. Further information: https://vercel.com/docs/analytics/privacy-policy",
+              "Vercel – Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA. Hosting of the website and data-minimising audience measurement (Vercel Web Analytics, only after you consent to “Statistics”). Vercel Web Analytics sets no cookies and stores nothing in your browser; visits are distinguished only by a hash generated from the request, which is discarded after 24 hours. Further information: https://vercel.com/docs/analytics/privacy-policy",
               "Instagram and Facebook – the links in the footer are plain links. The respective platform is only opened when you click them; no content from these platforms is loaded on our website.",
             ],
           },
@@ -429,7 +432,7 @@ export const cookiePolicy: Record<Lang, CookiePolicyPage> = {
         blocks: [
           {
             type: "p",
-            text: "On your first visit, a notice asks whether you want to allow external media. No cookie is set and no connection to Google is made before you decide. “Accept all” and “Necessary only” are given equal weight; closing the notice with “×” counts as “Necessary only”. Simply scrolling or continuing to browse does not constitute consent.",
+            text: "On your first visit, a notice asks whether you want to allow external media and audience measurement (statistics). Before you decide, no cookie is set, no connection to Google is made and the audience measurement is not loaded. “Accept all” and “Necessary only” are given equal weight; closing the notice with “×” counts as “Necessary only”. Simply scrolling or continuing to browse does not constitute consent.",
           },
           {
             type: "p",
