@@ -72,6 +72,9 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
         return Object.assign({}, e, { url: u });
       });
     </script>
+    <!-- Analytics-Loader (ersetzt webAnalytics des Adapters, gleicher Pfad und defer): inert bis zur
+         Einwilligung in „statistics“, aktiviert durch src/scripts/consent.ts. Ohne Banner (/admin) nie. -->
+    <script type="text/plain" data-consent="statistics" data-src="/_vercel/insights/script.js" defer is:inline></script>
     <meta name="theme-color" content="#faf6f0" />
     <meta name="generator" content={Astro.generator} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}

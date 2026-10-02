@@ -187,15 +187,24 @@ const policyHref = localizePath("/cookie-policy", lang);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: none;
-    border-radius: 50%;
-    background: transparent;
-    color: var(--color-text-muted);
+    /* Rahmen + Primärfarbe: optisch so deutlich wie die Aktions-Buttons. Größe unverändert
+       (die CTA-Abstände sind auf diese Maße gemessen). */
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    color: var(--color-primary);
     cursor: pointer;
   }
+  .consent__close svg {
+    stroke-width: 2.5;
+  }
   .consent__close:hover {
-    background: var(--color-accent-dim);
-    color: var(--color-text);
+    background: var(--color-primary);
+    color: #ffffff;
+  }
+  .consent__close:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 
   .consent__title {
