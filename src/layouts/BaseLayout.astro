@@ -62,6 +62,16 @@ const alternates = (["de", "it", "en"] as Lang[]).map((l) => ({
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Vercel Web Analytics: Query-String und Fragment vor dem Senden entfernen (z. B. ?id=…&token=…
+         aus Magic-Links). Muss vor dem Analytics-Script stehen; nutzt dessen Queue-Stub (window.vaq). -->
+    <script is:inline>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+      window.va("beforeSend", function (e) {
+        var u = String(e.url);
+        try { var p = new URL(u); u = p.origin + p.pathname; } catch (_) { u = u.split(/[?#]/)[0]; }
+        return Object.assign({}, e, { url: u });
+      });
+    </script>
     <meta name="theme-color" content="#faf6f0" />
     <meta name="generator" content={Astro.generator} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
