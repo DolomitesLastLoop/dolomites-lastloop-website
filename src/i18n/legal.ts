@@ -123,6 +123,29 @@ export const legal: Record<Lang, LegalContent> = {
                 "Sportärztliches Attest (Gesundheitsdaten – siehe Punkt 3)",
               ],
             },
+            {
+              type: "h",
+              text: "Community Run",
+            },
+            {
+              type: "p",
+              text: "Für die Anmeldung zum kostenlosen Community Run verarbeiten wir die im Community-Run-Formular erhobenen Daten, um den Community Run zu organisieren. Rechtsgrundlage ist deine Einwilligung, die du per Häkchen im Formular erteilst (Art. 6 Abs. 1 lit. a DSGVO). Die Daten werden in unserer Datenbank (Supabase, siehe Punkt 6) gespeichert; nach dem Absenden erhältst du eine Bestätigungs-E-Mail.",
+            },
+            {
+              type: "list",
+              items: [
+                "Vorname und Nachname",
+                "E-Mail-Adresse",
+                "Interesse am Workshop (optional, nur eine unverbindliche Interessensbekundung)",
+                "Deine Einwilligung (Häkchen) mit dem Zeitpunkt der Anmeldung",
+                "Sprache der Anmeldung (Deutsch, Italienisch oder Englisch)",
+                "Ein technischer Zugangsschlüssel, nur als Hash gespeichert",
+              ],
+            },
+            {
+              type: "p",
+              text: "Du kannst deine Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen, z. B. per E-Mail an info@worldcup-dobbiaco.it. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Verarbeitung bleibt davon unberührt. Zum Community-Run-Verteiler siehe Punkt 5, zur Speicherdauer Punkt 7.",
+            },
           ],
         },
         {
@@ -152,26 +175,27 @@ export const legal: Record<Lang, LegalContent> = {
           ],
         },
         {
-          heading: "5. Newsletter und Teilnehmer-Kommunikation",
+          heading: "5. Newsletter, Teilnehmer- und Community-Run-Kommunikation",
           blocks: [
             {
               type: "p",
-              text: "Für den E-Mail-Versand führen wir zwei getrennte Verteiler. Sie unterscheiden sich in Zweck und Rechtsgrundlage:",
+              text: "Für den E-Mail-Versand führen wir drei getrennte Verteiler. Sie unterscheiden sich in Zweck und Rechtsgrundlage:",
             },
             {
               type: "list",
               items: [
                 "Newsletter (freiwillig): Sofern du dich für unseren Newsletter anmeldest, verarbeiten wir deine E-Mail-Adresse und deinen Namen auf Grundlage deiner Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Du kannst dich jederzeit über den Abmeldelink in jeder E-Mail oder per Nachricht an uns wieder abmelden.",
                 "Teilnehmerinformationen (keine Einwilligung erforderlich): Nach deiner verbindlichen Anmeldung nehmen wir Vorname, Nachname und E-Mail-Adresse in einen separaten Teilnehmerverteiler auf. Darüber versenden wir ausschließlich organisatorische und sicherheitsrelevante Informationen zum Rennen – etwa Startzeiten, Änderungen an Strecke oder Ablauf sowie Wetter- und Sicherheitshinweise. Diese Verarbeitung ist zur Erfüllung des Teilnahmevertrags erforderlich (Art. 6 Abs. 1 lit. b DSGVO); eine Einwilligung ist dafür weder nötig noch holen wir eine ein. Diese Nachrichten enthalten keine Werbung.",
+                "Community Run: Wenn du dich zum Community Run anmeldest (siehe Punkt 2), nehmen wir Vorname, Nachname und E-Mail-Adresse in einen eigenen Community-Run-Verteiler auf. Darüber versenden wir gegebenenfalls Informationen zum Community Run, etwa zu Ablauf, Treffpunkt oder kurzfristigen Änderungen, als Teil seiner Organisation. Grundlage ist deine Einwilligung aus der Anmeldung (Art. 6 Abs. 1 lit. a DSGVO), die du jederzeit widerrufen kannst. Diese Nachrichten enthalten keine Werbung, und der Verteiler ist kein Newsletter.",
               ],
             },
             {
               type: "note",
-              text: "Die beiden Verteiler sind voneinander unabhängig: Eine Abmeldung vom Newsletter beendet den Empfang der Teilnehmerinformationen nicht – diese gehören zur Durchführung des Rennens und werden versandt, solange deine Anmeldung besteht. Umgekehrt gilt deine Anmeldung zum Rennen nicht als Einwilligung in den Newsletter. Für die Speicherdauer gelten die unter Punkt 7 genannten Fristen.",
+              text: "Die drei Verteiler sind voneinander unabhängig: Eine Abmeldung vom Newsletter beendet den Empfang der Teilnehmerinformationen nicht – diese gehören zur Durchführung des Rennens und werden versandt, solange deine Anmeldung besteht. Umgekehrt gilt deine Anmeldung zum Rennen nicht als Einwilligung in den Newsletter. Ebenso gilt die Anmeldung zum Community Run weder als Einwilligung in den Newsletter noch als Anmeldung zum Rennen. Für die Speicherdauer gelten die unter Punkt 7 genannten Fristen.",
             },
             {
               type: "p",
-              text: "Für beide Verteiler setzen wir Sendinblue SAS (handelnd als Brevo), 9–17 rue Salneuve, 75017 Paris, Frankreich, RCS Paris 498 019 298, als Auftragsverarbeiter ein.",
+              text: "Für alle drei Verteiler setzen wir Sendinblue SAS (handelnd als Brevo), 9–17 rue Salneuve, 75017 Paris, Frankreich, RCS Paris 498 019 298, als Auftragsverarbeiter ein.",
             },
           ],
         },
@@ -186,12 +210,16 @@ export const legal: Record<Lang, LegalContent> = {
               type: "list",
               items: [
                 "Hosting: Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA – Auslieferung der Website (Serverstandort EU, sofern verfügbar). Für etwaige Datenzugriffe aus den USA stützt sich Vercel auf das EU-U.S. Data Privacy Framework (DPF).",
-                "Datenbank/Speicher: Supabase Pte. Ltd., 65 Chulia Street #38-02/03, OCBC Centre, Singapur 049513 – Speicherung der Teilnehmer- und Anmeldedaten. Die Datenbank für dieses Projekt ist in einem Rechenzentrum in Paris (EU, AWS eu-west-3) gehostet; für etwaige Datenzugriffe außerhalb der EU stützt sich Supabase auf EU-Standardvertragsklauseln.",
-                "E-Mail-Versand: Plus Five Five, Inc. (handelnd als Resend), 2261 Market Street #5039, San Francisco, CA 94114, USA – Versand der Bestätigungs- und Ticket-E-Mails. Die Übermittlung in die USA stützt sich auf das EU-U.S. Data Privacy Framework (DPF).",
+                "Datenbank/Speicher: Supabase Pte. Ltd., 65 Chulia Street #38-02/03, OCBC Centre, Singapur 049513 – Speicherung der Teilnehmer- und Anmeldedaten, einschließlich der Anmeldungen zum Community Run. Die Datenbank für dieses Projekt ist in einem Rechenzentrum in Paris (EU, AWS eu-west-3) gehostet; für etwaige Datenzugriffe außerhalb der EU stützt sich Supabase auf EU-Standardvertragsklauseln.",
+                "E-Mail-Versand: Plus Five Five, Inc. (handelnd als Resend), 2261 Market Street #5039, San Francisco, CA 94114, USA – Versand der Bestätigungs- und Ticket-E-Mails und der Bestätigung zur Community-Run-Anmeldung sowie Zustellung der Nachrichten aus dem Kontaktformular an uns. Die Übermittlung in die USA stützt sich auf das EU-U.S. Data Privacy Framework (DPF).",
                 "Rate-Limiting/Schutz vor Missbrauch: Upstash Inc., USA – Verarbeitung von IP-Adressen zur Begrenzung der Anfragen. Die Verarbeitung erfolgt in einem Rechenzentrum in Frankfurt am Main (EU); ergänzend stützt sich Upstash für etwaige Datenzugriffe auf das EU-U.S. Data Privacy Framework (DPF).",
                 "Reichweitenmessung: Vercel Web Analytics (Anbieter: Vercel Inc., Anschrift siehe oben, als Auftragsverarbeiter) – anonyme, zusammengefasste Statistik über Seitenaufrufe (z. B. aufgerufene Seite, verweisende Seite, Land/Region, Gerätetyp, Browser und Betriebssystem). Von der Adresse der aufgerufenen Seite wird nur der Pfad übermittelt; Parameter (der Teil nach „?“, z. B. persönliche Zugangslinks) und Sprungmarken werden vor dem Senden entfernt. Dabei werden keine Cookies gesetzt und keine Daten im Speicher deines Browsers abgelegt; Besuche werden lediglich über einen aus der Anfrage gebildeten Hashwert unterschieden, der nach 24 Stunden verworfen wird. Rechtsgrundlage ist unser berechtigtes Interesse, die Nutzung der Website zu verstehen und sie zu verbessern (Art. 6 Abs. 1 lit. f DSGVO). Weitere Informationen: https://vercel.com/docs/analytics/privacy-policy und https://vercel.com/legal/privacy-policy.",
                 "Es kommen keine Google Analytics und keine Werbe- oder Marketing-Tracker zum Einsatz.",
               ],
+            },
+            {
+              type: "p",
+              text: "Kontaktformular: Wenn du uns über das Kontaktformular schreibst, verarbeiten wir deinen Namen, deine E-Mail-Adresse und deine Nachricht. Sie werden über unseren E-Mail-Dienstleister Resend (siehe oben) als E-Mail an das Postfach des Organisationsteams zugestellt; in unserer Datenbank speichern wir sie nicht. Zweck ist die Beantwortung deiner Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit deine Anfrage eine Anmeldung oder Teilnahme betrifft, ansonsten unser berechtigtes Interesse, Anfragen zu beantworten (Art. 6 Abs. 1 lit. f DSGVO). Wir bewahren deine Nachricht so lange auf, wie es zur Bearbeitung der Anfrage erforderlich ist.",
             },
           ],
         },
@@ -200,7 +228,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Wir speichern personenbezogene Daten nur so lange, wie es für die genannten Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen. Teilnehmerdaten werden bis drei Monate nach dem Rennen aufbewahrt (Frist ab dem 15.05.2027) und anschließend gelöscht oder anonymisiert. Gesundheitsdaten (sportärztliche Atteste) werden bis drei Monate nach dem Rennen (Frist ab dem 15.05.2027) aufbewahrt und anschließend gelöscht. Zahlungs- und buchhaltungsrelevante Daten bewahren wir gemäß Art. 2220 Codice Civile zehn Jahre auf.",
+              text: "Wir speichern personenbezogene Daten nur so lange, wie es für die genannten Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen. Teilnehmerdaten werden bis drei Monate nach dem Rennen aufbewahrt (Frist ab dem 15.05.2027) und anschließend gelöscht oder anonymisiert. Gesundheitsdaten (sportärztliche Atteste) werden bis drei Monate nach dem Rennen (Frist ab dem 15.05.2027) aufbewahrt und anschließend gelöscht. Daten der Community-Run-Anmeldung (in unserer Datenbank und im Community-Run-Verteiler bei Brevo) werden bis sechs Monate nach dem Community Run aufbewahrt (Frist ab dem 24.04.2027) und anschließend gelöscht. Zahlungs- und buchhaltungsrelevante Daten bewahren wir gemäß Art. 2220 Codice Civile zehn Jahre auf.",
             },
           ],
         },
@@ -609,6 +637,29 @@ export const legal: Record<Lang, LegalContent> = {
                 "Certificato medico agonistico (dati sanitari – vedi punto 3)",
               ],
             },
+            {
+              type: "h",
+              text: "Community Run",
+            },
+            {
+              type: "p",
+              text: "Per l’iscrizione al Community Run gratuito trattiamo i dati raccolti nel modulo del Community Run al fine di organizzare il Community Run. La base giuridica è il tuo consenso, che presti spuntando la casella nel modulo (art. 6, par. 1, lett. a GDPR). I dati sono memorizzati nel nostro database (Supabase, vedi punto 6); dopo l’invio ricevi un’e-mail di conferma.",
+            },
+            {
+              type: "list",
+              items: [
+                "Nome e cognome",
+                "Indirizzo e-mail",
+                "Interesse per il workshop (facoltativo, solo una manifestazione di interesse non vincolante)",
+                "Il tuo consenso (casella spuntata) con la data e l’ora dell’iscrizione",
+                "Lingua dell’iscrizione (tedesco, italiano o inglese)",
+                "Una chiave di accesso tecnica, memorizzata solo come hash",
+              ],
+            },
+            {
+              type: "p",
+              text: "Puoi revocare il consenso in qualsiasi momento con effetto per il futuro, ad es. scrivendo a info@worldcup-dobbiaco.it. La revoca non pregiudica la liceità del trattamento effettuato prima della revoca. Per la lista del Community Run vedi punto 5, per i tempi di conservazione il punto 7.",
+            },
           ],
         },
         {
@@ -638,26 +689,27 @@ export const legal: Record<Lang, LegalContent> = {
           ],
         },
         {
-          heading: "5. Newsletter e comunicazioni ai partecipanti",
+          heading: "5. Newsletter e comunicazioni ai partecipanti e al Community Run",
           blocks: [
             {
               type: "p",
-              text: "Per l’invio di e-mail gestiamo due liste distinte, che si differenziano per finalità e base giuridica:",
+              text: "Per l’invio di e-mail gestiamo tre liste distinte, che si differenziano per finalità e base giuridica:",
             },
             {
               type: "list",
               items: [
                 "Newsletter (facoltativa): se ti iscrivi alla nostra newsletter, trattiamo il tuo indirizzo e-mail e il tuo nome sulla base del tuo consenso (art. 6, par. 1, lett. a GDPR). Puoi annullare l’iscrizione in qualsiasi momento tramite il link di disiscrizione presente in ogni e-mail o contattandoci.",
                 "Comunicazioni ai partecipanti (non è richiesto il consenso): dopo la tua iscrizione vincolante inseriamo nome, cognome e indirizzo e-mail in una lista separata dedicata ai partecipanti. Tramite questa lista inviamo esclusivamente informazioni organizzative e di sicurezza relative alla gara, come orari di partenza, modifiche al percorso o allo svolgimento e avvisi meteo e di sicurezza. Questo trattamento è necessario all’esecuzione del contratto di partecipazione (art. 6, par. 1, lett. b GDPR); non è quindi richiesto alcun consenso, né viene raccolto. Questi messaggi non contengono pubblicità.",
+                "Community Run: se ti iscrivi al Community Run (vedi punto 2), inseriamo nome, cognome e indirizzo e-mail in una lista dedicata al Community Run. Tramite questa lista inviamo, se necessario, informazioni sul Community Run, ad esempio su programma, punto di ritrovo o modifiche dell’ultimo momento, nell’ambito della sua organizzazione. La base è il consenso prestato al momento dell’iscrizione (art. 6, par. 1, lett. a GDPR), che puoi revocare in qualsiasi momento. Questi messaggi non contengono pubblicità e la lista non è una newsletter.",
               ],
             },
             {
               type: "note",
-              text: "Le due liste sono indipendenti tra loro: la disiscrizione dalla newsletter non interrompe la ricezione delle comunicazioni ai partecipanti, che fanno parte dell’organizzazione della gara e vengono inviate finché la tua iscrizione è attiva. Viceversa, l’iscrizione alla gara non costituisce consenso alla newsletter. Per i tempi di conservazione valgono i termini indicati al punto 7.",
+              text: "Le tre liste sono indipendenti tra loro: la disiscrizione dalla newsletter non interrompe la ricezione delle comunicazioni ai partecipanti, che fanno parte dell’organizzazione della gara e vengono inviate finché la tua iscrizione è attiva. Viceversa, l’iscrizione alla gara non costituisce consenso alla newsletter. Allo stesso modo, l’iscrizione al Community Run non costituisce né consenso alla newsletter né iscrizione alla gara. Per i tempi di conservazione valgono i termini indicati al punto 7.",
             },
             {
               type: "p",
-              text: "Per entrambe le liste ci avvaliamo di Sendinblue SAS (operante con il marchio Brevo), 9–17 rue Salneuve, 75017 Parigi, Francia, RCS Paris 498 019 298, in qualità di responsabile del trattamento.",
+              text: "Per tutte e tre le liste ci avvaliamo di Sendinblue SAS (operante con il marchio Brevo), 9–17 rue Salneuve, 75017 Parigi, Francia, RCS Paris 498 019 298, in qualità di responsabile del trattamento.",
             },
           ],
         },
@@ -672,12 +724,16 @@ export const legal: Record<Lang, LegalContent> = {
               type: "list",
               items: [
                 "Hosting: Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA – distribuzione del sito (server nell’UE, se disponibile). Per eventuali accessi ai dati dagli USA Vercel si avvale dell’EU-U.S. Data Privacy Framework (DPF).",
-                "Database/archiviazione: Supabase Pte. Ltd., 65 Chulia Street #38-02/03, OCBC Centre, Singapore 049513 – memorizzazione dei dati di iscrizione e dei partecipanti. Il database di questo progetto è ospitato in un data center di Parigi (UE, AWS eu-west-3); per eventuali accessi ai dati al di fuori dell’UE Supabase si avvale delle clausole contrattuali tipo dell’UE.",
-                "Invio delle e-mail: Plus Five Five, Inc. (operante con il marchio Resend), 2261 Market Street #5039, San Francisco, CA 94114, USA – invio delle e-mail di conferma e del biglietto. Il trasferimento negli USA si basa sull’EU-U.S. Data Privacy Framework (DPF).",
+                "Database/archiviazione: Supabase Pte. Ltd., 65 Chulia Street #38-02/03, OCBC Centre, Singapore 049513 – memorizzazione dei dati di iscrizione e dei partecipanti, comprese le iscrizioni al Community Run. Il database di questo progetto è ospitato in un data center di Parigi (UE, AWS eu-west-3); per eventuali accessi ai dati al di fuori dell’UE Supabase si avvale delle clausole contrattuali tipo dell’UE.",
+                "Invio delle e-mail: Plus Five Five, Inc. (operante con il marchio Resend), 2261 Market Street #5039, San Francisco, CA 94114, USA – invio delle e-mail di conferma e del biglietto e della conferma di iscrizione al Community Run, nonché recapito a noi dei messaggi inviati tramite il modulo di contatto. Il trasferimento negli USA si basa sull’EU-U.S. Data Privacy Framework (DPF).",
                 "Limitazione delle richieste/protezione dagli abusi: Upstash Inc., USA – trattamento degli indirizzi IP per limitare il numero di richieste. Il trattamento avviene in un data center di Francoforte sul Meno (UE); in via integrativa, per eventuali accessi ai dati Upstash si avvale dell’EU-U.S. Data Privacy Framework (DPF).",
                 "Misurazione delle visite: Vercel Web Analytics (fornitore: Vercel Inc., indirizzo sopra indicato, in qualità di responsabile del trattamento) – statistiche anonime e aggregate sulle visualizzazioni delle pagine (ad es. pagina visitata, pagina di provenienza, paese/regione, tipo di dispositivo, browser e sistema operativo). Dell’indirizzo della pagina visitata viene trasmesso solo il percorso; i parametri (la parte dopo “?”, ad es. link di accesso personali) e i riferimenti interni alla pagina vengono rimossi prima dell’invio. Non vengono installati cookie né memorizzati dati nel tuo browser; le visite vengono distinte unicamente tramite un valore hash generato dalla richiesta, che viene eliminato dopo 24 ore. La base giuridica è il nostro legittimo interesse a comprendere l’utilizzo del sito e a migliorarlo (art. 6, par. 1, lett. f GDPR). Ulteriori informazioni: https://vercel.com/docs/analytics/privacy-policy e https://vercel.com/legal/privacy-policy.",
                 "Non vengono utilizzati Google Analytics né strumenti di tracciamento pubblicitario o di marketing.",
               ],
+            },
+            {
+              type: "p",
+              text: "Modulo di contatto: se ci scrivi tramite il modulo di contatto, trattiamo il tuo nome, il tuo indirizzo e-mail e il tuo messaggio. Questi dati vengono recapitati tramite il nostro fornitore di servizi e-mail Resend (vedi sopra) come e-mail alla casella di posta del team organizzativo; non li memorizziamo nel nostro database. La finalità è rispondere alla tua richiesta. La base giuridica è l’art. 6, par. 1, lett. b GDPR, se la tua richiesta riguarda un’iscrizione o una partecipazione, altrimenti il nostro legittimo interesse a rispondere alle richieste (art. 6, par. 1, lett. f GDPR). Conserviamo il tuo messaggio per il tempo necessario a gestire la richiesta.",
             },
           ],
         },
@@ -686,7 +742,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "Conserviamo i dati personali solo per il tempo necessario alle finalità indicate o per gli obblighi di legge. I dati dei partecipanti sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati o anonimizzati. I dati sanitari (certificati medici agonistici) sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati. I dati rilevanti ai fini contabili e di pagamento sono conservati per dieci anni ai sensi dell’art. 2220 del Codice Civile.",
+              text: "Conserviamo i dati personali solo per il tempo necessario alle finalità indicate o per gli obblighi di legge. I dati dei partecipanti sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati o anonimizzati. I dati sanitari (certificati medici agonistici) sono conservati fino a tre mesi dopo la gara (termine decorrente dal 15/05/2027) e successivamente cancellati. I dati dell’iscrizione al Community Run (nel nostro database e nella lista del Community Run su Brevo) sono conservati fino a sei mesi dopo il Community Run (termine decorrente dal 24/04/2027) e successivamente cancellati. I dati rilevanti ai fini contabili e di pagamento sono conservati per dieci anni ai sensi dell’art. 2220 del Codice Civile.",
             },
           ],
         },
@@ -1095,6 +1151,29 @@ export const legal: Record<Lang, LegalContent> = {
                 "Sports-medical certificate (health data – see section 3)",
               ],
             },
+            {
+              type: "h",
+              text: "Community Run",
+            },
+            {
+              type: "p",
+              text: "For registration for the free Community Run we process the data collected in the Community Run form in order to organise the Community Run. The legal basis is your consent, which you give by ticking the box in the form (Art. 6(1)(a) GDPR). The data are stored in our database (Supabase, see section 6); after submitting you receive a confirmation email.",
+            },
+            {
+              type: "list",
+              items: [
+                "First name and last name",
+                "Email address",
+                "Interest in the workshop (optional, a non-binding expression of interest only)",
+                "Your consent (ticked box) with the time of registration",
+                "Language of registration (German, Italian or English)",
+                "A technical access key, stored only as a hash",
+              ],
+            },
+            {
+              type: "p",
+              text: "You can withdraw your consent at any time with effect for the future, e.g. by email to info@worldcup-dobbiaco.it. This does not affect the lawfulness of processing carried out before the withdrawal. For the Community Run mailing list see section 5; for retention see section 7.",
+            },
           ],
         },
         {
@@ -1124,26 +1203,27 @@ export const legal: Record<Lang, LegalContent> = {
           ],
         },
         {
-          heading: "5. Newsletter and participant communications",
+          heading: "5. Newsletter, participant and Community Run communications",
           blocks: [
             {
               type: "p",
-              text: "We keep two separate mailing lists. They differ in purpose and legal basis:",
+              text: "We keep three separate mailing lists. They differ in purpose and legal basis:",
             },
             {
               type: "list",
               items: [
                 "Newsletter (optional): If you sign up for our newsletter, we process your email address and name on the basis of your consent (Art. 6(1)(a) GDPR). You can unsubscribe at any time via the unsubscribe link in every email or by contacting us.",
                 "Participant information (no consent required): Once your registration is binding, we add your first name, last name and email address to a separate participant list. We use it exclusively for organisational and safety-related information about the race, such as start times, changes to the course or schedule, and weather and safety notices. This processing is necessary for the performance of the participation contract (Art. 6(1)(b) GDPR); no consent is required for it and none is obtained. These messages contain no advertising.",
+                "Community Run: If you sign up for the Community Run (see section 2), we add your first name, last name and email address to a separate Community Run list. We use it, where needed, to send information about the Community Run, such as the schedule, meeting point or short-notice changes, as part of organising it. The basis is the consent you gave when signing up (Art. 6(1)(a) GDPR), which you can withdraw at any time. These messages contain no advertising, and the list is not a newsletter.",
               ],
             },
             {
               type: "note",
-              text: "The two lists are independent of each other: unsubscribing from the newsletter does not stop participant information, which is part of running the race and is sent for as long as your registration is active. Conversely, registering for the race does not constitute consent to the newsletter. Retention periods are those set out in point 7.",
+              text: "The three lists are independent of each other: unsubscribing from the newsletter does not stop participant information, which is part of running the race and is sent for as long as your registration is active. Conversely, registering for the race does not constitute consent to the newsletter. Likewise, signing up for the Community Run constitutes neither consent to the newsletter nor registration for the race. Retention periods are those set out in point 7.",
             },
             {
               type: "p",
-              text: "For both lists we use Sendinblue SAS (trading as Brevo), 9–17 rue Salneuve, 75017 Paris, France, RCS Paris 498 019 298, as a processor.",
+              text: "For all three lists we use Sendinblue SAS (trading as Brevo), 9–17 rue Salneuve, 75017 Paris, France, RCS Paris 498 019 298, as a processor.",
             },
           ],
         },
@@ -1158,12 +1238,16 @@ export const legal: Record<Lang, LegalContent> = {
               type: "list",
               items: [
                 "Hosting: Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA – delivery of the website (server location in the EU where available). For any data access from the USA, Vercel relies on the EU-U.S. Data Privacy Framework (DPF).",
-                "Database/storage: Supabase Pte. Ltd., 65 Chulia Street #38-02/03, OCBC Centre, Singapore 049513 – storage of participant and registration data. The database for this project is hosted in a data centre in Paris (EU, AWS eu-west-3); for any data access outside the EU, Supabase relies on the EU standard contractual clauses.",
-                "Email delivery: Plus Five Five, Inc. (trading as Resend), 2261 Market Street #5039, San Francisco, CA 94114, USA – sending of confirmation and ticket emails. Transfers to the USA are based on the EU-U.S. Data Privacy Framework (DPF).",
+                "Database/storage: Supabase Pte. Ltd., 65 Chulia Street #38-02/03, OCBC Centre, Singapore 049513 – storage of participant and registration data, including Community Run sign-ups. The database for this project is hosted in a data centre in Paris (EU, AWS eu-west-3); for any data access outside the EU, Supabase relies on the EU standard contractual clauses.",
+                "Email delivery: Plus Five Five, Inc. (trading as Resend), 2261 Market Street #5039, San Francisco, CA 94114, USA – sending of confirmation and ticket emails and of the Community Run sign-up confirmation, and delivery to us of messages sent via the contact form. Transfers to the USA are based on the EU-U.S. Data Privacy Framework (DPF).",
                 "Rate limiting/abuse protection: Upstash Inc., USA – processing of IP addresses to limit the number of requests. Processing takes place in a data centre in Frankfurt am Main (EU); in addition, Upstash relies on the EU-U.S. Data Privacy Framework (DPF) for any data access.",
                 "Audience measurement: Vercel Web Analytics (provider: Vercel Inc., address see above, acting as processor) – anonymous, aggregated statistics on page views (e.g. page visited, referring page, country/region, device type, browser and operating system). Only the path of the visited page’s address is transmitted; parameters (the part after “?”, e.g. personal access links) and page anchors are removed before sending. No cookies are set and no data is stored in your browser; visits are distinguished only by a hash generated from the request, which is discarded after 24 hours. The legal basis is our legitimate interest in understanding how the website is used and improving it (Art. 6(1)(f) GDPR). Further information: https://vercel.com/docs/analytics/privacy-policy and https://vercel.com/legal/privacy-policy.",
                 "No Google Analytics and no advertising or marketing trackers are used.",
               ],
+            },
+            {
+              type: "p",
+              text: "Contact form: If you write to us via the contact form, we process your name, your email address and your message. They are delivered by our email service provider Resend (see above) as an email to the organising team’s mailbox; we do not store them in our database. The purpose is to answer your enquiry. The legal basis is Art. 6(1)(b) GDPR where your enquiry concerns a registration or participation, otherwise our legitimate interest in answering enquiries (Art. 6(1)(f) GDPR). We keep your message for as long as is necessary to deal with your enquiry.",
             },
           ],
         },
@@ -1172,7 +1256,7 @@ export const legal: Record<Lang, LegalContent> = {
           blocks: [
             {
               type: "p",
-              text: "We store personal data only for as long as necessary for the stated purposes or as required by statutory retention obligations. Participant data are kept until three months after the race (period running from 15 May 2027) and then deleted or anonymised. Health data (sports-medical certificates) are kept until three months after the race (period running from 15 May 2027) and then deleted. Payment and accounting-related data are retained for ten years in accordance with Art. 2220 of the Italian Civil Code.",
+              text: "We store personal data only for as long as necessary for the stated purposes or as required by statutory retention obligations. Participant data are kept until three months after the race (period running from 15 May 2027) and then deleted or anonymised. Health data (sports-medical certificates) are kept until three months after the race (period running from 15 May 2027) and then deleted. Community Run registration data (in our database and in the Community Run list at Brevo) are kept until six months after the Community Run (period running from 24 April 2027) and then deleted. Payment and accounting-related data are retained for ten years in accordance with Art. 2220 of the Italian Civil Code.",
             },
           ],
         },
